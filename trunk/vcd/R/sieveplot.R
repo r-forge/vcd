@@ -130,7 +130,7 @@ function (formula, data = NULL, ..., subset)
       box()
 
       ## new frame
-      if (i < nrow(x) || j < ncol(x)) plot.new()
+      if (j < nrow(x) || i < ncol(x)) plot.new()
     }
 
   par(par.save)
