@@ -67,7 +67,7 @@ ternaryplot(
   cex = 2,
   bg = "gray",
   grid.color = "white",
-  grid.labels.color = "white",
+  labels.color = "white",
   main = "Arthritits Treatment Data"
 )
 legend(0.7, 0.8, c("GROUP", groups), pch = c(NA, pch), col = c(NA, col))
@@ -84,7 +84,7 @@ ternaryplot(
 )
 legend(
   0.7, 0.8,
-  legend = c("SIDE", "Port", "Starboard")
+  legend = c("SIDE", "Port", "Starboard"),
   pch = c(NA, 1, 19),
   col = c("black", "red", "blue"),
 )
