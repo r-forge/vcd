@@ -81,8 +81,8 @@ fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#
 }
 \references{
 M. Friendly (1994), A fourfold display for 2 by 2 by \eqn{k} tables.
-Technical Report 217, York University, Psychology Department.
-\url{http://hotspur.psych.yorku.ca/ftp/sas/catdata/4fold.ps.gz}
+Technical Report 217, York University, Psychology Department,
+\url{http://www.math.yorku.ca/SCS/Papers/4fold/4fold.ps.gz}.
 
 M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
