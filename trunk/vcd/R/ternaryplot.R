@@ -15,6 +15,7 @@ function (x,
           bg = "white",
           pch = 19,
           cex = 1,
+          prop.size = FALSE,
           col = "red",
           main = "ternary plot",
           ...)
@@ -31,6 +32,8 @@ function (x,
   dimnames.position <- match.arg(dimnames.position)
   if(is.null(dimnames) && dimnames.position != "none")
     dimnames <- colnames(x)
+
+  if(is.logical(prop.size) && prop.size) prop.size <- 3
   
   ## some error handling
   if(ncol(x) != 3)
@@ -106,7 +109,8 @@ function (x,
   ## plot points
   xp <- x[,2] + x[,3] / 2
   yp <- x[,3] * top
-  points(xp, yp, pch = pch, col = col, cex = cex, ...)
+  points(xp, yp, pch = pch, col = col,
+         cex = if(prop.size) prop.size * (s / max(s)) else cex, ...)
 
   ## plot 
   if (!is.null(id))
