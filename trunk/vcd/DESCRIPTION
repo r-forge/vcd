@@ -1,6 +1,6 @@
 Package: vcd
 Version: 0.1-2
-Date: 2002-09-19
+Date: 2002-09-25
 Title: Visualizing Categorical Data
 Author: David Meyer, Achim Zeileis, Alexandros Karatzoglou
 Maintainer: Kurt Hornik <kurt.hornik@ci.tuwien.ac.at>
