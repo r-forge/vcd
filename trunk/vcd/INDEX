@@ -2,7 +2,7 @@ Arthritis               Arthritis Treatment Data
 Baseball                Baseball
 Bundesliga              Ergebnisse der Fussball-Bundesliga
 Butterfly               Butterfly Species in Malaya
-CoalMiners              Breathelessness and Wheeze in Coal Miners
+CoalMiners              Breathlessness and Wheeze in Coal Miners
 Employment              Employment Status
 Federalist              `May' in Federalist Papers
 Hitters                 Hitters
@@ -17,7 +17,6 @@ Saxony                  Families in Saxony
 SexualFun               Sex Is Fun
 SpaceShuttle            Space Shuttle O-ring failures
 Suicide                 Suicide Rates in Germany
-Summary                 Summary of a m x n-table
 UKSoccer                UK Soccer Scores
 VisualAcuity            Visual Acuity in Left and Right Eyes
 VonBort                 Von Bortkiewicz Horse Kicks Data
@@ -25,6 +24,7 @@ WeldonDice              Weldon's Dice Data
 WomenQueue              Women in Queues
 agreementplot.default   Bangdiwala's Observer Agreement Chart
 assoc.stats             Association Statistics
+assocplot               Extended Association Plots
 barplot                 Bar Plots
 distplot                Diagnostic distribution plots
 expected                Expected Frequencies Table
@@ -37,5 +37,6 @@ oddsratio               Odds Ratios
 plot.oddsratio          (Log) Odds Ratios Plots
 rootogram               Rootograms
 sieveplot               Sieve Plots
+summary.table           Summary of a m x n-table
 ternaryplot             Ternary diagram
 woolf.test              Woolf test

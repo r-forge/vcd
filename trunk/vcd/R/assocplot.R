@@ -2,7 +2,7 @@ assocplot <- function(x,
                       ## parameters for extended plot
                       color = NULL,
                       shade = TRUE,
-                      test  = c("chisq","none"),
+                      test  = c("Chisq","none"),
                       conf.level = 0.95,
                       density = 20,
                       ## layout parameters
@@ -21,7 +21,7 @@ assocplot <- function(x,
         stop("at least one entry of x must be positive")
     if (is.null(color)) {
       color <- if (is.logical(shade) && !shade)
-        c("black", "red")
+        c("blue", "red")
       else
         c(0, 2 / 3)
     } else if (length(color) != 2)
@@ -30,7 +30,7 @@ assocplot <- function(x,
     test <- if (!is.logical(test))
       match.arg(test)
     else
-      if (test) "chisq" else "none"
+      if (test) "Chisq" else "none"
 
     f <- x[ , rev(1:NCOL(x))]           # rename for convenience;
                                         # f is observed freqs

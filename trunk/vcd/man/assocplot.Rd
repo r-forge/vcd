@@ -7,7 +7,7 @@
   table.
 }
 \usage{
-assocplot(x, color = NULL, shade = TRUE, test = c("chisq","none"),
+assocplot(x, color = NULL, shade = TRUE, test = c("Chisq","none"),
           conf.level = 0.95, density = 20,
           main = NULL, space = 0.3, xlab = NULL, ylab = NULL,
           cex.axis = 0.66, ...)
@@ -15,11 +15,10 @@ assocplot(x, color = NULL, shade = TRUE, test = c("chisq","none"),
 \arguments{
   \item{x}{a two-dimensional contingency table in matrix form.}
   \item{color}{a character vector of length two defining the colors used for
-    drawing positive and negative Pearson residuals, respectively. If
-    \code{shade} is \code{FALSE}, the default is black and red.
-    if \code{shade} is \code{TRUE}, \code{color} specifies the hue
-    values for extended shading and defaults to 0 and 2/3, i.e. blue and
-    red.}
+    drawing positive and negative Pearson residuals, respectively
+    (defaults are blue and red). Note that if \code{shade} is
+    \code{TRUE}, \code{color} specifies hue
+    values (default: 0 and 2/3 for blue/red).}
   \item{shade}{a logical indicating whether to produce extended association
     plots, or a numeric vector of at most 5 distinct positive numbers
     giving the absolute values of the cut points for the residuals. 
@@ -88,14 +87,14 @@ assocplot(x, color = NULL, shade = TRUE, test = c("chisq","none"),
 \examples{
 data(HairEyeColor)
 ## Aggregate over sex:
-(x <- margin.table(HairEyeColor, c(1,2)))
+(x <- margin.table(HairEyeColor, c(1, 2)))
 assocplot(x, main = "Relation between hair and eye color")
 
 ## Ordinary assocplot:
 assocplot(x, shade = FALSE)
 
 ## Aggregate over Eye color:
-(x <- margin.table(HairEyeColor, c(1,3)))
+(x <- margin.table(HairEyeColor, c(1, 3)))
 chisq.test(x)
 assocplot(x, main = "Relation between hair color and sex")
 }
