@@ -16,8 +16,9 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
     in the first column and the corresponding counts in the
     second column.}
   \item{type}{a character string indicating which distribution should be fit.}
-  \item{par}{a vector of distribution parameters, if set to \code{NULL},
-    the default, the parameters are estimated.}
+  \item{par}{a named list giving the distribution parameters (named as in the
+    corresponding density function), if set to \code{NULL}, the default,
+    the parameters are estimated.}
   \item{size}{the size argument for the binomial distribution, only
     required if \code{type} is \code{"binomial"}. If set to \code{NULL},
     \code{size} is taken to be the maximum count.}
@@ -25,24 +26,28 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
 \details{\code{goodfit} essentially computes the fitted values of a
 discrete distribution (either poisson, binomial or negative binomial)
 to the count data given in \code{obj}. If the parameters are not specified
-they are estimated by maximum likelihood (only MM for \code{"nbinomial"}).
-\code{par} should be of length 1 for \code{"poisson"} and \code{"binomial"},
-specifying the parameter lambda or prob respectively, and of length 2 for
-\code{"nbinomial"}, specifying prob and size.
+they are estimated by maximum likelihood. Furthermore the parameters are
+estimated by minimum Chisquare and method of moments for \code{"nbinomial"}
+(MM is equivalent to ML for the other distributions).
+\code{par} should a named list specifying the parameters \code{lambda}
+for \code{"poisson"}, \code{prob} for \code{"binomial"} and \code{prob} and
+\code{size} for \code{"nbinomial"}.
 
-The \code{\link{summary}} method then computes the chisquare and likelihood
-ratio statistic for the fitted values returned by \code{goodfit}. The
-\code{\link{plot}} method produces a \code{link{rootogram}} of the
+The corresponding Pearson Chisquare and likelihood
+ratio statistic are also computed and given with their $p$ values by the
+\code{summary} method. The
+\code{plot} method produces a \code{link{rootogram}} of the
 observed and fitted values.
 }
 \value{
   A list of class \code{"goodfit"} with elements:
   \item{observed}{observed frequencies,}
   \item{count}{corresponding counts,}
-  \item{fitted}{expected frequencies,}
+  \item{fitted}{expected frequencies (fitted by ML),}
   \item{type}{a character string indicating the distribution fitted,}
   \item{df}{degrees of freedom,}
-  \item{estimate}{estimate of the distribution parameters.}
+  \item{estimate}{a matrix of estimates of the distribution parameters,}
+  \item{statistic}{the corresponding Pearson Chisquare and likelihood ratio statistics.}
 }
 \author{
   Achim Zeileis
@@ -60,7 +65,7 @@ plot(gf)
 
 dummy <- rbinom(100, size = 6, prob = 0.5)
 gf1 <- goodfit(dummy, type = "binomial", size = 6)
-gf2 <- goodfit(dummy, type = "binomial", par = 0.6, size = 6)
+gf2 <- goodfit(dummy, type = "binomial", par = list(prob = 0.6), size = 6)
 summary(gf1)
 plot(gf1)
 summary(gf2)
