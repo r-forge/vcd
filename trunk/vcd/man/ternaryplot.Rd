@@ -111,7 +111,7 @@ ternaryplot(
   main = "Baseball Hitters Data"
 )
 legend(
-  0.7, 0.85,
+  0.8, 0.9,
   legend = c("POSITION(S)", levels(Positions)),
   pch = c("", pch),
   col = c(NA, colors)
