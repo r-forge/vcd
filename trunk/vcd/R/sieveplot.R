@@ -27,7 +27,7 @@ function (formula, data = NULL, ..., subset)
   function(x,
            reverse.y = TRUE,
            type = c("sieve","expected"),
-           title = NULL,
+           main = NULL,
            values = c("none", "cells", "margins", "both"),
            frequencies = c("absolute", "relative"),
            sieve.colors = c("red","blue"),
@@ -37,6 +37,8 @@ function (formula, data = NULL, ..., subset)
            margin = 0.2,
            cex.main = 3,
            cex.lab = 2,
+           xlab = names(dimnames(x))[2],
+           ylab = names(dimnames(x))[1],
            ...)
 {
   if (length(dim(x)) > 2)
@@ -45,8 +47,8 @@ function (formula, data = NULL, ..., subset)
   type <- match.arg(type)
   values <- match.arg(values)
   frequencies <- match.arg(frequencies)
-  if (is.null(title))
-      title <- if (type == "sieve") "Sieve diagram" else "Expected frequencies"
+  if (is.null(main))
+      main <- if (type == "sieve") "Sieve diagram" else "Expected frequencies"
 
   if (reverse.y) x <- x[nrow(x):1,]
 
@@ -62,7 +64,7 @@ function (formula, data = NULL, ..., subset)
   par.save <- par(no.readonly = TRUE)
   
   ## build layout
-  layout(matrix(1:(ncol(x) * nrow(x)), ncol(x), nrow(x), byrow=TRUE),
+  layout(matrix(1:(ncol(x) * nrow(x)), nrow(x), ncol(x), byrow=TRUE),
          widths = cols,
          heights = rows
          )
@@ -74,9 +76,9 @@ function (formula, data = NULL, ..., subset)
 
   ## title, etc.
   plot.new()
-  title(title,
-        xlab = names(dimnames(x))[2],
-        ylab = names(dimnames(x))[1],
+  title(main,
+        xlab = xlab,
+        ylab = ylab,
         outer=TRUE,
         cex.main = cex.main,
         cex.lab = cex.lab,
@@ -128,7 +130,7 @@ function (formula, data = NULL, ..., subset)
       box()
 
       ## new frame
-      plot.new()
+      if (i < nrow(x) || j < ncol(x)) plot.new()
     }
 
   par(par.save)
