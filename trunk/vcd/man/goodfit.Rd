@@ -46,7 +46,7 @@ not specified it is not estimated but taken as the maximum count.
 The corresponding Pearson Chi-squared or likelihood
 ratio statistic respectively is computed and given with their $p$ values by the
 \code{summary} method. The
-\code{plot} method produces a \code{link{rootogram}} of the
+\code{plot} method produces a \code{\link{rootogram}} of the
 observed and fitted values.
 }
 \value{
