@@ -71,6 +71,7 @@ function (formula, data = NULL, ..., subset)
 
   ## title, etc.
   plot.new()
+  plot.window(xlim = c(0, 1), ylim = c(0, 1), asp = 1)
   title(main,
         xlab = xlab,
         ylab = ylab,
