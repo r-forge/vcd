@@ -66,7 +66,7 @@ in particular in 2-way tables.
 
 \section{Tests for independence in 2-way tables} \label{sec:tests}
 
-We consider a 2-way contingency table with cell frequencies $(n_{ij})$ for
+We consider a 2-way contingency table with cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$ and row and column sums
 $n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$ respectively. For
 convenience the number of observations is denoted $n = n_{++}$.
@@ -99,7 +99,7 @@ This is the well-known $\chi^2$ test for independence in 2-way tables.
 
 But this is not the only plausible way of aggregation of the Pearson
 residuals. There are many conceivable functionals $\lambda(\cdot)$ which
-lead to reasonable test statistics $\lambda(r_{ij})$, the sum of squares
+lead to reasonable test statistics $\lambda(\{r_{ij}\})$, the sum of squares
 is just one of them. Another functional suitable for identifying
 the cells which cause the dependence (if any) is the maximum of the absolute
 values
@@ -119,7 +119,7 @@ permutation distribution---became more and more popular. In particular for
 the independence hypothesis (\ref{eq:H0}), using a permutation test is very intuitive
 due to the permutation invariance (given row and column sums) of this problem.
 By employing this approach the permutation distribution of statistics of
-type $\lambda(r_{ij})$ (also including the $\chi^2$ statistic) can be derived.
+type $\lambda(\{r_{ij}\})$ (also including the $\chi^2$ statistic) can be derived.
 
 Other classical tests for the hypothesis of independence  not fitting in
 the Pearson residual-based framework described above include Fisher's exact test,
@@ -147,8 +147,9 @@ coded by the rectangle's color and its position relative to the baseline.
 
 Figure \ref{fig:goals-assoc-classic} shows the association plot for the table of
 home and away goals for all 306 games in the 1995/6 season of the German soccer league
-Bundesliga \citep{vcd:Knorr-Held:1999}. In particular, it can be seen that there are
-fewer games ending 1-0 and more ending 1-1 than would be expected under independence.
+Bundesliga \citep[the data is available in the package \texttt{vcd}]{vcd:Knorr-Held:1999}.
+In particular, it can be seen that there are
+fewer games ending 1--0 and more ending 1--1 than would be expected under independence.
 But this does not yet imply the significance of some test statistic.
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -195,9 +196,9 @@ exceed an absolute value of 4 are shaded with full saturation. The heuristic
 behind this shading is that
 the Pearson residuals are approximately standard normal which implies
 that the highlighted cells are those with
-residuals {\em individually} significant at approximately the 5\% and 0.01\%
-level. But the main purpose of the shading is not to visualize significance but the pattern of
-deviation from independence \citep[p. 109]{vcd:Friendly:2000}. In particular,
+residuals \emph{individually} significant at approximately the 5\% and 0.01\%
+level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
+deviation from independence \citep[p.~109]{vcd:Friendly:2000}. In particular,
 this shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
 as in general it is unknown to which significance level $\alpha$ the
 values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
@@ -206,8 +207,8 @@ Figure \ref{fig:goals-mosaic-classic} shows the Friendly mosaic plot for
 the same Bundesliga data as in Figure \ref{fig:goals-assoc-classic}.
 In this plot, the residuals
 are visualized by the color shading of the cells. Again, the cells for
-the 1-0 and 1-1 results are highlighted and furthermore, there seem to be
-too many 6-3 results than would be plausible under independence. Whereas
+the 1--0 and 1--1 results are highlighted and furthermore, there seem to be
+too many 6--3 results than would be plausible under independence. Whereas
 the association plot in Figure \ref{fig:goals-assoc-classic} contains
 no information about the result of a test for independence, the shading
 in this plot conveys the impression that there might be
@@ -243,7 +244,7 @@ log-linear models (and therefore also for certain independence problems).
 However, it has two major drawbacks: First,
 the significance level for the hard-coded critical values 2 and 4 is
 usually unknown. Second, the colors for (light) blue and red
-used in the original \textsf{SAS} implementation and also in the base implementation
+used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
 in \textsf{R} are not device-independent and
 do not provide homogeneous saturations over different colors
 and copier proofness. We suggest some ways to overcome these drawbacks.
@@ -257,13 +258,14 @@ used. Hence, exactly those residuals causing the (potential)
 dependency within the table are highlighted. At the moment, these critical values
 are derived in \texttt{vcd} by simulation of the underlying distribution.
 
-The original implementation of mosaic plots in \textsf{SAS}
+The implementation of Friendly mosaic plots in \textsf{SAS}
 uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
 with hues for blue and red, full saturation, and varying luminance
 for lighter colors. The current \textsf{R} implementation is
 based on colors in the HSV (Hue--Saturation--Value) space where
-decreasing the saturation from 1 towards 0---given the hue for
-blue or red and full saturation---generates very similar colors
+decreasing the saturation from 1 towards 0
+%% ---given the hue for blue or red and full saturation---
+generates very similar colors
 as increasing the luminance for HSL colors from 0.5 towards 1.
 As an alternative to those HLS and HSV colors, the device-independent
 HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
@@ -287,7 +289,7 @@ grid.assocplot(goals, rot = 0)
 \end{figure}
 
 To illustrate what a `postive' example looks like we give the association plot
-for the well-known Hair-Eye-Color data set which cross-tabulates the hair and eye
+for the well-known Hair-Eye-Color data set (avilable in base \textsf{R}) which cross-tabulates the hair and eye
 color and sex of 592 statistics students: Figure \ref{fig:haireye-assoc-signif}
 shows the association plot for the 328 female students. It is easy to see that
 the hypothesis of independence is rejected at 1\% level by the maximum test (\ref{eq:MaxAbs})
@@ -388,7 +390,8 @@ independence.
 
 Two ideas for the problem of conditional independence are briefly outlined
 here and illustrated using the famous admissions data of the University of
-California at Berkley (UCB). In this data, the question whether there is sex
+California at Berkley (UCB) which is available in base \textsf{R}.
+In this data, the question whether there is sex
 discrimination at the UCB leads to the result that although women seem to
 be disadvantaged at the aggregated level there is no sex discrimination
 conditioned on the department---with the very exception of one department
