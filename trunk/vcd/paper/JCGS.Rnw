@@ -52,10 +52,10 @@
 
 %% Hyperref
 \hypersetup{%
-  pdftitle = {Visualizing (Conditional) Independence Using Extended Association and Mosaic Plots},
-  pdfsubject = {Visualizing (Conditional) Independence},
-  pdfkeywords = {contingency tables, association plots, mosaic plots, conditional
-    inference, permutation tests},
+  pdftitle = {Residual-based Shadings for Visualizing (Conditional) Independence},
+  pdfsubject = {Residual-based Shadings},
+  pdfkeywords = {contingency tables, association plots, mosaic plots, HCL colors, 
+    HSV colors, conditional inference, permutation tests},
   pdfauthor = {Achim Zeileis, David Meyer, Kurt Hornik},
   %% change colorlinks to false for pretty printing
   colorlinks = {true},
@@ -70,7 +70,7 @@
 \begin{document}
 
 \begin{center}
-\textbf{\LARGE Visualizing (Conditional) Independence Using Extended Association and Mosaic Plots}
+\textbf{\LARGE Residual-based Shadings for Visualizing (Conditional) Independence}
 
 \vspace{0.5cm}
 {\large Achim \textsc{Zeileis}, David \textsc{Meyer}, and Kurt \textsc{Hornik}}
@@ -87,30 +87,19 @@
 set.seed(12345)
 library(vcd)
 
-data(Bundesliga)
-goals <- xtabs(~ AwayGoals + HomeGoals, data = Bundesliga, subset = Year == 1995)
-
-data(HairEyeColor)
-haireye <- xtabs(Freq ~ Hair + Eye, data = as.data.frame(HairEyeColor), subset = Sex == "Female")
-
-data(UCBAdmissions)
-ucb <- UCBAdmissions
-dimnames(ucb)[[1]] <- c("Admit", "Reject")
-
 data(Arthritis)
 art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
+
+data(Employment)
+emp <- Employment
+emp1 <- co.table(Employment, "LayoffCause")[["Replaced"]]
 @
 
 <<auxfunctions,echo=FALSE,results=hide>>=
-he.test <- pearson.test(haireye, return = TRUE)
-cb <- he.test$qdist(c(0.9, 0.99))
-
-gp.shading <- function(x, y) gp.HSVshading(x, y, lty = 1, test = NULL)
-shadeHSVchisq <- function(x, y) gp.HSVshading(x, y, lty = 1)
-shadeHSVmax <- function(x, y) gp.HSVshading(x, y, interpolate = cb, lty = 1)
-shadeHCLmax <- function(x, y) gp.HCLshading(x, y, interpolate = cb, lty = 1)
-shadeHSVmax2 <- function(x, y) gp.HSVshading(x, y, interpolate = c(5,10), test = NULL)
-shadeHCLchisq <- function(x, y) gp.HCLshading(x, y, lty = 1)
+pmos.Friendly <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
+  labels = FALSE, space = 0.02, gp = gp.Friendly, ...)
+pmos.max <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
+  labels = FALSE, space = 0.02, gp = gp.max, ...)
 
 hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, correct = FALSE)
 {
@@ -206,7 +195,7 @@ Paper could be structured in the following way
 The \proglang{R} side then has to be described in another paper,
 probably for the Journal of Statistical Software.\\[0.3cm]
 \textbf{Key Words:} Association plots; Conditional inference; 
-  Contingency tables; Mosaic plots; Permutation tests.
+  Contingency tables; HCL colors; HSV colors; Mosaic plots; Permutation tests.
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
@@ -528,40 +517,27 @@ of graphical parameters.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(goals, rot = 0, gp = gp.binary)
+grid.assocplot(emp1, gp = gp.binary)
 @
 <<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaicplot(t(goals), shade = TRUE, main = "")
+mosaicplot(t(emp1), shade = TRUE, main = "")
 @
-\caption{Classic association and mosaic plot for the Bundesliga data.}
-\label{fig:goals-assoc-classic}
+\caption{Classic association and mosaic plot for the ``Replaced'' subset of the Employment data.}
+\label{fig:classic}
 \end{center}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \begin{center}
-<<haireye-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(haireye, gp = gp.Friendly)
+<<emp1-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+grid.mosaicplot(emp1, gp = gp.Friendly)
 @
-<<haireye-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(haireye, gp = gp.max)
+<<emp1-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+grid.mosaicplot(emp1, gp = gp.max)
 @
-\caption{Mosaic plots for the Hair-Eye-Color data.}
-\label{fig:haireye}
-\end{center}
-\end{figure}
-
-\begin{figure}[htbp]
-\begin{center}
-<<goals-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(goals, gp = gp.Friendly)
-@
-<<goals-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(goals, gp = gp.max)
-@
-\caption{Mosaic plots for the Bundesliga data.}
-\label{fig:goals}
+\caption{Mosaic plots for the ``Replaced'' subset of the Employment data.}
+\label{fig:emp1}
 \end{center}
 \end{figure}
 
@@ -828,38 +804,36 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-mosaic1,fig=TRUE,echo=FALSE,height=4,width=8>>=
-fm <- loglm(~(Gender + Admit)*Dept, data = UCBAdmissions, fitted = TRUE)
-res.fm <- (UCBAdmissions - fitted(fm))/sqrt(fitted(fm))
-dim(res.fm) <- dim(UCBAdmissions)
-my.gp <- gp.HCLshading(UCBAdmissions, aperm(res.fm))
+<<UCB-mosaic1,fig=TRUE,echo=FALSE,height=6,width=8>>=
+fm <- loglm(~(EmploymentStatus+EmploymentLength)*LayoffCause, data = emp, fitted = TRUE)
+my.gp <- gp.HCLshading(emp, residuals(fm, type = "pearson"))
 my.gp$p.value <- summary(fm)$tests[2,3]
 my.gp$lty <- c(1,1)
-grid.mosaicplot(ucb, gp = my.gp, margin = ~ (Gender + Admit)*Dept, space = c(0.1, 0.01, 0))
+grid.mosaicplot(emp, gp = my.gp, margin = ~(EmploymentStatus+EmploymentLength)*LayoffCause,
+  space = c(0.1, 0.01, 0), dir = "v")
 @
-\caption{UCB admission with mosaic display.}
-\label{fig:UCB-mosaic1}
+\caption{Employment data with mosaic display.}
+\label{fig:emp-mosaic1}
 \end{center}
 \end{figure}
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-mosaic2,fig=TRUE,echo=FALSE,height=6,width=8>>=
-mygp.max <- function(x,y) gp.max(x, y, level = (1 - c(0.1, 0.01)/6))
-tabplot(ucb, panel = function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE, labels = FALSE, gp = mygp.max, space = 0.02, ...))
+<<UCB-mosaic2,fig=TRUE,echo=FALSE,height=4,width=8>>=
+tabplot(emp, panel = pmos.max)
 @
-\caption{UCB admission with conditioned mosaic display.}
-\label{fig:UCB-mosaic2}
+\caption{Employment data with conditioned mosaic display.}
+\label{fig:emp-mosaic2}
 \end{center}
 \end{figure}
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-assoc,fig=TRUE,echo=FALSE,height=8,width=8>>=
-tabplot(margin.table(ucb, c(2,1,3)), gp = mygp.max)
+<<UCB-assoc,fig=TRUE,echo=FALSE,height=4,width=8>>=
+tabplot(emp)
 @
-\caption{UCB admission with conditioned association plot.}
-\label{fig:UCB-assoc}
+\caption{Employment data with conditioned association plot.}
+\label{fig:emp-assoc}
 \end{center}
 \end{figure}
 
