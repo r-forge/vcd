@@ -7,7 +7,8 @@ DM
 AZ
   * grid anschauen
   * slice.index() anschauen
-
+  * bug in mosaicpairs (bei total independence werden variablen permutiert)
+  
 KH
   * permtest/Patefield in R-devel (bis Ende JAN)
   * collapse.table()
