@@ -612,8 +612,7 @@ nbplot(p = 0.3, size = 4)
 nbplot(p = 0.4, size = 2)
 nbplot(p = 0.4, size = 4)
 par(mfrow = c(1,1))
-mtext("Negative binomial distributions for the number of trials to observe n = 2
- or n = 4 successes", line = 3)
+mtext("Negative binomial distributions for the number of trials to observe n = 2 or n = 4 successes", line = 3)
 
 #####################
 ## Goodness of fit ##
@@ -679,12 +678,9 @@ detach(Saxony)
 
 par(mfrow = c(2,2))
 Ord.plot(HorseKicks$Freq, HorseKicks$nDeaths, main = "Death by horse kicks")
-Ord.plot(Federalist$Freq, Federalist$nMay, main = "Instances of 'may' in
- Federalist papers")
-Ord.plot(Butterfly$nSpecies, Butterfly$nTokens, main = "Butterfly species
- collected in Malaya")
-Ord.plot(WomenQueue$Freq, WomenQueue$nWomen, main = "Women in queues of length
- 10")
+Ord.plot(Federalist$Freq, Federalist$nMay, main = "Instances of 'may' in Federalist papers")
+Ord.plot(Butterfly$nSpecies, Butterfly$nTokens, main = "Butterfly species collected in Malaya")
+Ord.plot(WomenQueue$Freq, WomenQueue$nWomen, main = "Women in queues of length 10")
 par(mfrow = c(1,1))
 
 ###############
