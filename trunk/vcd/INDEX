@@ -3,6 +3,8 @@ Kappa                   Cohen's Kappa and weighted Kappa
 SpaceShuttle            SpaceShuttle
 agreementplot.default   Bangdiwala's Observer Agreement Chart
 expected                Expected Frequencies Table
+logoddsratio            Log Odds Ratios
 mar.table               Table with marginal sums.
+plot.logoddsratio       Log Odds Ratios Plots
 sieveplot               Sieve Plots
 ternaryplot             Ternary diagram
