@@ -71,8 +71,8 @@ function (formula, data = NULL, ..., subset)
   ## open viewport
   if (!panel)
     grid.newpage()
-  push.viewport(plotViewport(margins))
-  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
+  pushViewport(plotViewport(margins))
+  pushViewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
   
   if(!is.null(main))
     grid.text(main, y = unit(1.1, "npc"),
@@ -145,7 +145,7 @@ function (formula, data = NULL, ..., subset)
   else
     grid.lines(c(0, 1), c(1, 0), gp = gpar(col = "red", linetype = "longdash"))
 
-  pop.viewport(2)
+  popViewport(2)
   
   ## Statistics - Returned invisibly
   ads <- crossprod(diag(x)) 

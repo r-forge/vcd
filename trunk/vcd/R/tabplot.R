@@ -51,14 +51,14 @@ tabplot.default <- function(x, panel = function(x, ...) grid.assocplot(x, panel 
   nc <- max(layout[,2])
   if(!is.null(axis.names[2])) margins[1] <- margins[1] + 1
   if(!is.null(axis.names[1])) margins[2] <- margins[2] + 1
-  push.viewport(plotViewport(margins))
+  pushViewport(plotViewport(margins))
 
   grid.text(axis.names[1], x = unit(0, "native") - unit(1, "lines"), rot = 90,
             gp = gpar(fontsize = fontsize))
   grid.text(axis.names[2], y = unit(0, "native") - unit(1, "lines"),
             gp = gpar(fontsize = fontsize))
 
-  push.viewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
+  pushViewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
 
   strUnit <- unit(2 * ncol(condition), "strheight", "A")
   cellport <- viewport(layout = grid.layout(2, 1,
@@ -70,21 +70,21 @@ tabplot.default <- function(x, panel = function(x, ...) grid.assocplot(x, panel 
 
     tabi <- eval(parse(text = paste("x[,,", condi, "]", sep = "")))
 
-    push.viewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
-    push.viewport(cellport)
-    push.viewport(viewport(layout.pos.row = 1))
+    pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
+    pushViewport(cellport)
+    pushViewport(viewport(layout.pos.row = 1))
     grid.rect(gp = gpar(fill = grey(0.9)))
     grid.text(condistr, y = ncond:1/ncond - 1/(2*ncond)) #Z# , gp = gpar(fontsize = fontsize))
     grid.segments(0, 0:ncond/ncond, 1, 0:ncond/ncond)
-    pop.viewport()
+    popViewport()
 
-    push.viewport(viewport(layout.pos.row = 2))
+    pushViewport(viewport(layout.pos.row = 2))
     panel(tabi, ...)
-    pop.viewport(2)
+    popViewport(2)
     grid.rect()
-    pop.viewport()
+    popViewport()
   }
-  pop.viewport(2)
+  popViewport(2)
   }
 
   invisible(x)

@@ -64,19 +64,19 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     w <- w - unit(2, "lines")
   }
 
-  push.viewport(plotViewport(margins))
+  pushViewport(plotViewport(margins))
   if(!is.null(main))
     grid.text(main, y = unit(1, "npc") + unit(1, "lines"), gp = gpar(fontsize = 1.5 * fontsize))
 
   ## set up if legend is required
   if(legend) {
-    push.viewport(viewport(layout = grid.layout(1, 2,
+    pushViewport(viewport(layout = grid.layout(1, 2,
                   widths = unit(c(0.85, 0.15), "npc"))))
-    push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+    pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
   }
 
   ## the core assocplot
-  push.viewport(viewport(x = unit(1, "npc") - unit(2*(1-panel), "lines"), y = unit(2*(1-panel), "lines"), xscale = c(0, sum(x.width + x.delta)),
+  pushViewport(viewport(x = unit(1, "npc") - unit(2*(1-panel), "lines"), y = unit(2*(1-panel), "lines"), xscale = c(0, sum(x.width + x.delta)),
                 yscale = c(0, sum(y.height + y.delta)),
                 height = h, width = w, just = c("right", "bottom")))
 
@@ -103,13 +103,13 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
               gp = gpar(fontsize = fontsize), check.overlap = check.overlap)
   }
 
-  pop.viewport()
+  popViewport()
 
   ## legend drawing
   if(legend) {
-    pop.viewport()
-    push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-    push.viewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
+    popViewport()
+    pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+    pushViewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
                   yscale = range(res), default.unit = "npc",
                   height = h - unit(4, "lines"),
 		  width = unit(0.75, "npc") - unit(2, "lines")))
@@ -145,9 +145,9 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     if(!is.null(gp$p.value)) grid.text(paste("p-value:\n", format.pval(gp$p.value), sep = ""),
                 x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"), gp = gpar(fontsize = 0.8*fontsize),
                 just = c("left", "top"))
-    pop.viewport(3)
+    popViewport(3)
   }
-  pop.viewport()
+  popViewport()
 
   invisible(x)
 }
@@ -164,21 +164,21 @@ assocpairs <- function(x, margin = 1, omargin = 2, legend = FALSE, ...)
   grid.newpage()
   vars <- names(dimnames(x))
   n <- length(vars)
-  push.viewport(plotViewport(rep(omargin, length.out = 4)))
-  push.viewport(viewport(layout = grid.layout(n, n)))
+  pushViewport(plotViewport(rep(omargin, length.out = 4)))
+  pushViewport(viewport(layout = grid.layout(n, n)))
   for(i in 1:n) {
     for(j in 1:n) {
-      push.viewport(viewport(layout.pos.row = i, layout.pos.col = j))
+      pushViewport(viewport(layout.pos.row = i, layout.pos.col = j))
       if(i==j) { grid.text(vars[i], gp = gpar(fontsize = 20)) }
       else {
         y <- margin.table(x, c(i, j))
 	grid.assocplot(y, panel = TRUE, legend = legend, margin = margin, xlab = "", ylab = "", axis.labels = FALSE, ...)
       }
       grid.rect()
-      pop.viewport()
+      popViewport()
     }
   }
-  pop.viewport(2)
+  popViewport(2)
   invisible(x)
 }
 
