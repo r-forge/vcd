@@ -1,6 +1,6 @@
 \name{VonBort}
 \alias{VonBort}
-\non_function{}
+\docType{data}
 \title{Von Bortkiewicz Horse Kicks Data}
 \description{
 Data from von Bortkiewicz (1898), given by

@@ -1,6 +1,6 @@
 \name{SpaceShuttle}
 \alias{SpaceShuttle}
-\non_function{}
+\docType{data}
 \title{Space Shuttle O-ring failures}
 \description{
 Data from Dalal et al. (1989) about O-ring failures in the

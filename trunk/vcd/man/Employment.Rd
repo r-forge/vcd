@@ -1,6 +1,6 @@
 \name{Employment}
 \alias{Employment}
-\non_function{}
+\docType{data}
 \title{Employment Status}
 \description{
 Data from a 1974 Danish study given by Anderson (1991) on the
@@ -43,7 +43,7 @@ mosaicplot(Employment, shade = TRUE,
 
 
 mosaicplot(Employment, shade = TRUE,
-           margin = ~LayoffCause*EmploymentLength + LayoffCause*EmploymentStatus,
+           margin = ~ LayoffCause*EmploymentLength + LayoffCause*EmploymentStatus,
 	   main = "Layoff*EmployLength + Layoff*EmployStatus")
 
 par(mfrow=c(1,2))

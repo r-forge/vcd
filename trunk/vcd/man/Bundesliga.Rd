@@ -1,6 +1,6 @@
 \name{Bundesliga}
 \alias{Bundesliga}
-\non_function{}
+\docType{data}
 \title{Ergebnisse der Fussball-Bundesliga}
 \description{
 Results from the first German soccer league in the years
@@ -10,12 +10,12 @@ Results from the first German soccer league in the years
 \usage{data(Bundesliga)}
 \format{A data frame with 612 observations and 6 variables.
   \describe{
-    \item{Heimteam}{character. Name of the home team,}
-    \item{Gastteam}{character. Name of the away team,}
-    \item{Heimtore}{number of goals scored by the home team,}
-    \item{Gasttore}{number of goals scored by the away team,}
-    \item{Spieltag}{day of the game,}
-    \item{Jahr}{year in which the season started.}
+    \item{HomeTeam}{character. Name of the home team,}
+    \item{AwayTeam}{character. Name of the away team,}
+    \item{HomeGoals}{number of goals scored by the home team,}
+    \item{AwayGoals}{number of goals scored by the away team,}
+    \item{Round}{day of the game,}
+    \item{Year}{year in which the season started.}
   }
 }
 
@@ -38,14 +38,14 @@ Discussion paper \bold{98}.
 data(Bundesliga)
 
 ## independence of home and away goals
-tore95 <- xtabs(~ Heimtore + Gasttore, data = Bundesliga, subset = Jahr == 1995)
+tore95 <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
 tore95
 mosaicplot(tore95, shade = TRUE)
 
 ## number of goals per game poisson distributed?
-ntore1 <- xtabs(~ Heimtore, data = Bundesliga, subset = Jahr == 1995)
-ntore2 <- xtabs(~ Gasttore, data = Bundesliga, subset = Jahr == 1995)
-ntore3 <- table(apply(subset(Bundesliga, Jahr == 1995)[,3:4], 1, sum))
+ntore1 <- xtabs(~ HomeGoals, data = Bundesliga, subset = Year == 1995)
+ntore2 <- xtabs(~ AwayGoals, data = Bundesliga, subset = Year == 1995)
+ntore3 <- table(apply(subset(Bundesliga, Year == 1995)[,3:4], 1, sum))
 
 gf1 <- goodfit(ntore1)
 gf2 <- goodfit(ntore2)

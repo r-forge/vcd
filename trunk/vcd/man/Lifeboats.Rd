@@ -1,6 +1,6 @@
 \name{Lifeboats}
 \alias{Lifeboats}
-\non_function{}
+\docType{data}
 \title{Lifeboats on the Titanic}
 \description{
 Data from Mersey (1912) about the 18 (out of 20) lifeboats launched
@@ -43,7 +43,7 @@ ternaryplot(
   id  = ifelse(men/total > 0.1, as.character(boat), NA),
   prop.size = 2,
   dimnames.position = "edge",
-  main = "Lifeboats on Titanic"
+  main = "Lifeboats on the Titanic"
 )
 legend(
   0.7, 0.8,

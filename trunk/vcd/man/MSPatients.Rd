@@ -1,6 +1,6 @@
 \name{MSPatients}
 \alias{MSPatients}
-\non_function{}
+\docType{data}
 \title{Diagnosis of Multiple Sclerosis}
 \description{
 Data from Westlund & Kurland (1953) on the diagnosis of multiple sclerosis (MS):

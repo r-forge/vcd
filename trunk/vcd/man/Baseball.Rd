@@ -1,6 +1,6 @@
 \name{Baseball}
 \alias{Baseball}
-\non_function{}
+\docType{data}
 \title{Baseball}
 \description{
 Baseball data.

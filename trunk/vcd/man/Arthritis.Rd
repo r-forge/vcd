@@ -1,6 +1,6 @@
 \name{Arthritis}
 \alias{Arthritis}
-\non_function{}
+\docType{data}
 \title{Arthritis Treatment Data}
 \description{
 Data from Koch & Edwards (1988) from a double-blind clinical trial

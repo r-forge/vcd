@@ -20,7 +20,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
    }
    obs <- x
    fit <- fitted
-   if(is.null(xlab)) {xlab <-  "Number of Occurences"}
+   if(is.null(xlab)) {xlab <-  "Number of Occurrences"}
 
    if(match.arg(scale) == "sqrt") {
      obs <- sqrt(obs)
