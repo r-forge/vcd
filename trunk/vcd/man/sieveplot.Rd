@@ -36,7 +36,6 @@ sieveplot(x, reverse.y = TRUE, type = c("sieve", "expected"), title = NULL, valu
 \seealso{\code{\link{mosaicplot}}}
 
 \examples{
-library(CatDat)
 data(HairEyeColor)
 (tab <- apply(HairEyeColor, 1:2, sum))
 sieveplot(t(tab))
