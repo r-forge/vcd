@@ -4,7 +4,7 @@ Bundesliga              Ergebnisse der Fussball-Bundesliga
 Butterfly               Butterfly Species in Malaya
 CoalMiners              Breathlessness and Wheeze in Coal Miners
 Employment              Employment Status
-Federalist              `May' in Federalist Papers
+Federalist              'May' in Federalist Papers
 Hitters                 Hitters
 HorseKicks              Death by Horse Kicks
 Kappa                   Cohen's Kappa and weighted Kappa
@@ -24,18 +24,21 @@ WeldonDice              Weldon's Dice Data
 WomenQueue              Women in Queues
 agreementplot.default   Bangdiwala's Observer Agreement Chart
 assoc.stats             Association Statistics
+assocplot               Extended Association Plots
 barplot                 Bar Plots
+confint                 Confidence Intervals
 distplot                Diagnostic distribution plots
-expected                Expected Frequencies Table
 fourfoldplot            Fourfold Plots
 goodfit                 Goodness-of-fit tests for discrete data
+independence.table      Indifference Table
 mar.table               Table with marginal sums.
 mosaicpairs             Mosaic Matrices
 mosaicplot              Mosaic Plots
 oddsratio               Odds Ratios
+pearson.test            Conditional independence test
 plot.oddsratio          (Log) Odds Ratios Plots
 rootogram               Rootograms
 sieveplot               Sieve Plots
-summary.table           Summary of a m x n-table
+table2d.summary         Summary of a 2-d - table
 ternaryplot             Ternary diagram
 woolf.test              Woolf test
