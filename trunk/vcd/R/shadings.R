@@ -126,8 +126,9 @@ gp.Friendly <- function(observed, residuals,
                         hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), fuzz = 0.05)
 {
   rval <- gp.HSVshading(observed, residuals, hue = hue, value = 1, lty = lty, interpolate = interpolate, test = NULL)
-  rval$col <- ifelse(rval$lty > 1, hsv(hue[2], 1, 1), hsv(hue[1], 1, 1)) ## as in VCD book
-  rval$col <- ifelse(abs(residuals) > fuzz, rval$col, hsv(0, 1, 0))      ## with FUZZ
+  #Z# rval$col <- ifelse(rval$lty > 1, hsv(hue[2], 1, 1), hsv(hue[1], 1, 1)) ## as in VCD book
+  #Z# rval$col <- ifelse(abs(residuals) > fuzz, rval$col, hsv(0, 1, 0))      ## with FUZZ
+  #Z# rval$lty <- ifelse(abs(residuals) > fuzz, rval$lty, 1)                 ## with FUZZ
   return(rval)
 }
 
