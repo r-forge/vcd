@@ -87,11 +87,14 @@ function (formula, data = NULL, ..., subset)
   ## signs of deviations
   sgn <- ex - x < 0
 
-  # margins (hard-coded, argh!)
+  # margins, limits (hard-coded, argh!)
   bm <- 0.1
   lm <- 0.1
   tm <- 0.15
   rm <- 0.1
+
+  xlim <- c(0, 1 + (nc - 1) * margin + lm + rm)
+  ylim <- c(0, 1 + (nr - 1) * margin + tm + bm)
 
   ## box coordinates for expected areas
   x1 <- lm + c(0, cumsum(colFreqs + margin)[-nc])
@@ -105,8 +108,6 @@ function (formula, data = NULL, ..., subset)
   ## setup device
   par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
   plot.new()
-  xlim <- c(0, 1 + (nc - 1) * margin + lm + rm)
-  ylim <- c(0, 1 + (nr - 1) * margin + tm + bm)
   par(usr = c(xlim, ylim))
   plot.window(xlim = xlim, ylim = ylim, asp = 1)
   
