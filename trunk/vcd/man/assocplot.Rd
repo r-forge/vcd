@@ -62,6 +62,7 @@ assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
   variables, colors are only used if the hypothesis of independence is
   rejected, and gray scales are used otherwise.
 }
+\note{The code for extended shading is taken from \code{mosaicplot}.}
 \seealso{
   \code{\link{mosaicplot}};
   \code{\link[ctest]{chisq.test}}.
