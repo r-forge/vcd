@@ -1,6 +1,20 @@
-goodfit <- function(freq, count, type = c("poisson", "binomial", "nbinomial"),
+goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
                     par = NULL, size = NULL)
 {
+    if(is.vector(obj)) {
+      obj <- table(obj)
+    }
+    if(is.table(obj)) {
+      if(length(dim(obj)) > 1) stop ("obj must be a 1-way table")
+      freq <- as.vector(obj)
+      count <- as.numeric(names(obj))
+    } else {
+      if(!(!is.null(ncol(obj)) && ncol(obj) == 2))
+        stop("obj must be a 2-column matrix or data.frame")
+      freq <- as.vector(obj[,1])
+      count <- as.vector(obj[,2])
+    }
+
     df <- length(count) - 1
 
     type <- match.arg(type)
