@@ -50,14 +50,17 @@ function (x,
   
   ## prepare plot
   top <- sqrt(3) / 2
-  par(plt = c(0.06, 0.94, 0.15, 0.87))
-  plot.new()
+#  par(plt = c(0.06, 0.94, 0.15, 0.87))
+#  plot.new()
   xlim <- c(-0.03, 1.03)
   ylim <- c(0, top)
   par(usr = c(xlim, ylim),
-      oma = c(0, 0, 1, 0)
+#      oma = c(0, 0, 1, 0),
+      plt = c(0.06, 0.94, 0.15, 0.87)
       )
-  plot.window(xlim = xlim, ylim = ylim, asp = 1)
+  plot(c(0,1), c(0,1), type = "n", ann = FALSE, axes = FALSE,
+       xlim = xlim, ylim = ylim, asp = 1)
+#  plot.window(xlim = xlim, ylim = ylim, asp = 1)
   eps <- 0.01
 
   ## coordinates of point P(a,b,c): xp = b + c/2, yp = c * sqrt(3)/2
@@ -66,7 +69,8 @@ function (x,
   polygon(c(0, 0.5, 1), c(0, top, 0), col = bg, xpd = NA, border = border, ...)
 
   ## title, labeling
-  title(main, outer = TRUE, line = -1)
+  if (!is.null(main))
+    title(main, outer = TRUE, line = -1)
   if (dimnames.position == "corner") {
     axis(1, at = c(-0.03, 1.03), labels = dimnames[1:2], tick = FALSE, font = 2)
     axis(3, at = 0.5, labels = dimnames[3], tick = FALSE, font = 2)
