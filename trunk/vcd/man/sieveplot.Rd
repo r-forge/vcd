@@ -39,7 +39,7 @@ the deviations of the observed from the expected values.
   \item{cex.main}{font size of title.}
   \item{cex.lab}{font size of labels.}
   \item{xlab, ylab}{labels of x- and y-axis.}
-  \item{formula}{a formula, such as \code{y ~ x}.}
+  \item{formula}{a formula, such as \code{y ~ x}. For details, see \code{xtabs}.}
   \item{data}{a data.frame (or list), or a contingency table from which the
           variables in `formula' should be taken.}
   \item{subset}{an optional vector specifying a subset of observations to be
