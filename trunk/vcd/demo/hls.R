@@ -13,7 +13,7 @@ if(require(tcltk))
     replot <- function(...) {
         hue.sav <- my.h <- as.numeric(tclvalue(hue))
         saturation.sav <- my.s <- as.numeric(tclvalue(saturation))
-        luminance.sav <- my.l <- as.numeric(tclvalue(value))
+        luminance.sav <- my.l <- as.numeric(tclvalue(luminance))
 	barplot(1, col = hls(my.h, my.s, my.l), axes = FALSE)
     }
 
@@ -26,7 +26,7 @@ if(require(tcltk))
 
 
     base <- tktoplevel()
-    tkwm.title(base, "HSV Colors")
+    tkwm.title(base, "HLS Colors")
 
     spec.frm <- tkframe(base, borderwidth = 2)
     hue.frm <- tkframe(spec.frm, relief = "groove", borderwidth = 2)
@@ -38,7 +38,7 @@ if(require(tcltk))
                    showvalue = TRUE, variable = hue,
                    resolution = 0.01, orient = "horiz"))
 
-    tkpack(tklabel(luminance.frm, text = "Value"))
+    tkpack(tklabel(luminance.frm, text = "Luminance"))
     tkpack(tkscale(luminance.frm, command = replot.maybe, from = 0, to = 1,
                    showvalue = TRUE, variable = luminance,
                    resolution = 0.01, orient = "horiz"))
