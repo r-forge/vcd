@@ -262,7 +262,7 @@ grid.mosaicplot.default <-
                             ifelse(x > E, tmp, -tmp)
                           },
                           FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
-      if(freq.type == "expected") x <- E #Z# caution: this is not not very clever
+      if(match.arg(freq.type) == "expected") x <- E #Z# caution: this is not not very clever
     }
 
     ## colors and legend
