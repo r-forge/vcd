@@ -10,6 +10,11 @@
 \begin{document}
 
 \SweaveOpts{engine=R,eps=FALSE}
+%\VignetteIndexEntry{Visualizing Independence Using Extended Association and Mosaic Plots}
+%\VignetteDepends{vcd,MASS,grid}
+%\VignetteKeywords{mosaic plot, association plot, independence, HCL colors}
+%\VignettePackage{vcd}
+
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
