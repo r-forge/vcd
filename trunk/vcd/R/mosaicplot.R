@@ -12,7 +12,7 @@ mosaicplot <- function(x, ...) UseMethod("mosaicplot")
 
 mosaicplot.default <-
 function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
-         NULL, dir = NULL, color = FALSE, shade = FALSE, margin = NULL,
+         NULL, dir = NULL, color = FALSE, cex = .66, shade = FALSE, clegend=TRUE, margin = NULL,
          type = c("pearson", "deviance", "FT"), residuals = NULL, ...)
 {
     mosaic.cell <- function(X, x1, y1, x2, y2,
@@ -48,7 +48,7 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                     } else label[[1]]
                 text(x= x.l + (x.r - x.l) / 2,
                      y= 965 + 22 * (lablevx - 1),
-                     srt=0, adj=.5, cex=.66, this.lab)
+                     srt=0, adj=.5, cex=cex, this.lab)
             }
             if (p > 2) {          # recursive call.
                 for (i in 1:xdim) {
@@ -112,7 +112,7 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                     } else label[[1]]
                 text(x= 35 - 20 * (lablevy - 1),
                      y= y.b + (y.t - y.b) / 2,
-                     srt=90, adj=.5, cex=.66, this.lab)
+                     srt=90, adj=.5, cex=cex, this.lab)
             }
             if (p > 2) {          # recursive call.
                 for (j in 1:ydim) {
@@ -155,6 +155,8 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
     }
 
     ##-- Begin main function
+	if(!is.logical(clegend)) 
+	stop("clegend must be logical")
     if(is.null(dim(x)))
         x <- as.array(x)
     else if(is.data.frame(x))
@@ -260,11 +262,11 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
 
     ##-- Plotting
     plot.new()
-    if(!shade) {
+    if(!shade || !clegend) {
         opar <- par(usr = c(1, 1000, 1, 1000), mgp = c(1, 1, 0))
         on.exit(par(opar))
     }
-    else {
+    else { 
         ## This code is extremely ugly, and certainly can be improved.
         ## In the case of extended displays, we also need to provide a
         ## legend for the shading and outline patterns.  The code works
