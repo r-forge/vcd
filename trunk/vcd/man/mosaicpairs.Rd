@@ -1,12 +1,16 @@
 \name{mosaicpairs}
 \alias{mosaicpairs}
+\alias{mosaicpairs.default}
+\alias{mosaicpairs.formula}
 \title{Mosaic Matrices}
 \description{Plots matrices of mosaics.}
 \usage{
-mosaicpairs(x, main = NULL, xlab = NULL, ylab = NULL, labels, \dots,
-            type = c("simple", "independent", "conditional", "joint"),
+\method{mosaicpairs}{default}(x, main = deparse(substitute(x)),
+            xlab = NULL, ylab = NULL, labels, \dots,
+            type = c("pairwise", "total", "conditional", "joint"),
             shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	    font.labels = 1, gap = 1)
+\method{mosaicpairs}{formula}(formula, data = NULL, \dots, main, subset)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -31,16 +35,22 @@ mosaicpairs(x, main = NULL, xlab = NULL, ylab = NULL, labels, \dots,
   \item{cex.labels, font.labels}{graphics parameters for the text panel.}
   \item{label.pos}{y position of labels in the text panel.}
   \item{gap}{distance between subplots, in margin lines.}
+  \item{formula}{a formula, such as \code{y ~ x}.}
+  \item{data}{a data.frame (or list), or a contingency table from which
+    the variables in \code{formula} should be taken.}
+  \item{subset}{an optional vector specifying a subset of observations
+    to be used for plotting.}
 }
 \details{
-  \code{mosaicpairs()} plots a matrix of pairwise mosaic plots, three
-  types are distinguished: \code{"simple"}, \code{"independent"}, \code{"conditional"}.
-  The simple mosaic shows bivariate marginal relations, collapsed over
-  all other variables. The independent mosaic matrix shows mosaic plots
+  \code{mosaicpairs()} plots a matrix of pairwise mosaic plots, four
+  independence types are distinguished:
+  \code{"pairwise"}, \code{"total"}, \code{"conditional"} and \code{"joint"}.
+  The pairwise mosaic matrix shows bivariate marginal relations, collapsed over
+  all other variables. The total independence mosaic matrix shows mosaic plots
   for mutual independence, i.e. for marginal and conditional independence
-  among all pairs of variables. The conditional mosaic matrix shows
+  among all pairs of variables. The conditional independence mosaic matrix shows
   mosaic plots for marginal independence given all other variables. The
-  joint option shows mosaic plots for joint independence of all pairs of
+  joint independence mosaic matrix shows mosaic plots for joint independence of all pairs of
   variables from the others.
 }
 

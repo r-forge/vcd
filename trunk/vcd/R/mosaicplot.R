@@ -1,28 +1,32 @@
-## Copyright (C) 1998 John W. Emerson
+## Original code copyright (C) 1998 John W. Emerson
 
 mosaicplot <- function(x, ...) UseMethod("mosaicplot")
 
 ### Changes by MM:
 ## - NULL instead of NA for default arguments, etc  [R / S convention]
-## - plotting at end; cosmetic
-## - mosaic.cell():
+## - plotting at end; cosmetic; warn about unused ... since we really don't..
+## - mosaic.cell():  ...(?)
 ### Changes by KH:
 ##   Shading of boxes to visualize deviations from independence by
 ##   displaying sign and magnitude of the standardized residuals.
-
+### Changes by W. Fischer and U. Ligges:
+## - Deparsing x in for main title. New arguments: sub, las, cex.axis
+## - made to work by BDR
 
 mosaicplot.default <-
-function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
-         NULL, dir = NULL, color = FALSE, cex = .66, shade = FALSE, clegend=TRUE, margin = NULL,
+function(x, main = deparse(substitute(x)), sub = NULL, xlab = NULL,
+         ylab = NULL, sort = NULL, off = NULL, dir = NULL,
+         color = FALSE, shade = FALSE, margin = NULL,
+         cex.axis = 0.66, las = par("las"), clegend = TRUE, 
          type = c("pearson", "deviance", "FT"), residuals = NULL, ...)
 {
-    mosaic.cell <- function(X, x1, y1, x2, y2,
-                            off, dir, color, lablevx, lablevy,
-                            maxdim, currlev, label)
+    mosaic.cell <- function(X, x1, y1, x2, y2, srt.x, srt.y,
+            adj.x, adj.y, off, dir, color, lablevx, lablevy,
+            maxdim, currlev, label)
     {
-        ## Recursive function doing he job'
+        ## Recursive function doing `the job'
         ##
-        ## explicitely relying on (1,1000)^2 user coordinates.
+        ## explicitly relying on (1,1000)^2 user coordinates.
         p <- ncol(X) - 2
         if (dir[1] == "v") {            # split here on the X-axis.
             xdim <- maxdim[1]
@@ -49,18 +53,17 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                     } else label[[1]]
                 text(x= x.l + (x.r - x.l) / 2,
                      y= 965 + 22 * (lablevx - 1),
-                     srt=0, adj=.5, cex=cex, this.lab)
+                     srt=srt.x, adj=adj.x, cex=cex.axis, this.lab)
             }
-            if (p > 2) {          # recursive call.
+            if (p > 2) {                # recursive call.
                 for (i in 1:xdim) {
                     if (XP[i] > 0) {
-                        Recall(as.matrix(X[X[,1]==i, 2:(p+2)]),
+                        Recall(X[X[,1]==i, 2:(p+2) , drop=FALSE],
                                x.l[i], y1, x.r[i], y2,
-                               off[2:length(off)],
-                               dir[2:length(dir)],
-                               color, lablevx-1, (i==1)*lablevy,
-                               maxdim[2:length(maxdim)],
-                               currlev+1, label[2:p])
+                               srt.x, srt.y, adj.x, adj.y,
+                               off[-1], dir[-1], color,
+                               lablevx-1, (i==1)*lablevy,
+                               maxdim[-1], currlev+1, label[2:p])
                     } else {
                         segments(rep(x.l[i],3), y1+(y2-y1)*c(0,2,4)/5,
                                  rep(x.l[i],3), y1+(y2-y1)*c(1,3,5)/5)
@@ -72,9 +75,7 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                         polygon(c(x.l[i], x.r[i], x.r[i], x.l[i]),
                                 c(y1, y1, y2, y2),
                                 lty = if(shade) X[i, p+1] else 1,
-                                col = if(shade) {
-                                    color[X[i, p+2]]
-                                } else color[i])
+                                col = color[if(shade) X[i, p+2] else i])
                         ## <KH 2000-08-29>
                         ## Is this really needed?
                         ## segments(c(rep(x.l[i],3),x.r[i]),
@@ -113,32 +114,29 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                     } else label[[1]]
                 text(x= 35 - 20 * (lablevy - 1),
                      y= y.b + (y.t - y.b) / 2,
-                     srt=90, adj=.5, cex=cex, this.lab)
+                     srt=srt.y, adj=adj.y, cex=cex.axis, this.lab)
             }
-            if (p > 2) {          # recursive call.
+            if (p > 2) {                # recursive call.
                 for (j in 1:ydim) {
                     if (YP[j] > 0) {
-                        Recall(as.matrix(X[X[,1]==j,2:(p+2)]),
+                        Recall(X[X[,1]==j, 2:(p+2) , drop=FALSE],
                                x1, y.b[j], x2, y.t[j],
-                               off[2:length(off)],
-                               dir[2:length(dir)], color,
+                               srt.x, srt.y, adj.x, adj.y,
+                               off[-1], dir[-1], color,
                                (j==1)*lablevx, lablevy-1,
-                               maxdim[2:length(maxdim)],
-                               currlev+1, label[2:p])
+                               maxdim[-1], currlev+1, label[2:p])
                     } else {
                         segments(x1+(x2-x1)*c(0,2,4)/5, rep(y.b[j],3),
                                  x1+(x2-x1)*c(1,3,5)/5, rep(y.b[j],3))
                     }
                 }
-            } else {  # ncol(X) <= 1: final split polygon and segments.
+            } else { # ncol(X) <= 1: final split polygon and segments.
                 for (j in 1:ydim) {
                     if (YP[j] > 0) {
                         polygon(c(x1,x2,x2,x1),
                                 c(y.b[j],y.b[j],y.t[j],y.t[j]),
                                 lty = if(shade) X[j, p+1] else 1,
-                                col = if(shade) {
-                                    color[X[j, p+2]]
-                                } else color[j])
+                                col = color[if(shade) X[j, p+2] else j])
                         ## <KH 2000-08-29>
                         ## Is this really needed?
                         ## segments(c(x1,x1,x1,x2),
@@ -156,16 +154,21 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
     }
 
     ##-- Begin main function
-	if(!is.logical(clegend)) 
-	stop("clegend must be logical")
+
+    ## Calculate string rotation for different settings of las:
+    srt.x <- if(las > 1) 90 else 0
+    srt.y <- if(las == 0 || las == 3) 90 else 0
+
     if(is.null(dim(x)))
         x <- as.array(x)
     else if(is.data.frame(x))
         x <- data.matrix(x)
     dimd <- length(dx <- dim(x))
     if(dimd == 0 || any(dx == 0))
-        stop(" must not have 0 dimensionality")
-    ##-- Set up 	nd' matrix : to contain indices and data
+        stop("`x' must not have 0 dimensionality")
+    if(length(list(...)))
+        warning("extra argument(s) `", names(list(...)), "'  disregarded..")
+    ##-- Set up `Ind' matrix : to contain indices and data
     Ind <- 1:dx[1]
     if(dimd > 1) {
         Ind <- rep(Ind, prod(dx[2:dimd]))
@@ -177,15 +180,15 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
         }
     }
     Ind <- cbind(Ind, c(x))
-    ## Ok, now the columns of 	nd' are the cell indices (which could
-    ## also have been created by xpand.grid()' and the corresponding
+    ## Ok, now the columns of `Ind' are the cell indices (which could
+    ## also have been created by `expand.grid()' and the corresponding
     ## cell counts.  We add two more columns for dealing with *EXTENDED*
-    ## mosaic plots which are produced unless hade' is FALSE, which
+    ## mosaic plots which are produced unless `shade' is FALSE, which
     ## currently is the default.  These columns have NAs for the simple
     ## case.  Otherwise, they specify the line type (1 for positive and
     ## 2 for negative residuals) and color (by giving the index in the
-    ## color vector which ranges from the `most negative'' to the
-    ## `most positive'' residuals.
+    ## color vector which ranges from the ``most negative'' to the
+    ## ``most positive'' residuals.
     if(is.logical(shade) && !shade) {
         Ind <- cbind(Ind, NA, NA)
     }
@@ -200,6 +203,7 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                        s = seq(1, to = 0, length = length(shade) + 1)),
                    hsv(4/6,             # blue
                        s = seq(0, to = 1, length = length(shade) + 1)))
+
         ## <EXPERIMENTAL>
         ## Fit the loglinear model.        
         if(inherits(margin, "formula")) {
@@ -225,6 +229,7 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                        },
                        FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
         ## </EXPERIMENTAL>        
+        
         ## And add the information to the data matrix.
         Ind <- cbind(Ind,
                      c(1 + (residuals < 0)),
@@ -255,33 +260,38 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
 
     ncolors <- length(tabulate(Ind[,dimd]))
     if(!shade && ((is.null(color) || length(color) != ncolors))) {
-        color <- if (is.null(color) || !color[1])
-            rep(0, ncolors)
-        else
-            heat.colors(ncolors)
+        color <-
+            if (is.logical(color) && color[1])
+                heat.colors(ncolors)
+            else if (is.null(color) || (is.logical(color) && !color[1]))
+                rep(0, ncolors)
+            else ## recycle
+                rep(color, length = ncolors)
     }
 
     ##-- Plotting
     plot.new()
+    if(!is.logical(clegend))
+      stop("clegend must be logical")
     if(!shade || !clegend) {
         opar <- par(usr = c(1, 1000, 1, 1000), mgp = c(1, 1, 0))
         on.exit(par(opar))
     }
-    else { 
+    else {
         ## This code is extremely ugly, and certainly can be improved.
         ## In the case of extended displays, we also need to provide a
         ## legend for the shading and outline patterns.  The code works
-        ## o.k. with integer breaks in hade'; rounding to two 2 digits
-        ## will not be good enough if hade' has length 5.
+        ## o.k. with integer breaks in `shade'; rounding to two 2 digits
+        ## will not be good enough if `shade' has length 5.
         pin <- par("pin")
         rtxt <- "Standardized\nResiduals:"
         ## Compute cex so that the rotated legend text does not take up
         ## more than 1/12 of the of the plot region horizontally and not
         ## more than 1/4 vertically.
         rtxtCex <- min(1,
-                       pin[1] / (strheight(rtxt, units = "i") * 12),
-                       pin[2] / (strwidth (rtxt, units = "i") / 4))
-        rtxtWidth <- 0.1                # unconditionally ...
+                       pin[1] / (strheight(rtxt, units = "inches") * 12),
+                       pin[2] / (strwidth (rtxt, units = "inches") / 4))
+        rtxtWidth <- 0.1                # unconditionally ..
         ## We put the legend to the right of the third axis.
         opar <- par(usr = c(1, 1000 * (1.1 + rtxtWidth), 1, 1000),
                     mgp = c(1, 1, 0))
@@ -290,10 +300,10 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
             strwidth(rtxt, units = "i", cex = rtxtCex) / pin[2]
         text(1000 * (1.05 + 0.5 * rtxtWidth), 0, labels = rtxt,
              adj = c(0, 0.25), srt = 90, cex = rtxtCex)
-        ## en' is the number of positive or negative intervals of
-        ## residuals (so overall, there are * len')
+        ## `len' is the number of positive or negative intervals of
+        ## residuals (so overall, there are `2 * len')
         len <- length(shade) + 1
-        ## h' is the height of each box in the legend (including the
+        ## `bh' is the height of each box in the legend (including the
         ## separating whitespace
         bh <- 0.95 * (0.95 - rtxtHeight) / (2 * len)
         x.l <- 1000 * 1.05
@@ -315,35 +325,54 @@ function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
                      brks[3 : (2 * len)],
                      sep = ":"),
                paste(">", brks[2 * len], sep = "")),
-             srt = 90, cex = 0.66)
+             srt = 90, cex = cex.axis)
     }
 
-    if (!is.null(main) || !is.null(xlab) || !is.null(ylab))
-        title(main, xlab=xlab, ylab=ylab)
+    if (!is.null(main) || !is.null(xlab) || !is.null(ylab) || !is.null(sub))
+        title(main, sub = sub, xlab = xlab, ylab = ylab)
+    adj.x <- adj.y <- 0.5
+    x1 <- 50; y1 <- 5; x2 <- 950; y2 <- 950
+    maxlen.xlabel <- maxlen.ylabel <- 35
+    ## Calculations required for 'las' related string rotation
+    ## and adjustment
+    if(srt.x == 90){
+        maxlen.xlabel <-
+            max(strwidth(label[[dimd + 1 - match('v', rev(dir))]],
+                cex = cex.axis))
+        adj.x <- 1
+        y2 <- y2 - maxlen.xlabel
+    }
+    if(srt.y == 0){
+        maxlen.ylabel <-
+            max(strwidth(label[[match('h', dir)]],
+                cex = cex.axis))
+        adj.y <- 0
+        x1 <- x1 + maxlen.ylabel
+    }
 
-    mosaic.cell(Ind,
-                x1=50, y1=5, x2=950, y2=950,
-                off/100, dir,
-                color, 2, 2,
-                maxdim= apply(as.matrix(Ind[,1:dimd]), 2, max),
-                currlev= 1, label)
-
+    mosaic.cell(Ind, x1 = x1, y1 = y1, x2 = x2, y2 = y2,
+                srt.x = srt.x, srt.y = srt.y, adj.x = adj.x,
+                adj.y = adj.y, off = off / 100, dir = dir,
+                color = color, lablevx = 2, lablevy = 2,
+                maxdim = apply(as.matrix(Ind[,1:dimd]), 2, max),
+                currlev = 1, label = label)
 }
 
 mosaicplot.formula <-
-function(formula, data = NULL, ..., subset)
+function(formula, data = NULL, ...,
+         main = deparse(substitute(data)), subset)
 {
     m <- match.call(expand.dots = FALSE)
     edata <- eval(m$data, parent.frame())
     if(inherits(edata, "ftable")
        || inherits(edata, "table")
        || length(dim(edata)) > 2) {
-        data <- as.table(data)
+        dat <- as.table(data)
         varnames <- attr(terms(formula), "term.labels")
         if(all(varnames != "."))
-            data <- margin.table(data,
-                                 match(varnames, names(dimnames(data))))
-        mosaicplot(data, ...)
+            dat <- margin.table(dat,
+                                 match(varnames, names(dimnames(dat))))
+        mosaicplot(dat, main = main, ...)
     }
     else {
         if(is.matrix(edata))
@@ -351,6 +380,6 @@ function(formula, data = NULL, ..., subset)
         m$... <- NULL
         m[[1]] <- as.name("model.frame")
         mf <- eval(m, parent.frame())
-        mosaicplot(table(mf), ...)
+        mosaicplot(table(mf), main = main, ...)
     }
 }
