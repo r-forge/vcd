@@ -37,8 +37,8 @@
   \item{formula}{a formula, such as \code{y ~ x}.}
   \item{data}{a data.frame (or list), or a contingency table from which
     the variables in \code{formula} should be taken.}
-  \item{subset}{an optional vector specifying a subset of observations
-    to be used for plotting.}
+  \item{subset}{an optional vector specifying a subset of the rows in
+    the dataframe to be used for plotting.}
 }
 \details{
   \code{mosaicpairs()} plots a matrix of pairwise mosaic plots, four
