@@ -1,3 +1,7 @@
+  #################################################
+  ## Fitting and Graphing Discrete Distributions ##
+  #################################################
+
   data(HorseKicks)
   barplot(HorseKicks, col = 2,
           xlab = "Number of Deaths", ylab = "Number of Corps-Years",
