@@ -228,6 +228,8 @@ grid.mosaicplot.default <-
     if (abbreviate[i])
       dimnames(x)[[i]] <- substr(dimnames(x)[[i]], 1, abbreviate[i])
 
+  #Z# expand space
+  space <- rep(space, length.out = maxdim)
 
   ## title
   if (!panel) grid.newpage()
@@ -340,9 +342,11 @@ grid.mosaicplot.default <-
     ## compute relative tile sizes and positions
     m <- apply(table, 1, sum)
     m[m == 0] <- 0.000001
-    m <- (1 - space) * m / sum(m)
+    dim <- length(index) + 1 #Z# already needed here for space[dim]
+
+    m <- (1 - space[dim]) * m / sum(m)
     l <- length(m)
-    sp <- space / (l - 1)
+    sp <- space[dim] / (l - 1)
     pos <- c(0, cumsum(m + sp)[-l])
 
     ## compute absolute sizes / coordinates
