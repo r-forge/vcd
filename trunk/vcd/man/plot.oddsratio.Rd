@@ -6,7 +6,7 @@ Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
 k-tables, along with confidence intervals.
 }
 \usage{
-plot.oddsratio(x, conf.level = 0.95,
+\method{plot}{oddsratio}(x, conf.level = 0.95,
                   type ="o", ylab = "Log Odds Ratio", xlab = "Strata",
                   whiskers = 0.1, ...)
 }
