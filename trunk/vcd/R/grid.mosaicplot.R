@@ -17,7 +17,8 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, ...) {
 }
 
 panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
-                             margins = c(0, 0, 0, 0), test = TRUE, level = 0.95, ...) {
+                             margins = c(0, 0, 0, 0), test = TRUE, level = 0.95,
+                             abbreviate = FALSE, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
   grid.mosaicplot(x = switch(type,
@@ -34,12 +35,16 @@ panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                     ),
                   panel = TRUE, main = NULL, labels = FALSE,
                   legend = legend, axes = axes, margins = margins,
-                  test = test, level = level, ...)
+                  test = test, level = level, abbreviate = abbreviate, ...)
 }
 
-panel.text <- function(x, fontsize = 20, ...) {
+panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {
   grid.rect()
-  grid.text(names(dimnames(x)), gp = gpar(fontsize = fontsize), ...)
+  grid.text(names(dimnames(x)), gp = gpar(fontsize = fontsize),
+            y = 0.5 + dimnames * 0.05, ...)
+  if (dimnames)
+    grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
+              y = 0.4)
 }
 
 grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
@@ -54,10 +59,12 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
                              level = 0.95,
                              space = 0.1,
                              legend = FALSE,
-                             axes = TRUE,
+                             axes = FALSE,
+                             abbreviate = FALSE,
                              margins = c(2, 2, 1, 2),
                              panel.margins = c(0, 0, 0, 0),
-                             fontsize = 20,
+                             diag.fontsize = 20,
+                             diag.dimnames = TRUE,
                              ...)
 {
   grid.newpage()
@@ -76,8 +83,7 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
   push.viewport(viewport(layout = l,
                          height = if (is.null(main)) 1 else 0.9,
                          y = 0, just = "bottom"))
-  grid.text(main, y = unit(1.05, "npc"),
-            gp = gpar(fontsize = 20))
+  grid.text(main, y = unit(1.05, "npc"), gp = gpar(fontsize = 20))
 
   
   for (i in 1:d)
@@ -87,12 +93,15 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
 
       if (i > j)
         panel.upper(x, i, j, type.upper, legend = legend, axes = axes,
-                    margins = panel.margins, test = test, level = level, ...)
+                    margins = panel.margins, test = test, level = level,
+                    abbreviate = abbreviate, ...)
       else if (i < j)
         panel.lower(x, i, j, type.lower, legend = legend, axes = axes,
-                    margins = panel.margins, test = test, level = level, ...)
+                    margins = panel.margins, test = test, level = level,
+                    abbreviate = abbreviate, ...)
       else 
-        panel.diag(margin.table(x, i), fontsize = fontsize, ...)
+        panel.diag(margin.table(x, i), fontsize = diag.fontsize,
+                   dimnames = diag.dimnames, ...)
 
       pop.viewport(2)
     }
@@ -137,6 +146,7 @@ grid.mosaicplot.default <-
            main = deparse(substitute(x)),
            labels = TRUE,
            axes = TRUE,
+           abbreviate = FALSE,
            
            direction = c("horizontal", "vertical"),
            
@@ -176,8 +186,12 @@ grid.mosaicplot.default <-
     axes <- rep(axes, 4)
   if(length(labels) == 1)
     labels <- rep(labels, 4)
-
+  if(length(abbreviate) == 1)
+    abbreviate <- rep(abbreviate, 4)
   maxdim <- length(d <- dim(x))
+  for (i in 1:maxdim)
+    if (abbreviate[i])
+      dimnames(x)[[i]] <- substr(dimnames(x)[[i]], 1, abbreviate[i])
   
   ## title
   if (!panel) grid.newpage()
@@ -351,8 +365,10 @@ grid.mosaicplot.default <-
             )
 
   ## draw labels
-  lab = do.call("rbind", lab)
-  grid.text(lab[,1], x = lab[,2], y = lab[,3], rot = lab[,4], check.overlap = TRUE)
+  if (any(axes)) {
+    lab = do.call("rbind", lab)
+    grid.text(lab[,1], x = lab[,2], y = lab[,3], rot = lab[,4], check.overlap = TRUE)
+  }
   
   ## draw dim labels
   if (labels[1])
