@@ -114,11 +114,11 @@
   
   ### MS Diagnosis data ###
   #########################
-  data(MSpatients)
+  data(MSPatients)
   ## use e.g., X11(width = 12), or expand graphics device
   par(mfrow = c(1,2))
-  agreementplot(t(MSpatients[,,1]), main = "Winnipeg Patients")
-  agreementplot(t(MSpatients[,,2]), main = "New Orleans Patients")
+  agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
+  agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
   par(mfrow = c(1,1))
 
   ##################
