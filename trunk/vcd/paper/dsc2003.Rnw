@@ -144,9 +144,8 @@ We propose to use a color-shading similar to the
 enhancements of \cite{vcd:Friendly:1994} for the mosaic plot 
 \cite[a graphical tool for the 
 visualization of the observed frequencies in a contingency table; 
-see][]{vcd:Hartigan+Kleiner:1984}:
-this extension 
-uses a color coding of the mosaic tiles to visualize deviations
+see][]{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984}:
+this extension uses a color coding of the mosaic tiles to visualize deviations
 (residuals) from a given log-linear model fitted to the table.
 Positive and negative signs of the residuals are coded by rectangles with
 solid and dashed borders respectively. Furthermore, residuals can be
@@ -160,7 +159,13 @@ that the highlighted cells are those with
 residuals \emph{individually} significant at approximately the 5\% and 0.01\%
 level. But the main purpose of the shading is not to visualize
 significance but the \emph{pattern} of
-deviation from independence \citep[p.~109]{vcd:Friendly:2000}.
+deviation from independence \citep[p.~109]{vcd:Friendly:2000}. A different
+approach for visualizing the residuals of log-linear models is
+used by \cite{vcd:Theus+Laurer:1999} who propose to use relative
+residuals, i.e., to scale all residuals according to the absolute sum
+of residuals. This is necessary when shading
+cells in a mosaic plot for expected frequencies, but offers no
+advantages when the residuals themselves are visualized. 
 
 This color scheme similarly facilitates
 the detection of (in)dependence patterns in association plots. 
