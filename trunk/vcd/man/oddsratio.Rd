@@ -43,7 +43,7 @@ M. Friendly (2000),
   \email{david.meyer@ci.tuwien.ac.at}
 }
 
-\seealso{\code{\link{plot.oddsratio}}, \code{\link{confint.oddsratio}}}
+\seealso{\code{\link{plot.oddsratio}}, \code{\link{confint}}}
 
 \examples{
 data(CoalMiners)
