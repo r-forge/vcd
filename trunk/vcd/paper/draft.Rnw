@@ -145,8 +145,8 @@ But it is absolutely unclear whether this difference is significant or not.
 
 \begin{figure}[htbp]
 \begin{center}
-<<goals-assoc-classic,fig=TRUE,echo=FALSE,height=5,width=5>>=
-grid.assocplot(goals, rot = 0)
+<<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=6>>=
+grid.assocplot(goals, rot = 0, gp = gp.binary)
 @
 \caption{Association plot for the Bundesliga data.}
 \label{fig:goals-assoc-classic}
@@ -164,7 +164,7 @@ sizes are proportional to the observed cell frequencies
 
 \begin{figure}[htbp]
 \begin{center}
-<<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=5,width=5>>=
+<<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=6,width=6>>=
 mosaicplot(t(goals), shade = TRUE, main = "")
 @
 \caption{Friendly mosaic plot for the Bundesliga data.}
@@ -253,8 +253,8 @@ the home team nor for the away team.
 
 \begin{figure}[htbp]
 \begin{center}
-<<goals-assoc-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
-grid.assocplot(goals, color = "signif", rot = 0)
+<<goals-assoc-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
+grid.assocplot(goals, rot = 0)
 @
 \caption{Extended association plots for the Bundesliga data.}
 \label{fig:goals-assoc-signif}
@@ -271,8 +271,8 @@ blond/brown and black/blue than would be plausible under independence.
 
 \begin{figure}[htbp]
 \begin{center}
-<<haireye-assoc-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
-grid.assocplot(haireye, color = "signif")
+<<haireye-assoc-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
+grid.assocplot(haireye)
 @
 \caption{Extended association plots for the Hair-Eye-Color data.}
 \label{fig:haireye-assoc-signif}
@@ -298,10 +298,10 @@ null hypothesis has to be rejected for the Hair-Eye-Color data.
 
 \begin{figure}[htbp]
 \begin{center}
-<<goals-mosaic-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
+<<goals-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
 grid.mosaicplot(goals, main = NULL)
 @
-<<haireye-mosaic-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
+<<haireye-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
 grid.mosaicplot(haireye, main = NULL)
 @
 \caption{Extended mosaic plots for the Bundesliga and Hair-Eye-Color data.}
@@ -367,8 +367,8 @@ assocation plot in Figure \ref{fig:UCB-assoc-signif}.
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
-tabplot(UCBAdmissions, color = "signif")
+<<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=10,width=10>>=
+tabplot(UCBAdmissions)
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
 \label{fig:UCB-assoc-signif}
@@ -381,8 +381,8 @@ a conditional independence model is fitted in each plot (see Figure
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
-grid.mosaicpairs(UCBAdmissions, type = "conditional")
+<<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
+grid.mosaicpairs(UCBAdmissions, type = "conditional", main = NULL)
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
 \label{fig:UCB-mosaic-signif}
