@@ -138,7 +138,7 @@ grid.mosaicpairs(UCBAdmissions)
 
 grid.mosaicpairs(UCBAdmissions, type="conditional")
 
-grid.mosaicpairs(UCBAdmissions, type="pairwise", gp = gp.signif)
+grid.mosaicpairs(UCBAdmissions, type="pairwise", gp = gp.max)
 
 
 

@@ -35,6 +35,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     ##   in each step by shifting the origin so that we can always plot
     ##   as detailed above.
 
+    require(grid)
+
     if(!is.array(x))
         stop("x must be an array")
     if(length(dim(x)) == 2) {

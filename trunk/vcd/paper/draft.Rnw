@@ -1,5 +1,4 @@
 \documentclass[10pt]{article}
-\usepackage{Sweave, graphicx}
 \usepackage{Z}
 
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
@@ -329,10 +328,10 @@ null hypothesis has to be rejected for the Hair-Eye-Color data.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.mosaicplot(t(goals), main = NULL)
+grid.mosaicplot(goals, main = NULL, gp = gp.HCLshading)
 @
 <<haireye-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.mosaicplot(t(haireye), main = NULL)
+grid.mosaicplot(haireye, main = NULL, gp = gp.HCLshading)
 @
 \caption{Extended mosaic plots for the Bundesliga and Hair-Eye-Color data (female students).}
 \label{fig:both-mosaic-signif}
@@ -417,7 +416,7 @@ a conditional independence model is fitted in each plot (see Figure
 \begin{center}
 <<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
 ##grid.mosaicpairs(UCBAdmissions, type = "conditional", main = NULL)
-grid.mosaicpairs(UCBAdmissions, type = "conditional", permute = FALSE)
+grid.mosaicpairs(UCBAdmissions, type = "conditional", permute = FALSE, gp = gp.HCLshading)
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
 \label{fig:UCB-mosaic-signif}

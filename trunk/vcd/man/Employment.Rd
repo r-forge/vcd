@@ -50,7 +50,7 @@ grid.mosaicplot(Employment,
 grid.mosaicplot(Employment[,,1], main = "Layoff: Closure")
 
 ## Replaced ##
-grid.mosaicplot(Employment[,,2], main = "Layoff : Replaced")
+grid.mosaicplot(Employment[,,2], main = "Layoff: Replaced")
 
 }
 
