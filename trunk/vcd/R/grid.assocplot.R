@@ -116,8 +116,7 @@ grid.assocplot <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     grid.yaxis()
     grid.text("Pearson\nresiduals:", x = 0.1, y = unit(1, "npc") + unit(0.5, "lines"),
               gp = gpar(fontsize = 10), just = c("left", "bottom"))
-    pop.viewport()
-    pop.viewport()
+    pop.viewport(2)
   }
 
   invisible(x)
