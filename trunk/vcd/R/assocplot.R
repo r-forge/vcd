@@ -179,7 +179,7 @@ pearson.test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
   FUNPearson <- function(x) FUN(Pearson(x))
   dist <- sapply(r2dtable(n, rowTotals, colTotals), FUNPearson)
   STATISTIC <- FUNPearson(x)
-  pdist <- function(x) mean(dist <= x)
+  pdist <- function(x) sapply(x, function(y) mean(dist <= y))
   qdist <- function(p) quantile(dist, p)
   PVAL <- switch(alternative,
                  greater = mean(dist >= STATISTIC),
