@@ -1,5 +1,8 @@
 "mosaicpairs" <-
-  function(x, main = NULL, xlab = NULL, ylab = NULL, labels, ..., type = c("simple", "independend", "conditional"), shade=FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5, font.labels = 1, gap = 1)
+  function(x, main = NULL, xlab = NULL, ylab = NULL, labels, ...,
+           type = c("simple", "independend", "conditional"),
+           shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
+	   font.labels = 1, gap = 1)
   {
     
     

@@ -1,6 +1,6 @@
-Ord.plot <- function(obj, ylim = NULL, xlab = "Number of occurences",
-                     ylab = "Frequency ratio", legend = TRUE,
-		     estim = TRUE, tol = 0.1, ...)
+Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
+                     type = NULL, ylim = NULL, xlab = "Number of occurences",
+		     ylab = "Frequency ratio", ...)
 {
   if(is.vector(obj)) {
     obj <- table(obj)
@@ -31,8 +31,8 @@ Ord.plot <- function(obj, ylim = NULL, xlab = "Number of occurences",
   {
     legend.text <- c(paste("slope =", round(RVAL[2], digits = 3)),
                      paste("intercept =", round(RVAL[1], digits = 3)))
-    if(estim) {
-      ordfit <- Ord.estimate(RVAL, tol = tol)
+    if(estimate) {
+      ordfit <- Ord.estimate(RVAL, type = type, tol = tol)
       legend.text <- c(legend.text, "", paste("type:", ordfit$type),
         paste("estimate:", names(ordfit$estimate),"=", round(ordfit$estimate, digits = 3)))
     }
@@ -51,7 +51,8 @@ Ord.estimate <- function(x, type = NULL, tol = 0.1)
     if(abs(b) < tol) type <- "poisson"
     else if(b < (-1 * tol)) type <- "binomial"
     else if(a > (-1 * tol)) type <- "nbinomial"
-    else type <- "log-series"
+    else if(abs(a + b) < 4*tol) type <- "log-series"
+    else type <- "none"
   }
 
   switch(type,
@@ -76,6 +77,9 @@ Ord.estimate <- function(x, type = NULL, tol = 0.1)
     par <- b
     names(par) <- "theta"
     if(par < 0) warning("theta not > 0")
+  },
+  "none" = {
+    par <- NA
   })
   list(estimate = par, type = type)
 }

@@ -2,6 +2,7 @@
 \alias{mosaicplot}
 \alias{mosaicplot.default}
 \alias{mosaicplot.formula}
+\alias{mosaicpairs}
 \title{Mosaic Plots}
 \description{Plots a mosaic on the current graphics device.}
 \usage{
