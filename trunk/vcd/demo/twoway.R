@@ -9,15 +9,15 @@
   ## unstratified
   ### no margin is standardized
   x <- margin.table(UCBAdmissions, 2:1)
-  fourfoldplot(x, std = "i", extended = FALSE)
+  grid.fourfoldplot(x, std = "i", extended = FALSE)
   ### std. for gender
-  fourfoldplot(x, margin = 1, extended = FALSE)
+  grid.fourfoldplot(x, margin = 1, extended = FALSE)
   ### std. for both
-  fourfoldplot(x, extended = FALSE)
+  grid.fourfoldplot(x, extended = FALSE)
   
   ## stratified
-  fourfoldplot(UCBAdmissions, extended = FALSE)
-  fourfoldplot(UCBAdmissions) ## extended plots
+  grid.fourfoldplot(UCBAdmissions, extended = FALSE)
+  grid.fourfoldplot(UCBAdmissions) ## extended plots
 
   tabplot(UCBAdmissions,
           panel = function(x, ...) grid.fourfoldplot(x, panel = TRUE, ...)
@@ -28,7 +28,7 @@
   data(CoalMiners)
   
   ## Fourfold display, both margins equated
-  fourfoldplot(CoalMiners, mfcol = c(2,4))
+  grid.fourfoldplot(CoalMiners, mfcol = c(2,4))
 
   ## Log Odds Ratio Plot
   summary(l <- oddsratio(CoalMiners))
@@ -40,7 +40,7 @@
   lines(fitted(m), col = "red")
   
   ## Fourfold display, strata equated
-  fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
+  grid.fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
   
   ####################
   ## Sieve Diagrams ##
@@ -53,21 +53,21 @@
   ## aggregate over `sex':
   (tab <- margin.table(HairEyeColor, 1:2))
   ## plot expected values:
-  sieveplot(t(tab), type = "expected", values = "both")
+  grid.sieveplot(t(tab), type = "expected", values = "both")
 
   ## plot sieve diagram:
-  sieveplot(t(tab))
+  grid.sieveplot(t(tab))
 
   ### Visual Acuity ###
   #####################
   data(VisualAcuity)
-  sieveplot(Freq ~ right + left,
-            data = VisualAcuity,
-            subset = gender == "female",
-            reverse.y = FALSE,
-            main = "Unaided distant vision data",
-            xlab = "Left Eye Grade",
-            ylab = "Right Eye Grade")
+  grid.sieveplot(Freq ~ right + left,
+                 data = VisualAcuity,
+                 subset = gender == "female",
+                 reverse.y = FALSE,
+                 main = "Unaided distant vision data",
+                 xlab = "Left Eye Grade",
+                 ylab = "Right Eye Grade")
   
   ### Berkeley Admission ###
   ##########################
@@ -77,11 +77,11 @@
   data(UCBAdmissions)
 
   (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
-  sieveplot(tab, reverse.y = FALSE,
-            xlab = "Gender:Admission",
-            ylab = "Department",
-            main = "Berkeley Admissions Data"
-            )
+  grid.sieveplot(tab, reverse.y = FALSE,
+                 xlab = "Gender:Admission",
+                 ylab = "Department",
+                 main = "Berkeley Admissions Data"
+                 )
 
   ######################
   ## Association Plot ##
@@ -90,11 +90,10 @@
   ### Hair Eye Color ###
   ######################
   data(HairEyeColor)
-  assocplot(margin.table(HairEyeColor, 1:2),
-            col = c("blue","red"),
-            xlab = "Hair Color",
-            ylab = "Eye Color",
-            main = "Association Plot")
+  grid.assocplot(margin.table(HairEyeColor, 1:2),
+                 xlab = "Hair Color",
+                 ylab = "Eye Color",
+                 main = "Association Plot")
 
   ####################
   ## Agreement Plot ##
@@ -108,22 +107,20 @@
   Kappa(SexualFun)
 
   ## Agreement Chart
-  agreementplot(t(SexualFun), weights = 1)
+  grid.agreementplot(t(SexualFun), weights = 1)
   ## Partial Agreement Chart and B-Statistics
-  (agreementplot(t(SexualFun),
-                 xlab = "Husband's Rating",
-                 ylab = "Wife's Rating",
-                 main = "Husband's and Wife's Sexual Fun")
+  (grid.agreementplot(t(SexualFun),
+                      xlab = "Husband's Rating",
+                      ylab = "Wife's Rating",
+                      main = "Husband's and Wife's Sexual Fun")
    )
   
   ### MS Diagnosis data ###
   #########################
   data(MSPatients)
   ## use e.g., X11(width = 12), or expand graphics device
-  par(mfrow = c(1,2))
-  agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
-  agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
-  par(mfrow = c(1,1))
+  grid.agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
+  grid.agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
 
   ##################
   ## Ternary Plot ##
