@@ -37,7 +37,7 @@ export(
        "woolf.test")
 
 import(MASS)
-import(ctest)
+import(stats)
 
 S3method("mosaicplot", "default")
 S3method("mosaicplot", "formula")
