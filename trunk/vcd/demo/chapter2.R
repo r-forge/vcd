@@ -121,11 +121,9 @@
   G2 <- 2*sum(WeldonDice*log(WeldonDice/expected))
   pchisq(chi2, df = 9, lower = FALSE)
   ## or:
-  WD.fit1 <- goodfit(WeldonDice, type = "binomial", par = list(prob = 1/3), size = 12)
-  WD.fit2 <- goodfit(WeldonDice, type = "binomial", size = 12)
-  ## doesn't work anymore...
-  WD.fit1$fitted[11] <- sum(dbinom(10:12, prob = WD.fit1$estimate, size = 12))*sum(WeldonDice)
-  WD.fit2$fitted[11] <- sum(dbinom(10:12, prob = WD.fit2$estimate, size = 12))*sum(WeldonDice)
+  WD.fit1 <- goodfit(WeldonDice, type = "binomial", par = list(prob = 1/3, size = 12))
+  WD.fit1$fitted[11] <- sum(predict(WD.fit1, newcount = 10:12))
+  WD.fit2 <- goodfit(WeldonDice, type = "binomial", par = list(size = 12), method = "MinChisq")
   summary(WD.fit1)
   summary(WD.fit2)
 
@@ -142,7 +140,7 @@
   summary(F.fit2)
 
   data(Saxony)
-  S.fit <- goodfit(Saxony, type = "binomial", size = 12)
+  S.fit <- goodfit(Saxony, type = "binomial", par = list(size = 12))
   summary(S.fit)
   plot(S.fit)
 
