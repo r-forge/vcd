@@ -1,9 +1,23 @@
-distplot <- function(freq, count, type = c("poisson", "binomial", "nbinomial"),
+distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
                      size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
                      line.col = 2, conf.int = TRUE, conf.level = 0.95, main = NULL,
 		     xlab = "Number of occurences", ylab = "Distribution metameter", ...)
 {
-  par.ml <- goodfit(freq, count, type = type, size = size)$estimate
+  if(is.vector(obj)) {
+  obj <- table(obj)
+  }
+  if(is.table(obj)) {
+    if(length(dim(obj)) > 1) stop ("obj must be a 1-way table")
+    freq <- as.vector(obj)
+    count <- as.numeric(names(obj))
+  } else {
+    if(!(!is.null(ncol(obj)) && ncol(obj) == 2))
+      stop("obj must be a 2-column matrix or data.frame")
+    freq <- as.vector(obj[,1])
+    count <- as.vector(obj[,2])
+  }
+
+  par.ml <- goodfit(obj, type = type, size = size)$estimate
 
   myindex <- (1:length(freq))[freq > 0]
   mycount <- count[myindex]
