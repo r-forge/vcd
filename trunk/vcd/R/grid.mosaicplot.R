@@ -17,8 +17,8 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
 }
 
 panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
-                             margins = c(0, 0, 0, 0), test = TRUE, level = 0.95,
-                             abbreviate = FALSE, ...) {
+                             margins = c(0, 0, 0, 0), abbreviate = FALSE,
+                             gp = gp.signif, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
   grid.mosaicplot(x = margin.table(x,
@@ -30,7 +30,7 @@ panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                     ),
                   panel = TRUE, main = NULL, labels = FALSE,
                   legend = legend, axes = axes, margins = margins,
-                  test = test, level = level, abbreviate = abbreviate, ...)
+                  abbreviate = abbreviate, gp = gp, ...)
 }
 
 panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {
@@ -48,9 +48,8 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
                              type = c("pairwise", "total", "conditional", "joint"),
                              type.upper = NULL,
                              type.lower = NULL,
+                             newpage = TRUE,
                              
-                             test = TRUE,
-                             level = 0.95,
                              space = 0.1,
                              legend = FALSE,
                              axes = FALSE,
@@ -59,10 +58,11 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
                              panel.margins = c(0, 0, 0, 0),
                              diag.fontsize = 20,
                              diag.dimnames = TRUE,
+                             gp = gp.signif,
                              ...)
 {
   require(grid)
-  grid.newpage()
+  if (newpage) grid.newpage()
   main
   type.upper <- if (is.null(type.upper))
     match.arg(type)
@@ -88,12 +88,10 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
 
       if (i > j)
         panel.upper(x, i, j, type.upper, legend = legend, axes = axes,
-                    margins = panel.margins, test = test, level = level,
-                    abbreviate = abbreviate, ...)
+                    margins = panel.margins, abbreviate = abbreviate, gp = gp, ...)
       else if (i < j)
         panel.lower(x, i, j, type.lower, legend = legend, axes = axes,
-                    margins = panel.margins, test = test, level = level,
-                    abbreviate = abbreviate, ...)
+                    margins = panel.margins, abbreviate = abbreviate, gp = gp, ...)
       else 
         panel.diag(margin.table(x, i), fontsize = diag.fontsize,
                    dimnames = diag.dimnames, ...)
@@ -374,7 +372,7 @@ grid.mosaicplot.default <-
 
   ## compute coordinates
   coordinates <- split(x, v = direction == "vertical", 0, 1, 1, 1)
-  browser()
+
   ## draw tiles
   grid.rect(coordinates[,1], coordinates[,2], coordinates[,3], coordinates[,4],
             just = c("left", "top"),
@@ -436,3 +434,8 @@ grid.mosaicplot.default <-
   invisible(x)
 }
 
+gp.chisq.shading <- function(...)
+  gp.shading(..., test = chisq.test)
+
+gp.max.shading <- function(...)
+  gp.shading(..., test = pearson.test)
