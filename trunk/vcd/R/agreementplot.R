@@ -19,7 +19,27 @@ function (formula, data = NULL, ..., subset)
         m$... <- NULL
         m[[1]] <- as.name("model.frame")
         mf <- eval(m, parent.frame())
-        agreementplot(table(mf), ...)
+        if (length(formula) == 2) {
+          by <- mf
+          y <- NULL
+        }
+        else {
+          i <- attr(attr(mf, "terms"), "response")
+          by <- mf[-i]
+          y <- mf[[i]]
+        }
+        by <- lapply(by, factor)
+        x <- if (is.null(y)) 
+          do.call("table", by)
+        else if (NCOL(y) == 1) 
+          tapply(y, by, sum)
+        else {
+          z <- lapply(as.data.frame(y), tapply, by, sum)
+          array(unlist(z), dim = c(dim(z[[1]]), length(z)), dimnames = c(dimnames(z[[1]]), 
+                                                              list(names(z))))
+        }
+        x[is.na(x)] <- 0
+        agreementplot(x, ...)
     }
 }
 
