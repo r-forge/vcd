@@ -13,7 +13,7 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
   pop.viewport(1)
   grid.text(names(dimnames(x)), y = 1, just = c("center", "top"),
             gp = gpar(fontsize = fontsize))
-  
+
 }
 
 panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
@@ -49,7 +49,7 @@ grid.mosaicpairs <- function(x, main = NULL,
                              type.upper = NULL,
                              type.lower = NULL,
                              newpage = TRUE,
-                             
+
                              space = 0.1,
                              legend = FALSE,
                              axes = FALSE,
@@ -74,7 +74,7 @@ grid.mosaicpairs <- function(x, main = NULL,
   else
     match.arg(type.lower, type)
   if (permute) x <- aperm(x)
-  
+
   d <- length(dim(x))
   l <- grid.layout(d, d)
   push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
@@ -83,7 +83,7 @@ grid.mosaicpairs <- function(x, main = NULL,
                          y = 0, just = "bottom"))
   grid.text(main, y = unit(1.05, "npc"), gp = gpar(fontsize = 20))
 
-  
+
   for (i in 1:d)
     for(j in 1:d) {
       push.viewport(viewport(layout.pos.col = i, layout.pos.row = j))
@@ -95,7 +95,7 @@ grid.mosaicpairs <- function(x, main = NULL,
       else if (i < j)
         panel.lower(x, i, j, type.lower, legend = legend, axes = axes,
                     margins = panel.margins, abbreviate = abbreviate, gp = gp, ...)
-      else 
+      else
         panel.diag(margin.table(x, i), fontsize = diag.fontsize,
                    dimnames = diag.dimnames, ...)
 
@@ -141,13 +141,13 @@ legend.block <- function(res,
                          gp = gp.shading,
                          fontsize = 12,
                          panel = FALSE,
-                         space = 0.6, 
+                         space = 2,        #Z# was: from left in "native", now: from right in "lines"
                          text = "Pearson\nresiduals:") {
-  
+
   push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-  push.viewport(viewport(x = space, y = 0.1, just = c("left", "bottom"),
+  push.viewport(viewport(x = unit(1, "native") - unit(space, "lines"), y = 0.1, just = c("right", "bottom"),
                          yscale = range(res), default.unit = "npc",
-                         height = 0.8, width = 0.2))
+                         height = 0.75, width = 0.2))
 
   if(!is.null(gp$col.legend)) {
     col.legend <- gp$col.legend
@@ -159,14 +159,14 @@ legend.block <- function(res,
     y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
     col.legend <- list(pos = y.pos, height = y.height, col = y.col)
   }
-  
+
   grid.rect(x = unit(rep(0.5, length(col.legend$pos)), "npc"), y = col.legend$pos,
             height = col.legend$height, default.unit = "native",
             gp = gpar(fill = col.legend$col, col = NULL),
             just = c("centre", "bottom"))
 
   grid.rect()
-  
+
   grid.yaxis(main = FALSE, gp = gpar(fontsize = fontsize))
   if (!panel)
     grid.text(text, x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
@@ -178,7 +178,7 @@ legend.block <- function(res,
               x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"),
               gp = gpar(fontsize = 0.8*fontsize),
               just = c("left", "top"))
-  
+
  pop.viewport(2)
 }
 
@@ -188,12 +188,12 @@ grid.mosaicplot.default <-
            labels = TRUE,
            axes = TRUE,
            abbreviate = FALSE,
-           
+
            direction = c("horizontal", "vertical"),
-           
+
            margin = NULL,
            residuals = NULL,
-           type = c("pearson", "deviance", "FT"),
+           type = c("Pearson", "deviance", "FT"),
            shade = TRUE,
            legend = TRUE,
            gp = gp.shading,
@@ -208,9 +208,9 @@ grid.mosaicplot.default <-
   require(grid)
 
   ## parameter handling
-  if (is.null(dim(x))) 
+  if (is.null(dim(x)))
     x <- as.array(x)
-  else if (is.data.frame(x)) 
+  else if (is.data.frame(x))
     x <- data.matrix(x)
   if (any(x < 0) || any(is.na(x)))
     stop("all entries of x must be nonnegative and finite")
@@ -226,13 +226,15 @@ grid.mosaicplot.default <-
   for (i in 1:maxdim)
     if (abbreviate[i])
       dimnames(x)[[i]] <- substr(dimnames(x)[[i]], 1, abbreviate[i])
-  
+
+
   ## title
-  if (!panel)
-    grid.newpage()
-  if(!is.null(main))
-    margins[3] <- margins[3] + 3
-  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  if (!panel) grid.newpage()
+  if(!is.null(main)) margins[3] <- margins[3] + 3
+
+  #Z# push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  #Z# needed for what?
+
   push.viewport(plotViewport(margins))
   if (!is.null(main))
     grid.text(main,
@@ -247,12 +249,12 @@ grid.mosaicplot.default <-
         require(MASS)
         E <- fitted(loglm(margin, x, fitted = TRUE))
       } else {
-        if (is.null(margin)) 
+        if (is.null(margin))
           margin <- as.list(1:maxdim)
         E <- loglin(x, margin, fit = TRUE, print = FALSE)$fit
       }
       residuals <- switch(type,
-                          pearson = (x - E) / sqrt(E), 
+                          Pearson = (x - E) / sqrt(E),
                           deviance = {
                             tmp <- 2 * (x * log(ifelse(x == 0, 1, x/E)) - (x - E))
                             tmp <- sqrt(pmax(tmp, 0))
@@ -262,16 +264,57 @@ grid.mosaicplot.default <-
     }
 
     ## colors and legend
-    if(is.function(gp))
-      gp <- gp(x, residuals)
-    
+    if(is.function(gp)) {
+      gpfun <- gp
+      gp <- gpfun(x, residuals)
+    } else {
+      if(is.null(gp$legend.col)) legend <- FALSE
+    }
+    #Z# used to be
+    #Z# if(is.function(gp))
+    #Z#   gp <- gp(x, residuals)
+
     if (legend && !is.null(residuals)) {
       push.viewport(viewport(layout = grid.layout(1, 2,
-                               widths = unit(c(0.8, 0.2), "npc"))))
-      legend.block(residuals, gp, fontsize, panel, 0.4, "standardized\nresiduals:")
+                               widths = unit(c(0.85, 0.15), "npc"))))
+      #Z# legend.block(residuals, gp, fontsize, panel, 2, "standardized\nresiduals:")
+      #Z# difficult to still use legend.block...
+      push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+      push.viewport(viewport(x = unit(1, "native") - unit(2, "lines"), y = 0.1, just = c("right", "bottom"),
+                    yscale = range(residuals), default.unit = "npc",
+                    height = 0.7, width = unit(0.75, "native") - unit(2, "lines")))
+
+      if(!is.null(gp$legend.col)) {
+        legend.col <- gp$legend.col
+      } else {
+        col.bins <- min(residuals) + diff(range(residuals)) * ((0:200)/200)
+        y.pos <- col.bins[-length(col.bins)]
+        y.height <- diff(col.bins)
+        y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
+        legend.col <- list(pos = y.pos, height = y.height, col = y.col)
+      }
+
+      grid.rect(x = unit(rep(0.5, length(legend.col$pos)), "npc"), y = legend.col$pos,
+                height = legend.col$height, default.unit = "native",
+                gp = gpar(fill = legend.col$col, col = NULL),
+                just = c("centre", "bottom"))
+
+      grid.yaxis(main = FALSE, gp = gpar(fontsize = fontsize))
+      grid.rect()
+
+      if(!panel) grid.text(paste(type, "\nresiduals:", sep = ""), x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
+                  gp = gpar(fontsize = 0.8*fontsize), just = c("left", "bottom"))
+      if(!is.null(gp$p.value)) grid.text(paste("p-value:\n", format.pval(gp$p.value), sep = ""),
+                  x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"), gp = gpar(fontsize = 0.8*fontsize),
+                  just = c("left", "top"))
+      pop.viewport(2)
+
     }
-  } else gp <- legend <- NULL
-  
+  } else {
+    legend <- FALSE
+    gp <- NULL
+  }
+
   ## compute unit shifts for labels
   rsh <- unit(1, "npc") + unit((1 + any(axes)) / 2, "lines")
   lsh <- unit(0, "npc") - unit((1 + any(axes)) / 2, "lines")
@@ -288,7 +331,7 @@ grid.mosaicplot.default <-
     l <- length(m)
     sp <- space / (l - 1)
     pos <- c(0, cumsum(m + sp)[-l])
-    
+
     ## compute absolute sizes / coordinates
     coord <- if (v)
       cbind(x0, y0 - pos * h, w, m * h)
@@ -297,14 +340,14 @@ grid.mosaicplot.default <-
 
     ## labels
     dim <- length(index) + 1
-    
+
 ## store all coordinates in the `lab' list and print all at the end
 ## to prevent overlapping text. Not really a neat solution.
 
     if (direction == "vertical") {
       if (dim == 1 && axes[1])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
-                                            x = I(rep(list(lsh), l)), 
+                                            x = I(rep(list(lsh), l)),
                                             y = coord[,2] - coord[,4] / 2,
                                             rot = 90)
       else if (dim == 2 && index[1] == 1 && axes[2])
@@ -314,7 +357,7 @@ grid.mosaicplot.default <-
                                             rot = 0)
       else if (dim == 3 && index[2] == d[2] && axes[3])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
-                                            x = I(rep(list(rsh), l)), 
+                                            x = I(rep(list(rsh), l)),
                                             y = coord[,2] - coord[,4] / 2,
                                             rot = -90)
       else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
@@ -344,7 +387,7 @@ grid.mosaicplot.default <-
                                             y = coord[,2] - coord[,4] / 2,
                                             rot = -90)
     }
-      
+
     ## repeat recursively for all subtiles, and return coordinate matrix
     if (dim < maxdim) {
       ind <- slice.index(table, 1)
@@ -363,19 +406,22 @@ grid.mosaicplot.default <-
 
   ## set margins
   push.viewport(viewport(layout.pos.col = 1))
-  
-  w = unit(1, "npc");
-  h = unit(1, "npc");
+
+  w <- unit(1, "npc")
+  h <- unit(1, "npc")
   if(any(labels)) {
-    w <- w - unit(4, "lines");
-    h <- h - unit(4, "lines");
+    w <- w - unit(2 + 2*(1-panel), "lines") #Z# discuss this!
+    h <- h - unit(2 + 2*(1-panel), "lines") #Z# see also below
   }
   if(any(axes)) {
-    w <- w - unit(2, "lines");
-    h <- h - unit(2, "lines");
+    w <- w - unit(2, "lines")
+    h <- h - unit(2, "lines")
   }
-  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
-  push.viewport(viewport(width = w, height = h))
+  #Z# push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  #Z# better adjustment of viewport instead of
+  #Z# push.viewport(viewport(width = w, height = h))
+  push.viewport(viewport(x = unit(1, "npc") - unit(2*(1-panel), "lines"), y = unit(2*(1-panel), "lines"),
+                height = h, width = w, just = c("right", "bottom")))
 
   ## compute coordinates
   coordinates <- split(x, v = direction == "vertical", 0, 1, 1, 1)
@@ -383,9 +429,9 @@ grid.mosaicplot.default <-
   ## draw tiles
   grid.rect(coordinates[,1], coordinates[,2], coordinates[,3], coordinates[,4],
             just = c("left", "top"),
-            gp = do.call("gpar", lapply(gp, function(x) if(is.array(x)) aperm(x) else x))
+            gp = do.call("gpar", lapply(gp, function(x) if(is.array(x)) aperm(x) else x))   #Z# too complicated?
             )
-              
+
   ## draw labels
   if (any(axes)) {
     lab = do.call("rbind", lab)
@@ -398,7 +444,7 @@ grid.mosaicplot.default <-
               check.overlap = TRUE,
               gp = gpar(fontsize = 0.8 * fontsize))
   }
-  
+
   ## draw dim labels
   rsh <- unit(1, "npc") + unit(2 + any(axes), "lines")
   lsh <- unit(-2 - any(axes), "lines")
@@ -406,15 +452,15 @@ grid.mosaicplot.default <-
     if (labels[1])
       grid.text(names(dimnames(x))[1],
                 y = 0.5, x = lsh, gp = gpar(fontsize = fontsize), rot = 90)
-    
+
     if (maxdim > 1 && labels[2])
       grid.text(names(dimnames(x))[2],
                 x = 0.5, y = rsh, gp = gpar(fontsize = fontsize), rot = 0)
-    
+
     if (maxdim > 2 && labels[3])
       grid.text(names(dimnames(x))[3],
                 y = 0.5, x = rsh, gp = gpar(fontsize = fontsize), rot = -90)
-    
+
     if (maxdim > 3 && labels[4])
       grid.text(names(dimnames(x))[4],
                 x = 0.5, y = lsh, gp = gpar(fontsize = fontsize), rot = 0)
@@ -422,27 +468,23 @@ grid.mosaicplot.default <-
     if (labels[1])
       grid.text(names(dimnames(x))[1],
                 x = 0.5, y = rsh, gp = gpar(fontsize = fontsize))
-    
+
     if (maxdim > 1 && labels[2])
       grid.text(names(dimnames(x))[2],
                 y = 0.5, x = lsh, gp = gpar(fontsize = fontsize), rot = 90)
-    
+
     if (maxdim > 2 && labels[3])
       grid.text(names(dimnames(x))[3],
                 x = 0.5, y = lsh, gp = gpar(fontsize = fontsize))
-    
+
     if (maxdim > 3 && labels[4])
       grid.text(names(dimnames(x))[4],
                 y = 0.5, x = rsh, gp = gpar(fontsize = fontsize), rot = -90)
   }
-  
+
   ## clean up and return
-  pop.viewport(5 + legend)
+  #Z# pop.viewport(5 + legend)
+      pop.viewport(3 + legend)
   invisible(x)
 }
 
-gp.chisq.shading <- function(...)
-  gp.shading(..., test = chisq.test)
-
-gp.max.shading <- function(...)
-  gp.shading(..., test = pearson.test)
