@@ -36,7 +36,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
      if(is.null(ylim)) {ylim <- range(-0.1 * c(fit-obs,fit),
                         c(fit-obs,fit)) + c(0, 0.1)}
      dummy <- barplot(obs, names = names, col = bar.col, beside = FALSE,
-             xlab = xlab, ylab = ylab, shift = fit - obs, ylim = ylim, ...)
+             xlab = xlab, ylab = ylab, offset = fit - obs, ylim = ylim, ...)
      lines(dummy, fit, col = line.col, type = "b", pch = 19)
      abline(h = 0)
    },
