@@ -26,10 +26,12 @@ function (formula, data = NULL, ..., subset)
 "agreementplot.default" <-
   function(x,
            reverse.y = TRUE,
-           title = "Agreement Chart",
+           main = "Agreement Chart",
            weights = c(1, 1 - 1 / (ncol(x) - 1)^2),
            cex.main = 2,
            cex.lab = 1.5,
+           xlab = names(dimnames(x))[2],
+           ylab = names(dimnames(x))[1],
            ...)
 {
   if (length(dim(x)) > 2)
@@ -49,9 +51,9 @@ function (formula, data = NULL, ..., subset)
 
   ## title, etc.
   plot.new()
-  title(title,
-        xlab = names(dimnames(x))[2],
-        ylab = names(dimnames(x))[1],
+  title(main,
+        xlab = xlab,
+        ylab = ylab,
         cex.main = cex.main,
         cex.lab = cex.lab,
         ...)
