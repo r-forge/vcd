@@ -99,7 +99,10 @@ function (formula, data = NULL, ..., subset)
   ## setup device
   par(mar = c(5.1, 5.1, 6.1, 3.1))
   plot.new()
-  par(usr = c(0, 1 + (nc - 1) * margin, 0, 1 + (nr - 1) * margin))
+  xlim <- c(0, 1 + (nc - 1) * margin)
+  ylim <- c(0, 1 + (nr - 1) * margin)
+  par(usr = c(xlim, ylim))
+  plot.window(xlim = xlim, ylim = ylim, asp = 1)
   
   ## title, etc.
   title(main,
