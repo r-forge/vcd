@@ -6,7 +6,7 @@ Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
 k-tables, along with confidence intervals.
 }
 \usage{
-plot.oddsratio(x, confidence = TRUE,
+plot.oddsratio(x, conf.level = 0.95,
                   type ="o", ylab = "Log Odds Ratio", xlab = "Strata",
                   whiskers = 0.1, ...)
 }
@@ -14,8 +14,8 @@ plot.oddsratio(x, confidence = TRUE,
 \arguments{
   \item{x}{An object of class \code{logoddsratio}, computed for a 2 x 2
     x k-table.}
-  \item{confidence}{if \code{TRUE}, confidence intervals are plotted for
-  each data point.}
+  \item{conf.level}{if not \code{NULL} or \code{FALSE},
+    \code{conf.level}-\% confidence intervals are plotted for each data point.}
   \item{type}{plot type.}
   \item{ylab}{label for the y-axis.}
   \item{xlab}{label for the x-axis.}

@@ -10,14 +10,13 @@
   confidence bands.
 }
 \usage{
-Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
+Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a confusion matrix.}
   \item{weights}{either one of the two options or a user-specified
     matrix with same dimensions as \code{x}.}
-  \item{conf.level}{level for the confidence intervals.}
 }
 \details{
   Cohen's kappa is the diagonal sum of the (possibly weighted) relative frequencies,
@@ -30,10 +29,12 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
 \value{
   An object of class \code{kappa} with three components:
   \item{Kappa}{Kappa statistic, along with Approximate Standard Error
-    (ASE) and 95\% confidence bounds.}
+    (ASE)}
   \item{Kappa.Weighted}{idem for the weighted kappa.}
   \item{Weights}{weight matrix used.}
 }
+\note{The \code{summary} method also prints the
+  weights. \code{confint.Kappa} computes approximate confidence intervals.}
 \references{
     \item Cohen, Jacob (1960): A coefficient of agreement for nominal
     scales. Educational and Psychological Measurement.
@@ -42,7 +43,7 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
 }
 \author{David Meyer\cr
 \email{david.meyer@ci.tuwien.ac.at}}
-\seealso{\code{\link{agreementplot}}}
+\seealso{\code{\link{agreementplot}}, \code{\link{confint.Kappa}}}
 \examples{
 data(SexualFun)
 Kappa(SexualFun)
