@@ -284,43 +284,45 @@ grid.mosaicplot.default <-
     ## labels
     dim <- length(index) + 1
     
-## old label handling: printed in recursion
-##
-#     if (dim == 1 && axes[1])
-#       grid.text(dimnames(x)[[1]], x = coord[,1] + coord[,3] / 2, y = 1.05,
-#                 check.overlap = TRUE)
-    
-#     if (dim == 2 && index[1] == 1 && axes[2])
-#       grid.text(dimnames(x)[[2]], y = coord[,2] - coord[,4] / 2, x = -0.05, rot = 90,
-#                 check.overlap = TRUE)
-    
-#     if (dim == 3 && index[2] == d[2] && axes[3])
-#       grid.text(dimnames(x)[[3]], x = coord[,1] + coord[,3] / 2, y = -0.05,
-#                 check.overlap = TRUE)
-    
-#     if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
-#       grid.text(dimnames(x)[[4]], y = coord[,2] - coord[,4] / 2, x = 1.05, rot = -90,
-#                 check.overlap = TRUE)
+## store all coorinates in the `lab' list and print all at the end
+## to prevent overlapping text. Not really a neat solution.
 
-## new label handling: store all coorinates in the `lab' list and print all at the end
-## to prevent overlapping text
-    
-    if (dim == 1 && axes[1])
-      lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
-                                          x = coord[,1] + coord[,3] / 2,
-                                          y = 1.05, rot = 0)
-    else if (dim == 2 && index[1] == 1 && axes[2])
-      lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[2]]),
-                                          y = coord[,2] - coord[,4] / 2,
-                                          x = -0.05, rot = 90)
-    else if (dim == 3 && index[2] == d[2] && axes[3])
-      lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
-                                          x = coord[,1] + coord[,3] / 2,
-                                          y = -0.05, rot = 0)
-    else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
-      lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[4]]),
-                                          y = coord[,2] - coord[,4] / 2,
-                                          x = 1.05, rot = -90)
+    if (direction == "vertical") {
+      if (dim == 1 && axes[1])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
+                                            x = -0.05, 
+                                            y = coord[,2] - coord[,4] / 2,
+                                            rot = 90)
+      else if (dim == 2 && index[1] == 1 && axes[2])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[2]]),
+                                            x = coord[,1] + coord[,3] / 2,
+                                            y = 1.05, rot = 0)
+      else if (dim == 3 && index[2] == d[2] && axes[3])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
+                                            x = 1.05, rot = -90,
+                                            y = coord[,2] - coord[,4] / 2)
+      else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[4]]),
+                                            x = coord[,1] + coord[,3] / 2,
+                                            y = -0.05, rot = 0)
+    } else {
+      if (dim == 1 && axes[1])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
+                                            x = coord[,1] + coord[,3] / 2,
+                                            y = 1.05, rot = 0)
+      else if (dim == 2 && index[1] == 1 && axes[2])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[2]]),
+                                            y = coord[,2] - coord[,4] / 2,
+                                            x = -0.05, rot = 90)
+      else if (dim == 3 && index[2] == d[2] && axes[3])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
+                                            x = coord[,1] + coord[,3] / 2,
+                                            y = -0.05, rot = 0)
+      else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
+        lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[4]]),
+                                            y = coord[,2] - coord[,4] / 2,
+                                            x = 1.05, rot = -90)
+    }
       
     ## repeat recursively for all subtiles, and return coordinate matrix
     if (dim < maxdim) {
@@ -371,21 +373,39 @@ grid.mosaicplot.default <-
   }
   
   ## draw dim labels
-  if (labels[1])
-    grid.text(names(dimnames(x))[1],
-              x = 0.5, y = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2))
-  
-  if (maxdim > 1 && labels[2])
-    grid.text(names(dimnames(x))[2],
-              y = 0.5, x = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 90)
-  
-  if (maxdim > 2 && labels[3])
-    grid.text(names(dimnames(x))[3],
-              x = 0.5, y = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2))
-  
-  if (maxdim > 3 && labels[4])
-    grid.text(names(dimnames(x))[4],
-              y = 0.5, x = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = -90)
+  if (direction == "vertical") {
+    if (labels[1])
+      grid.text(names(dimnames(x))[1],
+                y = 0.5, x = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 90)
+    
+    if (maxdim > 1 && labels[2])
+      grid.text(names(dimnames(x))[2],
+                x = 0.5, y = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = 0)
+    
+    if (maxdim > 2 && labels[3])
+      grid.text(names(dimnames(x))[3],
+                y = 0.5, x = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = -90)
+    
+    if (maxdim > 3 && labels[4])
+      grid.text(names(dimnames(x))[4],
+                x = 0.5, y = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 0)
+  } else {
+    if (labels[1])
+      grid.text(names(dimnames(x))[1],
+                x = 0.5, y = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2))
+    
+    if (maxdim > 1 && labels[2])
+      grid.text(names(dimnames(x))[2],
+                y = 0.5, x = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 90)
+    
+    if (maxdim > 2 && labels[3])
+      grid.text(names(dimnames(x))[3],
+                x = 0.5, y = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2))
+    
+    if (maxdim > 3 && labels[4])
+      grid.text(names(dimnames(x))[4],
+                y = 0.5, x = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = -90)
+  }
   
   ## clean up and return
   pop.viewport(3 + legend)
