@@ -242,7 +242,9 @@ indifference.table <- function(x, frequency = c("absolute", "relative")) {
   n <- sum(x)
   x <- x / n
   d <- length(dim(x))
-  tab <- do.call("outer", lapply(1:d, function(i) apply(x, i, sum)))
+  tab <- apply(x, 1, sum)
+  for (i in 2:d)
+    tab <- tab %o% apply(x, i, sum)
   if (frequency == "relative") tab else tab * n
 }
 
