@@ -7,7 +7,7 @@
 \usage{
 \method{mosaicplot}{default}(x, main = deparse(substitute(x)), sub = NULL, xlab = NULL,
          ylab = NULL, sort = NULL, off = NULL, dir = NULL,
-         color = FALSE, shade = FALSE, margin = NULL,
+         color = FALSE, shade = !(is.null(residuals) && is.null(margin)), margin = NULL,
          cex.axis = 0.66, las = par("las"), clegend = TRUE, 
          type = c("pearson", "deviance", "FT"), residuals = NULL, \dots)
 \method{mosaicplot}{formula}(formula, data = NULL, \dots,
@@ -41,8 +41,9 @@
   \item{las}{numeric; the style of axis labels, see \code{\link{par}}.}
   \item{shade}{a logical indicating whether to produce extended mosaic
     plots, or a numeric vector of at most 5 distinct positive numbers
-    giving the absolute values of the cut points for the residuals.  By
-    default, \code{shade} is \code{FALSE}, and simple mosaics are
+    giving the absolute values of the cut points for the residuals. 
+    If no marginal model and no residuals are specified,
+    \code{shade} is \code{FALSE} by default and simple mosaics are
     created.  Using \code{shade = TRUE} cuts absolute values at 2 and
     4.}
   \item{clegend}{logical. Should a color legend be plotted? (only needed

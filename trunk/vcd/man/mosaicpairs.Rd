@@ -8,7 +8,7 @@
 \method{mosaicpairs}{default}(x, main = deparse(substitute(x)),
             xlab = NULL, ylab = NULL, labels, \dots,
             type = c("pairwise", "total", "conditional", "joint"),
-            shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
+            shade = TRUE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	    font.labels = 1, gap = 1)
 \method{mosaicpairs}{formula}(formula, data = NULL, \dots, main, subset)
 }
@@ -27,8 +27,7 @@
   \item{shade}{a logical indicating whether to produce extended mosaic
     plots, or a numeric vector of at most 5 distinct positive numbers
     giving the absolute values of the cut points for the residuals.  By
-    default, \code{shade} is \code{FALSE}, and simple mosaics are
-    created.  Using \code{shade = TRUE} cuts absolute values at 2 and
+    default, \code{shade} is \code{TRUE}.  Using \code{shade = TRUE} cuts absolute values at 2 and
     4.}
   \item{oma}{A vector of the form c(bottom, left, top, right) giving the
     size of the outer margins in lines of text.}
