@@ -16,8 +16,9 @@ function(formula, data = NULL, subset, na.action, ..., main = NULL)
 assoc.default <- function(x,
                           row.vars = NULL, col.vars = NULL,
                           compress = TRUE, xlim = NULL, ylim = NULL,
-                          space = spaces.conditional(sp = 0),
-                          split.vertical = NULL, ...) {
+                          spacing = spacing.conditional(sp = 0),
+                          split.vertical = NULL,
+                          xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
   if (!inherits(x, "ftable")) {
     if (is.null(row.vars) && is.null(col.vars) && is.table(x))
@@ -31,7 +32,7 @@ assoc.default <- function(x,
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
-  space <- space(dim(tab), condvars = which(cond))
+  spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
   split.vertical <- rep(FALSE, dl)
@@ -39,16 +40,19 @@ assoc.default <- function(x,
   split.vertical[names(attr(x, "col.vars"))] <- TRUE
   
   strucplot(tab,
-            space = space,
+            spacing = spacing,
             split.vertical = split.vertical,
-            panel = panel.assocplot(compress = compress, xlim = xlim, ylim = ylim),
+            panel = panel.assocplot(compress = compress, xlim = xlim, ylim = ylim,
+              yspace = yspace, xscale = xscale),
             keepAR = FALSE,
+            residuals.type = "Pearson",
             ...)
 }
 
-panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 0.8)
-  function(observed = NULL, expected, residuals,
-           space = NULL, gp = NULL, split.vertical = TRUE) {
+panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
+                            yspace = unit(0.5, "lines"), xscale = 0.9)
+  function(residuals, observed = NULL, expected, 
+           spacing = NULL, gp = NULL, split.vertical = TRUE) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -57,13 +61,15 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 
     ## axis limits
     resid <- structable(residuals, split.vertical = split.vertical)
     sexpected <- structable(sqrt(expected), split.vertical = split.vertical)
+    rfunc <- function(x) c(min(x, 0), max(x, 0))
     if(is.null(ylim))
       ylim <- matrix(if (compress)
-                       apply(resid, 1, range)
+                       apply(resid, 1, rfunc)
                      else
-                       rep.int(range(resid), nrow(resid)),
+                       rep.int(rfunc(resid), nrow(resid)),
                      nrow = 2)
-    attr(ylim, "split.vertical") <- rep(T, sum(!split.vertical))
+
+    attr(ylim, "split.vertical") <- rep(TRUE, sum(!split.vertical))
     attr(ylim, "dnames") <- dn[!split.vertical]
     class(ylim) <- "structable"
 
@@ -73,7 +79,7 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 
                      else
                        rep.int(c(-1,1) * max(sexpected), ncol(resid)),
                      nrow = 2) / 2
-    attr(xlim, "split.vertical") <- rep(T, sum(split.vertical))
+    attr(xlim, "split.vertical") <- rep(TRUE, sum(split.vertical))
     attr(xlim, "dnames") <- dn[split.vertical]
     class(xlim) <- "structable"
 
@@ -82,18 +88,19 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 
       v <- split.vertical[i]
       splitbase <- if (v) sexp else res
       splittab <- lapply(seq(dx[i]), function(j) splitbase[[j]])
-      len <- sapply(splittab, function(x) sum(x[2,] - x[1,]))
+      len <- sapply(splittab, function(x) sum(x[1,] - x[2,]))
+
       d <- dx[i]
 
       ## compute total cols/rows and build split layout
-      dist <- unit.c(unit(len, "null"), space[[i]])
+      dist <- unit.c(unit(len, "null"), spacing[[i]]  + (1 * !v) * yspace)
       idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2 * d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = name, yscale = res[,1])
+                         layout = layout, name = name)
 
       ## next level: either create further splits, or final viewports
       name <- paste(name, "", dnn[i], dn[[i]], sep = ".")
@@ -133,7 +140,8 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 
       seekViewport(mnames[i])
       grid.lines(y = unit(0, "native"), gp = gpar(lty = 5))
       grid.rect(y = 0, x = 0,
-                height = residuals[i] * factor, width = sqrt(expected[i]) * factor,
+                height = residuals[i],
+                width = xscale * unit(sqrt(expected[i]), "native"),
                 default.units = "native",
                 gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"))

@@ -1,8 +1,8 @@
-\name{assoc.stats}
-\alias{assoc.stats}
-\alias{summary.assoc.stats}
-\alias{print.assoc.stats}
-\alias{print.summary.assoc.stats}
+\name{assocstats}
+\alias{assocstats}
+\alias{summary.assocstats}
+\alias{print.assocstats}
+\alias{print.summary.assocstats}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Association Statistics}
 \description{
@@ -10,11 +10,11 @@
   the phi-coefficient, the the contingency coefficient and Cramer's V.
 }
 \usage{
-assoc.stats(x)
+assocstats(x)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{x}{a rxc-table.}
+  \item{x}{a r x c-table.}
 }
 \value{
   A list with components:
@@ -33,6 +33,6 @@ Michael Friendly (2000), \emph{Visualizing Categorical Data}. SAS Institute, Car
 \examples{
 data(Arthritis)
 tab <- xtabs(~Improved + Treatment, data = Arthritis)
-summary(assoc.stats(tab))
+summary(assocstats(tab))
 }
 \keyword{category}% at least one, from doc/KEYWORDS

@@ -5,8 +5,7 @@ mosaic <- function(x, ...)
   UseMethod("mosaic")
 
 mosaic.formula <-
-function(formula, data = NULL, space = NULL, labels = NULL,
-         ..., main = NULL)
+function(formula, data = NULL, ..., main = NULL)
 {
     if (is.logical(main) && main)
       main <- deparse(substitute(data))
@@ -40,15 +39,9 @@ function(formula, data = NULL, space = NULL, labels = NULL,
           dat <- margin.table(dat, ind)
         }
         if (dep != "")
-          doubledecker(dat, main = main, space = space, labels = labels, ...)
-        else if (length(vars) > 1)
-          mosaic(dat, main = main,
-                 space = if (is.null(space)) spaces.conditional() else space,
-                 labels = if (is.null(labels)) labels.conditional() else labels,
-                 condvars = 1:length(condind), ...)
-        else
-          mosaic(dat, main = main, space = space,
-                 labels = if (is.null(labels)) labels.text() else labels, ...)
+          doubledecker(dat, main = main, ...)
+        else 
+          mosaic(dat, main = main, ...)
       } else {
         tab <- if ("Freq" %in% colnames(data))
           xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
@@ -58,22 +51,15 @@ function(formula, data = NULL, space = NULL, labels = NULL,
                 data = data)
 
         if (dep != "")
-          doubledecker(tab, main = main, space = space, labels = labels, ...)
-        else if (!is.null(condnames)) {
-          condind <- match(condnames, names(dimnames(tab)))
-          mosaic(tab, main = main,
-                 space = if (is.null(space)) spaces.conditional() else space,
-                 labels = if (is.null(labels)) labels.conditional() else labels,
-                 condvars = 1:length(condind),
-                 ...)
-        } else mosaic(tab, main = main, space = space,
-                      labels = if (is.null(labels)) labels.text() else labels, ...)
+          doubledecker(tab, main = main, ...)
+        else
+          mosaic(tab, main = main, ...)
       }
   }
 
 mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
                            split.vertical = FALSE, direction = NULL,
-                           space = NULL, ...) {
+                           spacing = NULL, ...) {
   dl <- length(dim(x))
   
   ## splitting argument
@@ -85,19 +71,19 @@ mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
     split.vertical <- rep(split.vertical, length.out = dl)
 
   ## spacing argument
-  if (is.null(space))
-    space <- if (dl < 3) spaces.equal() else spaces.increase()
+  if (is.null(spacing))
+    spacing <- if (dl < 3) spacing.equal() else spacing.increase()
 
   strucplot(x,
             panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize),
             split.vertical = split.vertical,
-            space = space,
+            spacing = spacing,
             ...)
 }
 
 panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
-  function(observed, expected = NULL, residuals,
-           space = NULL, gp = NULL, split.vertical = TRUE) {
+  function(residuals, observed, expected = NULL, 
+           spacing = NULL, gp = NULL, split.vertical = TRUE) {
     dn <- dimnames(observed)
     dnn <- names(dn)
     dx <- dim(observed)
@@ -111,7 +97,7 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
       d <- dx[i]
 
       ## compute total cols/rows and build split layout
-      dist <- unit.c(unit(margin, "null"), space[[i]])
+      dist <- unit.c(unit(margin, "null"), spacing[[i]])
       idx <- matrix(1:(2*d), nrow = 2, byrow = TRUE)[-2*d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])

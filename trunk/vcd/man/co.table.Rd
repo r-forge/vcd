@@ -15,7 +15,7 @@ co.table(x, margin, collapse = ".")
     (only if more than 1 margin is given)}
 }
 \details{
-  This is essentially an interface to \code{\link{"["}} which is more 
+  This is essentially an interface to \code{\link[base]{"Extract"}} which is more 
   convenient for arrays of arbitrary dimension.   
 }
 \value{

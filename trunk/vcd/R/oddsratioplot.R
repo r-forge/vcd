@@ -12,9 +12,10 @@ function (x, stratum = NULL, log = TRUE) {
  
   lor <- function (y) {
     if (any(y == 0))
-      y <- y + 0.5 
-    or <- y[1,1] * y[2,2] / y[1,2] / y[2,1]
-    if (log) log(or) else or
+      y <- y + 0.5
+    y <- log(y)
+    or <- y[1,1] + y[2,2] - y[1,2] - y[2,1]
+    if (log) or else exp(or)
   }
 
   ase <- function(y) sqrt(sum(1/(y + 0.5)))

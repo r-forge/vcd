@@ -11,8 +11,9 @@
 fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
              conf.level = 0.95, std = c("margins", "ind.max", "all.max"),
              margin = c(1, 2), space = 0.2, main = NULL,
-             mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.2,
-             p.adjust.method = p.adjust.methods)
+             mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.15,
+             p.adjust.method = p.adjust.methods, panel = FALSE,
+             fontsize = 12)
 }
 \arguments{
   \item{x}{a 2 by 2 by \eqn{k} contingency table in array form, or as a
@@ -56,6 +57,9 @@ fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#
   \item{p.adjust.method}{method to be used for p-value adjustments for
     multistratum-plots. The p-values are used for the ``visual''
     significance tests of the oddsratios.}
+  \item{panel}{if \code{FALSE}, \code{grid.newpage()} is called before
+    plotting.}
+  \item{fontsize}{fontsize of main title.}
 }
 \details{
   The fourfold display is designed for the display of 2 by 2 by \eqn{k}

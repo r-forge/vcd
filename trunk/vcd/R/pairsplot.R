@@ -14,7 +14,7 @@ pairs <- function(x,
                   title.gp = gpar(fontsize = 20),
                   
                   space = 0.1,
-                  legend = FALSE,
+                  legend = NULL,
                   axes = FALSE,
                   abbreviate = FALSE,
                   margins = c(2, 2, 1, 2),
@@ -23,7 +23,7 @@ pairs <- function(x,
                   diag.dimnames = TRUE,
                   shade = FALSE,
                   gp = NULL,
-                  labels = NULL,
+                  labeling = NULL,
                   ...)
 {
   require(grid)
@@ -56,11 +56,11 @@ pairs <- function(x,
       pushViewport(viewport(width = 1 - space, height = 1 - space))
 
       if (i > j)
-        panel.upper(x, j, i, type.upper, legend = legend, axes = axes, labels = labels,
+        panel.upper(x, j, i, type.upper, legend = legend, axes = axes, labeling = labeling,
                     margins = panel.margins, abbreviate = abbreviate,
                     gp = gp, shade = shade, ...)
       else if (i < j)
-        panel.lower(x, j, i, type.lower, legend = legend, axes = axes, labels = labels,
+        panel.lower(x, j, i, type.lower, legend = legend, axes = axes, labeling = labeling,
                     margins = panel.margins, abbreviate = abbreviate, gp = gp,
                     shade = shade, ...)
       else
@@ -93,11 +93,11 @@ panel.barplot <- function(x, color = "gray", fontsize = 20, dimnames, ...) {
 
 panel.assoc <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                         margins = c(0, 0, 0, 0), abbreviate = FALSE,
-                        gp = NULL, labels = NULL, shade = FALSE, ...) {
+                        gp = NULL, labeling = NULL, shade = FALSE, ...) {
   assoc(x = margin.table(x, c(i, j)),
         gp = gp,
         shade = shade,
-        labels = labels,
+        labeling = labeling,
         margin = margins,
         newpage = FALSE,
         legend = legend,
@@ -108,9 +108,9 @@ panel.assoc <- function(x, i, j, type, legend = FALSE, axes = TRUE,
   popViewport()
 }
 
-panel.mosaic <- function(x, i, j, type, legend = FALSE, axes = TRUE,
+panel.mosaic <- function(x, i, j, type, legend = NULL, axes = TRUE,
                          margins = c(0, 0, 0, 0), abbreviate = FALSE,
-                         gp = NULL, labels = NULL, shade = FALSE, ...) {
+                         gp = NULL, labeling = NULL, shade = FALSE, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
   mosaic(x = margin.table(x, if (type == "pairwise") c(i, j) else c(i, j, rest)),
@@ -121,7 +121,7 @@ panel.mosaic <- function(x, i, j, type, legend = FALSE, axes = TRUE,
            ),
          gp = gp,
          shade = shade,
-         labels = labels,
+         labeling = labeling,
          margin = margins,
          newpage = FALSE,
          main = NULL,
