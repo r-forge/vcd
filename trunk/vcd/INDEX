@@ -12,3 +12,4 @@ oddsratio               Odds Ratios
 plot.oddsratio          (Log) Odds Ratios Plots
 sieveplot               Sieve Plots
 ternaryplot             Ternary diagram
+woolf.test              Woolf test
