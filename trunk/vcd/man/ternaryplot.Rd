@@ -94,7 +94,7 @@ ternaryplot(
   main = "Lifeboats on Titanic"
 )
 legend(
-  0.7, 0.8,
+  0.8, 0.9,
   legend = c("SIDE", "Port", "Starboard"),
   pch = c(NA, 1, 19),
   col = c("black", "red", "blue"),
