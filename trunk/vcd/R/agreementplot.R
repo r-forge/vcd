@@ -63,50 +63,59 @@ function (formula, data = NULL, ..., subset)
   
   ## compute relative frequencies
   n <- sum(x)
-  cols <- colSums(x)/n
-  rows <- rowSums(x)/n
+  colFreqs <- colSums(x) / n
+  rowFreqs <- rowSums(x) / n
 
-  ## set margins
-  par(usr = c(0, 1, 0, 1))
+  ## margins, limits (hard-coded, argh!)
+  bm <- 0.1
+  lm <- 0.1
+  tm <- 0.1
+  rm <- 0.1
 
-  ## title, etc.
+  xlim = c(0, 1 + lm + rm)
+  ylim = c(0, 1 + tm + bm)
+
+  ## init device
+  par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
   plot.new()
-  plot.window(xlim = c(0, 1), ylim = c(0, 1), asp = 1)
-  title(main,
-        xlab = xlab,
-        ylab = ylab,
-        cex.main = cex.main,
-        cex.lab = cex.lab,
-        ...)
+  par(usr = c(xlim, ylim))
+  plot.window(xlim = xlim, ylim = ylim, asp = 1)
 
-  rect(0, 0, 1, 1)
+  ## title
+  text(x = xlim[2] / 2, y = ylim[2], labels = main, cex = cex.main)
 
-  xc <- c(0, cumsum(cols))
-  yc <- c(0, cumsum(rows))
+  ## axis labels
+  text(x = xlim[2] / 2, y = 0, labels = xlab, cex = cex.lab)
+  text(x = 0, y = ylim[2] / 2, labels = ylab, cex = cex.lab, srt = 90)
+  
+  rect(lm, bm, lm + 1, bm + 1)
 
-  my.axis <- function (side, at, ...)
+  xc <- c(0, cumsum(colFreqs))
+  yc <- c(0, cumsum(rowFreqs))
+
+  my.text <- function (y, ...)
     if (reverse.y)
-      axis(side, at, ...)
+      text(y, ...)
     else
-      axis(side, 1 - at, ...)
+      text(2 * bm + 1 - y, ...)
 
   my.rect <- function (xleft, ybottom, xright, ytop, ...)
     if (reverse.y)
-      rect(xleft, ybottom, xright, ytop, ...)
+      rect(lm + xleft, bm + ybottom, lm + xright, bm + ytop, ...)
     else
-      rect(xleft, 1 - ybottom, xright, 1 - ytop, ...)
+      rect(lm + xleft, 1 + tm - ybottom, lm + xright, 1 + tm - ytop, ...)
   
   A <- matrix(0, length(weights), nc)
   for (i in 1:nc) {
     ## x - axis
-    axis(1, at = xc[i] + (xc[i+1] - xc[i]) / 2,
-         labels = dimnames(x)[[2]][i], tick = FALSE, ...)
+    text(x = lm + xc[i] + (xc[i+1] - xc[i]) / 2, y = bm - 0.04,
+         labels = dimnames(x)[[2]][i], ...)
 
     ## y - axis
-    my.axis(2, at = yc[i] + (yc[i+1] - yc[i]) / 2,
-            labels = dimnames(x)[[1]][i], tick = FALSE, ...)
+    my.text(y = bm + yc[i] + (yc[i+1] - yc[i]) / 2, x = lm - 0.03,
+            labels = dimnames(x)[[1]][i], srt = 90, ...)
     
-    ## expected rectange
+    ## expected rectangle
     my.rect(xc[i], yc[i], xc[i+1], yc[i+1])
     
     ## observed rectangle
@@ -137,13 +146,13 @@ function (formula, data = NULL, ..., subset)
       if (j > 1) A[j, i] <- A[j, i] - A[j - 1, i]
   }
   if (reverse.y)
-    lines(c(0, 1), c(0, 1), col = "red", lty = "longdash")
+    lines(c(lm, bm + 1), c(lm, 1 + bm), col = "red", lty = "longdash")
   else
-    lines(c(0, 1), c(1, 0), col = "red", lty = "longdash")
+    lines(c(lm, bm + 1), c(lm + 1, bm), col = "red", lty = "longdash")
   
   ## Statistics - Returned invisibly
   ads <- crossprod(diag(x)) 
-  ar  <- n * n * crossprod(cols, rows)
+  ar  <- n * n * crossprod(colFreqs, rowFreqs)
   invisible(list(
                  Bangdiwala = ads / ar,
                  Bangdiwala.Weighted = (sum(weights * A)) /  ar,
