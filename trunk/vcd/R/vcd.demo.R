@@ -237,8 +237,9 @@ if (chapter == 3) {
   ### Visual Acuity ###
   #####################
   data(VisualAcuity)
-  sieveplot(xtabs(Freq ~ right + left,
-                  data = VisualAcuity, subset = gender == "female"),
+  sieveplot(Freq ~ right + left,
+            data = VisualAcuity,
+            subset = gender == "female",
             reverse.y = FALSE,
             main = "Unaided distant vision data",
             xlab = "Left Eye Grade",
