@@ -34,24 +34,25 @@ M. Friendly (2000),
 }
 
 \examples{
+\dontrun{
 data(Employment)
 
 ## Employment Status ##
-grid.mosaicplot(Employment,
-           margin = ~ LayoffCause * EmploymentLength + EmploymentStatus,
+mosaic(Employment,
+           expected = ~ LayoffCause * EmploymentLength + EmploymentStatus,
 	   main = "Layoff*EmployLength + EmployStatus")
 
 
-grid.mosaicplot(Employment,
-           margin = ~ LayoffCause * EmploymentLength + LayoffCause * EmploymentStatus,
+mosaic(Employment,
+           expected = ~ LayoffCause * EmploymentLength + LayoffCause * EmploymentStatus,
 	   main = "Layoff*EmployLength + Layoff*EmployStatus")
 
 ## Closure ##
-grid.mosaicplot(Employment[,,1], main = "Layoff: Closure")
+mosaic(Employment[,,1], main = "Layoff: Closure")
 
 ## Replaced ##
-grid.mosaicplot(Employment[,,2], main = "Layoff: Replaced")
-
+mosaic(Employment[,,2], main = "Layoff: Replaced")
+}
 }
 
 \keyword{datasets}

@@ -9,18 +9,18 @@
   ## unstratified
   ### no margin is standardized
   x <- margin.table(UCBAdmissions, 2:1)
-  grid.fourfoldplot(x, std = "i", extended = FALSE)
+  fourfoldplot(x, std = "i", extended = FALSE)
   ### std. for gender
-  grid.fourfoldplot(x, margin = 1, extended = FALSE)
+  fourfoldplot(x, margin = 1, extended = FALSE)
   ### std. for both
-  grid.fourfoldplot(x, extended = FALSE)
+  fourfoldplot(x, extended = FALSE)
   
   ## stratified
-  grid.fourfoldplot(UCBAdmissions, extended = FALSE)
-  grid.fourfoldplot(UCBAdmissions) ## extended plots
+  fourfoldplot(UCBAdmissions, extended = FALSE)
+  fourfoldplot(UCBAdmissions) ## extended plots
 
   tabplot(UCBAdmissions,
-          panel = function(x, ...) grid.fourfoldplot(x, panel = TRUE, ...)
+          panel = function(x, ...) fourfoldplot(x, panel = TRUE, ...)
           )
 
   ### Coal Miners Lung Data ###
@@ -28,7 +28,7 @@
   data(CoalMiners)
   
   ## Fourfold display, both margins equated
-  grid.fourfoldplot(CoalMiners, mfcol = c(2,4))
+  fourfoldplot(CoalMiners, mfcol = c(2,4))
 
   ## Log Odds Ratio Plot
   summary(l <- oddsratio(CoalMiners))
@@ -40,7 +40,7 @@
   lines(fitted(m), col = "red")
   
   ## Fourfold display, strata equated
-  grid.fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
+  fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
   
   ####################
   ## Sieve Diagrams ##
@@ -53,15 +53,15 @@
   ## aggregate over `sex':
   (tab <- margin.table(HairEyeColor, 1:2))
   ## plot expected values:
-  grid.sieveplot(t(tab), type = "expected", values = "both")
+  sieveplot(t(tab), type = "expected", values = "both")
 
   ## plot sieve diagram:
-  grid.sieveplot(t(tab))
+  sieveplot(t(tab))
 
   ### Visual Acuity ###
   #####################
   data(VisualAcuity)
-  grid.sieveplot(Freq ~ right + left,
+  sieveplot(Freq ~ right + left,
                  data = VisualAcuity,
                  subset = gender == "female",
                  reverse.y = FALSE,
@@ -77,7 +77,7 @@
   data(UCBAdmissions)
 
   (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
-  grid.sieveplot(tab, reverse.y = FALSE,
+  sieveplot(tab, reverse.y = FALSE,
                  xlab = "Gender:Admission",
                  ylab = "Department",
                  main = "Berkeley Admissions Data"
@@ -90,9 +90,9 @@
   ### Hair Eye Color ###
   ######################
   data(HairEyeColor)
-  grid.assocplot(margin.table(HairEyeColor, 1:2),
-                 xlab = "Hair Color",
-                 ylab = "Eye Color",
+  assoc(margin.table(HairEyeColor, 1:2),
+#                 xlab = "Hair Color",
+#                 ylab = "Eye Color",
                  main = "Association Plot")
 
   ####################
@@ -107,9 +107,9 @@
   Kappa(SexualFun)
 
   ## Agreement Chart
-  grid.agreementplot(t(SexualFun), weights = 1)
+  agreementplot(t(SexualFun), weights = 1)
   ## Partial Agreement Chart and B-Statistics
-  (grid.agreementplot(t(SexualFun),
+  (agreementplot(t(SexualFun),
                       xlab = "Husband's Rating",
                       ylab = "Wife's Rating",
                       main = "Husband's and Wife's Sexual Fun")
@@ -119,8 +119,8 @@
   #########################
   data(MSPatients)
   ## use e.g., X11(width = 12), or expand graphics device
-  grid.agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
-  grid.agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
+  agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
+  agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
 
   ##################
   ## Ternary Plot ##

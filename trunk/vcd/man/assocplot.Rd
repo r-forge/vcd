@@ -91,15 +91,15 @@ assocplot(x, color = NULL, shade = TRUE, test = c("Chisq", "none"),
 data(HairEyeColor)
 ## Aggregate over sex:
 (x <- margin.table(HairEyeColor, c(1, 2)))
-assocplot(x, main = "Relation between hair and eye color")
+assoc(x, main = "Relation between hair and eye color", shade = TRUE)
 
 ## Ordinary assocplot:
-assocplot(x, shade = FALSE)
+assoc(x)
 
 ## Aggregate over Eye color:
 (x <- margin.table(HairEyeColor, c(1, 3)))
 chisq.test(x)
-assocplot(x, main = "Relation between hair color and sex")
+assoc(x, main = "Relation between hair color and sex", shade = TRUE)
 }
 \keyword{hplot}
 

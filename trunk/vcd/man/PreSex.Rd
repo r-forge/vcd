@@ -42,24 +42,24 @@ data(PreSex)
 
 ## Mosaic display for Gender and Premarital Sexual Expirience
 ## (Gender Pre)
-grid.mosaicplot(margin.table(PreSex, c(3,4)), legend = FALSE,
+mosaic(margin.table(PreSex, c(3,4)), legend = FALSE,
                 main = "Gender and Premarital Sex")
 
 ## (Gender Pre)(Extra)
-grid.mosaicplot(margin.table(PreSex, c(2,3,4)), legend = FALSE,
-           margin = ~Gender * PremaritalSex + ExtramaritalSex ,
+mosaic(margin.table(PreSex, c(2,3,4)), legend = FALSE,
+       expected = ~Gender * PremaritalSex + ExtramaritalSex ,
 	   main = "PreMaritalSex*Gender +Sex")
 
 ## (Gender Pre Extra)(Marital)
-mosaicplot(PreSex,
-           margin = ~Gender*PremaritalSex*ExtramaritalSex + MaritalStatus,
-           legend = FALSE, main = "PreMarital*ExtraMarital + MaritalStatus")
+mosaic(PreSex,
+       expected = ~Gender*PremaritalSex*ExtramaritalSex + MaritalStatus,
+       legend = FALSE, main = "PreMarital*ExtraMarital + MaritalStatus")
 
 ## (GPE)(PEM)
-mosaicplot(PreSex, 
-           margin = ~ Gender * PremaritalSex * ExtramaritalSex
+mosaic(PreSex, 
+       expected = ~ Gender * PremaritalSex * ExtramaritalSex
                     + MaritalStatus * PremaritalSex * ExtramaritalSex,
-	   legend = FALSE, main = "G*P*E + P*E*M")
+       legend = FALSE, main = "G*P*E + P*E*M")
 }
 
 \keyword{datasets}
