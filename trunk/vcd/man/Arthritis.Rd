@@ -1,12 +1,14 @@
 \name{Arthritis}
 \alias{Arthritis}
 \non_function{}
-\title{Arthritis}
+\title{Arthritis Treatment Data}
 \description{
-Arthritis treatment data.
+Data from Koch & Edwards (1988) from a double-blind clinical trial
+investigating a new treatment for rheumatoid arthritis.
 }
 
 \usage{data(Arthritis)}
+
 \format{A data frame with 84 observations and 5 variables.
   \describe{
     \item{ID}{patient ID,}
@@ -18,9 +20,15 @@ Arthritis treatment data.
 }
 
 \references{
+G. Koch & S. Edwards (1988), Clinical efficiency trials with categorical
+data. In K. E. Peace (ed.), \emph{Biopharmaceutical Statistics for Drug Development},
+403-451. Marcel Dekker, New York.
+
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Publishing.
 }
 
-\source{Friendly, Visualizing Categorical Data:
+\source{Michael Friendly (2000), Visualizing Categorical Data:
 \url{http://hotspur.psych.yorku.ca/ftp/sas/vcd/catdata/arthrit.sas}}
 
 \examples{

@@ -9,7 +9,7 @@
   observed and expected diagonal elements are represented by superposed
   black and white rectangles, respectively. The function also computes
   a statistic measuring the strength of agreement (relation of respective
-  area sums). 
+  area sums).
 }
 \usage{
 \method{agreementplot}{default}(x, reverse.y = TRUE, main = "Agreement Chart",
@@ -60,11 +60,11 @@
 data(SexualFun)
 agreementplot(t(SexualFun))
 
-data(MSpatients)
+data(MSPatients)
 ## Enlarge plot manually or use sth. like: X11(width = 12)!
 par(mfrow = c(1,2))
-agreementplot(t(MSpatients[,,1]), main = "Winnipeg Patients")
-agreementplot(t(MSpatients[,,2]), main = "New Orleans Patients")
+agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
+agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
 
 }
 \keyword{category}% at least one, from doc/KEYWORDS

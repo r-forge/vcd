@@ -1,7 +1,7 @@
 \name{Ord.plot}
 \alias{Ord.plot}
 \alias{Ord.estimate}
-\title{Ord plot}
+\title{Ord plots}
 \description{
 Ord plots for diagnosing discrete distributions.
 }
@@ -53,6 +53,9 @@ from \code{Ord.estimate} as it implements just some simple heuristics!
   Achim Zeileis
 }
 \references{
+J. K. Ord (1967), Graphical methods for a class of discrete distributions,
+\emph{Journal of the Royal Statistical Society}, \bold{A 130}, 232-238.
+
 Michael Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Publishing.
 }
