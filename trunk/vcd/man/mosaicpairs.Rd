@@ -4,7 +4,7 @@
 \description{Plots matrices of mosaics.}
 \usage{
 mosaicpairs(x, main = NULL, xlab = NULL, ylab = NULL, labels, \dots,
-            type = c("simple", "independent", "conditional"),
+            type = c("simple", "independent", "conditional", "joint"),
             shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	    font.labels = 1, gap = 1)
 }
@@ -38,8 +38,10 @@ mosaicpairs(x, main = NULL, xlab = NULL, ylab = NULL, labels, \dots,
   The simple mosaic shows bivariate marginal relations, collapsed over
   all other variables. The independent mosaic matrix shows mosaic plots
   for mutual independence, i.e. for marginal and conditional independence
-  among all pairs of variables. The conditinal mosaic matrix shows
-  mosaic plots for marginal independence given all other variables.
+  among all pairs of variables. The conditional mosaic matrix shows
+  mosaic plots for marginal independence given all other variables. The
+  joint option shows mosaic plots for joint independence of all pairs of
+  variables from the others.
 }
 
 \references{
@@ -59,3 +61,6 @@ mosaicpairs(UCBAdmissions, shade = TRUE)
 mosaicpairs(UCBAdmissions, shade = TRUE, type="conditional")
 }
 \keyword{hplot}
+
+
+
