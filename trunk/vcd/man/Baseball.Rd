@@ -30,11 +30,11 @@ Baseball data.
     \item{league86}{player's league.}
     \item{div86}{player's division.}
     \item{team86}{player's team.}
-    \item{posit86}{player's position (see \code{\cite{Hitters}}).}
-    \item{outs86}{number of putouts (see \code{\cite{Hitters}})}
-    \item{assist86}{number of assists (see \code{\cite{Hitters}})}
-    \item{error86}{number of assists (see \code{\cite{Hitters}})}
-    \item{sal87}{annary salary on opening day (in $1000).}
+    \item{posit86}{player's position (see \code{\link{Hitters}}).}
+    \item{outs86}{number of putouts (see \code{\link{Hitters}})}
+    \item{assist86}{number of assists (see \code{\link{Hitters}})}
+    \item{error86}{number of assists (see \code{\link{Hitters}})}
+    \item{sal87}{annary salary on opening day (in \$1000).}
     \item{league87}{league in 1987.}
     \item{team87}{team in 1987.}
   }
