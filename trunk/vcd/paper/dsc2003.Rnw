@@ -39,7 +39,7 @@ contingency tables---are extended in three directions:
 \begin{enumerate}
  \item The visualization is enhanced by using colors for the
   importance of the residuals.
- \item Two extensions for the use of multi-way tables are proposed.
+ \item Two methods for the use of multi-way tables are proposed.
  \item The implementation currently available in \textsf{R} is improved using a more modular
   design and allowing a more flexible specification of plotting parameters.
 \end{enumerate}
@@ -57,9 +57,10 @@ of the residuals themselves.
 This task can greatly be sustained by the use of graphical
 methods such as the association plot, for which we propose some
 extensions: the use of colors for the shading of the residuals, two
-possible extensions for multi-way tables, and a new, more flexible
-implementation using {\sf R}'s alternative graphical system,
-\texttt{grid} \cite{vcd:Murrell:2002}. The new functionality is provided by the {\sf R} package
+possible methods for multi-way tables, and a new, more flexible
+implementation using {\sf R}'s alternative graphical system
+\texttt{grid} \citep{vcd:Murrell:2002}. The new functionality is provided 
+by the {\sf R} package
 \texttt{vcd}, inspired by the book `Visualizing Categorical Data'
 \citep{vcd:Friendly:2000}.
 
@@ -107,7 +108,7 @@ implementations, the sign of the residual is typically redundantly
 coded by the rectangle's color and its position relative to the baseline.
 
 Figure \ref{fig:assoc-classic1} shows the association plot
-(produced by the implementation in \texttt{base} {\sf R}) for the
+(produced by the implementation in base {\sf R}) for the
 variables `Hair' and `Eye' of the well-known `HairEyeColor' data
 set \cite[Hair and Eye colors of 264 male and 328 female statistics
 students; see][]{vcd:Snee:1974}. 
@@ -139,7 +140,7 @@ grid.assocplot(HairEyeColor[,,2], gp = gp.shading)
 \pagebreak
 \section{Improved visualization through residual shading}
 
-We propose to use a color-shading similar to
+We propose to use a color-shading similar to the
 enhancements of \cite{vcd:Friendly:1994} for the mosaic plot 
 \cite[a graphical tool for the 
 visualization of the observed frequencies in a contingency table; 
@@ -176,7 +177,7 @@ For example, the big tiles for blond hair convey the impression of an asymmetry 
 male and female students, and hence that hypothesis of independence is
 to be rejected. However, the $\chi^2$ test statistic is not significant at
 a 5\% level: in this example, its value is 6.221, and the corresponding
-$p$ value approximately $0.1013$. Apparently, the relative size of the
+$p$ value is approximately $0.101$. Apparently, the relative size of the
 tiles is insufficient to assess the ``strength'' of association
 between two variables; again, information on the absolute size of the
 residuals would be useful.
@@ -249,9 +250,10 @@ plots: like in trellis displays, we produce a separate plot
 for each level of a conditioning variable (in the case of two
 or more conditioning variables, for each level combination). 
 This can be illustrated using the famous admissions data of the University of
-California at Berkley (UCB)---see \cite{vcd:Bickel+Hammel+O'connell:1975}---which is available in base \textsf{R}.
+California at Berkley \citep{vcd:Bickel+Hammel+O'connell:1975} 
+which is available in base \textsf{R}.
 In this data, the question whether there is gender
-discrimination at the UCB leads to the result that although women seem to
+discrimination at the university leads to the result that although women seem to
 be disadvantaged at the aggregated level there is no gender discrimination
 in the department strata---with the very exception of one department
 in which women are {\em more} likely to be admitted than would be plausible
@@ -309,6 +311,23 @@ statistic---the maximum of the absolute values of the Pearson residuals.
 
 \bibliographystyle{asa}
 \bibliography{vcd}
+
+\section*{Addresses}
+
+David Meyer\\
+Achim Zeileis\\
+E-mail: \texttt{\{David.Meyer,Achim.Zeileis\}@ci.tuwien.ac.at}\\
+Institut f\"ur Statistik und Wahrscheinlichkeitstheorie\\
+Technische Universit\"at Wien\\
+Wiedner Hauptstra{\ss}e 8--10/1071\\
+1040 Wien\\
+\\
+Kurt Hornik\\
+E-mail: \texttt{Kurt.Hornik@wu-wien.ac.at}\\
+Institut f\"ur Statistik\\
+Wirtschaftsuniversit\"at Wien\\
+Augasse 2--6\\
+1090 Wien\\
 
 \end{document}
 % LocalWords:  proofness
