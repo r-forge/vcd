@@ -1,7 +1,21 @@
-Ord.plot <- function(x, count, ylim = NULL, xlab = "Number of occurences",
+Ord.plot <- function(obj, ylim = NULL, xlab = "Number of occurences",
                      ylab = "Frequency ratio", legend = TRUE,
 		     estim = TRUE, tol = 0.1, ...)
 {
+  if(is.vector(obj)) {
+    obj <- table(obj)
+  }
+  if(is.table(obj)) {
+    if(length(dim(obj)) > 1) stop ("obj must be a 1-way table")
+    x <- as.vector(obj)
+    count <- as.numeric(names(obj))
+  } else {
+    if(!(!is.null(ncol(obj)) && ncol(obj) == 2))
+      stop("obj must be a 2-column matrix or data.frame")
+    x <- as.vector(obj[,1])
+    count <- as.vector(obj[,2])
+  }
+
   y <- count * x/c(NA, x[-length(x)])
   fm <- lm(y ~ count)
   fmw <- lm(y ~ count, weights = sqrt(x - 1))
