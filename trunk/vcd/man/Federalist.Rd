@@ -25,7 +25,7 @@ F. Mosteller & D. L. Wallace (1984), \emph{Applied Bayesian and Classical
 Inference: The Case of the Federalist Papers}. Springer-Verlag, New York, NY.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 19.}

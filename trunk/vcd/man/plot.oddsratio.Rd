@@ -22,8 +22,9 @@ plot.oddsratio(x, confidence = TRUE,
   \item{whiskers}{Width of the confidence interval whiskers.}
   \item{\dots}{Other graphics parameters (see \code{par}).}
 }
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+\references{
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr

@@ -29,7 +29,7 @@ E. R. Tufte (1997), \emph{Visual Explanations: Images and Quantities,
 Evidence and Narrative}. Graphics Press, Cheshire, CT.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data:

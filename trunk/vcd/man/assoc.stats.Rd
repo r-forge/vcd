@@ -22,8 +22,8 @@ assoc.stats(x)
   \item{cont}{The  contingency coefficient.}
   \item{cramer}{Cramer's V.}
 }
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+\references{
+Michael Friendly (2000), \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr

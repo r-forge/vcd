@@ -25,7 +25,7 @@ A. J. Lee (1997), Modelling scores in the Premier League: Is Manchester
 United really the best?, \emph{Chance}, \bold{10}(1), 15-19.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 27.

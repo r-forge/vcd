@@ -30,7 +30,7 @@ Structural models of similarities and differences, \emph{Sociological
 Methodology}, \bold{17}, 145-184.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 91.

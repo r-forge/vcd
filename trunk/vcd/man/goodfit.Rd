@@ -53,8 +53,8 @@ observed and fitted values.
   Achim Zeileis
 }
 \references{
-Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

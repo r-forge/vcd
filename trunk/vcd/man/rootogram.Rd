@@ -41,8 +41,8 @@ visible.
 J. W. Tukey (1977), \emph{Exploratory Data Analysis}. Addison Wesley,
 Reading, MA.
 
-Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

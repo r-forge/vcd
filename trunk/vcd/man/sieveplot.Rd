@@ -46,8 +46,12 @@ the deviations of the observed from the expected values.
     used for plotting.}
   \item{\dots}{further graphics parameters (see \code{par}).}
 }
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+\references{
+H. Riedwyl & M. Schüpbach (1994), Parquet diagram to plot contingency tables.
+In F. Faulbaum (ed.), \emph{Softstat '93: Advances in Statistical Software},
+293-299. Gustav Fischer, New York.
+
+M. Friendly (2000), Visualizing Categorical Data, SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr

@@ -1,7 +1,7 @@
 \name{CoalMiners}
 \alias{CoalMiners}
 \non_function{}
-\title{Sex Is Fun}
+\title{Breathelessness and Wheeze in Coal Miners}
 \description{
 Data from Ashford & Snowden (1970) given by Agresti (1990) on the
 association between two pulmonary conditions, breathelessness and
@@ -29,7 +29,7 @@ J. R. Ashford & R. D. Snowdon (1970), Multivariate probit analysis,
 \emph{Biometrics}, \bold{26}, 535-546.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 82-83, 319-322.

@@ -48,8 +48,9 @@
   \item{Bangdiwala.Weighted}{the weighted statistic}
   \item{weights}{the weigtht vector used.}
 }
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+\references{
+Michael Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr
@@ -65,7 +66,7 @@ data(MSPatients)
 par(mfrow = c(1,2))
 agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
 agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
-
+par(mfrow = c(1,1))
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{hplot}% __ONLY ONE__ keyword per line

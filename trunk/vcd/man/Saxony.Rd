@@ -25,7 +25,7 @@ R. R. Sokal & F. J. Rholf (1969), \emph{Biometry. The Principles and
 Practice of Statistics}. W. H. Freeman, San Francisco, CA.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, pp. 40-42.}

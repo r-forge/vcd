@@ -33,7 +33,7 @@ victimization. In S. E. Fienberg & A. J. J. Reiss (eds.),
 Printing Office, Washington, DC.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 113.
