@@ -59,13 +59,13 @@ the deviations of the observed from the expected values.
 data(HairEyeColor)
 
 ## aggregate over `sex':
-(tab <- apply(HairEyeColor, 1:2, sum))
+(tab <- margin.table(HairEyeColor, c(2,1)))
 
 ## plot expected values:
-sieveplot(t(tab), type = "expected", values = "both")
+sieveplot(tab, type = "expected", values = "both")
 
 ## plot sieve diagram:
-sieveplot(t(tab))
+sieveplot(tab)
 
 ## an example for the formula interface:
 data(mtcars)
