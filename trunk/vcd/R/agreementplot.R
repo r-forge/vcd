@@ -93,16 +93,16 @@ function (formula, data = NULL, ..., subset)
   xc <- c(0, cumsum(colFreqs))
   yc <- c(0, cumsum(rowFreqs))
 
-  my.text <- function (y, ...)
-    if (reverse.y)
-      text(y, ...)
-    else
-      text(2 * bm + 1 - y, ...)
+  my.text <- if(reverse.y)
+    function (y, ...) text(y, ...)
+  else
+    function (y, ...) text(2 * bm + 1 - y, ...)
 
-  my.rect <- function (xleft, ybottom, xright, ytop, ...)
-    if (reverse.y)
+  my.rect <- if(reverse.y)
+    function (xleft, ybottom, xright, ytop, ...)
       rect(lm + xleft, bm + ybottom, lm + xright, bm + ytop, ...)
-    else
+  else
+    function (xleft, ybottom, xright, ytop, ...)
       rect(lm + xleft, 1 + tm - ybottom, lm + xright, 1 + tm - ytop, ...)
   
   A <- matrix(0, length(weights), nc)
@@ -164,7 +164,7 @@ function (formula, data = NULL, ..., subset)
 Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
 {
   if (is.character(weights))
-      weights = match.arg(weights)
+      weights <- match.arg(weights)
 
   q <- qnorm((1 + conf.level) / 2)
   
@@ -190,9 +190,9 @@ Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level =
   W <- if (is.matrix(weights))
     weights
   else if (weights == "Equal-Spacing")
-    outer (1:nc, 1:nc, function(x, y) 1 - abs(x - y) / (nc - 1))
+    1 - abs(outer(1:nc, 1:nc, "-")) / (nc - 1)
   else
-    outer (1:nc, 1:nc, function(x, y) 1 - (abs(x - y) / (nc - 1))^2)
+    1 - (abs(outer(1:nc, 1:nc, "-")) / (nc - 1))^2
   pow <- sum(W * x) / n
   pcw <- sum(W * colFreqs %o% rowFreqs)
   kw <- kappa(pow, pcw)
@@ -220,7 +220,7 @@ Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level =
 print.Kappa <- function (x, ...) {
   tab <- rbind(x$Unweighted, x$Weighted)
   rownames(tab) <- names(x)[1:2]
-  print(tab)
+  print(tab, ...)
   invisible(x)
 }
 
@@ -228,13 +228,13 @@ summary.Kappa <- function (object, ...)
   structure(object, class = "summary.Kappa")
 
 print.summary.Kappa <- function (x, ...) {
-  print.Kappa(x)
+  print.Kappa(x, ...)
   cat("\nWeights:\n")
-  print(x$Weights)
+  print(x$Weights, ...)
   invisible(x)
 }
 
-expected <- function(x, frequency = c("absolute","relative")) {
+indifference.table <- function(x, frequency = c("absolute", "relative")) {
   if (!is.array(x))
     stop("Need array of absolute frequencies!")
   frequency <- match.arg(frequency)
@@ -242,26 +242,24 @@ expected <- function(x, frequency = c("absolute","relative")) {
   n <- sum(x)
   x <- x / n
   d <- length(dim(x))
-  tab <- apply(x, 1, sum)
-  for (i in 2:d)
-    tab <- tab %o% apply(x, i, sum)
+  tab <- do.call("outer", lapply(1:d, function(i) apply(x, i, sum)))
   if (frequency == "relative") tab else tab * n
 }
 
 mar.table <- function(x) {
   if(!is.matrix(x))
-    stop("Function only defined for m x n - tables.")
+    stop("Function only defined for 2-d - tables.")
   tab <- rbind(cbind(x, TOTAL = rowSums(x)), TOTAL = c(colSums(x), sum(x)))
   names(dimnames(tab)) <- names(dimnames(x))
   tab
 }
 
-summary.table <- function(object,
-                    margins = TRUE,
-                    percentages = FALSE,
-                    conditionals = c("none", "row", "column"),
-                    ...
-                    )
+table2d.summary <- function(object,
+                            margins = TRUE,
+                            percentages = FALSE,
+                            conditionals = c("none", "row", "column"),
+                            ...
+                            )
 {
   ret <- list()
   ret$chisq <- base::summary.table(object, ...)
@@ -306,18 +304,18 @@ summary.table <- function(object,
     ret$table <- tab
   }    
 
-  class(ret) <- "summary.table"
+  class(ret) <- "table2d.summary"
   ret
 }
 
-print.summary.table <- 
+print.table2d.summary <- 
 function (x, digits = max(1, getOption("digits") - 3), ...) 
 {
   if (!is.null(x$table))
     if(dim(x$table)[3] == 1)
-      print(x$table[,,1], digits = digits)
+      print(x$table[,,1], digits = digits, ...)
     else
-      print(ftable(aperm(x$table, c(1,3,2))), 2, digits = digits)
+      print(ftable(aperm(x$table, c(1,3,2))), 2, digits = digits, ...)
   
   cat("\n")
   
@@ -328,7 +326,7 @@ function (x, digits = max(1, getOption("digits") - 3), ...)
 
 assoc.stats <- function(x) {
   if(!is.matrix(x))
-    stop("Function only defined for m x n - tables.")
+    stop("Function only defined for 2-d - tables.")
   require(MASS)
   
   tab    <- summary(loglm(~1+2, x))$tests
@@ -349,7 +347,7 @@ print.assoc.stats <- function(x,
                               digits = 3,
                               ...)
 {
-  print(x$chisq.tests, digits = 5)
+  print(x$chisq.tests, digits = 5, ...)
   cat("\n")
   cat("Phi-Coefficient   :", round(x$phi,    digits = digits), "\n")
   cat("Contingency Coeff.:", round(x$cont,   digits = digits), "\n")
@@ -368,8 +366,8 @@ summary.assoc.stats <- function(object, percentage = FALSE, ...) {
 
 print.summary.assoc.stats <- function(x, ...) {
   cat("\n")
-  print(x$summary)
-  print(x$object)
+  print(x$summary, ...)
+  print(x$object, ...)
   cat("\n")
   invisible(x)
 }
