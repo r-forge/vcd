@@ -38,8 +38,8 @@ sieveplot(x, reverse.y = TRUE, type = c("sieve", "expected"), title = NULL, valu
 \examples{
 data(HairEyeColor)
 (tab <- apply(HairEyeColor, 1:2, sum))
-sieveplot(t(tab))
 sieveplot(t(tab), type = "expected", values = "both")
+sieveplot(t(tab))
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{hplot}% __ONLY ONE__ keyword per line
