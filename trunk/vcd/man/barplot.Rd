@@ -1,5 +1,6 @@
 \name{barplot}
 \alias{barplot}
+\alias{barplot.default}
 \title{Bar Plots}
 \usage{
 \method{barplot}{default}(height, width = 1, space = NULL,

@@ -1,5 +1,7 @@
 \name{mosaicplot}
 \alias{mosaicplot}
+\alias{mosaicplot.default}
+\alias{mosaicplot.formula}
 \title{Mosaic Plots}
 \description{Plots a mosaic on the current graphics device.}
 \usage{
