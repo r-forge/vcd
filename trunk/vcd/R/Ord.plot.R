@@ -1,6 +1,6 @@
 Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
                      type = NULL, ylim = NULL, xlab = "Number of occurences",
-		     ylab = "Frequency ratio", ...)
+		     ylab = "Frequency ratio", main = "Ord plot", ...)
 {
   if(is.vector(obj)) {
     obj <- table(obj)
@@ -22,7 +22,7 @@ Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
   fit1 <- predict(fm, data.frame(count))
   fit2 <- predict(fmw, data.frame(count))
   if(is.null(ylim)) ylim <- range(c(y, fit1, fit2), na.rm = TRUE)
-  plot(y ~ count, ylim = ylim, xlab = xlab, ylab = ylab, ...)
+  plot(y ~ count, ylim = ylim, xlab = xlab, ylab = ylab, main = main, ...)
   lines(count, fit1)
   lines(count, fit2, col = 2)
   RVAL <- coef(fmw)

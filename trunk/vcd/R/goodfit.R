@@ -1,5 +1,5 @@
 goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
-                    par = NULL, size = NULL)
+                    method = c("ML", "MinChisq"), par = NULL)
 {
     if(is.vector(obj)) {
       obj <- table(obj)
@@ -18,88 +18,88 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
     df <- length(count) - 1
 
     type <- match.arg(type)
+    method <- match.arg(method)
+
     switch(type,
 
     "poisson" = {
 
-      chi2 <- function(x)
-      {
-	p.hat <- dpois(count, lambda = x)
-        expected <- sum(freq) * p.hat
-        sum((freq - expected)^2/expected)
-      }
-
-      if(is.null(par)) {
-        df <- df - 1
-	## ML/MM
-	par1 <- weighted.mean(count,freq)
-	## minChisq
-	chi2opt <- optimize(chi2, range(count))
-	par2 <- chi2opt$minimum
-	statistic <- chi2opt$objective
-        par <- rbind(par1, par2)
-        rownames(par) <- c("ML", "minChisq")
-      }
-      else {
+      if(!is.null(par)) {
         if(!is.list(par)) stop("`par' must be a named list")
-        if(!(names(par) == "lambda"))
-	  stop("`par' must specify `lambda'")
-	par <- matrix(par$lambda, ncol = 1)
-	rownames(par) <- "fixed"
-	statistic <- chi2(par[1,1])
+        if(!(names(par) == "lambda")) stop("`par' must specify `lambda'")
+	par <- par$lambda
+	method <- "fixed"
       }
-      colnames(par) <- "lambda"
-      p.hat <- dpois(count, lambda = par[1,1])
+      else if(method == "ML") {
+        df <- df - 1
+	par <- weighted.mean(count,freq)
+      }
+      else if(method == "MinChisq") {
+        df <- df - 1
+
+	chi2 <- function(x)
+        {
+	  p.hat <- dpois(count, lambda = x)
+          expected <- sum(freq) * p.hat
+          sum((freq - expected)^2/expected)
+        }
+
+	par <- optimize(chi2, range(count))$minimum
+      }
+      par <- list(lambda = par)
+      p.hat <- dpois(count, lambda = par$lambda)
     },
 
     "binomial" = {
+      size <- par$size
       if(is.null(size)) {
         size <- max(count)
         warning("size was not given, taken as maximum count")
       }
 
-      chi2 <- function(x)
-      {
-	p.hat <- dbinom(count, prob = x, size = size)
-        expected <- sum(freq) * p.hat
-        sum((freq - expected)^2/expected)
+      if(!is.null(par$prob)) {
+        if(!is.list(par)) stop("`par' must be a named list and specify `prob'")
+	par <- par$prob
+	method <- "fixed"
       }
-
-      if(is.null(par)) {
+      else if(method == "ML") {
         df <- df - 1
-        ## ML/MM
-	par1 <- weighted.mean(count/size, freq)
-	## minChisq
-	chi2opt <- optimize(chi2, c(0,1))
-	par2 <- chi2opt$minimum
-	statistic <- chi2opt$objective
-        par <- rbind(par1, par2)
-        rownames(par) <- c("ML", "minChisq")
+	par <- weighted.mean(count/size, freq)
       }
-      else {
-        if(!is.list(par)) stop("`par' must be a named list")
-        if(!(names(par) == "prob"))
-	  stop("`par' must specify `prob'")
-	par <- matrix(par$prob, ncol = 1)
-	rownames(par) <- "fixed"
-	statistic <- chi2(par[1,1])
+      else if(method == "MinChisq") {
+        df <- df - 1
+
+	chi2 <- function(x)
+        {
+	  p.hat <- dbinom(count, prob = x, size = size)
+          expected <- sum(freq) * p.hat
+          sum((freq - expected)^2/expected)
+        }
+
+	par <- optimize(chi2, c(0,1))$minimum
       }
-      colnames(par) <- "prob"
-      p.hat <- dbinom(count, prob = par[1,1], size = size)
+      par <- list(prob = par, size = size)
+      p.hat <- dbinom(count, prob = par$prob, size = par$size)
     },
 
 
     "nbinomial" = {
 
-      chi2 <- function(x)
-      {
-	p.hat <- dnbinom(count, size = x[1], prob = x[2])
-        expected <- sum(freq) * p.hat
-        sum((freq - expected)^2/expected)
+      if(!is.null(par)) {
+        if(!is.list(par)) stop("`par' must be a named list")
+        if(is.character(all.equal(sum(match(names(par), c("size", "prob"))), 3))) stop("`par' must specify `prob' and `size'")
+	method <- "fixed"
+	par <- c(par$size, par$prob)
       }
-
-      if(is.null(par)) {
+      else if(method == "ML") {
         df <- df - 2
+
+	require(package = MASS)
+        par <- fitdistr(rep(count, freq), "negative binomial")$estimate
+        par <- par[1]/c(1, sum(par))
+     }
+     else if(method == "MinChisq") {
+       df <- df - 2
 
 	## MM
 	xbar <- weighted.mean(count,freq)
@@ -108,55 +108,102 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 	n <- xbar^2/(s2 - xbar)
         par1 <- c(n, p)
 
-	## ML
-	require(package = MASS)
-        par <- fitdistr(rep(count, freq), "negative binomial")$estimate
-        par <- par[1]/c(1, sum(par))
+        chi2 <- function(x)
+        {
+	  p.hat <- dnbinom(count, size = x[1], prob = x[2])
+          expected <- sum(freq) * p.hat
+          sum((freq - expected)^2/expected)
+        }
 
 	## minChisq
-	chi2opt <- optim(par1, chi2)
-	par2 <- chi2opt$par
-	statistic <- chi2opt$value
-        par <- rbind(par, par2, par1)
-        rownames(par) <- c("ML", "minChisq", "MM")
-      } else {
-        if(!is.list(par)) stop("`par' must be a named list")
-        if(is.character(all.equal(sum(match(names(par), c("size", "prob"))), 3)))
-	  stop("`par' must specify `prob' and `size'")
-        par <- matrix(c(par$size, par$prob), nrow = 1)
-	rownames(par) <- "fixed"
-	statistic <- chi2(par[1,])
+	par <- optim(par1, chi2)$par
       }
-      colnames(par) <- c("size", "prob")
-      p.hat <- dnbinom(count, size = par[1,1], prob = par[1,2])
+      par <- list(size = par[1], prob = par[2])
+      p.hat <- dnbinom(count, size = par$size, prob = par$prob)
     })
 
     expected <- sum(freq) * p.hat
 
-    statistic <- c(statistic, sum(freq*log(freq/expected)) * 2)
-    names(statistic) <- c("Pearson", "Likelihood Ratio")
-
     RVAL <- list(observed = freq,
                  count = count, fitted = expected,
-		 type = type, df = df, estimate = par,
-		 statistic = statistic)
+		 type = type, method = method, df = df,
+		 par = par)
     class(RVAL) <- "goodfit"
     RVAL
 }
 
-summary.goodfit <- function(object, ...)
+summary.goodfit <- function(object, tol = 1e-5, correct = TRUE, ...)
 {
     df <- object$df
-    RVAL <- object$statistic
-    RVAL <- cbind(RVAL, c(df,df), pchisq(RVAL, df = df, lower = FALSE))
+    obsrvd <- object$observed
+    expctd <- fitted(object)
+
+    G2 <- sum(obsrvd * log(obsrvd/expctd)) * 2
+    X2 <- sum((obsrvd - expctd)^2/expctd)
+
+    ## observed zero frequencies might correspond
+    ## to non-neglectable Pearson `residuals'
+    count <- 0:max(object$count)
+    if(object$type == "binomial") count <- 0:object$par$size
+    n <- length(count)
+    obsrvd <- rep(0, n)
+    names(obsrvd) <- count
+    obsrvd[as.character(object$count)] <- object$observed
+    expctd <- predict(object, newcount = count)
+    presid <- (obsrvd - expctd)^2/expctd
+
+    continue <- presid[n] > tol
+    if(object$type == "binomial") continue <- FALSE
+
+    while(continue) {
+      count <- c(count, count[n] + 1)
+      n <- n + 1
+      expctd <- c(expctd, predict(object, newcount = count[n]))
+      presid <- c(presid, expctd[n])
+      continue <- presid[n] > tol
+    }
+
+    print(max(count))
+
+    if(correct) X2 <- sum(presid)
+    names(G2) <- "Likelihood Ratio"
+    names(X2) <- "Pearson"
+
+    switch(object$method,
+    "ML" = { RVAL <- G2 },
+    "MinChisq" = { RVAL <- X2 },
+    "fixed" = { RVAL <- c(X2, G2) })
+
+    RVAL <- cbind(RVAL, df, pchisq(RVAL, df = df, lower = FALSE))
     colnames(RVAL) <- c("X^2", "df", "P(> X^2)")
 
-    cat(paste("\n\t Goodness-of-fit tests for", object$type, "distribution\n\n"))
+    cat(paste("\n\t Goodness-of-fit test for", object$type, "distribution\n\n"))
     print(RVAL)
+    invisible(RVAL)
 }
 
 plot.goodfit <- function(x, ...)
 {
   rootogram(x, ...)
+}
+
+fitted.goodfit <- function(object, ...)
+{
+  object$fitted
+}
+
+predict.goodfit <- function(object, newcount = NULL, type = c("response", "prob"), ...)
+{
+  if(is.null(newcount)) newcount <- object$count
+  type <- match.arg(type)
+
+  switch(object$type,
+  "poisson" = { densfun <- "dpois" },
+  "binomial" = { densfun <- "dbinom" },
+  "nbinomial" = { densfun <- "dnbinom" })
+
+  RVAL <- do.call(densfun, c(list(x = newcount), object$par))
+  if(type == "response") RVAL <- RVAL * sum(object$observed)
+  return(RVAL)
 }
 

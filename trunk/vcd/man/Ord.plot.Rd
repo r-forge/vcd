@@ -8,7 +8,7 @@ Ord plots for diagnosing discrete distributions.
 \usage{
 Ord.plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,
          ylim = NULL, xlab = "Number of occurences",
-	 ylab = "Frequency ratio", ...)
+	 ylab = "Frequency ratio", main = "Ord plot", ...)
 Ord.estimate(x, type = NULL, tol = 0.1)
 }
 \arguments{
@@ -27,6 +27,7 @@ Ord.estimate(x, type = NULL, tol = 0.1)
   \item{ylim}{limits for the y axis.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
+  \item{main}{a title for the plot.}
   \item{...}{further arguments passed to \code{\link{plot}}.}
   \item{x}{a vector giving intercept and slope for the (fitted)
     line in the Ord plot.}
