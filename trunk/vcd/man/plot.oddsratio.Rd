@@ -1,12 +1,12 @@
-\name{plot.logoddsratio}
-\alias{plot.logoddsratio}
-\title{Log Odds Ratios Plots}
+\name{plot.oddsratio}
+\alias{plot.oddsratio}
+\title{(Log) Odds Ratios Plots}
 \description{
-Plots log odds ratios, computed by \code{logoddsratio} for 2 x 2 x
+Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
 k-tables, along with confidence intervals.
 }
 \usage{
-plot.logoddsratio(x, quantile = qnorm(0.975), confidence = TRUE,
+plot.oddsratio(x, confidence = TRUE,
                   type ="o", ylab = "Log Odds Ratio", xlab = "Strata",
                   whiskers = 0.1, ...)
 }
@@ -14,7 +14,6 @@ plot.logoddsratio(x, quantile = qnorm(0.975), confidence = TRUE,
 \arguments{
   \item{x}{An object of class \code{logoddsratio}, computed for a 2 x 2
     x k-table.}
-  \item{quantile}{(one-sided) quantile used for the confidence intervals.}
   \item{confidence}{if \code{TRUE}, confidence intervals are plotted for
   each data point.}
   \item{type}{plot type.}
@@ -35,7 +34,7 @@ plot.logoddsratio(x, quantile = qnorm(0.975), confidence = TRUE,
 
 \examples{
 data(CoalMiners)
-l <- logoddsratio(CoalMiners)
+l <- oddsratio(CoalMiners)
 g <- seq(25, 60, by = 5)
 plot(l,
      xlab = "Age Group",
