@@ -222,7 +222,7 @@ expected <- function(x, frequency = c("absolute","relative")) {
     stop("Need array of absolute frequencies!")
   frequency <- match.arg(frequency)
 
-  n <- sum(x)
+ n <- sum(x)
   x <- x / n
   d <- length(dim(x))
   tab <- apply(x, 1, sum)
@@ -232,7 +232,65 @@ expected <- function(x, frequency = c("absolute","relative")) {
 }
 
 mar.table <- function(x) {
+  if(!is.matrix(x))
+    stop("Function only defined for m x n - tables.")
   tab <- rbind(cbind(x, TOTAL = rowSums(x)), TOTAL = c(colSums(x), sum(x)))
   names(dimnames(tab)) <- names(dimnames(x))
   tab
 }
+
+Summary <- function(x,
+                    totals = TRUE,
+                    percentages = TRUE,
+                    conditionals = c("row", "column", "none"),
+                    digits = 4
+                    )
+{
+  if(!is.matrix(x))
+    stop("Function only defined for m x n - tables.")
+  conditionals <- match.arg(conditionals)
+  
+  tab <- array(0, c(dim(x) + totals, 1 + percentages + (conditionals != "none")))
+
+  ## frequencies
+  tab[,,1] <- if(totals) mar.table(x) else x
+
+  ## percentages
+  if(percentages) {
+    tmp <- prop.table(x)
+    tab[,,2] <- 100 * if(totals) mar.table(tmp) else tmp
+  }
+
+  ## conditional distributions
+  if(conditionals != "none") {
+    tmp <- prop.table(x, margin = 1 + (conditionals == "column"))
+    tab[,,2 + percentages] <- 100 * if(totals) mar.table(tmp) else tmp
+  }
+
+  ## dimnames
+  dimnames(tab) <- c(dimnames(if(totals) mar.table(x) else x),
+                     list(c("freq",
+                            if(percentages) "%",
+                            switch(conditionals, row = "row%", column = "col%")
+                            )
+                          )
+                     )
+
+  ## patch row%/col% totals
+  if(conditionals == "row") 
+    tab[dim(tab)[1],,3] <- NA
+
+  if(conditionals == "column")
+    tab[,dim(tab)[2],3] <- NA
+                     
+  if(dim(tab)[3] == 1)
+    print(tab[,,1], digits = digits)
+  else
+    print(ftable(aperm(tab, c(1,3,2))),2, digits = digits)
+  
+  invisible(tab)
+}
+
+
+
+
