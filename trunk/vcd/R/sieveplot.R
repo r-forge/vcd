@@ -59,6 +59,8 @@ function (formula, data = NULL, ..., subset)
   ex <- rows %o% cols * n
   sgn <- ex - x < 0
 
+  par.save <- par(no.readonly = TRUE)
+  
   ## build layout
   layout(matrix(1:(ncol(x) * nrow(x)), ncol(x), nrow(x), byrow=TRUE),
          widths = cols,
@@ -129,6 +131,8 @@ function (formula, data = NULL, ..., subset)
       plot.new()
     }
 
+  par(par.save)
+  
 }
 
 
