@@ -78,11 +78,11 @@ function (formula, data = NULL, ..., subset)
 
   ## compute relative frequencies
   n <- sum(x)
-  cols <- colSums(x)/n
-  rows <- rowSums(x)/n
+  colFreqs <- colSums(x) / n
+  rowFreqs <- rowSums(x) / n
 
   ## expected values
-  ex <- rows %o% cols * n
+  ex <- rowFreqs %o% colFreqs * n
 
   ## signs of deviations
   sgn <- ex - x < 0
@@ -94,12 +94,12 @@ function (formula, data = NULL, ..., subset)
   rm <- 0.1
 
   ## box coordinates for expected areas
-  x1 <- lm + c(0, cumsum(cols + margin)[-nc])
-  x2 <- x1 + cols
+  x1 <- lm + c(0, cumsum(colFreqs + margin)[-nc])
+  x2 <- x1 + colFreqs
   xmid <- (x1 + x2) / 2
   
-  y2 <- bm + 1 + (nr - 1) * margin - c(0, cumsum(rows + margin)[-nr]) 
-  y1 <- y2 - rows
+  y2 <- bm + 1 + (nr - 1) * margin - c(0, cumsum(rowFreqs + margin)[-nr]) 
+  y1 <- y2 - rowFreqs
   ymid <- (y1 + y2) / 2
 
   ## setup device
@@ -128,8 +128,8 @@ function (formula, data = NULL, ..., subset)
         ## optionally, write marginal frequencies
         if (values %in%  c("margins","both"))
           text(x = 1 + nc * margin + lm + 0.03, y = ymid[i], font = 2,
-               labels = if (frequencies == "relative") round(rows[i], 2)
-                        else round(rows[i] * n, 1), srt = 90, ...)
+               labels = if (frequencies == "relative") round(rowFreqs[i], 2)
+                        else round(rowFreqs[i] * n, 1), srt = 90, ...)
       }
       if (i == 1) { ## x-axis
         text(y = bm - 0.03 + values %in% c("margins","both") * (1 + nr * margin + 0.04),
@@ -137,21 +137,21 @@ function (formula, data = NULL, ..., subset)
         ## optionally, write marginal frequencies
         if (values %in%  c("margins","both"))
           text(pos = 1, x = xmid[j], y = bm - 0.01, font = 2,
-               labels = if (frequencies == "relative") round(cols[j], 2)
-                        else round(cols[j] * n, 1), ...)
+               labels = if (frequencies == "relative") round(colFreqs[j], 2)
+                        else round(colFreqs[j] * n, 1), ...)
       }
 
       ## DRAW GRID
 
-      square.side <- sqrt(cols[j] * rows[i] / if (type == "sieve") x[i, j] else ex[i, j])
+      square.side <- sqrt(colFreqs[j] * rowFreqs[i] / if (type == "sieve") x[i, j] else ex[i, j])
       dev <- sgn[i, j] + 1
       line.color <- if (type == "sieve") sieve.colors[dev] else exp.color
       line.type  <- if (type == "sieve") sieve.lty[dev] else exp.lty
-      for (ii in seq(0, rows[i], by = square.side))
+      for (ii in seq(0, rowFreqs[i], by = square.side))
         lines(c(x1[j], x2[j]), c(y1[i], y1[i]) + ii,
               col = line.color, lty = line.type
               )
-      for (jj in seq(0, cols[j], by = square.side))
+      for (jj in seq(0, colFreqs[j], by = square.side))
         lines(c(x1[j], x1[j]) + jj, c(y1[i], y2[i]),
               col = line.color, lty = line.type
               )
