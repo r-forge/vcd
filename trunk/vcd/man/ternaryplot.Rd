@@ -72,8 +72,8 @@ ternaryplot(
 )
 legend(0.7, 0.8, c("GROUP", groups), pch = c(NA, pch), col = c(NA, col))
 
-data(lifeboats)
-attach(lifeboats)
+data(Lifeboats)
+attach(Lifeboats)
 ternaryplot(
   lifeboats[,4:6],
   pch = ifelse(side=="Port", 1, 19),
@@ -89,8 +89,8 @@ legend(
   col = c("black", "red", "blue"),
 )
 
-data(hitters)
-attach(hitters)
+data(Hitters)
+attach(Hitters)
 colors <- c("black","red","green","blue","red","black","blue")
 pch <- substr(levels(Positions), 1, 1)
 ternaryplot(
@@ -107,3 +107,4 @@ legend(
 )
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
+
