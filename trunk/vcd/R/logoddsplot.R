@@ -8,7 +8,7 @@ function (x, stratum = NULL, log = TRUE) {
   if (l == 2 && dim(x) != c(2,2))
     stop("Not a 2x2-table.")
   if (!is.null(stratum) && dim(x)[-stratum] != c(2,2))
-    stop("Need strata of 2x2-tables.")
+    stop("Need strata of 2 x 2 - tables.")
  
   lor <- function (y) {
     or <- y[1,1] * y[2,2] / y[1,2] / y[2,1]
@@ -47,10 +47,10 @@ function(object, ...) {
 function(x,
          quantile = qnorm(0.975),
          confidence = TRUE,
-         type  = "o",
-         ylab  = "Log Odds Ratio",
-         xlab  = "Strata",
-         ticks = 0.1,
+         type = "o",
+         ylab = "Log Odds Ratio",
+         xlab = "Strata",
+         whiskers = 0.1,
          ...)
 {
   if (length(dim(x)) > 1)
@@ -78,8 +78,8 @@ function(x,
   if (confidence)
     for (i in 1:length(x)) {
       lines(c(i, i), c(lwr[i], upr[i]))
-      lines(c(i - ticks/2, i + ticks/2), c(lwr[i], lwr[i]))
-      lines(c(i - ticks/2, i + ticks/2), c(upr[i], upr[i]))
+      lines(c(i - whiskers/2, i + whiskers/2), c(lwr[i], lwr[i]))
+      lines(c(i - whiskers/2, i + whiskers/2), c(upr[i], upr[i]))
     }
 }
 
