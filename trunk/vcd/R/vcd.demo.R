@@ -19,7 +19,7 @@ if(chapter == 2) {
           main = "Women in queues of length 10")
 
   data(WeldonDice)
-  barplot(WeldonDice$Freq, names = WeldonDice$n56, col = 2,
+  barplot(WeldonDice$Freq, names = c(WeldonDice$n56[-11], "10+"), col = 2,
           xlab = "Number of 5s and 6s", ylab = "Frequency",
 	  main = "Weldon's dice data")
 
@@ -110,21 +110,25 @@ if(chapter == 2) {
   attach(WeldonDice)
   ## Are the dice fair?
   p.hyp <- 1/3
-  p.hat <- dbinom(0:10, prob = p.hyp, size = 12)
+  p.hat <- dbinom(0:12, prob = p.hyp, size = 12)
   expected <- sum(Freq) * p.hat
+  expected <- c(expected[1:10], sum(expected[11:13]))
   chi2 <- sum((Freq - expected)^2/expected)
-  G2 <- sum(Freq*log(Freq/expected)) ##???
+  G2 <- 2*sum(Freq*log(Freq/expected))
   pchisq(chi2, df = 10, lower = FALSE)
   ## Are the data from a binomial distribution?
   p <- weighted.mean(n56/12, Freq)
-  p.hat <- dbinom(0:10, prob = p, size = 12)
+  p.hat <- dbinom(0:12, prob = p, size = 12)
   expected <- sum(Freq) * p.hat
+  expected <- c(expected[1:10], sum(expected[11:13]))
   chi2 <- sum((Freq - expected)^2/expected)
-  G2 <- 2*sum(Freq*log(Freq/expected)) ##???
+  G2 <- 2*sum(Freq*log(Freq/expected))
   pchisq(chi2, df = 9, lower = FALSE)
   ## or:
   WD.fit1 <- goodfit(Freq, n56, type = "binomial", par = 1/3, size = 12)
   WD.fit2 <- goodfit(Freq, n56, type = "binomial", size = 12)
+  WD.fit1$fitted[11] <- sum(dbinom(10:12, prob = WD.fit1$estimate, size = 12))*sum(Freq)
+  WD.fit2$fitted[11] <- sum(dbinom(10:12, prob = WD.fit2$estimate, size = 12))*sum(Freq)
   summary(WD.fit1)
   summary(WD.fit2)
   detach(WeldonDice)
