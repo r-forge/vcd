@@ -17,8 +17,6 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
     count <- as.vector(obj[,2])
   }
 
-  par.ml <- goodfit(obj, type = type, size = size)$estimate["ML",]
-
   myindex <- (1:length(freq))[freq > 0]
   mycount <- count[myindex]
   myfreq <- freq[myindex]
@@ -26,6 +24,8 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   switch(match.arg(type),
 
   "poisson" = {
+    par.ml <- goodfit(obj, type = type)$par$lambda
+
     phi <- function(nk, k, N, size = NULL)
       ifelse(nk > 0, lgamma(k + 1) + log(nk/N), NA)
     y <- phi(myfreq, mycount, sum(freq))
@@ -39,7 +39,12 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   },
 
   "binomial" = {
-    if(is.null(size)) size <- max(count)
+    if(is.null(size)) {
+      size <- max(count)
+      warning("size was not given, taken as maximum count")
+    }
+    par.ml <- goodfit(obj, type = type, par = list(size = size))$par$prob
+
     phi <- function(nk, k, N, size)
       log(nk) - log(N * choose(size, k))
     y <- phi(myfreq, mycount, sum(freq), size = size)
@@ -52,8 +57,9 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   },
 
   "nbinomial" = {
-    size <- par.ml[1]
-    par.ml <- par.ml[2]
+    par.ml <- goodfit(obj, type = type)$par
+    size <- par.ml$size
+    par.ml <- par.ml$prob
     phi <- function(nk, k, N, size)
       log(nk) - log(N * choose(size + k - 1, k))
     y <- phi(myfreq, mycount, sum(freq), size = size)

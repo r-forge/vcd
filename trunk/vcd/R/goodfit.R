@@ -14,6 +14,18 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
       freq <- as.vector(obj[,1])
       count <- as.vector(obj[,2])
     }
+    n <- length(count)
+
+    if(n <= max(count)) {
+      warning("zero frequencies missing in `obj'")
+      old.count <- count
+      old.freq <- freq
+      count <- 0:max(count)
+      n <- length(count)
+      freq <- rep(0, n)
+      names(freq) <- count
+      freq[as.character(old.count)] <- old.freq
+    }
 
     df <- length(count) - 1
 
@@ -40,7 +52,8 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 	chi2 <- function(x)
         {
 	  p.hat <- dpois(count, lambda = x)
-          expected <- sum(freq) * p.hat
+          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+	  expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
 
@@ -72,6 +85,7 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 	chi2 <- function(x)
         {
 	  p.hat <- dbinom(count, prob = x, size = size)
+          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
           expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
@@ -105,17 +119,18 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 	xbar <- weighted.mean(count,freq)
 	s2 <- var(rep(count,freq))
 	p <- xbar / s2
-	n <- xbar^2/(s2 - xbar)
-        par1 <- c(n, p)
+	size <- xbar^2/(s2 - xbar)
+        par1 <- c(size, p)
 
+	## minChisq
         chi2 <- function(x)
         {
 	  p.hat <- dnbinom(count, size = x[1], prob = x[2])
+          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
           expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
 
-	## minChisq
 	par <- optim(par1, chi2)$par
       }
       par <- list(size = par[1], prob = par[2])
@@ -132,40 +147,34 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
     RVAL
 }
 
-summary.goodfit <- function(object, tol = 1e-5, correct = TRUE, ...)
+print.goodfit <- function(x, ...)
+{
+    cat(paste("\nObserved and fitted values for", x$type, "distribution\n"))
+    if(x$method == "fixed")
+      cat("with fixed parameters \n\n")
+    else
+      cat(paste("with paramaters estimated by `", x$method, "' \n\n", sep = ""))
+    RVAL <- cbind(x$count, x$observed, x$fitted)
+    colnames(RVAL) <- c("count", "observed", "fitted")
+    rownames(RVAL) <- rep("", nrow(RVAL))
+    print(RVAL)
+    invisible(RVAL)
+}
+
+summary.goodfit <- function(object, ...)
 {
     df <- object$df
     obsrvd <- object$observed
     expctd <- fitted(object)
 
     G2 <- sum(obsrvd * log(obsrvd/expctd)) * 2
+
+    n <- length(obsrvd)
+    p.hat <- predict(object, type = "prob")
+    p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+    expctd <- p.hat * sum(obsrvd)
     X2 <- sum((obsrvd - expctd)^2/expctd)
 
-    ## observed zero frequencies might correspond
-    ## to non-neglectable Pearson `residuals'
-    count <- 0:max(object$count)
-    if(object$type == "binomial") count <- 0:object$par$size
-    n <- length(count)
-    obsrvd <- rep(0, n)
-    names(obsrvd) <- count
-    obsrvd[as.character(object$count)] <- object$observed
-    expctd <- predict(object, newcount = count)
-    presid <- (obsrvd - expctd)^2/expctd
-
-    continue <- presid[n] > tol
-    if(object$type == "binomial") continue <- FALSE
-
-    while(continue) {
-      count <- c(count, count[n] + 1)
-      n <- n + 1
-      expctd <- c(expctd, predict(object, newcount = count[n]))
-      presid <- c(presid, expctd[n])
-      continue <- presid[n] > tol
-    }
-
-    print(max(count))
-
-    if(correct) X2 <- sum(presid)
     names(G2) <- "Likelihood Ratio"
     names(X2) <- "Pearson"
 
