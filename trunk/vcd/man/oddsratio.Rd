@@ -17,7 +17,6 @@ oddsratio(x, stratum = NULL, log = TRUE)
   \item{x}{a 2 x 2 x ... table.}
  \item{stratum}{vector of strata dimensions.}
  \item{log}{if \code{FALSE}, ordinary odds ratios are computed}
- \item{conf.level}{confidence level used for confidence intervals.}
 }
 \value{
   An object of class \code{logoddratio}, which is simply a
