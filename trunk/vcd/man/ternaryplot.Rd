@@ -10,7 +10,7 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position =
 c("corner","edge","none"), dimnames.color = "black", id = NULL, 
 id.color = "black", coordinates = FALSE, grid = TRUE, grid.color =
 "gray", labels = c("inside", "outside", "none"), labels.color =
-"darkgray", border = "black", bg = "white", pch = 19, col = "red",
+"darkgray", border = "black", bg = "white", pch = 19, cex = 1, col = "red",
 main = "ternary plot", ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -32,6 +32,8 @@ main = "ternary plot", ...)
   \item{border}{color of the triangle border.}
   \item{bg}{triangle background.}
   \item{pch}{plotting character. Defaults to filled dots.}
+  \item{cex}{a numerical value giving the amount by which plotting text
+          and symbols should be scaled relative to the default.}
   \item{col}{plotting color.}
   \item{main}{main title.}
   \item{\dots}{additional graphics parameters (see \code{par()})}
@@ -51,26 +53,31 @@ of a point P(a,b,c), \eqn{a + b + c = 1}, are: P(b + c/2, c * sqrt(3)/2).
 
 \examples{
 data(Arthritis)
-## extract data
-(tab <- ftable(xtabs(~Sex + Treatment + Improved, data = Arthritis)))
-## set column names == levels
-colnames(tab) <- attr(tab, "col.vars")[[1]]
-## build groups by crossing the row vars
-groups <- levels(do.call(":", lapply(attr(tab, "row.vars"), factor)))
+    
+## Build table by crossing Treatment and Sex
+tab <- as.table(xtabs(~ I(Sex:Treatment) + Improved, data = Arthritis))
+    
+## Mark groups
 col <- c("red", "red", "blue", "blue")
 pch <- c(1, 19, 1, 19)
+    
 ## plot
 ternaryplot(
-  tab,
-  col = col,
-  pch = pch,
-  cex = 2,
-  bg = "gray",
-  grid.color = "white",
-  labels.color = "white",
-  main = "Arthritits Treatment Data"
-)
-legend(0.7, 0.8, c("GROUP", groups), pch = c(NA, pch), col = c(NA, col))
+            tab,
+            col = col,
+            pch = pch,
+            cex = 2,
+            bg = "lightgray",
+            grid.color = "white",
+            labels.color = "white",
+            main = "Arthritits Treatment Data"
+           )
+## legend
+legend(0.7, 0.8,
+       c("GROUP", rownames(tab)),
+       pch = c(NA, pch),
+       col = c(NA, col)
+      )
 
 data(Lifeboats)
 attach(Lifeboats)

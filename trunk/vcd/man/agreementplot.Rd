@@ -12,7 +12,9 @@
   area sums). 
 }
 \usage{
-\method{agreementplot}{default}(x, reverse.y = TRUE, title = "Agreement Chart", weights = c(1, 1 - 1/(ncol(x) - 1)^2), cex.main = 2, cex.lab = 1.5, ...)
+\method{agreementplot}{default}(x, reverse.y = TRUE, main = "Agreement Chart",
+              weights = c(1, 1 - 1/(ncol(x) - 1)^2), cex.main = 2, cex.lab = 1.5,
+              xlab = names(dimnames(x))[2], ylab = names(dimnames(x))[1], ...)
 \method{agreementplot}{formula}(formula, data = NULL, ..., subset)
 }
 %- maybe also `usage' for other objects documented here.
@@ -20,12 +22,13 @@
   \item{x}{a confusion matrix, i.e. a table with equal-sized dimensions.}
   \item{reverse.y}{if \code{TRUE}, the y axis is reversed (i.e., the
     rectangles' positions correspond to the contingency table).}
-  \item{title}{user-specified title.}
+  \item{main}{user-specified main title.}
   \item{weights}{vector of weights for successive larger observed areas, used
     in the agreement strength statistic, and also for the shading. The
     first element should be 1.}
   \item{cex.main}{font size of title.}
   \item{cex.lab}{font size of labels.}
+  \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}.}
   \item{data}{a data.frame (or list), or a contingency table from which the
           variables in `formula' should be taken.}
@@ -58,9 +61,11 @@ data(SexualFun)
 agreementplot(t(SexualFun))
 
 data(MSpatients)
-par(mfrow=c(1,2))
-agreementplot(t(MSpatients[,,1]), title = "Winnipeg Patients")
-agreementplot(t(MSpatients[,,2]), title = "New Orleans Patients")
+## Enlarge plot manually or use sth. like: X11(width = 12)!
+par(mfrow = c(1,2))
+agreementplot(t(MSpatients[,,1]), main = "Winnipeg Patients")
+agreementplot(t(MSpatients[,,2]), main = "New Orleans Patients")
+
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{hplot}% __ONLY ONE__ keyword per line

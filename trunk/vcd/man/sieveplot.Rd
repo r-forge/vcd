@@ -10,11 +10,12 @@ squares equal to the expected frequencies. Thus, the densities visualize
 the deviations of the observed from the expected values.
 }
 \usage{
-\method{sieveplot}{default}(x, reverse.y = TRUE, type = c("sieve",
-"expected"), title = NULL, values = c("none", "cells", "margins",
-"both"), frequencies = c("absolute", "relative"), sieve.colors = c("red","blue"),
-sieve.lty = c("longdash", "solid"), exp.color = "gray", exp.lty = "dotted", margin = 0.2,
-cex.main = 3, cex.lab = 2, ...)
+\method{sieveplot}{default}(x, reverse.y = TRUE, type = c("sieve", "expected"),
+          main = NULL, values = c("none", "cells", "margins", "both"),
+          frequencies = c("absolute", "relative"), sieve.colors = c("red","blue"),
+          sieve.lty = c("longdash", "solid"), exp.color = "gray",
+          exp.lty = "dotted", margin = 0.2, cex.main = 3, cex.lab = 2,
+          xlab = names(dimnames(x))[2], ylab = names(dimnames(x))[1], ...)
 \method{sieveplot}{formula}(formula, data = NULL, ..., subset)
 }
 %- maybe also `usage' for other objects documented here.
@@ -24,7 +25,7 @@ cex.main = 3, cex.lab = 2, ...)
     rectangles' positions correspond to the contingency table).}
   \item{type}{\code{expected} fills the rectangles 
     according to the \emph{expected} frequencies.}
-  \item{title}{user specified title.}
+  \item{main}{user specified title.}
   \item{values}{optionally, the frequencies of the \code{cells} or
     \code{margins} or of \code{both} can be plotted.}
   \item{frequencies}{chooses the type of these frequencies:
@@ -37,6 +38,7 @@ cex.main = 3, cex.lab = 2, ...)
   \item{margin}{lines of margin between the cell rectangles.}
   \item{cex.main}{font size of title.}
   \item{cex.lab}{font size of labels.}
+  \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}.}
   \item{data}{a data.frame (or list), or a contingency table from which the
           variables in `formula' should be taken.}
