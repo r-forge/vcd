@@ -35,8 +35,13 @@ plot.logoddsratio(x, quantile = qnorm(0.975), confidence = TRUE,
 
 \examples{
 data(CoalMiners)
-plot(logoddsratio(CoalMiners),
+l <- logoddsratio(CoalMiners)
+g <- seq(25, 60, by = 5)
+plot(l,
      xlab = "Age Group",
-     ylab = "Breathelessness and Wheeze in Coal Miners")
+     main = "Breathelessness and Wheeze in Coal Miners")
+m <- lm(l ~ g + I(g^2))
+lines(fitted(m), col = "red")
 }
+
 \keyword{hplot}% at least one, from doc/KEYWORDS
