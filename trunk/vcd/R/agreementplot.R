@@ -264,7 +264,7 @@ table2d.summary <- function(object,
                             )
 {
   ret <- list()
-  ret$chisq <- base::summary.table(object, ...)
+  ret$chisq <- summary.table(object, ...)
   
   if(is.matrix(object)) {
     
@@ -322,7 +322,7 @@ function (x, digits = max(1, getOption("digits") - 3), ...)
   cat("\n")
   
   if (!is.null(x$chisq))
-    base::print.summary.table(x$chisq, digits, ...)
+    print.summary.table(x$chisq, digits, ...)
   invisible(x)
 }
 
@@ -376,7 +376,8 @@ print.summary.assoc.stats <- function(x, ...) {
 
 woolf.test <- function(x) {
   DNAME <- deparse(substitute(x))
-  x <- x + 1 / 2
+  if (any(x == 0))
+    x <- x + 1 / 2
   k <- dim(x)[3]
   or <- apply(x, 3, function(x) (x[1,1] * x[2,2]) / (x[1,2] * x[2,1]))
   w <-  apply(x, 3, function(x) 1 / sum(1 / x))
