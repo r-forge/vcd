@@ -3,16 +3,26 @@
 \non_function{}
 \title{Hitters}
 \description{
-Hitters data.
+This data set is deduced from the \code{\link{Baseball}} fielding data set:
+fielding performance basically includes the numbers of Errors, Putouts and Assists
+made by each player. In order to reduce the number of observations, the
+data has been compressed by calculating the mean number of errors,
+putouts and assists for each team and for only 6 positions (1B, 2B, 3B, C,
+OF, SS and UT). In addition, each of these three variables has been
+scaled to a common range by dividing each variable by the maximum of the variable.
 }
 
 \usage{data(Hitters)}
 \format{A data frame with 154 observations and 4 variables.
   \describe{
-    \item{Positions}{factor indicating ,}
-    \item{Putouts}{,}
-    \item{Assists}{,}
-    \item{Erros}{.}
+    \item{Positions:}{factor indicating the field position (1B=first
+      baseman, 2B=second baseman, 3B=third baseman, C=catcher,
+      OF=outfielder, SS=Short Stop, UT=Utility Players),}
+    \item{Putouts}{occur when a fielder causes an oppsing player to be
+      tagged or fored out,}
+    \item{Assists}{are credited to other fielders involved in making
+      that putout, and}
+    \item{Errors}{count the errors made by a player.}
   }
 }
 
@@ -21,7 +31,7 @@ M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Publishing.
 }
 
-\source{Michael Friendly (2000), Visualizing Categorical Data, p. ??.}
+\source{SAS System for Statistical Graphics, First Edition, P. A2.3}
 
 \examples{
 data(Hitters)
@@ -46,3 +56,6 @@ legend(
 }
 
 \keyword{datasets}
+
+
+
