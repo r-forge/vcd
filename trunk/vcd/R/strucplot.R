@@ -17,11 +17,12 @@ strucplot <- function(## main parameters
                       gp = NULL,
                       labels = labels.text(),
                       panel = panel.mosaic(),
+                      legend = legend.resbased(),
                       
                       main = NULL,
                       sub = NULL,
                       margin = rep.int(2.5, 4),
-                      legend = FALSE,
+                      legend.width = unit(0.15, "npc"),
                       
                       ## control parameters
                       pop = FALSE,
@@ -82,7 +83,8 @@ strucplot <- function(## main parameters
     if (is.function(gp)) {
       gpfun <- gp
       gp <- gpfun(x, residuals)
-    } else if (legend) stop("gp argument must be a shading function for drawing a legend")
+    } else if (!is.null(legend))
+      stop("gp argument must be a shading function for drawing a legend")
   } else {
     if (!is.null(gp)) {
       warning("gp parameter ignored since shade=FALSE")
@@ -90,22 +92,21 @@ strucplot <- function(## main parameters
     }
   }
   
-  if (legend && !shade)
-    stop("Legend only sensible for shade=TRUE")
-
   ## choose gray when no shading is used
   if (is.null(gp))
     gp <- gpar(fill = rep.int(grey(0.8), length(x)))
   
   ## set up page
   if (newpage) grid.newpage()
-  pushViewport(vcdViewport(margin, legend = legend,
-                           main = !is.null(main), sub = !is.null(sub), keepAR = keepAR))
+  pushViewport(vcdViewport(mar = margin, legend = shade && !is.null(legend),
+                           main = !is.null(main), sub = !is.null(sub), keepAR = keepAR,
+                           legend.width = legend.width))
 
   ## legend
-  if (shade && legend) {
+  if (shade && !is.null(legend)) {
     seekViewport("legend")
-    legend.block(obs = x, res = residuals, gp = gpfun)
+    legend(obs = x, res = residuals, gp = gpfun,
+           autotext = paste(residuals.type, "residuals:", sep = "\n"))
     if (pop) popViewport()
   }
 
@@ -141,64 +142,17 @@ strucplot <- function(## main parameters
   if (pop) popViewport()
 }
 
-legend.block <- function(obs, res,
-                         gp = gp.Friendly(),
-                         fontsize = 12,
-                         space = 2,  
-                         text = "residuals:") {
-
-  pushViewport(viewport(x = 0.2, y = 0.2, just = c("left", "bottom"),
-                         yscale = range(res), default.unit = "native",
-                         height = unit(0.6, "npc"), width = 0.1))
-
-  if(!is.null(gp$col.legend)) {
-    col.legend <- gp$col.legend
-  } else {
-    if (is.function(gp)) {
-      gpfun <- gp
-      gp <- gpfun(obs, res)
-    }
-    col.bins <- gp$col.bins
-    if(is.null(col.bins)) col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
-    y.pos <- col.bins[-length(col.bins)]
-    y.height <- diff(col.bins)
-    y.col <- gpfun(obs, y.pos + 0.5*y.height)$fill
-    col.legend <- list(pos = y.pos, height = y.height, col = y.col)
-  }
-
-  grid.rect(x = unit(rep.int(0.5, length(col.legend$pos)), "npc"), y = col.legend$pos,
-            height = col.legend$height, default.unit = "native",
-            gp = gpar(fill = col.legend$col, col = NULL),
-            just = c("centre", "bottom"))
-
-  grid.rect()
-
-  at <- seq(from = min(col.legend$pos), to = max(col.legend$pos), length = 10)
-  grid.text(format(signif(at, 2)), x = unit(7, "npc"), y = at,
-            default.unit = "native", just = c("right", "center"))
-  grid.segments(x0 = 1, x1 = 2, y0 = at, y1 = at, default.unit = "native")
-  
-  popViewport(1)
-  grid.text(text, x = 0, y = unit(0.8, "npc") + unit(1, "lines"),
-            gp = gpar(fontsize = fontsize),
-            just = c("left", "centre")
-            )
-  if(!is.null(gp$p.value)) {
-   grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
-              x = 0, y = unit(0.15, "npc") - unit(0.5, "strheight", "A"),
-              gp = gpar(fontsize = fontsize),
-              just = c("left", "top"))
-  }
-}
-
-vcdViewport <- function(mar = unit(c(4, 4, 5, 2), "lines"),
+vcdViewport <- function(mar = rep.int(2.5, 4),
+                        legend.width = unit(0.15, "npc"),
                         legend = FALSE, main = FALSE, sub = FALSE,
                         keepAR = TRUE)
 {
-  if (!is.unit(mar))
-    mar <- unit(mar, "lines")
-  if (length(mar) == 1)
-    mar <- unit.rep(mar, 4)
+  mar <- if (!is.unit(mar))
+    unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
+  else
+    unit.rep(mar, length.out = 4)
+  if (!is.unit(legend.width))
+    legend.width <- unit(legend.width, "npc")
   vpPlot <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot")
   vpMarginBottom <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "marginBottom")
   vpMarginLeft <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginLeft")
@@ -216,10 +170,10 @@ vcdViewport <- function(mar = unit(c(4, 4, 5, 2), "lines"),
       layout.pos.row = 3, name = "pval")
     vpBase <- viewport(layout.pos.row = 1 + (legend || main),
                        layout = grid.layout(3, 4,
-                         widths = unit.c(mar[2],
+                         widths = unit.c(mar[4],
                            unit(1, if (keepAR) "snpc" else "npc") -
-                           (mar[2] + mar[4] + (1 * !keepAR) * unit(4, "lines")),
-                           mar[4], unit(4, "lines")),
+                           (mar[2] + mar[4] + (1 * !keepAR) * legend.width),
+                           mar[2], legend.width),
                          heights = unit.c(mar[1], unit(1, if (keepAR) "snpc" else "npc") -
                            (mar[1] + mar[3]), mar[3])),
                        name = "base")
@@ -230,8 +184,8 @@ vcdViewport <- function(mar = unit(c(4, 4, 5, 2), "lines"),
   } else {
     vpBase <- viewport(layout.pos.row = 1 + (legend || main),
                        layout = grid.layout(3, 3,
-                         widths = unit.c(mar[2], unit(1, if (keepAR) "snpc" else "npc") -
-                           mar[2] - mar[4], mar[4]),
+                         widths = unit.c(mar[4], unit(1, if (keepAR) "snpc" else "npc") -
+                           mar[2] - mar[4], mar[2]),
                          heights = unit.c(mar[1], unit(1, if (keepAR) "snpc" else "npc") -
                            mar[1] - mar[3], mar[3])
                          ),
@@ -246,7 +200,7 @@ vcdViewport <- function(mar = unit(c(4, 4, 5, 2), "lines"),
     vpTop <- viewport(layout.pos.row = 1, name = "main")
     vpSub <- viewport(layout.pos.row = 2 + main, name = "sub")
     
-    space <- unit(4, "lines") + mar[2] + mar[4] - mar[1] - mar[3]
+    space <- legend.width + mar[2] + mar[4] - mar[1] - mar[3]
     sandwich <- if (legend) {
       vplist <- vpList(vpTop, vpPlotregion, vpSub)
       viewport(layout = grid.layout(3, 1, height = unit.c(0.5 * space, unit(1, "npc") -
@@ -255,7 +209,7 @@ vcdViewport <- function(mar = unit(c(4, 4, 5, 2), "lines"),
       vplist <- vpList(vpTop, vpPlotregion, vpSub)
       viewport(layout = grid.layout(3, 1,
                  height = unit.c(unit(2, "lines"),
-                   unit(1, "npc") - unit(4, "lines"), unit(2, "lines"))))
+                   unit(1, "npc") - legend.width, unit(2, "lines"))))
     } else if (main) {
       vplist <- vpList(vpTop, vpPlotregion)
       viewport(layout = grid.layout(2, 1,

@@ -2,7 +2,7 @@
 ### doubledecker plot
 
 doubledecker <- function(x,
-                         col = hcl(seq(0, 260, length = length(dim(x))), 50, 70),
+                         col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
                          main = NULL, 
                          labels = NULL,
                          margin = c(1, 1, length(dim(x)) + 1, 3),
