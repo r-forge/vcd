@@ -83,7 +83,7 @@ class(gp.HSVshading) <- "vcdShading"
 
 gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
                           hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
-                          interpolate = c(2, 4), lty = 1,
+                          gamma = 2.2, fixup = TRUE, interpolate = c(2, 4), lty = 1,
                           p.value = NULL, level = 0.95)
 
 {
@@ -132,7 +132,8 @@ gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL
     res2 <- c(head(res2, 1) - 1, res2[-1] - diff(res2)/2, tail(res2, 1) + 1)
     legend.col <- hcl(ifelse(res2 > 0, my.h[1], my.h[2]),
                       max.chroma * pmax(pmin(interpolate(abs(res2)), 1), 0),
-	              my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res2)), 1), 0))
+	              my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res2)), 1), 0),
+		      gamma = gamma, fixup = fixup)
     lty.bins <- 0
     legend.lty <- lty[2:1]
     legend <- list(col = legend.col, col.bins = col.bins,
@@ -145,7 +146,8 @@ gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL
 
     col <- hcl(ifelse(res > 0, my.h[1], my.h[2]),
                max.chroma * pmax(pmin(interpolate(abs(res)), 1), 0),
-	       my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res)), 1), 0))
+	       my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res)), 1), 0),
+	       gamma = gamma, fixup = fixup)
     dim(col) <- dim(x)
     
     lty <- ifelse(x > 0, lty[1], lty[2])    
