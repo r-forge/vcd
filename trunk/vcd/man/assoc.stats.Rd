@@ -2,6 +2,7 @@
 \alias{assoc.stats}
 \alias{summary.assoc.stats}
 \alias{print.assoc.stats}
+\alias{print.summary.assoc.stats}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Association Statistics}
 \description{

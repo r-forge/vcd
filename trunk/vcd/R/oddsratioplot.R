@@ -6,7 +6,7 @@ function (x, stratum = NULL, log = TRUE, conf.level = 0.95) {
   if (l - length(stratum) > 2)
     stop("All but 2 dimensions must be specified as strata.")
   if (l == 2 && dim(x) != c(2,2))
-    stop("Not a 2x2-table.")
+    stop("Not a 2 x 2 - table.")
   if (!is.null(stratum) && dim(x)[-stratum] != c(2,2))
     stop("Need strata of 2 x 2 - tables.")
  
@@ -49,26 +49,34 @@ function(x, ...) {
 
 "summary.oddsratio" <-
 function(object, ...) {
-  if(length(dim(object)) > 1) {
-    cat("\n")
-    if(attr(object, "log")) cat("Log ");
-    cat("Odds Ratio(s):\n\n")
-    print(object)
-    cat("\nAsymptotic Standard Error(s):\n\n")
-    print(attr(object, "ASE"))
-    cat("\n")
-  } else {
+  if(!is.null(dim(object)))
+    ret <- object
+  else {
     ret <- cbind(object,
-                 ASE = attr(object, "ASE"),
-                 Z   = attr(object, "Z"),
-                 P   = attr(object, "P"),
-                 lwr = attr(object, "lwr"),
-                 upr = attr(object, "upr")
-                 )
+          ASE = attr(object, "ASE"),
+          Z   = attr(object, "Z"),
+          P   = attr(object, "P"),
+          lwr = attr(object, "lwr"),
+          upr = attr(object, "upr")
+          )
     colnames(ret)[1] <- if(attr(object, "log")) "Log Odds Ratio" else "Odds Ratio"
-    ret
   }
+  
+  class(ret) <- "summary.oddsratio"
+  ret
 }
+
+
+"print.summary.oddsratio" <-
+function(x, ...)
+  if(!is.null(attr(x, "log"))) {
+    cat("\n")
+    cat(if(attr(x, "log")) "Log Odds Ratio(s):" else "Odds Ratio(s):", "\n\n")
+    print.oddsratio(x)
+    cat("\nAsymptotic Standard Error(s):\n\n")
+    print(attr(x, "ASE"))
+    cat("\n")
+  } else print(unclass(x))
 
 "plot.oddsratio" <-
 function(x,

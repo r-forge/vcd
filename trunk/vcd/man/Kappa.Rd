@@ -1,7 +1,8 @@
 \name{Kappa}
 \alias{Kappa}
-\alias{print.kappa}
-\alias{summary.kappa}
+\alias{print.Kappa}
+\alias{summary.Kappa}
+\alias{print.summary.Kappa}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Cohen's Kappa and weighted Kappa}
 \description{
@@ -9,13 +10,14 @@
   confidence bands.
 }
 \usage{
-Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
+Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a confusion matrix.}
   \item{weights}{either one of the two options or a user-specified
     matrix with same dimensions as \code{x}.}
+  \item{conf.level}{level for the confidence intervals.}
 }
 \details{
   Cohen's kappa is the diagonal sum of the (possibly weighted) relative frequencies,
