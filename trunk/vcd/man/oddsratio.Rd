@@ -10,7 +10,7 @@
   for (possibly) stratified data.
 }
 \usage{
-oddsratio(x, stratum = NULL, log = TRUE, conf.level = 0.95)
+oddsratio(x, stratum = NULL, log = TRUE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -24,15 +24,15 @@ oddsratio(x, stratum = NULL, log = TRUE, conf.level = 0.95)
   vector of (log) odds ratios with dimensionality depending on \code{stratum}, along with
   the following attributes:
   \item{ASE}{a vector with the asymptotic standard errors}
-  \item{lwr, upr}{a vector with lower/upper confidence bounds}
-  \item{Z}{test statistic for significance tests (only computed for log
-  odds ratios: simply the standardized log odds ratio, which follows
-an asymptotic normal distribution.}
-  \item{P}{p-value for this test.}
   \item{log}{logical value indicating if log odds ratios or common odds
     ratios are computed.}
 }
-\note{The \code{summary} method prints the standard errors.}
+\note{The \code{summary} method prints the standard errors, and---for
+  log odds ratios---also computes and prints the standardized
+  log odds ratios, which follows an asymptotic normal distribution, and
+  the correpsonding P values. \code{confint.oddsratio} computes
+  confidence intervals for the (log) odds ratios.
+}
 
 \references{
 M. Friendly (2000),
@@ -43,7 +43,7 @@ M. Friendly (2000),
   \email{david.meyer@ci.tuwien.ac.at}
 }
 
-\seealso{\code{\link{plot.oddsratio}}}
+\seealso{\code{\link{plot.oddsratio}}, \code{\link{confint.oddsratio}}}
 
 \examples{
 data(CoalMiners)
