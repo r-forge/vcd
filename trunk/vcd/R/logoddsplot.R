@@ -18,15 +18,15 @@ function (x, stratum = NULL, log = TRUE) {
   ase <- function(y) sqrt(sum(1/y))
 
   if(is.null(stratum))
-    structure(lor(x), ASE = ase(x), class = "logoddsratios")
+    structure(lor(x), ASE = ase(x), class = "logoddsratio")
   else
     structure(apply(x, stratum, lor),
               ASE   = apply(x, stratum, ase),
-              class = "logoddsratios"
+              class = "logoddsratio"
               )
 }
 
-"print.logoddsratios" <-
+"print.logoddsratio" <-
 function(x, ...) {
   if (length(dim(x)) > 1)
     print(cbind(unclass(x)))
@@ -34,7 +34,7 @@ function(x, ...) {
     print(c(x))
 }
 
-"summary.logoddsratios" <-
+"summary.logoddsratio" <-
 function(object, ...) {
   cat("\nLog Odd Ratio(s):\n\n")
   print(object)
@@ -43,7 +43,7 @@ function(object, ...) {
   cat("\n")
 }
 
-"plot.logoddsratios" <-
+"plot.logoddsratio" <-
 function(x,
          quantile = qnorm(0.975),
          confidence = TRUE,
@@ -82,4 +82,6 @@ function(x,
       lines(c(i - ticks/2, i + ticks/2), c(upr[i], upr[i]))
     }
 }
+
+
 
