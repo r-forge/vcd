@@ -1,0 +1,26 @@
+DM
+  * Abstract fuer DSC-Vortrag draften
+    (Wir schreiben nur extended abstract, kein Paper)
+  * Interface fuer verschiedene Farbcodings
+  * grid anschauen
+
+AZ
+  * grid anschauen
+
+KH
+  * permtest/Patefield in R-devel (bis Ende JAN)
+  * collapse.table()
+  * Seminar im SoSe
+
+JCGS (-> Ende APR)
+  * Inhalt: independence in 2-way tables
+    visualization with enhanced assoc/mosaic plots
+  * korrekte Permtests
+  * Farbcoding (wie waehlen wir "krit." Werte?)
+  * Ausblick auf n-way Erweiterung
+  * Implementierung in grid? (moeglicherweise besser
+    fuer mosaipairs und n-way assocplots)
+
+JSS (-> Sommer)
+  * log-linear Models (Friendly Kap.7, Theus-Paper)
+  * moeglicherweise: Seminar-Output
