@@ -29,9 +29,11 @@
 #    gamma     - The device gamma.  PC CRTs have a gamma of about
 #                2.2, Macs about 1.5 (from memory) and SGI displays
 #                have a gamma of 1.
+#
+#    verbose   - give warnings if values are out of gamut
 
 hcl =
-  function(hue, chroma = 35, luminance = 85, correct = FALSE, gamma = 2.2)
+  function(hue, chroma = 35, luminance = 85, correct = FALSE, gamma = 2.2, verbose = TRUE)
   {
     HEXDIGITS = c("0", "1", "2", "3", "4", "5", "6", "7",
                   "8", "9", "A", "B", "C", "D", "E", "F")
@@ -81,7 +83,7 @@ hcl =
     #  Convert to hexadecimal strings
 
     if (any(RGB < 0 | RGB > 255, na.rm=TRUE)) {
-      warning("out of gammut RGB values")
+      if(verbose) warning("out of gammut RGB values")
       if (correct)
         RGB = pmax(pmin(RGB,  255), 0)
       else
