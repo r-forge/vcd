@@ -90,7 +90,7 @@ function (formula, data = NULL, ..., subset)
   # margins, limits (hard-coded, argh!)
   bm <- 0.1
   lm <- 0.1
-  tm <- 0.15
+  tm <- 0.1 + 0.05 * values %in%  c("margins", "both")
   rm <- 0.1
 
   xlim <- c(0, 1 + (nc - 1) * margin + lm + rm)
@@ -112,11 +112,11 @@ function (formula, data = NULL, ..., subset)
   plot.window(xlim = xlim, ylim = ylim, asp = 1)
   
   ## title
-  text(x = xlim[2] / 2, y = ylim[2], labels = main, cex = cex.main)
+  text(x = lm + (1 + (nc - 1) * margin) / 2, y = ylim[2], labels = main, cex = cex.main)
 
   ## axis labels
-  text(x = xlim[2] / 2, y = 0, labels = xlab, cex = cex.lab)
-  text(x = 0, y = ylim[2] / 2, labels = ylab, cex = cex.lab, srt = 90)
+  text(x = lm + (1 + (nc - 1) * margin) / 2, y = 0, labels = xlab, cex = cex.lab)
+  text(x = 0, y = bm + (1 + (nr - 1) * margin) / 2, labels = ylab, cex = cex.lab, srt = 90)
   
   ## boxes
   for (i in 1:nr)
