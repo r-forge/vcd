@@ -55,7 +55,7 @@ function (formula, data = NULL, ..., subset)
            ...)
 {
   if (length(dim(x)) > 2)
-    stop("Kappa only implemented for two-way tables")
+    stop("Function implemented for two-way tables only!")
   if (ncol(x) != nrow(x))
     stop("Dimensions must have equal length!")
 
@@ -222,7 +222,7 @@ expected <- function(x, frequency = c("absolute","relative")) {
     stop("Need array of absolute frequencies!")
   frequency <- match.arg(frequency)
 
- n <- sum(x)
+  n <- sum(x)
   x <- x / n
   d <- length(dim(x))
   tab <- apply(x, 1, sum)
