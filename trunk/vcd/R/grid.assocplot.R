@@ -142,14 +142,10 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   invisible(x)
 }
 
-grid.assocplot.formula <- function(formula, data = list(), ...)
+grid.assocplot.formula <- function(formula, data, ...)
 {
-  x <- ftable(formula, data = data)
-  rownames(x) <- attr(x, "row.vars")[[1]]
-  colnames(x) <- attr(x, "col.vars")[[1]]
-  names(dimnames(x)) <- c(names(attr(x, "row.vars")), names(attr(x, "col.vars")))
-  class(x) <- NULL
-  grid.assocplot(t(x), ...)
+  tabplot(formula, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+          margins = rep(1,4), data, ...)
 }
 
 assocpairs <- function(x, margin = 2, ...)
@@ -255,7 +251,7 @@ tabplot.formula <- function(formula, panel = function(x, ...) grid.assocplot(x, 
 }
 
 
-tabplot.table <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+tabplot.default <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
                     margins = rep(1,4), ...)
 {
   grid.newpage()
@@ -271,22 +267,22 @@ tabplot.table <- function(x, panel = function(x, ...) grid.assocplot(x, panel = 
   condition <- as.matrix(sapply(expand.grid(condition), as.character))
 
   ## compute layout
-  layout <- c(1,1,1) ## cols, rows, pages
+  layout <- c(1,1,1) ## rows, cols, pages
   if(ncond == 1) {
-    layout[1] <- ceiling(sqrt(floor(nlevels)))
-    layout[2] <- ceiling(nlevels/layout[1])
+    layout[2] <- ceiling(sqrt(floor(nlevels)))
+    layout[1] <- ceiling(nlevels/layout[2])
     layout <- expand.grid(lapply(layout, function(x) 1:x))[1:nplots,]
   }
   else {
-    layout[2] <- nlevels[1]
-    layout[1] <- nlevels[2]
+    layout[1] <- nlevels[1]
+    layout[2] <- nlevels[2]
     if(ncond > 3) layout[3] <- nplots/prod(nlevels[1:2])
     if(layout[3] > 1) stop("multiple pages not supported yet")
     layout <- expand.grid(lapply(layout, function(x) 1:x))
   }
 
-  nr <- max(layout[,2])
-  nc <- max(layout[,1])
+  nr <- max(layout[,1])
+  nc <- max(layout[,2])
   push.viewport(plotViewport(margins))
   push.viewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
 
@@ -300,11 +296,11 @@ tabplot.table <- function(x, panel = function(x, ...) grid.assocplot(x, panel = 
 
     tabi <- eval(parse(text = paste("x[,,", condi, "]", sep = "")))
 
-    push.viewport(viewport(layout.pos.row = layout[i,2], layout.pos.col = layout[i,1]))
+    push.viewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
     push.viewport(cellport)
     push.viewport(viewport(layout.pos.row = 1))
     grid.rect(gp = gpar(fill = grey(0.9)))
-    grid.text(condistr, y = 1:ncond/ncond - 1/(2*ncond))
+    grid.text(condistr, y = ncond:1/ncond - 1/(2*ncond))
     grid.segments(0, 0:ncond/ncond, 1, 0:ncond/ncond)
     pop.viewport()
 
