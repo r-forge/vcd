@@ -95,7 +95,7 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 because this is known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
 This is the well-known $\chi^2$ test for independence in 2-way tables. 
-Now, when the $chi^2$ test statistic turns out to be significant for some data, 
+Now, when the $\chi^2$ test statistic turns out to be significant for some data, 
 it seems natural to go back to its components, i.e. the  residuals, for a more detailed analysis.
 
 Association plots \citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
@@ -172,11 +172,11 @@ emphasizes the associational pattern in the underlying data.
 
 Another example is given in Figure \ref{fig:assoc-classic2}:
 this time, we cross-tabulate the variables `Eye' and `Sex'.
-The big tiles for brown Eyes suggest convey the impression of an asymmetry between
+For example, the big tiles for blond hair convey the impression of an asymmetry between
 male and female students, and hence that hypothesis of independence is
 to be rejected. However, the $\chi^2$ test statistic is not significant at
-a 5\% level: in this example, its value is 7.28, and the corresponding
-$p$ value approximately $0.063$. Apparently, the relative size of the
+a 5\% level: in this example, its value is 6.221, and the corresponding
+$p$ value approximately $0.1013$. Apparently, the relative size of the
 tiles is insufficient to assess the ``strength'' of association
 between two variables; again, information on the absolute size of the
 residuals would be useful.
@@ -184,15 +184,15 @@ Using the extended shading (Figure \ref{fig:assoc-improved2}), we see at first g
 that \emph{no} residual is bigger than 2 (or smaller than -2 for
 negative ones, respectively) 
 because simply no tile is shaded. In fact, as we can depict from
-the legend, the overall range of the residuals is approximately $[-1.5,1.5]$.
+the legend, the overall range of the residuals is smaller than $[-1.5,1.5]$.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-classic2,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-base::assocplot(margin.table(HairEyeColor, 2:3))
+base::assocplot(margin.table(HairEyeColor, c(1,3)))
 @
-\caption{Association plot for `Eye' and `Sex' in the `HairEyeColor' data.}
+\caption{Association plot for `Hair' and `Sex' in the `HairEyeColor' data.}
 \label{fig:assoc-classic2}
 \end{center}
 \end{figure}
@@ -201,9 +201,9 @@ base::assocplot(margin.table(HairEyeColor, 2:3))
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-improved,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(t(margin.table(HairEyeColor, 2:3)), gp = gp.shading)
+grid.assocplot(t(margin.table(HairEyeColor, c(1,3))), gp = gp.shading)
 @
-\caption{Extended association plot for `Eye' and `Sex' in the `HairEyeColor' data.}
+\caption{Extended association plot for `Hair' and `Sex' in the `HairEyeColor' data.}
 \label{fig:assoc-improved2}
 \end{center}
 \end{figure}
@@ -220,6 +220,9 @@ e.g., the null hypotheses of conditional independence:
 
 \[\pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots}\]
 
+A general approach for visualizing such kind of hypotheses are
+extended mosaic plots. In this section, we give two examples for the
+applicability of association plots to multi-way tables.
 A quick overview of the mutual independence structure of a multi-way
 table (i.e., all pairwise \textit{marginal} associations)
 can be given by a matrix of plots where each cell contains an
@@ -277,8 +280,7 @@ general plotting to relative coordinates is not supported.
 The new implementation was written from scratch in \texttt{grid} offering
 much more versatility amongst some minor advantages and convenient
 improvements. Second, the graphics parameters of the rectangles in the
-association plots (like in almost all standard \textsf{R}
-plots), such as color and line type, cannot be specified for each cell
+association plots, such as color and line type, cannot be specified for each cell
 by the user. To overcome this, the current implementation in \texttt{vcd}
 allows the user to specify either arrays of graphics parameters
 of the same dimensionality as the object being plotted or a function
@@ -295,7 +297,6 @@ plots to multi-way tables. Furthermore, a new
 implementation is outlined based on the graphics package \texttt{grid}
 which provides more modular design and more flexible specification
 of graphical parameters.
-
 Our work is still not at its end, though: for example, the plots for
 multi-way tables currently do not use the same scale for all subplots,
 and thus residuals of different subplots are not
