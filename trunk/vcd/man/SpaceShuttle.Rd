@@ -1,9 +1,11 @@
 \name{SpaceShuttle}
 \alias{SpaceShuttle}
 \non_function{}
-\title{SpaceShuttle}
+\title{Space Shuttle O-ring failures}
 \description{
-Data set about NASA space shuttle O-ring failures.
+Data from Dalal et al. (1989) about O-ring failures in the
+NASA space shuttle progam. The damage index comes from a
+discussion of the data by Tufte (1997).
 }
 
 \usage{data(SpaceShuttle)}
@@ -13,16 +15,24 @@ Data set about NASA space shuttle O-ring failures.
     \item{Temperature}{temperature during start (in degrees F),}
     \item{Pressure}{pressure,}
     \item{Fail}{did any O-ring failures occur? (no, yes),}
-    \item{nFailures}{how many (of six) 0-rings faild?,}
+    \item{nFailures}{how many (of six) 0-rings failed?,}
     \item{Damage}{damage index.}
   }
 }
 
 \references{
-Dalal et al. (1989), \emph{JASA}, \bold{84}, 945-957.
+S. Dalal, E. B. Fowlkes, B. Hoadly (1989), Risk analysis of the space
+shuttle: Pre-Challenger prediction of failure, \emph{Journal of the
+American Statistical Association}, \bold{84}, 945-957.
+
+E. R. Tufte (1997), \emph{Visual Explanations: Images and Quantities,
+Evidence and Narrative}. Graphics Press, Cheshire, CT.
+
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Publishing.
 }
 
-\source{Friendly, Visualizing Categorical Data:
+\source{Michael Friendly (2000), Visualizing Categorical Data:
 \url{http://hotspur.psych.yorku.ca/ftp/sas/vcd/catdata/orings.sas}}
 
 \examples{

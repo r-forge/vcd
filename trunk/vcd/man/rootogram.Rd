@@ -2,7 +2,7 @@
 \alias{rootogram}
 \alias{rootogram.default}
 \alias{rootogram.goodfit}
-\title{Rootogram}
+\title{Rootograms}
 \description{
 Rootograms of observed and fitted values.
 }
@@ -38,6 +38,9 @@ visible.
   Achim Zeileis
 }
 \references{
+J. W. Tukey (1977), \emph{Exploratory Data Analysis}. Addison Wesley,
+Reading, MA.
+
 Michael Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Publishing.
 }

@@ -43,6 +43,14 @@ straight line. See Friendly (2000) for details.
   Achim Zeileis
 }
 \references{
+D. C. Hoaglin (1980), A poissonness plot, \emph{The American
+Statistican}, \bold{34}, 146-149.
+
+D. C. Hoaglin & J. W. Tukey (1985), Checking the shape of discrete
+distributions. In D. C. Hoaglin, F. Mosteller, J. W. Tukey (eds.),
+\emph{Exploring Data Tables, Trends and Shapes}, chapter 9. John
+Wiley & Sons, New York.
+
 Michael Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Publishing.
 }
