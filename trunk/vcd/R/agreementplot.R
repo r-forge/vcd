@@ -152,16 +152,18 @@ function (formula, data = NULL, ..., subset)
             )
 }
 
-Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
+Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
 {
   if (is.character(weights))
       weights = match.arg(weights)
 
+  q <- qnorm((1 + conf.level) / 2)
+  
   d  <- diag(x)
   n  <- sum(x)
   nc <- ncol(x)
-  cols <- colSums(x)/n
-  rows <- rowSums(x)/n
+  colFreqs <- colSums(x)/n
+  rowFreqs <- rowSums(x)/n
   
   ## Kappa
   kappa <- function (po, pc)
@@ -171,51 +173,54 @@ Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
     
   ## unweighted
   po <- sum(d) / n
-  pc <- crossprod(cols, rows)
+  pc <- crossprod(colFreqs, rowFreqs)
   k <- kappa(po, pc)
   s <- std(po, pc)
   
   ## weighted 
-  if (is.matrix(weights))
-    W <- weights
+  W <- if (is.matrix(weights))
+    weights
+  else if (weights == "Equal-Spacing")
+    outer (1:nc, 1:nc, function(x, y) 1 - abs(x - y) / (nc - 1))
   else
-    W <- if (weights == "Equal-Spacing")
-      outer (1:nc, 1:nc, function(x, y) 1 - abs(x - y) / (nc - 1))
-    else
-      outer (1:nc, 1:nc, function(x, y) 1 - (abs(x - y) / (nc - 1))^2)
+    outer (1:nc, 1:nc, function(x, y) 1 - (abs(x - y) / (nc - 1))^2)
   pow <- sum(W * x) / n
-  pcw <- sum(W * cols %o% rows)
+  pcw <- sum(W * colFreqs %o% rowFreqs)
   kw <- kappa(pow, pcw)
   sw <- std(x / n, 1 - pcw, W)
 
   structure(
-            list(Kappa = c(
+            list(Unweighted = c(
                    value = k,
                    ASE   = s,
-                   lwr   = k - s * qnorm(0.975),
-                   upr   = k + s * qnorm(0.975) 
+                   lwr   = k - s * q,
+                   upr   = k + s * q
                    ),
-                 Kappa.Weighted = c(
+                 Weighted = c(
                    value = kw,
                    ASE   = sw,
-                   lwr   = kw - sw * qnorm(0.975),
-                   upr   = kw + sw * qnorm(0.975) 
+                   lwr   = kw - sw * q,
+                   upr   = kw + sw * q 
                    ),
-                 Weights = W),
-            class = "kappa"
+                 Weights = W
+                 ),
+            class = "Kappa"
        )
 }
 
-print.kappa <- function (x, ...) {
-  tab <- rbind(x$Kappa, x$Kappa.Weighted)
+print.Kappa <- function (x, ...) {
+  tab <- rbind(x$Unweighted, x$Weighted)
   rownames(tab) <- names(x)[1:2]
   print(tab)
 }
 
-summary.kappa <- function (object, ...) {
-  print(object)
+summary.Kappa <- function (object, ...)
+  structure(object, class = "summary.Kappa")
+
+print.summary.Kappa <- function (x, ...) {
+  print.Kappa(x)
   cat("\nWeights:\n")
-  print(object$Weights)
+  print(x$Weights)
 }
 
 expected <- function(x, frequency = c("absolute","relative")) {
@@ -240,56 +245,73 @@ mar.table <- function(x) {
   tab
 }
 
-Summary <- function(x,
-                    totals = TRUE,
-                    percentages = TRUE,
-                    conditionals = c("row", "column", "none"),
-                    digits = 4
+summary.table <- function(object,
+                    margins = TRUE,
+                    percentages = FALSE,
+                    conditionals = c("none", "row", "column"),
+                    ...
                     )
 {
-  if(!is.matrix(x))
-    stop("Function only defined for m x n - tables.")
-  conditionals <- match.arg(conditionals)
+  ret <- list()
+  ret$chisq <- base::summary.table(object, ...)
   
-  tab <- array(0, c(dim(x) + totals, 1 + percentages + (conditionals != "none")))
+  if(is.matrix(object)) {
+    
+    conditionals <- match.arg(conditionals)
+  
+    tab <- array(0, c(dim(object) + margins, 1 + percentages + (conditionals != "none")))
 
-  ## frequencies
-  tab[,,1] <- if(totals) mar.table(x) else x
+    ## frequencies
+    tab[,,1] <- if(margins) mar.table(object) else object
 
-  ## percentages
-  if(percentages) {
-    tmp <- prop.table(x)
-    tab[,,2] <- 100 * if(totals) mar.table(tmp) else tmp
-  }
+    ## percentages
+    if(percentages) {
+      tmp <- prop.table(object)
+      tab[,,2] <- 100 * if(margins) mar.table(tmp) else tmp
+    }
 
-  ## conditional distributions
-  if(conditionals != "none") {
-    tmp <- prop.table(x, margin = 1 + (conditionals == "column"))
-    tab[,,2 + percentages] <- 100 * if(totals) mar.table(tmp) else tmp
-  }
+    ## conditional distributions
+    if(conditionals != "none") {
+      tmp <- prop.table(object, margin = 1 + (conditionals == "column"))
+      tab[,,2 + percentages] <- 100 * if(margins) mar.table(tmp) else tmp
+    }
 
-  ## dimnames
-  dimnames(tab) <- c(dimnames(if(totals) mar.table(x) else x),
-                     list(c("freq",
-                            if(percentages) "%",
-                            switch(conditionals, row = "row%", column = "col%")
+    ## dimnames
+    dimnames(tab) <- c(dimnames(if(margins) mar.table(object) else object),
+                       list(c("freq",
+                              if(percentages) "%",
+                              switch(conditionals, row = "row%", column = "col%")
+                              )
                             )
-                          )
-                     )
+                       )
 
-  ## patch row%/col% totals
-  if(conditionals == "row") 
-    tab[dim(tab)[1],,2 + percentages] <- NA
+    ## patch row% / col% margins
+    if(conditionals == "row") 
+      tab[dim(tab)[1],,2 + percentages] <- NA
+    
+    if(conditionals == "column")
+      tab[,dim(tab)[2],2 + percentages] <- NA
+    
+    ret$table <- tab
+  }    
 
-  if(conditionals == "column")
-    tab[,dim(tab)[2],2 + percentages] <- NA
-                     
-  if(dim(tab)[3] == 1)
-    print(tab[,,1], digits = digits)
-  else
-    print(ftable(aperm(tab, c(1,3,2))), 2, digits = digits)
+  class(ret) <- "summary.table"
+  ret
+}
+
+print.summary.table <- 
+function (x, digits = max(1, getOption("digits") - 3), ...) 
+{
+  if (!is.null(x$table))
+    if(dim(x$table)[3] == 1)
+      print(x$table[,,1], digits = digits)
+    else
+      print(ftable(aperm(x$table, c(1,3,2))), 2, digits = digits)
   
-  invisible(tab)
+  cat("\n")
+  
+  if (!is.null(x$chisq))
+    base::print.summary.table(x$chisq, digits, ...)
 }
 
 assoc.stats <- function(x) {
@@ -323,16 +345,26 @@ print.assoc.stats <- function(x,
 }
 
 summary.assoc.stats <- function(object, percentage = FALSE, ...) {
-  Summary(object$table, percentage = percentage, ...)
+  tab <- summary(object$table, percentage = percentage, ...)
+  tab$chisq <- NULL
+  structure(list(summary = tab,
+                 object  = object),
+            class   = "summary.assoc.stats"
+            )
+}
+
+print.summary.assoc.stats <- function(x, ...) {
   cat("\n")
-  print(object)
+  print(x$summary)
+  print(x$object)
+  cat("\n")
 }
 
 woolf.test <- function(x) {
   DNAME <- deparse(substitute(x))
   x <- x + 1 / 2
   k <- dim(x)[3]
-  or <- apply(x, 3, function(x) (x[1,1]*x[2,2])/(x[1,2]*x[2,1]))
+  or <- apply(x, 3, function(x) (x[1,1] * x[2,2]) / (x[1,2] * x[2,1]))
   w <-  apply(x, 3, function(x) 1 / sum(1 / x))
   o <- log(or)
   e <- weighted.mean(log(or), w)
