@@ -49,13 +49,7 @@ goodfit <- function(freq, count, type = c("poisson", "binomial", "nbinomial"),
     })
 
     expected <- sum(freq) * p.hat
-    chi2 <- sum((freq - expected)^2/expected)
-    G2 <- sum(freq*log(freq/expected)) * 2
-    RVAL <- c(chi2, G2)
-    RVAL <- cbind(RVAL, pchisq(RVAL, df = df, lower = FALSE))
-    colnames(RVAL) <- c("statistic", "p value")
-    rownames(RVAL) <- c("Pearson chi-square:", "Likelihood ratio:")
-    RVAL <- list(tests = RVAL, observed = freq,
+    RVAL <- list(observed = freq,
                  count = count, fitted = expected,
 		 type = type, df = df, estimate = par)
     class(RVAL) <- "goodfit"
@@ -64,9 +58,18 @@ goodfit <- function(freq, count, type = c("poisson", "binomial", "nbinomial"),
 
 summary.goodfit <- function(object, ...)
 {
-    cat(paste("\t Goodness-of-fit test for", object$type, "distribution\n\n"))
-    print(object$tests)
-    cat(paste("degrees of freedom:", object$df, "\n"))
+    freq <- object$observed
+    expected <- object$fitted
+    df <- object$df
+    chi2 <- sum((freq - expected)^2/expected)
+    G2 <- sum(freq*log(freq/expected)) * 2
+    RVAL <- c(chi2, G2)
+    RVAL <- cbind(RVAL, c(df,df), pchisq(RVAL, df = object$df, lower = FALSE))
+    colnames(RVAL) <- c("X^2", "df", "P(> X^2)")
+    rownames(RVAL) <- c("Pearson", "Likelihood Ratio")
+
+    cat(paste("\n\t Goodness-of-fit tests for", object$type, "distribution\n\n"))
+    print(RVAL)
 }
 
 plot.goodfit <- function(x, ...)
