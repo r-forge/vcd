@@ -22,9 +22,9 @@ expected(x, frequency = c("absolute", "relative"))
   \email{david.meyer@ci.tuwien.ac.at}
 }
 \examples{
-data(MSpatients)
-expected(MSpatients)
-expected(MSpatients, frequency = "relative")
+data(MSPatients)
+expected(MSPatients)
+expected(MSPatients, frequency = "relative")
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{array}% __ONLY ONE__ keyword per line
