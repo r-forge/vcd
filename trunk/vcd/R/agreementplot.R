@@ -278,17 +278,72 @@ Summary <- function(x,
 
   ## patch row%/col% totals
   if(conditionals == "row") 
-    tab[dim(tab)[1],,3] <- NA
+    tab[dim(tab)[1],,2 + percentages] <- NA
 
   if(conditionals == "column")
-    tab[,dim(tab)[2],3] <- NA
+    tab[,dim(tab)[2],2 + percentages] <- NA
                      
   if(dim(tab)[3] == 1)
     print(tab[,,1], digits = digits)
   else
-    print(ftable(aperm(tab, c(1,3,2))),2, digits = digits)
+    print(ftable(aperm(tab, c(1,3,2))), 2, digits = digits)
   
   invisible(tab)
+}
+
+assoc.stats <- function(x) {
+  if(!is.matrix(x))
+    stop("Function only defined for m x n - tables.")
+  require(MASS)
+  
+  tab    <- summary(loglm(~1+2, x))$tests
+  phi    <- sqrt(tab[2,1] / sum(x))
+  cont   <- sqrt(phi^2 / (1 + phi^2))
+  cramer <- sqrt(phi^2 / min(dim(x) - 1))
+  structure(
+            list(table = x,
+                 chisq.tests = tab,
+                 phi = phi,
+                 contingency = cont,
+                 cramer = cramer),
+            class = "assoc.stats"
+            )
+}
+
+print.assoc.stats <- function(x,
+                              digits = 3,
+                              ...)
+{
+  print(x$chisq.tests, digits = 5)
+  cat("\n")
+  cat("Phi-Coefficient   :", round(x$phi,    digits = digits), "\n")
+  cat("Contingency Coeff.:", round(x$cont,   digits = digits), "\n")
+  cat("Cramer's V        :", round(x$cramer, digits = digits), "\n")
+}
+
+summary.assoc.stats <- function(object, percentage = FALSE, ...) {
+  Summary(object$table, percentage = percentage, ...)
+  cat("\n")
+  print(object)
+}
+
+woolf.test <- function(x) {
+  DNAME <- deparse(substitute(x))
+  x <- x + 1 / 2
+  k <- dim(x)[3]
+  or <- apply(x, 3, function(x) (x[1,1]*x[2,2])/(x[1,2]*x[2,1]))
+  w <-  apply(x, 3, function(x) 1 / sum(1 / x))
+  o <- log(or)
+  e <- weighted.mean(log(or), w)
+  STATISTIC <- sum(w * (o - e)^2)
+  PARAMETER <- k - 1
+  PVAL <- 1 - pchisq(STATISTIC, PARAMETER)
+  METHOD <- "Woolf-test on Homogeneity of Odds Ratios (no 3-Way assoc.)"
+  names(STATISTIC) <- "X-squared"
+  names(PARAMETER) <- "df"
+  structure(list(statistic = STATISTIC, parameter = PARAMETER, 
+                 p.value = PVAL, method = METHOD, data.name = DNAME, observed = o, 
+                 expected = e), class = "htest")
 }
 
 

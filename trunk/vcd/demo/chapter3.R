@@ -8,7 +8,7 @@
 
   ## unstratified
   ### no margin is standardized
-  x <- apply(UCBAdmissions, c(2,1), sum)
+  x <- margin.table(UCBAdmissions, 2:1)
   fourfoldplot(x, std = "i", extended = FALSE)
   ### std. for gender
   fourfoldplot(x, margin = 1, extended = FALSE)
@@ -27,7 +27,7 @@
   fourfoldplot(CoalMiners, mfcol = c(2,4))
 
   ## Log Odds Ratio Plot
-  l <- logoddsratio(CoalMiners)
+  summary(l <- oddsratio(CoalMiners))
   g <- seq(25, 60, by = 5)
   plot(l,
        xlab = "Age Group",
@@ -37,7 +37,7 @@
   
   ## Fourfold display, strata equated
   fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
-
+  
   ####################
   ## Sieve Diagrams ##
   ####################
@@ -47,8 +47,7 @@
   data(HairEyeColor)
 
   ## aggregate over `sex':
-  (tab <- apply(HairEyeColor, 1:2, sum))
-
+  (tab <- margin.table(HairEyeColor, 1:2))
   ## plot expected values:
   sieveplot(t(tab), type = "expected", values = "both")
 
@@ -66,14 +65,14 @@
             xlab = "Left Eye Grade",
             ylab = "Right Eye Grade")
   
-
   ### Berkeley Admission ###
   ##########################
 
   ## -> Larger tables: Cross factors
   ### Cross Gender and Admission
   data(UCBAdmissions)
-  tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions)
+
+  (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
   sieveplot(tab, reverse.y = FALSE,
             xlab = "Gender:Admission",
             ylab = "Department",
@@ -87,7 +86,7 @@
   ### Hair Eye Color ###
   ######################
   data(HairEyeColor)
-  assocplot(apply(HairEyeColor, c(1,2), sum),
+  assocplot(margin.table(HairEyeColor, 1:2),
             col = c("blue","red"),
             xlab = "Hair Color",
             ylab = "Eye Color",
@@ -172,6 +171,7 @@
   #############################
   data(Hitters)
   attach(Hitters)
+
   colors <- c("black","red","green","blue","red","black","blue")
   pch <- substr(levels(Positions), 1, 1)
   ternaryplot(
@@ -187,10 +187,13 @@
          col = c(NA, colors)
          )
 
+  detach(Hitters)
+
   ### Lifeboats on Titanic ###
   ############################
   data(Lifeboats)
   attach(Lifeboats)
+
   ternaryplot(
               Lifeboats[,4:6],
               pch = ifelse(side=="Port", 1, 19),
@@ -232,3 +235,7 @@
   abline(lm(total ~ as.POSIXct(launch),
             subset = side == "Starboard"),
          col = "darkblue")     
+
+  detach(Lifeboats)
+
+
