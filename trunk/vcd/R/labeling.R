@@ -27,6 +27,8 @@ labeling.list <- function(gp = gpar(),
                         cols = 2,
                         ...) 
   function(d, split.vertical, condvars) {
+    if (is.table(d))
+      d <- dimnames(d)
     ld <- length(d)
     labeling.text(labels = FALSE, varnames = varnames)(d, split.vertical, condvars)
     seekViewport("marginBottom")
@@ -48,6 +50,8 @@ labeling.list <- function(gp = gpar(),
 
 labeling.conditional <- function(...)
   function (d, split.vertical, condvars) {
+    if (is.table(d))
+      d <- dimnames(d)
     v <- rep.int(TRUE, length(d))
     v[condvars] <- FALSE
     labeling.text(labels = !v, ...)(d, split.vertical, condvars)
@@ -61,6 +65,8 @@ labeling.cells <- function(labels = TRUE, varnames = TRUE,
                          margin = unit(0.5, "lines"), clip.cells = TRUE,
                          text = NULL, ...)
   function(d, split.vertical, condvars) {
+    if (is.table(d))
+      d <- dimnames(d)
     dn <- names(d)
     ld <- length(d)
 
@@ -109,7 +115,7 @@ labeling.cells <- function(labels = TRUE, varnames = TRUE,
             paste(prvars[labels[1:ld]], prlab, sep = "", collapse = lcollapse) 
           } 
           
-          grid.text(txt,
+          grid.text(if(!is.na(txt)) txt,
                     x = switch(pos[1], left =, top = 0, centre = 0.5, 1),
                     y = switch(pos[2], left =, top = 1, centre = 0.5, 0),
                     gp = gp, just = just, rot = rot)
@@ -138,6 +144,8 @@ labeling.text <- function(labels = TRUE, varnames = labels,
                         clip = FALSE, ...
                         )
   function(d, split.vertical, condvars) {
+    if (is.table(d))
+      d <- dimnames(d)
     dn <- names(d)
     ld <- length(d)
 
@@ -440,6 +448,8 @@ labeling.text <- function(labels = TRUE, varnames = labels,
 
 labeling.doubledecker <- function(labels = "bottom", ...)
   function(d, split.vertical, condvars) {
+    if (is.table(d))
+      d <- dimnames(d)
     labeling.text(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
                 clip = c(rep.int(TRUE, length(d) - 1), FALSE),
                 labbl.varnames = FALSE,
