@@ -3,7 +3,7 @@
 \docType{data}
 \title{Employment Status}
 \description{
-Data from a 1974 Danish study given by Anderson (1991) on the
+Data from a 1974 Danish study given by Andersen (1991) on the
 employees who had been laid off. The workers are classified by
 their employment status on 1975-01-01, the cause of their layoff
 and the length of employment before they were laid off.
@@ -24,7 +24,7 @@ and the length of employment before they were laid off.
 }
 
 \references{
-E. B. Anderson (1991), \emph{Statistical Analysis of Categorical Data}. Springer-Verlag, Berlin.
+E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}. Springer-Verlag, Berlin.
 
 M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.

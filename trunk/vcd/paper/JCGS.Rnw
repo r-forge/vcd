@@ -98,7 +98,7 @@ ucb <- UCBAdmissions
 dimnames(ucb)[[1]] <- c("Admit", "Reject")
 
 data(Arthritis)
-art <- xtabs(~ Improved + Treatment, data = Arthritis)
+art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
 @
 
 <<auxfunctions,echo=FALSE,results=hide>>=
