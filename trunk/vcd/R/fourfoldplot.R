@@ -196,8 +196,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                              method = p.adjust.method
                              )
     
-    scale <- space / (2 * convertNative(unit(1, "strheight", "Ag")))
-    v <- 0.95 - max(convertNative(unit(1, "strwidth", as.character(c(x))))) / 2
+    scale <- space / (2 * convertY(unit(1, "strheight", "Ag"), "native", valueOnly = TRUE) )
+    v <- 0.95 - max(convertX(unit(1, "strwidth", as.character(c(x))), "native", valueOnly = TRUE) ) / 2
 
     fontsize = fontsize * scale
     

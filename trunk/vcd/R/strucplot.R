@@ -13,9 +13,9 @@ strucplot <- function(## main parameters
                       
                       ## layout
                       split.vertical = TRUE, 
-                      space = NULL,
+                      spacing = NULL,
                       gp = NULL,
-                      labels = labels.text(),
+                      labeling = labeling.text(),
                       panel = panel.mosaic(),
                       legend = legend.resbased(),
                       
@@ -73,8 +73,8 @@ strucplot <- function(## main parameters
                         )
 
   ## spacing
-  if (is.function(space))
-    space <- space(dim(x), condvars)
+  if (is.function(spacing))
+    spacing <- spacing(dim(x), condvars)
 
   ## gp (color, fill, lty, etc.) argument
   if (shade) {
@@ -82,7 +82,7 @@ strucplot <- function(## main parameters
       gp <- gp.HCLshading()
     if (is.function(gp)) {
       gpfun <- gp
-      gp <- gpfun(x, residuals)
+      gp <- gpfun(residuals = residuals, observed = x, expected = expected)
     } else if (!is.null(legend))
       stop("gp argument must be a shading function for drawing a legend")
   } else {
@@ -103,6 +103,8 @@ strucplot <- function(## main parameters
                            legend.width = legend.width))
 
   ## legend
+  if (is.logical(legend))
+    legend <- if (legend) legend.resbased() else NULL
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     legend(obs = x, res = residuals, gp = gpfun,
@@ -125,17 +127,17 @@ strucplot <- function(## main parameters
 
   ## make plot
   seekViewport("plot")
-  panel(observed = if (type == "observed") x else expected,
-        residuals = residuals,
+  panel(residuals = residuals,
+        observed = if (type == "observed") x else expected,
         expected = expected,
-        space = space,
+        spacing = spacing,
         gp = gp,
         split.vertical = split.vertical)
 
   upViewport(dl)
 
   ## labels
-  if (!is.null(labels)) labels(dn, split.vertical, condvars)
+  if (!is.null(labeling)) labeling(dn, split.vertical, condvars)
 
   ## pop/move up viewport
   seekViewport("cell")

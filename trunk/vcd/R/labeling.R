@@ -1,5 +1,5 @@
 #################################################################
-## labelings
+## labeling
 
 pexpand <- function(par, len, default.value, default.names) {
   nam <- names(par)
@@ -18,7 +18,7 @@ pexpand <- function(par, len, default.value, default.names) {
   ret
 }
 
-labels.list <- function(gp = gpar(),
+labeling.list <- function(gp = gpar(),
                         just = "left",
                         pos = "left",
                         lsep = ": ", sep = " ",
@@ -28,7 +28,7 @@ labels.list <- function(gp = gpar(),
                         ...) 
   function(d, split.vertical, condvars) {
     ld <- length(d)
-    labels.text(labels = FALSE, varnames = varnames)(d, split.vertical, condvars)
+    labeling.text(labels = FALSE, varnames = varnames)(d, split.vertical, condvars)
     seekViewport("marginBottom")
     pos <- unit(switch(pos, left = 0, centre = 0.5, 1) / cols, "npc")
     ind <- split(seq(ld), rep.int(seq(cols), ceiling(ld / cols))[seq(ld)])
@@ -46,19 +46,20 @@ labels.list <- function(gp = gpar(),
                 )
   }
 
-labels.conditional <- function(...)
+labeling.conditional <- function(...)
   function (d, split.vertical, condvars) {
     v <- rep.int(TRUE, length(d))
     v[condvars] <- FALSE
-    labels.text(labels = !v, ...)(d, split.vertical, condvars)
-    labels.cells(labels = v, ...)(d, split.vertical, condvars)
+    labeling.text(labels = !v, ...)(d, split.vertical, condvars)
+    labeling.cells(labels = v, ...)(d, split.vertical, condvars)
   }
 
-labels.cells <- function(labels = TRUE, varnames = TRUE,
+labeling.cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate.labels = FALSE, abbreviate.varnames = FALSE,
                          gp = gpar(), lsep = ": ", lcollapse = "\n",
                          just = "centre", pos = "centre", rot = 0,
-                         margin = unit(0.5, "lines"), clip.cells = TRUE, ...)
+                         margin = unit(0.5, "lines"), clip.cells = TRUE,
+                         text = NULL, ...)
   function(d, split.vertical, condvars) {
     dn <- names(d)
     ld <- length(d)
@@ -85,6 +86,7 @@ labels.cells <- function(labels = TRUE, varnames = TRUE,
       n <- d[[vind]]
       for (labind in seq(along = n)) {
         lab <- c(labs, n[labind])
+        names(lab) <- names(d)[1:vind]
         mlab <- paste("cell", paste(dn[1:vind], lab, sep = ".", collapse = ".."),
                       sep = "..")
 
@@ -92,15 +94,21 @@ labels.cells <- function(labels = TRUE, varnames = TRUE,
           split(vind + 1, lab)
         else {
           seekViewport(mlab)
-          prlab <- ifelse(abbreviate.labels,
-                          sapply(seq(along = lab),
-                                 function(i) abbreviate(lab[i], abbreviate.labels[i])),
-                          lab)
-          prlab <- prlab[labels[1:ld]]
-          txt <- paste(prvars[labels[1:ld]], prlab, sep = "", collapse = lcollapse)
           pushViewport(viewport(width = max(unit(0, "npc"), unit(1, "npc") - 2 * margin),
                                 height = unit(1, "npc") - 2 * margin,
                                 clip = clip.cells))
+          txt <- if (!is.null(text)) {
+            lab <- lab[names(dimnames(text))]
+            do.call("[", c(list(text), as.list(lab)))
+          } else {
+            prlab <- ifelse(abbreviate.labels,
+                            sapply(seq(along = lab),
+                                   function(i) abbreviate(lab[i], abbreviate.labels[i])),
+                            lab)
+            prlab <- prlab[labels[1:ld]]
+            paste(prvars[labels[1:ld]], prlab, sep = "", collapse = lcollapse) 
+          } 
+          
           grid.text(txt,
                     x = switch(pos[1], left =, top = 0, centre = 0.5, 1),
                     y = switch(pos[2], left =, top = 1, centre = 0.5, 0),
@@ -113,7 +121,7 @@ labels.cells <- function(labels = TRUE, varnames = TRUE,
     
 }
 
-labels.text <- function(labels = TRUE, varnames = labels,
+labeling.text <- function(labels = TRUE, varnames = labels,
                         tl.labels = NULL, tl.varnames = NULL, 
                         gp.labels = gpar(fontsize = 12),
                         gp.varnames = gpar(fontsize = 12, fontface = 2),
@@ -142,8 +150,8 @@ labels.text <- function(labels = TRUE, varnames = labels,
 
     ## tl.labels
     def <- logical()
-    def[split.vertical] <- rep(c(T,F), length.out = sum(split.vertical))
-    def[!split.vertical] <- rep(c(T,F), length.out = sum(!split.vertical))
+    def[split.vertical] <- rep(c(TRUE, FALSE), length.out = sum(split.vertical))
+    def[!split.vertical] <- rep(c(TRUE, FALSE), length.out = sum(!split.vertical))
     tl.labels <- if (is.null(tl.labels)) 
       def
     else
@@ -430,9 +438,9 @@ labels.text <- function(labels = TRUE, varnames = labels,
     
   }
 
-labels.doubledecker <- function(labels = "bottom", ...)
+labeling.doubledecker <- function(labels = "bottom", ...)
   function(d, split.vertical, condvars) {
-    labels.text(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
+    labeling.text(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
                 clip = c(rep.int(TRUE, length(d) - 1), FALSE),
                 labbl.varnames = FALSE,
                 rot.labels = rep.int(0, 4),
@@ -446,14 +454,14 @@ labels.doubledecker <- function(labels = "bottom", ...)
               gp = gpar(fontface = 2))
   }
 
-labels.left <- function(tl.labels = TRUE, clip = TRUE, pos.varnames = "left",
+labeling.left <- function(tl.labels = TRUE, clip = TRUE, pos.varnames = "left",
                         pos.labels = "left", just.labels = "left", ...)
-  labels.text(tl.labels = tl.labels, clip = clip, pos.varnames = pos.varnames,
+  labeling.text(tl.labels = tl.labels, clip = clip, pos.varnames = pos.varnames,
               pos.labels = pos.labels, just.labels = just.labels, ...)
 
-labels.boxed <- function(tl.labels = TRUE, boxes = TRUE, clip = TRUE, pos.labels = "center", ...)
-  labels.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, ...)
+labeling.boxed <- function(tl.labels = TRUE, boxes = TRUE, clip = TRUE, pos.labels = "center", ...)
+  labeling.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, ...)
 
-labels.augsburg <- function(tl.labels = FALSE, boxes = TRUE, clip = TRUE, pos.labels = "left", just.labels = "left", labbl.varnames = FALSE, ...)
-  labels.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, labbl.varnames = labbl.varnames, just.labels = just.labels, ...)
+labeling.augsburg <- function(tl.labels = FALSE, boxes = TRUE, clip = TRUE, pos.labels = "left", just.labels = "left", labbl.varnames = FALSE, ...)
+  labeling.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, labbl.varnames = labbl.varnames, just.labels = just.labels, ...)
 

@@ -12,9 +12,10 @@
   area sums).
 }
 \usage{
-\method{agreementplot}{default}(x, reverse.y = TRUE, main = "Agreement Chart",
-              weights = c(1, 1 - 1/(ncol(x) - 1)^2), cex.main = 2, cex.lab = 1.5,
-              xlab = names(dimnames(x))[2], ylab = names(dimnames(x))[1], ...)
+\method{agreementplot}{default}(x, reverse.y = TRUE, main = NULL,
+              weights = c(1, 1 - 1/(ncol(x) - 1)^2), margins = par("mar"),
+              panel = FALSE, xlab = names(dimnames(x))[2],
+              ylab = names(dimnames(x))[1], ...)
 \method{agreementplot}{formula}(formula, data = NULL, ..., subset)
 }
 %- maybe also `usage' for other objects documented here.
@@ -26,8 +27,8 @@
   \item{weights}{vector of weights for successive larger observed areas, used
     in the agreement strength statistic, and also for the shading. The
     first element should be 1.}
-  \item{cex.main}{font size of title.}
-  \item{cex.lab}{font size of labels.}
+  \item{margins}{vector of margins (see \code{\link[graphics]{par}}.}
+  \item{panel}{if \code{FALSE}, the plot is drawn on a new page.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}. For details, see \code{xtabs}.}
   \item{data}{a data.frame (or list), or a contingency table from which the

@@ -11,11 +11,12 @@ the deviations of the observed from the expected values.
 }
 \usage{
 \method{sieveplot}{default}(x, reverse.y = TRUE, type = c("sieve", "expected"),
-          main = NULL, values = c("none", "cells", "margins", "both"),
+          main = deparse(substitute(x)), values = c("none", "cells", "margins", "both"),
           frequencies = c("absolute", "relative"), sieve.colors = c("red","blue"),
           sieve.lty = c("longdash", "solid"), exp.color = "gray",
-          exp.lty = "dotted", margin = 0.01, cex.main = 2, cex.lab = 1.5,
-          xlab = names(dimnames(x))[2], ylab = names(dimnames(x))[1], ...)
+          exp.lty = "dotted", margin = 0.01, panel = FALSE,
+          margins = c(4,3,4,4), xlab = names(dimnames(x))[2],
+          ylab = names(dimnames(x))[1], ...)
 \method{sieveplot}{formula}(formula, data = NULL, ..., subset)
 }
 %- maybe also `usage' for other objects documented here.
@@ -36,8 +37,8 @@ the deviations of the observed from the expected values.
   \item{exp.color, exp.lty}{color/line type entry for the expected
     values grid.}
   \item{margin}{lines of margin between the cell rectangles.}
-  \item{cex.main}{font size of title.}
-  \item{cex.lab}{font size of labels.}
+  \item{margins}{vector of margins (see \code{\link[graphics]{par}}.}
+  \item{panel}{if \code{FALSE}, the plot is drawn on a new page.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}. For details, see \code{xtabs}.}
   \item{data}{a data.frame (or list), or a contingency table from which the

@@ -1,7 +1,7 @@
 export(
 ## generic functions
        "Kappa",
-       "assoc.stats",
+       "assocstats",
        "distplot",	    
        "fourfoldplot",
        "goodfit",
@@ -17,20 +17,20 @@ export(
        "structable",
 
        ## spacings
-       "spaces.conditional",
-       "spaces.equal",
-       "spaces.dimequal",
-       "spaces.increase",
-       "spaces.doubledecker",
+       "spacing.conditional",
+       "spacing.equal",
+       "spacing.dimequal",
+       "spacing.increase",
+       "spacing.doubledecker",
 
-       "labels.augsburg",
-       "labels.text",
-       "labels.boxed",
-       "labels.left",
-       "labels.cells",
-       "labels.conditional",
-       "labels.list",
-       "labels.doubledecker",
+       "labeling.augsburg",
+       "labeling.text",
+       "labeling.boxed",
+       "labeling.left",
+       "labeling.cells",
+       "labeling.conditional",
+       "labeling.list",
+       "labeling.doubledecker",
 
        "legend.resbased",
        "legend.fixed",
@@ -88,11 +88,11 @@ S3method("print", "summary.Kappa")
 S3method("print", "goodfit")
 S3method("print", "oddsratio")
 S3method("print", "summary.oddsratio")
-S3method("print", "assoc.stats")
-S3method("print", "summary.assoc.stats")
+S3method("print", "assocstats")
+S3method("print", "summary.assocstats")
 S3method("print", "table2d.summary")
 
 S3method("summary", "Kappa")
-S3method("summary", "assoc.stats")
+S3method("summary", "assocstats")
 S3method("summary", "goodfit")
 S3method("summary", "oddsratio")

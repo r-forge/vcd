@@ -31,13 +31,13 @@ legend.resbased <- function(fontsize = 12,
     } else {
       if (is.function(gp)) {
         gpfun <- gp
-        gp <- gpfun(obs, res)
+        gp <- gpfun(res, obs)
       }
       col.bins <- gp$col.bins
       if(is.null(col.bins)) col.bins <- min(res) + diff(range(res)) * ((0:steps) / steps)
       y.pos <- col.bins[-length(col.bins)]
       y.height <- diff(col.bins)
-      y.col <- gpfun(obs, y.pos + 0.5 * y.height)$fill
+      y.col <- gpfun(y.pos + 0.5 * y.height, obs)$fill
       col.legend <- list(pos = y.pos, height = y.height, col = y.col)
     }
 

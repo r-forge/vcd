@@ -337,7 +337,7 @@ function (x, digits = max(1, getOption("digits") - 3), ...)
   invisible(x)
 }
 
-assoc.stats <- function(x) {
+assocstats <- function(x) {
   if(!is.matrix(x))
     stop("Function only defined for 2-d - tables.")
 ##  require(MASS)
@@ -352,13 +352,13 @@ assoc.stats <- function(x) {
                  phi = phi,
                  contingency = cont,
                  cramer = cramer),
-            class = "assoc.stats"
+            class = "assocstats"
             )
 }
 
-print.assoc.stats <- function(x,
-                              digits = 3,
-                              ...)
+print.assocstats <- function(x,
+                             digits = 3,
+                             ...)
 {
   print(x$chisq.tests, digits = 5, ...)
   cat("\n")
@@ -368,16 +368,16 @@ print.assoc.stats <- function(x,
   invisible(x)
 }
 
-summary.assoc.stats <- function(object, percentage = FALSE, ...) {
+summary.assocstats <- function(object, percentage = FALSE, ...) {
   tab <- summary(object$table, percentage = percentage, ...)
   tab$chisq <- NULL
   structure(list(summary = tab,
                  object  = object),
-            class   = "summary.assoc.stats"
+            class   = "summary.assocstats"
             )
 }
 
-print.summary.assoc.stats <- function(x, ...) {
+print.summary.assocstats <- function(x, ...) {
   cat("\n")
   print(x$summary, ...)
   print(x$object, ...)

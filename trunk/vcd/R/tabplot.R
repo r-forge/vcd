@@ -16,7 +16,7 @@ tabplot.formula <- function(formula, panel = function(x, ...) assoc(x, newpage =
 }
 
 
-tabplot.default <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, labels = NULL, ...), margins = rep(1, 4), fontsize = 12, ...)
+tabplot.default <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, labeling = NULL, ...), margins = rep(1, 4), fontsize = 12, ...)
 {
   grid.newpage()
 
