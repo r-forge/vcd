@@ -117,10 +117,6 @@ function(x,
     }
 }
 
-"confint" <- 
-function (object, parm, level = 0.95, ...) 
-UseMethod("confint")
-
 "confint.oddsratio" <-
 function(object, parm, level = 0.95, ...) {
   ASE <- attr(object, "ASE")
