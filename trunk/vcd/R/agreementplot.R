@@ -221,6 +221,7 @@ print.Kappa <- function (x, ...) {
   tab <- rbind(x$Unweighted, x$Weighted)
   rownames(tab) <- names(x)[1:2]
   print(tab)
+  invisible(x)
 }
 
 summary.Kappa <- function (object, ...)
@@ -230,6 +231,7 @@ print.summary.Kappa <- function (x, ...) {
   print.Kappa(x)
   cat("\nWeights:\n")
   print(x$Weights)
+  invisible(x)
 }
 
 expected <- function(x, frequency = c("absolute","relative")) {
@@ -321,6 +323,7 @@ function (x, digits = max(1, getOption("digits") - 3), ...)
   
   if (!is.null(x$chisq))
     base::print.summary.table(x$chisq, digits, ...)
+  invisible(x)
 }
 
 assoc.stats <- function(x) {
@@ -351,6 +354,7 @@ print.assoc.stats <- function(x,
   cat("Phi-Coefficient   :", round(x$phi,    digits = digits), "\n")
   cat("Contingency Coeff.:", round(x$cont,   digits = digits), "\n")
   cat("Cramer's V        :", round(x$cramer, digits = digits), "\n")
+  invisible(x)
 }
 
 summary.assoc.stats <- function(object, percentage = FALSE, ...) {
@@ -367,6 +371,7 @@ print.summary.assoc.stats <- function(x, ...) {
   print(x$summary)
   print(x$object)
   cat("\n")
+  invisible(x)
 }
 
 woolf.test <- function(x) {
