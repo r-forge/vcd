@@ -1,6 +1,6 @@
 "mosaicpairs" <-
   function(x, main = NULL, xlab = NULL, ylab = NULL, labels, ...,
-           type = c("simple", "independend", "conditional"),
+           type = c("simple", "independent", "conditional"),
            shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	   font.labels = 1, gap = 1)
   {
@@ -46,7 +46,7 @@
                          {
                            switch(type,
                                   simple = mosaicplot(margin.table(x,c(j,i)),shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),
-                                  independend = mosaicplot(x,shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),       
+                                  independent = mosaicplot(x,shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),
                                   conditional = mosaicplot(margin.table(x,c(j,i,index[!index%in%c(j,i)])), shade=shade,margin=list(c(j,index[!index%in%c(j,i)]),c(i,index[!index%in%c(j,i)])), clegend=FALSE, xlab="",ylab="",cex=1.2 )
                                   )
                            
