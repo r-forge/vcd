@@ -28,7 +28,7 @@ function (x, stratum = NULL, log = TRUE) {
   }
 
   structure(LOR,
-            ASE = if(log) ASE,
+            ASE = ASE,
             log = log,
             class = "oddsratio"
             )}
@@ -52,7 +52,7 @@ function(object, ...) {
     Z <- object / ASE
     
     ret <- cbind(object,
-                 ASE = ASE,
+                 ASE = if (LOG) ASE,
                  Z   = if (LOG) Z,
                  P   = if (LOG) 1 - pnorm(abs(Z))
                  )
