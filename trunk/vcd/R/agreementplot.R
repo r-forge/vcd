@@ -234,17 +234,21 @@ print.summary.Kappa <- function (x, ...) {
   invisible(x)
 }
 
-indifference.table <- function(x, frequency = c("absolute", "relative")) {
+independence.table <- function(x, frequency = c("absolute", "relative")) {
   if (!is.array(x))
     stop("Need array of absolute frequencies!")
   frequency <- match.arg(frequency)
 
   n <- sum(x)
   x <- x / n
-  d <- length(dim(x))
-  tab <- apply(x, 1, sum)
-  for (i in 2:d)
-    tab <- tab %o% apply(x, i, sum)
+  d <- dim(x)
+
+  ## build margins
+  margins <- lapply(1:length(d), function(i) apply(x, i, sum))
+
+  ## multiply all combinations & reshape
+  tab <- array(apply(expand.grid(margins), 1, prod), d)
+  
   if (frequency == "relative") tab else tab * n
 }
 
