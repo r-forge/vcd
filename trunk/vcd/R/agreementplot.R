@@ -201,15 +201,11 @@ Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level =
   structure(
             list(Unweighted = c(
                    value = k,
-                   ASE   = s,
-                   lwr   = k - s * q,
-                   upr   = k + s * q
+                   ASE   = s
                    ),
                  Weighted = c(
                    value = kw,
-                   ASE   = sw,
-                   lwr   = kw - sw * q,
-                   upr   = kw + sw * q 
+                   ASE   = sw
                    ),
                  Weights = W
                  ),
