@@ -1,15 +1,11 @@
-\documentclass[10pt]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage{dsc2003}
-\usepackage{Z}
-
-\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
-\setlength{\parindent}{0em}
-
-\bibpunct{(}{)}{;}{a}{}{,}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+%% don't need: \usepackage{vcd}
 
 \begin{document}
 
-\SweaveOpts{engine=R}
+\SweaveOpts{engine=R,eps=FALSE}
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
@@ -20,15 +16,13 @@ goals <- xtabs(~ AwayGoals + HomeGoals, data = Bundesliga, subset = Year == 1995
 data(HairEyeColor)
 haireye <- xtabs(Freq ~ Hair + Eye, data = as.data.frame(HairEyeColor), subset = Sex == "Female")
 data(UCBAdmissions)
+
+gp.old <- function(x, y) gp.Friendly(x, y, lty = 1)
 @
 
 
 \title{Visualizing Independence Using Extended Association Plots}
-\author{\hfill David Meyer$^\dag$ \hfill Achim Zeileis$^\dag$ \hfill Kurt Hornik$^\ddag$ \hfill \hfill \\[0.2cm]
-\dag {\it \small Institut f\"ur Statistik \& Wahrscheinlichkeitstheorie,
- Technische Universit\"at Wien}\\
-\ddag {\it \small Institut f\"ur Statistik, Wirtschaftsuniversit\"at Wien}
-}
+\author{David Meyer \And Achim Zeileis \And Kurt Hornik}
 \date{}
 \maketitle
 
@@ -38,30 +32,35 @@ contingency tables---are extended in three directions:
 \begin{enumerate}
  \item The visualization is enhanced by using colors for the
   importance of the residuals.
- \item Two methods for the use of multi-way tables are proposed.
  \item The implementation currently available in \textsf{R} is improved using a more modular
   design and allowing a more flexible specification of plotting parameters.
+ \item Two methods for the use of multi-way tables are proposed.
 \end{enumerate}
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
 
 Given two categorical variables, or, equivalently, their contingency
-table, one is often interested in whether they are 
+table, one is often interested in whether they are
 independent or not. Usually, the $\chi^2$ test statistic---the sum of the
 squared Pearson residuals---is used as a measure of association.
 Now, whenever the statistic is
 significant, one might ask for a more detailed analysis on the basis
 of the residuals themselves.
 This task can greatly be sustained by the use of graphical
-methods such as the association plot, for which we propose some
+methods such as the mosaic display
+\citep{vcd:Hartigan+Kleiner:1981,vcd:Friendly:1994,vcd:Theus+Lauer:1999,vcd:Hofmann:2003}
+or the association plot \citep{vcd:Cohen:1980,vcd:Friendly:2000}.
+For the latter we propose some
 extensions: the use of colors for the shading of the residuals, two
 possible methods for multi-way tables, and a new, more flexible
 implementation using {\sf R}'s alternative graphical system
-\texttt{grid} \citep{vcd:Murrell:2002}. The new functionality is provided 
+\texttt{grid} \citep{vcd:Murrell:2002}. The new functionality is provided
 by the {\sf R} package
 \texttt{vcd}, inspired by the book `Visualizing Categorical Data'
 \citep{vcd:Friendly:2000}.
+
+\pagebreak
 
 \section{Association plots for 2-way tables} \label{sec:assocplots}
 
@@ -94,8 +93,8 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 \end{equation}
 which is known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
-This is the well-known $\chi^2$ test for independence in 2-way tables. 
-Now, when the $\chi^2$ test statistic turns out to be significant for some data, 
+This is the well-known $\chi^2$ test for independence in 2-way tables.
+Now, when the $\chi^2$ test statistic turns out to be significant for some data,
 it seems natural to go back to its components, i.e., the  residuals, for a more detailed analysis.
 
 Association plots \citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
@@ -110,9 +109,9 @@ Figure \ref{fig:assoc-classic1} shows the association plot
 (produced by the implementation in base {\sf R}) for the
 variables `Hair' and `Eye' of the well-known `HairEyeColor' data
 set \cite[Hair and Eye colors of 264 male and 328 female statistics
-students; see][]{vcd:Snee:1974}. 
-The biggest tiles are easily made out: e.g., the tiles for 
-brown and blue eyes, given blond hair, seem to represent important residuals. 
+students; see][]{vcd:Snee:1974}.
+The biggest tiles are easily made out: e.g., the tiles for
+brown and blue eyes, given blond hair, seem to represent important residuals.
 But assessing the ``importance'' of the others is far from obvious.
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -130,7 +129,7 @@ base::assocplot(t(HairEyeColor[,,2]))
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-improved1,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(HairEyeColor[,,2], gp = gp.Friendly)
+grid.assocplot(HairEyeColor[,,2], gp = gp.old)
 @
 \caption{Extended association plot for `Hair' and `Eye' colors of female students.}
 \label{fig:assoc-improved1}
@@ -140,17 +139,16 @@ grid.assocplot(HairEyeColor[,,2], gp = gp.Friendly)
 \section{Improved visualization through residual shading}
 
 We propose to use a color-shading similar to the
-enhancements of \cite{vcd:Friendly:1994} for the mosaic plot 
-\cite[a graphical tool for the 
-visualization of the observed frequencies in a contingency table; 
-see][]{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984}:
-this extension uses a color coding of the mosaic tiles to visualize deviations
-(residuals) from a given log-linear model fitted to the table.
-Positive and negative signs of the residuals are coded by rectangles with
-solid and dashed borders respectively. Furthermore, residuals can be
-classified according to specified shading levels: per default,
-residuals exceeding an absolute
-value of 2 are shaded light blue and red respectively, those that even
+enhancements of \cite{vcd:Friendly:1994} for the mosaic plot
+\cite[a graphical tool for the
+visualization of the observed frequencies in a contingency table;
+see][]{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984}.
+This extension uses a color coding of the mosaic tiles to visualize deviations
+(residuals) from independence. The sign and size of residuals are
+coded by color shadings of the corresponding rectangles: by default,
+residuals with an absolute value smaller than 2 are white, positive
+and negative residuals exceeding an absolute
+value of 2 are shaded light blue and red respectively, and those that even
 exceed an absolute value of 4 are shaded with full saturation. The heuristic
 behind this shading is that
 the Pearson residuals are approximately standard normal which implies
@@ -158,20 +156,14 @@ that the highlighted cells are those with
 residuals \emph{individually} significant at approximately the 5\% and 0.01\%
 level. But the main purpose of the shading is not to visualize
 significance but the \emph{pattern} of
-deviation from independence \citep[p.~109]{vcd:Friendly:2000}. A different
-approach for visualizing the residuals of log-linear models is
-used by \cite{vcd:Theus+Laurer:1999} who propose to use relative
-residuals, i.e., to scale all residuals according to the absolute sum
-of residuals. This is necessary when shading
-cells in a mosaic plot for expected frequencies, but offers no
-advantages when the residuals themselves are visualized. 
+deviation from independence \citep[p.~109]{vcd:Friendly:2000}.
 
 This color scheme similarly facilitates
-the detection of (in)dependence patterns in association plots. 
+the detection of (in)dependence patterns in association plots.
 Consider the `HairEyeColor' example
 introduced in the previous section: Figure \ref{fig:assoc-improved1}
 shows the same residuals as Figure \ref{fig:assoc-classic1}, but
-now, the color shading helps us to sort the residuals into the 
+now, the color shading helps us to sort the residuals into the
 three categories: important--less important--unimportant and thus
 emphasizes the associational pattern in the underlying data.
 
@@ -187,7 +179,7 @@ between two variables; again, information on the absolute size of the
 residuals would be useful.
 Using the extended shading (Figure \ref{fig:assoc-improved2}), we see at first glance
 that \emph{no} residual is bigger than 2 (or smaller than $-2$ for
-negative ones, respectively) 
+negative ones, respectively)
 because simply no tile is shaded. In fact, as we can see from
 the legend, the overall range of the residuals is smaller than $[-1.5,1.5]$.
 
@@ -206,16 +198,36 @@ base::assocplot(margin.table(HairEyeColor, c(1,3)))
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-improved,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(t(margin.table(HairEyeColor, c(1,3))), gp = gp.Friendly)
+grid.assocplot(t(margin.table(HairEyeColor, c(1,3))), gp = gp.old)
 @
 \caption{Extended association plot for `Hair' and `Sex' in the `HairEyeColor' data.}
 \label{fig:assoc-improved2}
 \end{center}
 \end{figure}
 
+
+\section{Implementation enhancements}
+
+The current implementation of association plots in \textsf{R} suffers
+from two main disadvantages: First, it is not easy to recycle the
+plots in conditioning plots or pairs plots as they have been implemented
+using \textsf{R}'s base graphics engine where in general plotting to relative
+coordinates is not supported. Second, the graphics parameters of the rectangles in the
+association plots, such as color and line type, cannot be specified for each cell
+by the user. To overcome this, a new implementation was written from scratch
+in \texttt{grid} offering much more versatility amongst some minor advantages
+and convenient improvements. It allows the user to specify either 2-way tables of graphics parameters,
+i.e., arrays of the same dimensionality as the object being plotted, or a function
+which computes these graphics parameters based on the original table
+and its Pearson residuals. This makes it easy for users to implement their
+own shading schemes; \texttt{vcd} provides functions for shading schemes
+like those described in the previous sections. How association plots can
+be recycled using the new \texttt{grid} implementation is described in the next
+section.
+
 \section{Extension to multi-way tables}
 
-Independence problems do not only occur in 2-way tables, but 
+Independence problems do not only occur in 2-way tables, but
 are also important in tables of higher dimensionality where they
 can follow much more complex patterns.
 These are again defined based on the underlying table of theoretical cell probabilities
@@ -240,8 +252,9 @@ colored residuals.
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
- panel.assocplot <- function (x, i, j, ..., axes, abbreviate) grid.assocplot(margin.table(x, c(i,j)), ..., panel = T, axis.labels = F, labels = F, main = NULL)
-grid.mosaicpairs(aperm(HairEyeColor), panel.upper= panel.assocplot, panel.lower = panel.assocplot, gp = gp.Friendly, main = NULL)
+panel.assocplot <- function (x, i, j, ..., axes, abbreviate)
+  grid.assocplot(t(margin.table(x, c(i,j))), ..., panel = TRUE, axis.labels = FALSE, labels = FALSE, main = NULL)
+grid.mosaicpairs(aperm(HairEyeColor), panel.upper= panel.assocplot, panel.lower = panel.assocplot, gp = gp.old, main = NULL)
 @
 \caption{Extended association pairs for the `HairEyeColor' data,
   visualizing all pairwise marginal associations.}
@@ -252,9 +265,9 @@ grid.mosaicpairs(aperm(HairEyeColor), panel.upper= panel.assocplot, panel.lower 
 To visualize \textit{conditional} independence, we could use conditioning
 plots: like in trellis displays, we produce a separate plot
 for each level of a conditioning variable (in the case of two
-or more conditioning variables, for each level combination). 
+or more conditioning variables, for each level combination).
 This can be illustrated using the famous admissions data of the University of
-California at Berkley \citep{vcd:Bickel+Hammel+O'connell:1975} 
+California at Berkley \citep{vcd:Bickel+Hammel+O'connell:1975}
 which is available in base \textsf{R}.
 In this data, the question whether there is gender
 discrimination at the university leads to the result that although women seem to
@@ -267,45 +280,27 @@ association plot in Figure \ref{fig:UCB-assoc-signif}.
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=10,width=10>>=
-tabplot(UCBAdmissions, gp = gp.Friendly)
+tabplot(UCBAdmissions, gp = gp.old)
 @
 \caption{Extended conditioning association plots for the `UCB Admissions' data.}
 \label{fig:UCB-assoc-signif}
 \end{center}
 \end{figure}
 
-\section{Implementation enhancements}
-
-The current implementation of association plots in \textsf{R} suffers
-from two main disadvantages: First, it is not easy to recycle the
-plots in conditioning plots or pairs plots as
-they have been implemented using \textsf{R}'s base graphics engine where in
-general plotting to relative coordinates is not supported.
-The new implementation was written from scratch in \texttt{grid} offering
-much more versatility amongst some minor advantages and convenient
-improvements. Second, the graphics parameters of the rectangles in the
-association plots, such as color and line type, cannot be specified for each cell
-by the user. To overcome this, the current implementation in \texttt{vcd}
-allows the user to specify either arrays of graphics parameters
-of the same dimensionality as the object being plotted or a function
-which computes these graphics parameters based on the original table
-and its Pearson residuals. Functions are provided for shading schemes
-like those described in the previous sections.
 
 \section{Conclusion}
 We suggest a set of enhancements for visualizing the independence
 problem in contingency tables using association plots. The
-extensions aim at improving the visualization by displaying
-the size of the residuals, and by extending the concept of association
-plots to multi-way tables. Furthermore, a new
-implementation is outlined based on the graphics package \texttt{grid}
-which provides more modular design and more flexible specification
-of graphical parameters.
+extensions aim at improving (a) the visualization by displaying
+the size of the residuals and (b) the implementation based on the
+graphics package \texttt{grid} which provides more modular design
+and more flexible specification of graphical parameters. Furthermore,
+some extensions of association plots to multi-way tables are outlined.
 Our work is still not at its end, though: for example, the plots for
 multi-way tables currently do not use the same scale for all subplots,
 and thus residuals of different subplots are not
 comparable. Furthermore, the current color scheme only allows the
-detection of ``patterns'' of independence. It would be nice, however, 
+detection of ``patterns'' of independence. It would be nice, however,
 if the shading levels were
 chosen in a way that a true visual test of independence can be performed,
 that is, that the presence of ``significant'' residuals leads to a
@@ -313,26 +308,24 @@ rejection of the hypothesis of independence. Current work includes the
 development of such color schemes, based on an alternative test
 statistic---the maximum of the absolute values of the Pearson residuals.
 
-\bibliographystyle{asa}
+\bibliographystyle{abbrvnat}
 \bibliography{vcd}
 
-\section*{Addresses}
+\subsection*{Affiliation}
 
-David Meyer\\
-Achim Zeileis\\
-E-mail: \texttt{\{David.Meyer,Achim.Zeileis\}@ci.tuwien.ac.at}\\
+David Meyer, Achim Zeileis\\
 Institut f\"ur Statistik und Wahrscheinlichkeitstheorie\\
 Technische Universit\"at Wien\\
 Wiedner Hauptstra{\ss}e 8--10/1071\\
-1040 Wien\\
+A-1040 Wien, Austria\\
+E-mail: \email{David.Meyer@ci.tuwien.ac.at}, \email{Achim.Zeileis@ci.tuwien.ac.at}\\
 \\
 Kurt Hornik\\
-E-mail: \texttt{Kurt.Hornik@wu-wien.ac.at}\\
 Institut f\"ur Statistik\\
 Wirtschaftsuniversit\"at Wien\\
 Augasse 2--6\\
-1090 Wien\\
+A-1090 Wien, Austria\\
+E-mail: \email{Kurt.Hornik@wu-wien.ac.at}\\
 
 \end{document}
-% LocalWords:  proofness
 
