@@ -1,25 +1,25 @@
   data(HorseKicks)
-  barplot(HorseKicks$Freq, names = HorseKicks$nDeaths, col = 2,
+  barplot(HorseKicks, col = 2,
           xlab = "Number of Deaths", ylab = "Number of Corps-Years",
           main = "Deaths by Horse Kicks")
 
   data(Federalist)
-  barplot(Federalist$Freq, names = Federalist$nMay, col = 2,
+  barplot(Federalist, col = 2,
           xlab = "Occurences of 'may'", ylab = "Number of Blocks of Text",
           main = "'may' in Federalist papers")
 
   data(WomenQueue)
-  barplot(WomenQueue$Freq, names = WomenQueue$nWomen, col = 2,
+  barplot(WomenQueue, col = 2,
           xlab = "Number of women", ylab = "Number of queues",
           main = "Women in queues of length 10")
 
   data(WeldonDice)
-  barplot(WeldonDice$Freq, names = c(WeldonDice$n56[-11], "10+"), col = 2,
+  barplot(WeldonDice, names = c(names(WeldonDice)[-11], "10+"), col = 2,
           xlab = "Number of 5s and 6s", ylab = "Frequency",
 	  main = "Weldon's dice data")
 
   data(Butterfly)
-  barplot(Butterfly$nSpecies, names = Butterfly$nTokens, col = 2,
+  barplot(Butterfly, col = 2,
           xlab = "Number of individuals", ylab = "Number of Species",
   	main = "Butterfly species im Malaya")
 
@@ -91,46 +91,41 @@
   ## Goodness of fit ##
   #####################
 
-  attach(HorseKicks)
-  p <- weighted.mean(nDeaths, Freq)
+  p <- weighted.mean(as.numeric(names(HorseKicks)), HorseKicks)
   p.hat <- dpois(0:4, p)
-  expected <- sum(Freq) * p.hat
-  chi2 <- sum((Freq - expected)^2/expected)
+  expected <- sum(HorseKicks) * p.hat
+  chi2 <- sum((HorseKicks - expected)^2/expected)
   pchisq(chi2, df = 3, lower = FALSE)
   ## or:
-  HK.fit <- goodfit(Freq, nDeaths)
+  HK.fit <- goodfit(HorseKicks)
   summary(HK.fit)
-  detach(HorseKicks)
 
-  attach(WeldonDice)
   ## Are the dice fair?
   p.hyp <- 1/3
   p.hat <- dbinom(0:12, prob = p.hyp, size = 12)
-  expected <- sum(Freq) * p.hat
+  expected <- sum(WeldonDice) * p.hat
   expected <- c(expected[1:10], sum(expected[11:13]))
-  chi2 <- sum((Freq - expected)^2/expected)
-  G2 <- 2*sum(Freq*log(Freq/expected))
+  chi2 <- sum((WeldonDice - expected)^2/expected)
+  G2 <- 2*sum(WeldonDice*log(WeldonDice/expected))
   pchisq(chi2, df = 10, lower = FALSE)
   ## Are the data from a binomial distribution?
-  p <- weighted.mean(n56/12, Freq)
+  p <- weighted.mean(as.numeric(names(WeldonDice))/12, WeldonDice)
   p.hat <- dbinom(0:12, prob = p, size = 12)
-  expected <- sum(Freq) * p.hat
+  expected <- sum(WeldonDice) * p.hat
   expected <- c(expected[1:10], sum(expected[11:13]))
-  chi2 <- sum((Freq - expected)^2/expected)
-  G2 <- 2*sum(Freq*log(Freq/expected))
+  chi2 <- sum((WeldonDice - expected)^2/expected)
+  G2 <- 2*sum(WeldonDice*log(WeldonDice/expected))
   pchisq(chi2, df = 9, lower = FALSE)
   ## or:
-  WD.fit1 <- goodfit(Freq, n56, type = "binomial", par = 1/3, size = 12)
-  WD.fit2 <- goodfit(Freq, n56, type = "binomial", size = 12)
-  WD.fit1$fitted[11] <- sum(dbinom(10:12, prob = WD.fit1$estimate, size = 12))*sum(Freq)
-  WD.fit2$fitted[11] <- sum(dbinom(10:12, prob = WD.fit2$estimate, size = 12))*sum(Freq)
+  WD.fit1 <- goodfit(WeldonDice, type = "binomial", par = 1/3, size = 12)
+  WD.fit2 <- goodfit(WeldonDice, type = "binomial", size = 12)
+  WD.fit1$fitted[11] <- sum(dbinom(10:12, prob = WD.fit1$estimate, size = 12))*sum(WeldonDice)
+  WD.fit2$fitted[11] <- sum(dbinom(10:12, prob = WD.fit2$estimate, size = 12))*sum(WeldonDice)
   summary(WD.fit1)
   summary(WD.fit2)
-  detach(WeldonDice)
 
-  attach(Federalist)
-  F.fit1 <- goodfit(Freq, nMay)
-  F.fit2 <- goodfit(Freq, nMay, type = "nbinomial")
+  F.fit1 <- goodfit(Federalist)
+  F.fit2 <- goodfit(Federalist, type = "nbinomial")
   summary(F.fit1)
   par(mfrow = c(2,2))
   plot(F.fit1, scale = "raw", type = "standing")
@@ -140,32 +135,29 @@
   par(mfrow = c(1,1))
   plot(F.fit2, type = "deviation")
   summary(F.fit2)
-  detach(Federalist)
 
   data(Saxony)
-  attach(Saxony)
-  S.fit <- goodfit(Freq, nMales, type = "binomial", size = 12)
+  S.fit <- goodfit(Saxony, type = "binomial", size = 12)
   summary(S.fit)
   plot(S.fit)
-  detach(Saxony)
 
   ###############
   ## Ord plots ##
   ###############
 
   par(mfrow = c(2,2))
-  Ord.plot(HorseKicks$Freq, HorseKicks$nDeaths, main = "Death by horse kicks")
-  Ord.plot(Federalist$Freq, Federalist$nMay, main = "Instances of 'may' in Federalist papers")
-  Ord.plot(Butterfly$nSpecies, Butterfly$nTokens, main = "Butterfly species collected in Malaya")
-  Ord.plot(WomenQueue$Freq, WomenQueue$nWomen, main = "Women in queues of length 10")
+  Ord.plot(HorseKicks, main = "Death by horse kicks")
+  Ord.plot(Federalist, main = "Instances of 'may' in Federalist papers")
+  Ord.plot(Butterfly, main = "Butterfly species collected in Malaya")
+  Ord.plot(WomenQueue, main = "Women in queues of length 10")
   par(mfrow = c(1,1))
 
   ###############
   ## Distplots ##
   ###############
 
-  distplot(HorseKicks$Freq, HorseKicks$nDeaths, type = "poisson")
-  distplot(HorseKicks$Freq, HorseKicks$nDeaths, type = "poisson", lambda = 0.61)
-  distplot(Federalist$Freq, Federalist$nMay, type = "poisson")
-  distplot(Federalist$Freq, Federalist$nMay, type = "nbinomial")
-  distplot(Saxony$Freq, Saxony$nMales, type = "binomial", size = 12)
+  distplot(HorseKicks, type = "poisson")
+  distplot(HorseKicks, type = "poisson", lambda = 0.61)
+  distplot(Federalist, type = "poisson")
+  distplot(Federalist, type = "nbinomial")
+  distplot(Saxony, type = "binomial", size = 12)
