@@ -7,30 +7,32 @@
   table.
 }
 \usage{
-assocplot(x, color = NULL, shade = TRUE, test = c("Chisq","none"),
+assocplot(x, color = NULL, shade = TRUE, test = c("Chisq", "none"),
           conf.level = 0.95, density = 20,
           main = NULL, space = 0.3, xlab = NULL, ylab = NULL,
           cex.axis = 0.66, ...)
 }
 \arguments{
   \item{x}{a two-dimensional contingency table in matrix form.}
-  \item{color}{a character vector of length two defining the colors used for
-    drawing positive and negative Pearson residuals, respectively
-    (defaults are blue and red). Note that if \code{shade} is
-    \code{TRUE}, \code{color} specifies hue
-    values (default: 0 and 2/3 for blue/red).}
-  \item{shade}{a logical indicating whether to produce extended association
-    plots, or a numeric vector of at most 5 distinct positive numbers
-    giving the absolute values of the cut points for the residuals. 
-    Using \code{shade = TRUE} cuts absolute values at 2 and 4.}
-  \item{test}{statistic to be used for the test of
-    independence. Currently, only the Chi-squared test is
-    implemented. If the hypothesis cannot be rejected and \code{shade} is \code{TRUE},
-    the boxes visualizing the residuals are striped. If \code{test} is
+  \item{color}{a character vector of length two defining the colors used
+    for drawing positive and negative Pearson residuals, respectively
+    (defaults are blue and red).  Note that if \code{shade} is
+    \code{TRUE}, \code{color} specifies hue values (default: 0 and 2/3
+    for blue/red).}
+  \item{shade}{a logical indicating whether to produce extended
+    association plots, or a numeric vector of at most 5 distinct
+    positive numbers giving the absolute values of the cut points for
+    the residuals.  Using \code{shade = TRUE} cuts absolute values at 2
+    and 4.}
+  \item{test}{statistic to be used for the test of independence.
+    Currently, only the Chi-squared test is implemented.  If the
+    hypothesis cannot be rejected and \code{shade} is \code{TRUE}, the
+    boxes visualizing the residuals are striped.  If \code{test} is 
     \code{"none"} or \code{FALSE}, no test is performed and no stripes
-    are produced. Ignored if \code{shade = FALSE}.}
+    are produced.  Ignored if \code{shade = FALSE}.}
   \item{conf.level}{confidence level for the test of independence.}
-  \item{density}{density for the stripes in case of visualized test of independence.}
+  \item{density}{density for the stripes in case of visualized test of
+    independence.}
   \item{space}{the amount of space (as a fraction of the average
     rectangle width and height) left between each rectange.}
   \item{main}{overall title for the plot.}
@@ -55,16 +57,17 @@ assocplot(x, color = NULL, shade = TRUE, test = c("Chisq","none"),
   The rectangles in each row are positioned relative to a baseline
   indicating independence (\eqn{d_{ij} = 0}).  If the observed frequency
   of a cell is greater than the expected one, the box rises above the
-  baseline, and falls below otherwise. In addition, the boxes are shaded
-  depending on \code{shade} and \code{chisq.test}. If \code{shade = FALSE},
+  baseline, and falls below otherwise.  In addition, the boxes are shaded
+  depending on \code{shade} and \code{test}.  If \code{shade = FALSE},
   positive/negative residuals are shaded in the color specified by the
-  first/second element of \code{color} (default: black and red). If
-  \code{shade = TRUE}, the residuals are shaded according to their size:
-  the elements of \code{color} specify the hue value for the
-  color shades of the positive/negative residuals (default: blue and
-  red, respectively). If \code{test} is not \code{FALSE} or \code{"none"},
-  the specified test of independence is done, and the boxes are striped
-  if the hypothesis cannot be rejected.
+  first/second element of \code{color} (the default corresponds to blue
+  and red).  If \code{shade = TRUE}, the residuals are shaded according
+  to their size: the elements of \code{color} specify the hue value for
+  the color shades of the positive/negative residuals (default: blue and
+  red, respectively).  If \code{test} is not \code{FALSE} or
+  \code{"none"}, the specified test of independence is performed, and
+  the boxes are striped if the null hypothesis of independence cannot be
+  rejected.
 }
 \note{The code for extended shading is taken from \code{mosaicplot}.}
 \seealso{
