@@ -26,7 +26,7 @@ function(height, width = 1, space = NULL, names.arg = NULL,
 	height <- rbind(height)
 	beside <- TRUE
     } else if (!is.matrix(height))
-	stop("`height' must be a vector or a matrix")
+	stop(paste(sQuote("height"), "must be a vector or a matrix"))
 
     if(is.logical(legend.text))
 	legend.text <-
@@ -37,14 +37,14 @@ function(height, width = 1, space = NULL, names.arg = NULL,
 
     if (beside) {
 	if (length(space) == 2)
-	    space <- rep(c(space[2], rep(space[1], NR - 1)), NC)
-	width <- rep(width, length = NR * NC)
+	    space <- rep.int(c(space[2], rep.int(space[1], NR - 1)), NC)
+	width <- rep(width, length.out = NR * NC)
     } else {
-	width <- rep(width, length = NC)
+	width <- rep(width, length.out = NC)
 	height <- rbind(0, apply(height, 2, cumsum))
     }
 
-    offset <- rep(offset, length.out = length(width))
+    offset <- rep(as.vector(offset), length.out = length(width))
 
     delta <- width / 2
     w.r <- cumsum(space + width)
@@ -99,7 +99,7 @@ function(height, width = 1, space = NULL, names.arg = NULL,
 		 lty = axis.lty, cex.axis = cex.names, ...)
 	}
 	if(!is.null(legend.text)) {
-	    legend.col <- rep(col, length = length(legend.text))
+	    legend.col <- rep(col, length.out = length(legend.text))
 	    if((horiz & beside) || (!horiz & !beside)){
 		legend.text <- rev(legend.text)
 		legend.col <- rev(legend.col)
