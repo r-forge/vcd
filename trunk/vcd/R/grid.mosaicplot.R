@@ -194,6 +194,7 @@ grid.mosaicplot.default <-
            margin = NULL,
            residuals = NULL,
            type = c("Pearson", "deviance", "FT"),
+           freq.type = c("observed", "expected"),  #Z# only if model...
            shade = TRUE,
            legend = TRUE,
            gp = gp.Friendly,
@@ -261,6 +262,7 @@ grid.mosaicplot.default <-
                             ifelse(x > E, tmp, -tmp)
                           },
                           FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
+      if(freq.type == "expected") x <- E #Z# caution: this is not not very clever
     }
 
     ## colors and legend
@@ -274,15 +276,26 @@ grid.mosaicplot.default <-
     #Z# if(is.function(gp))
     #Z#   gp <- gp(x, residuals)
 
+    #Z# duplicated from below
+    h <- unit(1, "npc")
+    if(any(labels)) {
+      h <- h - unit(2 + 2*(1-panel), "lines") #Z# see also below
+    }
+    if(any(axes)) {
+      h <- h - unit(2, "lines")
+    }
+
+
     if (legend && !is.null(residuals)) {
       push.viewport(viewport(layout = grid.layout(1, 2,
                                widths = unit(c(0.85, 0.15), "npc"))))
       #Z# legend.block(residuals, gp, fontsize, panel, 2, "standardized\nresiduals:")
       #Z# difficult to still use legend.block...
       push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-      push.viewport(viewport(x = unit(1, "native") - unit(2, "lines"), y = 0.1, just = c("right", "bottom"),
+      push.viewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
                     yscale = range(residuals), default.unit = "npc",
-                    height = 0.7, width = unit(0.75, "native") - unit(2, "lines")))
+                    height = h - unit(4, "lines"),
+                    width = unit(0.75, "npc") - unit(2, "lines")))
 
       if(!is.null(gp$legend.col)) {
         legend.col <- gp$legend.col
@@ -417,6 +430,9 @@ grid.mosaicplot.default <-
     w <- w - unit(2, "lines")
     h <- h - unit(2, "lines")
   }
+
+
+
   #Z# push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   #Z# better adjustment of viewport instead of
   #Z# push.viewport(viewport(width = w, height = h))

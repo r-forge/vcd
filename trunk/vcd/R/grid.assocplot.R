@@ -7,7 +7,7 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
                            model.formula = NULL, labels = TRUE, fontsize = 12,
                            gp = gp.max, legend = TRUE,
                            scale = 0.4, rot = 90, check.overlap = TRUE, axis.labels = TRUE,
-                           show.grid = FALSE, panel = FALSE, margins = c(1, 1, 1, 1))
+                           panel = FALSE, margins = c(1, 1, 1, 1))
 {
   require(grid) #Z# require globally?
   if (length(dim(x)) != 2)
@@ -109,9 +109,10 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   if(legend) {
     pop.viewport()
     push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-    push.viewport(viewport(x = unit(1, "native") - unit(2, "lines"), y = 0.1, just = c("right", "bottom"),
+    push.viewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
                   yscale = range(res), default.unit = "npc",
-                  height = 0.7, width = unit(0.75, "native") - unit(2, "lines")))
+                  height = h - unit(4, "lines"),
+		  width = unit(0.75, "npc") - unit(2, "lines")))
 
     if(!is.null(gp$legend.col)) {
       legend.col <- gp$legend.col
