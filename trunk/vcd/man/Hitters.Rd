@@ -15,7 +15,7 @@ scaled to a common range by dividing each variable by the maximum of the variabl
 \usage{data(Hitters)}
 \format{A data frame with 154 observations and 4 variables.
   \describe{
-    \item{Positions:}{factor indicating the field position (1B=first
+    \item{Positions}{factor indicating the field position (1B=first
       baseman, 2B=second baseman, 3B=third baseman, C=catcher,
       OF=outfielder, SS=Short Stop, UT=Utility Players),}
     \item{Putouts}{occur when a fielder causes an oppsing player to be
