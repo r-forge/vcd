@@ -30,15 +30,14 @@ function (x, stratum = NULL, log = TRUE, conf.level = 0.95) {
   Z <- LOR / ASE
   
   structure(LOR,
-            ASE = ASE,
+            ASE = if(log) ASE,
             lwr = if(log) LOR - I else exp(log(LOR) - I),
             upr = if(log) LOR + I else exp(log(LOR) + I),
-            Z   = Z,
-            P   = 1 - pnorm(abs(Z)),
+            Z   = if(log) Z,
+            P   = if(log) 1 - pnorm(abs(Z)),
             log = log,
             class = "oddsratio"
-            )
-}
+            )}
 
 "print.oddsratio" <-
 function(x, ...) {
@@ -50,9 +49,9 @@ function(x, ...) {
 
 "summary.oddsratio" <-
 function(object, ...) {
-  if(length(dim(x)) > 1) {
+  if(length(dim(object)) > 1) {
     cat("\n")
-    if(object$log) cat("Log ");
+    if(attr(object, "log")) cat("Log ");
     cat("Odds Ratio(s):\n\n")
     print(object)
     cat("\nAsymptotic Standard Error(s):\n\n")
@@ -61,8 +60,8 @@ function(object, ...) {
   } else {
     ret <- cbind(object,
                  ASE = attr(object, "ASE"),
-                 Z = attr(object, "Z"),
-                 P = attr(object, "P"),
+                 Z   = attr(object, "Z"),
+                 P   = attr(object, "P"),
                  lwr = attr(object, "lwr"),
                  upr = attr(object, "upr")
                  )
