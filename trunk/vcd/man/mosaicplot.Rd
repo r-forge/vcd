@@ -5,18 +5,20 @@
 \title{Mosaic Plots}
 \description{Plots a mosaic on the current graphics device.}
 \usage{
-\method{mosaicplot}{default}(x, main = NULL, xlab = NULL, ylab = NULL,
-                   sort = NULL, off = NULL, dir = NULL, color = FALSE,
-		   cex = .66, shade = FALSE, clegend = TRUE,
-		   margin = NULL, type = c("pearson", "deviance", "FT"),
-                   residuals = NULL, \dots)
-\method{mosaicplot}{formula}(formula, data = NULL, \dots, subset)
+\method{mosaicplot}{default}(x, main = deparse(substitute(x)), sub = NULL, xlab = NULL,
+         ylab = NULL, sort = NULL, off = NULL, dir = NULL,
+         color = FALSE, shade = FALSE, margin = NULL,
+         cex.axis = 0.66, las = par("las"), clegend = TRUE, 
+         type = c("pearson", "deviance", "FT"), residuals = NULL, \dots)
+\method{mosaicplot}{formula}(formula, data = NULL, \dots,
+                             main = deparse(substitute(data)), subset)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.  The table is
     best created by the \code{table()} command.}
   \item{main}{character string for the mosaic title.}
+  \item{sub}{character string for the mosaic sub-title (at bottom).}
   \item{xlab,ylab}{x- and y-axis labels used for the plot; by default,
     the first and second element of \code{names(dimnames(X))} (i.e., the
     name of the first and second variable in \code{X}).}
@@ -34,7 +36,9 @@
   \item{color}{logical or (recycling) vector of colors for color
     shading, used only when \code{shade} is \code{FALSE}.  The default
     \code{color=FALSE} gives empty boxes with no shading.}
-  \item{cex}{the magnification to be used for annotations.}
+  \item{cex.axis}{The magnification to be used for axis annotation,
+    as a multiple of \code{par("cex")}.}
+  \item{las}{numeric; the style of axis labels, see \code{\link{par}}.}
   \item{shade}{a logical indicating whether to produce extended mosaic
     plots, or a numeric vector of at most 5 distinct positive numbers
     giving the absolute values of the cut points for the residuals.  By

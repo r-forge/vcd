@@ -1,6 +1,34 @@
-"mosaicpairs" <-
-  function(x, main = NULL, xlab = NULL, ylab = NULL, labels, ...,
-           type = c("simple", "independent", "conditional", "joint"),
+mosaicpairs <- function(x, ...) UseMethod("mosaicpairs")
+
+"mosaicpairs.formula" <-
+function(formula, data = NULL, ...,
+         main = deparse(substitute(data)), subset)
+{
+    m <- match.call(expand.dots = FALSE)
+    edata <- eval(m$data, parent.frame())
+    if(inherits(edata, "ftable")
+       || inherits(edata, "table")
+       || length(dim(edata)) > 2) {
+        dat <- as.table(data)
+        varnames <- attr(terms(formula), "term.labels")
+        if(all(varnames != "."))
+            dat <- margin.table(dat,
+                                 match(varnames, names(dimnames(dat))))
+        mosaicpairs(dat, main = main, ...)
+    }
+    else {
+        if(is.matrix(edata))
+            m$data <- as.data.frame(data)
+        m$... <- NULL
+        m[[1]] <- as.name("model.frame")
+        mf <- eval(m, parent.frame())
+        mosaicpairs(table(mf), main = main, ...)
+    }
+}
+
+"mosaicpairs.default" <-
+  function(x, main = deparse(substitute(x)), xlab = NULL, ylab = NULL, labels, ...,
+           type = c("pairwise", "total", "conditional", "joint"),
            shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	   font.labels = 1, gap = 1)
   {
@@ -23,8 +51,6 @@
         oma[3] <- 6
     }
 
-
-
     opar <- par(mfrow = c(nc, nc), mar = rep(gap/2, 4),oma=oma)
     on.exit(par(opar))
 
@@ -45,13 +71,23 @@
 
                          {
                            switch(type,
-                                  simple = mosaicplot(margin.table(x,c(j,i)),
-                                    shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),
-                                  independent = mosaicplot(x,shade=shade,clegend=FALSE,
-                                    xlab="",ylab="",cex=1 ),
-                                  conditional = mosaicplot(margin.table(x,c(j,i,index[!index%in%c(j,i)])), shade=shade,margin=list(c(j,index[!index%in%c(j,i)]),c(i,index[!index%in%c(j,i)])), clegend=FALSE, xlab="",ylab="",cex=1.2 ),
-                                  joint = mosaicplot(margin.table(x,c(j,i,index[!index%in%c(j,i)])), shade=shade, margin=list(c(j,i), c(index[!index%in%c(j,i)])), clegend=FALSE, xlab="",ylab="",cex=1.2 )
-
+                                  pairwise = mosaicplot(margin.table(x, c(j,i)),
+                                    main = NULL,
+                                    shade=shade, clegend=FALSE, xlab="", ylab="", cex.axis=1 ),
+                                  total = mosaicplot(x, shade = shade, clegend = FALSE,
+                                    main = NULL,
+                                    xlab="", ylab="", cex.axis=1),
+                                  conditional = mosaicplot(margin.table(x,
+                                    c(j, i, index[!index %in% c(j, i)])), shade=shade,
+                                    margin=list(c(j, index[!index %in% c(j, i)]),
+                                      c(i, index[!index %in% c(j, i)])),
+                                    main = NULL,
+                                    clegend=FALSE, xlab="", ylab="", cex.axis=1.2),
+                                  joint = mosaicplot(margin.table(x,
+                                    c(j, i, index[!index %in% c(j, i)])), shade=shade,
+                                    margin=list(c(j, i), c(index[!index %in% c(j, i)])),
+                                    main = NULL,
+                                    clegend=FALSE, xlab="", ylab="", cex.axis=1.2)
                                   )
 
                          }
