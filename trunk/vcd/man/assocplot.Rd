@@ -7,9 +7,10 @@
   table.
 }
 \usage{
-assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
+assocplot(x, color = NULL, shade = TRUE, test = c("chisq","none"),
+          conf.level = 0.95, density = 20,
           main = NULL, space = 0.3, xlab = NULL, ylab = NULL,
-          cex.axis = 0.66)
+          cex.axis = 0.66, ...)
 }
 \arguments{
   \item{x}{a two-dimensional contingency table in matrix form.}
@@ -18,15 +19,19 @@ assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
     \code{shade} is \code{FALSE}, the default is black and red.
     if \code{shade} is \code{TRUE}, \code{color} specifies the hue
     values for extended shading and defaults to 0 and 2/3, i.e. blue and
-    red. Note that if \code{chisq.test} is not \code{FALSE},
-    colors are only used if the hypothesis of independence is rejected}.
+    red.}
   \item{shade}{a logical indicating whether to produce extended association
     plots, or a numeric vector of at most 5 distinct positive numbers
     giving the absolute values of the cut points for the residuals. 
     Using \code{shade = TRUE} cuts absolute values at 2 and 4.}
-  \item{chisq.test}{Confidence level for the Chi-squared test of
-    independence. If the hypothesis is rejected and \code{shade} is not \code{FALSE},
-    colors are used to visualize the residuals. Ignored if \code{shade = FALSE}.}
+  \item{test}{statistic to be used for the test of
+    independence. Currently, only the Chi-squared test is
+    implemented. If the hypothesis cannot be rejected and \code{shade} is \code{TRUE},
+    the boxes visualizing the residuals are striped. If \code{test} is
+    \code{"none"} or \code{FALSE}, no test is performed and no stripes
+    are produced. Ignored if \code{shade = FALSE}.}
+  \item{conf.level}{confidence level for the test of independence.}
+  \item{density}{density for the stripes in case of visualized test of independence.}
   \item{space}{the amount of space (as a fraction of the average
     rectangle width and height) left between each rectange.}
   \item{main}{overall title for the plot.}
@@ -36,6 +41,7 @@ assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
     the column variable in \code{x} if non-\code{NULL}.}
   \item{cex.axis}{The magnification to be used for axis annotation,
     as a multiple of \code{par("cex")}.}
+  \item{\dots}{Further graphics parameters}
 }
 \details{
   For a two-way contingency table, the signed contribution to Pearson's
@@ -55,12 +61,11 @@ assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
   positive/negative residuals are shaded in the color specified by the
   first/second element of \code{color} (default: black and red). If
   \code{shade = TRUE}, the residuals are shaded according to their size:
-  if \code{chisq.test = FALSE}, the elements of \code{color} specify the hue value for the
+  the elements of \code{color} specify the hue value for the
   color shades of the positive/negative residuals (default: blue and
-  red, respectively); if \code{chisq.test} is numeric, i.e. specifies the
-  confidence level for the Chi-square test of independence of the two
-  variables, colors are only used if the hypothesis of independence is
-  rejected, and gray scales are used otherwise.
+  red, respectively). If \code{test} is not \code{FALSE} or \code{"none"},
+  the specified test of independence is done, and the boxes are striped
+  if the hypothesis cannot be rejected.
 }
 \note{The code for extended shading is taken from \code{mosaicplot}.}
 \seealso{
