@@ -6,14 +6,12 @@
 Visualizes compositional, 3-dimensional data in an equilateral triangle.
 }
 \usage{
-ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position =
-c("corner","edge","none"), dimnames.color = "black", id = NULL, 
-id.color = "black", coordinates = FALSE, grid = TRUE, grid.color =
-"gray", labels = c("inside", "outside", "none"), labels.color =
-"darkgray", border = "black", bg = "white", pch = 19, cex = 1, col = "red",
-main = "ternary plot", ...)
+ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge","none"),
+            dimnames.color = "black", id = NULL, id.color = "black", coordinates = FALSE,
+	    grid = TRUE, grid.color = "gray", labels = c("inside", "outside", "none"),
+	    labels.color = "darkgray", border = "black", bg = "white", pch = 19, cex = 1,
+	    prop.size = FALSE, col = "red", main = "ternary plot", ...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a matrix with three columns.}
   \item{scale}{row sums scale to be used.}
@@ -57,14 +55,14 @@ of a point P(a,b,c), \eqn{a + b + c = 1}, are: P(b + c/2, c * sqrt(3)/2).
 
 \examples{
 data(Arthritis)
-    
+
 ## Build table by crossing Treatment and Sex
 tab <- as.table(xtabs(~ I(Sex:Treatment) + Improved, data = Arthritis))
-    
+
 ## Mark groups
 col <- c("red", "red", "blue", "blue")
 pch <- c(1, 19, 1, 19)
-    
+
 ## plot
 ternaryplot(
             tab,
@@ -118,7 +116,7 @@ legend(
   col = c(NA, colors)
 )
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}
 
 
 

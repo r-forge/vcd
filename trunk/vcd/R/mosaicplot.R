@@ -10,6 +10,7 @@ mosaicplot <- function(x, ...) UseMethod("mosaicplot")
 ##   Shading of boxes to visualize deviations from independence by
 ##   displaying sign and magnitude of the standardized residuals.
 
+
 mosaicplot.default <-
 function(x, main = NULL, xlab = NULL, ylab = NULL, sort = NULL, off =
          NULL, dir = NULL, color = FALSE, cex = .66, shade = FALSE, clegend=TRUE, margin = NULL,
