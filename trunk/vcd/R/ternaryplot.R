@@ -65,9 +65,10 @@ function (x,
     axis(3, at = 0.5, labels = dimnames[3], tick = FALSE, font = 2)
   }
   if (dimnames.position == "edge") {
-    text (0.25 - 2 * eps, 0.5 * top, dimnames[2], srt = 60, col = dimnames.color)
-    text (0.75 + 3 * eps, 0.5 * top, dimnames[1], srt = -60, col = dimnames.color)
-    text (0.5, 0, dimnames[3], pos = 1, offset = 0.5, xpd = NA, col = dimnames.color)
+    shift <- eps * if (labels == "outside") 8 else 0
+    text (0.25 - 2 * eps - shift, 0.5 * top + shift, dimnames[2], srt = 60, col = dimnames.color)
+    text (0.75 + 3 * eps + shift, 0.5 * top + shift, dimnames[1], srt = -60, col = dimnames.color)
+    text (0.5, 0, dimnames[3], pos = 1, offset = 0.5 + 30 * shift, xpd = NA, col = dimnames.color)
   }
 
   ## grid
