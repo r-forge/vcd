@@ -19,6 +19,10 @@
   fourfoldplot(UCBAdmissions, extended = FALSE)
   fourfoldplot(UCBAdmissions) ## extended plots
 
+  tabplot(UCBAdmissions,
+          panel = function(x, ...) grid.fourfoldplot(x, panel = TRUE, ...)
+          )
+
   ### Coal Miners Lung Data ###
   #############################
   data(CoalMiners)
@@ -237,5 +241,4 @@
          col = "darkblue")     
 
   detach(Lifeboats)
-
 
