@@ -45,6 +45,7 @@ function(x, ...) {
     print(cbind(unclass(x)))
   else
     print(c(x))
+  invisible(x)
 }
 
 "summary.oddsratio" <-
@@ -68,7 +69,7 @@ function(object, ...) {
 
 
 "print.summary.oddsratio" <-
-function(x, ...)
+function(x, ...) {
   if(!is.null(attr(x, "log"))) {
     cat("\n")
     cat(if(attr(x, "log")) "Log Odds Ratio(s):" else "Odds Ratio(s):", "\n\n")
@@ -77,6 +78,8 @@ function(x, ...)
     print(attr(x, "ASE"))
     cat("\n")
   } else print(unclass(x))
+  invisible(x)
+}
 
 "plot.oddsratio" <-
 function(x,
