@@ -1,19 +1,19 @@
 if(require(tcltk))
 {
     hue  <- tclVar("hue")
-    luminance  <- tclVar("luminance")
     saturation  <- tclVar("saturation")
+    value  <- tclVar("value")
     hue <- tclVar(0)
     hue.sav <- 0
-    luminance <- tclVar(0.5)
-    luminance.sav <- 0.5
+    luminance <- tclVar(1)
+    luminance.sav <- 1
     saturation <- tclVar(1)
     saturation.sav <- 1
 
     replot <- function(...) {
         hue.sav <- my.h <- as.numeric(tclvalue(hue))
-        luminance.sav <- my.l <- as.numeric(tclvalue(luminance))
         saturation.sav <- my.s <- as.numeric(tclvalue(saturation))
+        luminance.sav <- my.l <- as.numeric(tclvalue(luminance))
 	barplot(1, col = hls(my.h, my.l, my.s), axes = FALSE)
     }
 
