@@ -75,7 +75,7 @@ legend(0.7, 0.8, c("GROUP", groups), pch = c(NA, pch), col = c(NA, col))
 data(Lifeboats)
 attach(Lifeboats)
 ternaryplot(
-  lifeboats[,4:6],
+  Lifeboats[,4:6],
   pch = ifelse(side=="Port", 1, 19),
   col = ifelse(side=="Port", "red", "blue"),
   id  = ifelse(men/total > 0.1, as.character(boat), NA),
@@ -94,7 +94,7 @@ attach(Hitters)
 colors <- c("black","red","green","blue","red","black","blue")
 pch <- substr(levels(Positions), 1, 1)
 ternaryplot(
-  hitters[,2:4],
+  Hitters[,2:4],
   pch = as.character(Positions),
   col = colors[codes(Positions)],
   main = "Baseball Hitters Data"
