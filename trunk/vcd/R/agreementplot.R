@@ -129,7 +129,7 @@ function (formula, data = NULL, ..., subset)
             )
 }
 
-kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
+Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 {
   if (is.character(weights))
       weights = match.arg(weights)
@@ -209,7 +209,7 @@ expected <- function(x, frequency = c("absolute","relative")) {
   if (frequency == "relative") tab else tab * n
 }
 
-margin.table <- function(x) {
+mar.table <- function(x) {
   tab <- rbind(cbind(x, TOTAL = rowSums(x)), TOTAL = c(colSums(x), sum(x)))
   names(dimnames(tab)) <- names(dimnames(x))
   tab
