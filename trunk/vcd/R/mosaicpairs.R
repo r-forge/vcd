@@ -12,8 +12,9 @@ function(formula, data = NULL, ...,
         dat <- as.table(data)
         varnames <- attr(terms(formula), "term.labels")
         if(all(varnames != "."))
-            dat <- margin.table(dat,
-                                 match(varnames, names(dimnames(dat))))
+            ind <- match(varnames, names(dimnames(dat)))
+            if (any(is.na(ind)))
+              stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", main))
         mosaicpairs(dat, main = main, ...)
     }
     else {
@@ -29,7 +30,7 @@ function(formula, data = NULL, ...,
 "mosaicpairs.default" <-
   function(x, main = deparse(substitute(x)), xlab = NULL, ylab = NULL, labels, ...,
            type = c("pairwise", "total", "conditional", "joint"),
-           shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
+           shade = TRUE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	   font.labels = 1, gap = 1)
   {
 
