@@ -70,12 +70,14 @@ function (formula, data = NULL, ..., subset)
   rowFreqs <- rowSums(x) / n
 
   ## open viewport
-  if (!panel) grid.newpage()
-  if(!is.null(main))
-    grid.text(main, y = unit(0.95, "npc"),
-              gp = gpar(fontsize = 25))
-
+  if (!panel)
+    grid.newpage()
+  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
   push.viewport(plotViewport(margins))
+  
+  if(!is.null(main))
+    grid.text(main, y = unit(1.1, "npc"),
+              gp = gpar(fontsize = 25))
 
   ## axis labels
   grid.text(xlab, y = -0.12, gp = gpar(fontsize = 20))
