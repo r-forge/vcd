@@ -19,7 +19,9 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
     of counts or a data frame or matrix with frequencies
     in the first column and the corresponding counts in the
     second column.}
-  \item{type}{a character string indicating which distribution should be fit.}
+  \item{type}{a character string indicating which distribution should be fit
+    (for \code{goodfit}) or  indicating the type of prediction (fitted response
+    or probabilities in \code{predict}) respectively.}
   \item{method}{a character string indicating whether the distribution should
     be fit via ML (Maximum Likelihood) or Minimum Chi-squared.}
   \item{par}{a named list giving the distribution parameters (named as in the
@@ -30,8 +32,6 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
   \item{newcount}{a vector of counts. By default the counts stored in \code{object}
     are used, i.e. the fitted values are computed. These can also be
     extracted by \code{fitted(object)}.}
-  \item{type}{a character string indicating whether fitted response values or
-    probabilities should be predicted.}
   \item{\dots}{\emph{currently not used}.}
 }
 \details{\code{goodfit} essentially computes the fitted values of a
