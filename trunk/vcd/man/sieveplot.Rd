@@ -14,7 +14,7 @@ the deviations of the observed from the expected values.
           main = NULL, values = c("none", "cells", "margins", "both"),
           frequencies = c("absolute", "relative"), sieve.colors = c("red","blue"),
           sieve.lty = c("longdash", "solid"), exp.color = "gray",
-          exp.lty = "dotted", margin = 0.2, cex.main = 3, cex.lab = 2,
+          exp.lty = "dotted", margin = 0.01, cex.main = 2, cex.lab = 1.5,
           xlab = names(dimnames(x))[2], ylab = names(dimnames(x))[1], ...)
 \method{sieveplot}{formula}(formula, data = NULL, ..., subset)
 }
