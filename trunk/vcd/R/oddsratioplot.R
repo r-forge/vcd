@@ -1,5 +1,5 @@
 "oddsratio" <-
-function (x, stratum = NULL, log = TRUE, conf.level = 0.95) {
+function (x, stratum = NULL, log = TRUE) {
   l <- length(dim(x))
   if (l > 2 && is.null(stratum))
     stratum <- 3:l
@@ -27,15 +27,8 @@ function (x, stratum = NULL, log = TRUE, conf.level = 0.95) {
     ASE <- apply(x, stratum, ase)
   }
 
-  I <- ASE * qnorm((1 + conf.level) / 2)
-  Z <- LOR / ASE
-  
   structure(LOR,
             ASE = if(log) ASE,
-            lwr = if(log) LOR - I else exp(log(LOR) - I),
-            upr = if(log) LOR + I else exp(log(LOR) + I),
-            Z   = if(log) Z,
-            P   = if(log) 1 - pnorm(abs(Z)),
             log = log,
             class = "oddsratio"
             )}
@@ -54,14 +47,16 @@ function(object, ...) {
   if(!is.null(dim(object)))
     ret <- object
   else {
+    LOG <- attr(object, "log")
+    ASE <- attr(object, "ASE")
+    Z <- object / ASE
+    
     ret <- cbind(object,
-          ASE = attr(object, "ASE"),
-          Z   = attr(object, "Z"),
-          P   = attr(object, "P"),
-          lwr = attr(object, "lwr"),
-          upr = attr(object, "upr")
-          )
-    colnames(ret)[1] <- if(attr(object, "log")) "Log Odds Ratio" else "Odds Ratio"
+                 ASE = ASE,
+                 Z   = if (LOG) Z,
+                 P   = if (LOG) 1 - pnorm(abs(Z))
+                 )
+    colnames(ret)[1] <- if (LOG) "Log Odds Ratio" else "Odds Ratio"
   }
   
   class(ret) <- "summary.oddsratio"
@@ -84,7 +79,7 @@ function(x, ...) {
 
 "plot.oddsratio" <-
 function(x,
-         confidence = TRUE,
+         conf.level = 0.95,
          type = "o",
          ylab = NULL,
          xlab = "Strata",
@@ -93,12 +88,14 @@ function(x,
 {
   if (length(dim(x)) > 1)
     stop ("Plot function works only on vectors.")
-  
+
+  confidence <- !(is.null(conf.level) || conf.level == FALSE)
   yrange <- range(x)
   
   if(confidence) {
-    lwr <- attr(x, "lwr")
-    upr <- attr(x, "upr")
+    CI  <- confint(x, level = conf.level)
+    lwr <- CI[,1]
+    upr <- CI[,2]
     yrange[1] <- trunc(min(yrange[1], min(lwr)))
     yrange[2] <- ceiling(max(yrange[2], max(upr)))
   }
@@ -119,6 +116,10 @@ function(x,
       lines(c(i - whiskers/2, i + whiskers/2), c(upr[i], upr[i]))
     }
 }
+
+"confint" <- 
+function (object, parm, level = 0.95, ...) 
+UseMethod("confint")
 
 "confint.oddsratio" <-
 function(object, parm, level = 0.95, ...) {
