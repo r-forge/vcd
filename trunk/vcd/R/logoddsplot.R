@@ -11,11 +11,12 @@ function (x, stratum = NULL, log = TRUE) {
     stop("Need strata of 2 x 2 - tables.")
  
   lor <- function (y) {
+    y <- y + 0.5 
     or <- y[1,1] * y[2,2] / y[1,2] / y[2,1]
     if (log) log(or) else or
   }
 
-  ase <- function(y) sqrt(sum(1/y))
+  ase <- function(y) sqrt(sum(1/(y + 0.5)))
 
   if(is.null(stratum))
     structure(lor(x), ASE = ase(x), class = "logoddsratio")
