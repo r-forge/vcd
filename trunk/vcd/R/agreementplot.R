@@ -161,13 +161,11 @@ function (formula, data = NULL, ..., subset)
             )
 }
 
-Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = 0.95)
+Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 {
   if (is.character(weights))
       weights <- match.arg(weights)
 
-  q <- qnorm((1 + conf.level) / 2)
-  
   d  <- diag(x)
   n  <- sum(x)
   nc <- ncol(x)
