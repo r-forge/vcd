@@ -14,7 +14,7 @@ if(require(tcltk))
         hue.sav <- my.h <- as.numeric(tclvalue(hue))
         saturation.sav <- my.s <- as.numeric(tclvalue(saturation))
         luminance.sav <- my.l <- as.numeric(tclvalue(luminance))
-	barplot(1, col = hls(my.h, my.s, my.l), axes = FALSE)
+	barplot(1, col = hls(my.h, my.l, my.s), axes = FALSE)
     }
 
     replot.maybe <- function(...)
