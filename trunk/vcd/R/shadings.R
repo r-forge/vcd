@@ -35,7 +35,7 @@ gp.HSVshading <- function(observed, residuals,
   col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
   col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
 
-  ## col.legend
+  ## legend.col
   y.pos <- col.bins[-length(col.bins)]
   y.height <- diff(col.bins)
   res2 <- y.pos + 0.5*y.height
@@ -98,7 +98,7 @@ gp.HCLshading <- function(observed, residuals,
   col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
   col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
 
-  ## col.legend
+  ## legend.col
   y.pos <- col.bins[-length(col.bins)]
   y.height <- diff(col.bins)
   res2 <- y.pos + 0.5*y.height
@@ -152,9 +152,9 @@ gp.binary <- function(observed, residuals, col = 1:2)
   y.height <- diff(col.bins)
   res2 <- y.pos + 0.5*y.height
   y.col <- ifelse(res2 > 0, col[1], col[2])
-  col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+  legend.col <- list(pos = y.pos, height = y.height, col = y.col)
 
-  rval <- list(fill = fill, col.bins = col.bins, col.legend = col.legend)
+  rval <- list(fill = fill, legend.col = legend.col)
   class(rval) <- c("vcd.gpar", "gpar")
   return(rval)
 }
