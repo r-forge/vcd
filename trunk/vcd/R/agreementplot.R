@@ -82,11 +82,11 @@ function (formula, data = NULL, ..., subset)
   plot.window(xlim = xlim, ylim = ylim, asp = 1)
 
   ## title
-  text(x = xlim[2] / 2, y = ylim[2], labels = main, cex = cex.main)
+  text(x = lm + 1 / 2, y = ylim[2], labels = main, cex = cex.main)
 
   ## axis labels
-  text(x = xlim[2] / 2, y = 0, labels = xlab, cex = cex.lab)
-  text(x = 0, y = ylim[2] / 2, labels = ylab, cex = cex.lab, srt = 90)
+  text(x = lm + 1 / 2, y = 0, labels = xlab, cex = cex.lab)
+  text(x = 0, y = bm + 1 / 2, labels = ylab, cex = cex.lab, srt = 90)
   
   rect(lm, bm, lm + 1, bm + 1)
 
