@@ -147,7 +147,7 @@ print.goodfit <- function(x, ...)
     colnames(RVAL) <- c("count", "observed", "fitted")
     rownames(RVAL) <- rep("", nrow(RVAL))
     print(RVAL)
-    invisible(RVAL)
+    invisible(x)
 }
 
 summary.goodfit <- function(object, ...)
