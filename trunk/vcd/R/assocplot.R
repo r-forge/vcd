@@ -2,7 +2,7 @@ assocplot <- function(x,
                       ## parameters for extended plot
                       color = NULL,
                       shade = TRUE,
-                      test  = c("Chisq","none"),
+                      test  = c("Chisq", "none"),
                       conf.level = 0.95,
                       density = 20,
                       ## layout parameters
@@ -31,6 +31,7 @@ assocplot <- function(x,
       match.arg(test)
     else
       if (test) "Chisq" else "none"
+    if(test == "Chisq") require(ctest)
 
     f <- x[ , rev(1:NCOL(x))]           # rename for convenience;
                                         # f is observed freqs
@@ -48,7 +49,7 @@ assocplot <- function(x,
     ylim <- c(0, sum(y.h) + NCOL(f) * y.delta)
     yscale <- sum(y.h) + NCOL(f) * y.delta
 
-    ## shading (taken from `mosaicplot')
+    ## Shading (taken from `mosaicplot').
     if (is.logical(shade) && shade) shade <- c(2, 4)
     if (shade) {
       if (any(shade <= 0) || length(shade) > 5)
@@ -60,7 +61,7 @@ assocplot <- function(x,
                  hsv(color[2],   
                      s = seq(0, to = 1, length = length(shade) + 1)))
       if (test == "none" || chisq.test(x)$p.value <= 1 - conf.level)
-        density <- NULL
+          density <- NULL
       
       ## This code is extremely ugly, and certainly can be improved.
       ## In the case of extended displays, we also need to provide a
@@ -131,7 +132,10 @@ assocplot <- function(x,
     z <- expand.grid(x.m, y.m)
     rect(as.vector(z[, 1] - e / 2), as.vector(z[, 2]),
          as.vector(z[, 1] + e / 2), as.vector(z[, 2] + d),
-         col = if (shade) color[as.numeric(cut(d, breaks))] else color[1 + (d < 0)],
+         col = { if (shade)
+             color[as.numeric(cut(d, breaks))]
+         else
+             color[1 + (d < 0)]},
          border = if (shade && !is.null(density)) "black",
          ...
          )
