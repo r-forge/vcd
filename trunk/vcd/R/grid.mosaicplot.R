@@ -171,7 +171,6 @@ grid.mosaicplot.default <-
     stop("at least one entry of x must be positive")
   direction <- match.arg(direction)
   type <- match.arg(type)
-  test <- match.arg(test)
   if (permute) x <- aperm(x)
   if(length(axes) == 1)
     axes <- rep(axes, 4)
