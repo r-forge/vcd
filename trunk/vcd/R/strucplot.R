@@ -6,8 +6,10 @@
 strucplot <- function(## main parameters
                       x,
                       residuals = NULL,
-                      expected = NULL, condvars = NULL,
-                      shade = FALSE,
+                      expected = NULL,
+		      df = NULL,         #Z# new argument for inference
+		      condvars = NULL,
+                      shade = NULL,
                       type = c("observed", "expected"),
                       residuals.type = c("Pearson", "deviance", "FT"),
                       
@@ -15,6 +17,7 @@ strucplot <- function(## main parameters
                       split.vertical = TRUE, 
                       spacing = NULL,
                       gp = NULL,
+		      gp.args = NULL,   #Z# new argument for specifying gp arguments
                       labeling = labeling.text(),
                       panel = panel.mosaic(),
                       legend = legend.resbased(),
@@ -31,8 +34,9 @@ strucplot <- function(## main parameters
                       keepAR = TRUE,
                       eDLlimit = 3
                       ) {
-  require(grid)
-  
+  #Z# changed default behaviour of shade
+  if(is.null(shade)) shade <- is.function(gp) || !is.null(expected)
+		      
   type <- match.arg(type)
   residuals.type = match.arg(residuals.type)
 
@@ -48,18 +52,30 @@ strucplot <- function(## main parameters
   ## performance hack
   engine.display.list(dl <= eDLlimit)
   
-  ## residuals
-  expected <- if (inherits(expected, "formula")) {
-    require(MASS)
-    fitted(loglm(expected, x, fitted = TRUE))
-  } else {
-    if (is.null(expected))
-      expected <- if (is.null(condvars))
-        as.list(1:dl)
-      else
-        lapply((length(condvars) + 1):dl, c, seq(length(condvars)))
-    loglin(x, expected, fit = TRUE, print = FALSE)$fit
+  #Z# model fitting
+  #Z# maybe, after all, this should be done in the shading generating
+  #Z# function because strucplot() really does not need to know anything
+  #Z# about model fitting
+  #Z# For now, this is done here. A parameter df is added for inference
+  #Z# (which is done in the shading (generating) functions).
+  #Z# Finally, expected can also be the table of expected values.
+  if(!(!is.null(expected) && is.numeric(expected))) {
+    if(inherits(expected, "formula")) {
+      fm <- loglm(expected, x, fitted = TRUE)
+      expected <- fitted(fm)
+      df <- fm$df
+    } else {
+      if(is.null(expected)) {
+        expected <- if(is.null(condvars)) as.list(1:dl)
+          else lapply((length(condvars) + 1):dl, c, seq(length(condvars)))
+      }
+      fm <- loglin(x, expected, fit = TRUE, print = FALSE)
+      expected <- fm$fit
+      df <- fm$df
+    }
   }
+  
+  #Z# compute residuals
   if (is.null(residuals))
     residuals <- switch(residuals.type,
                         ## FIXME: expected == 0 ??
@@ -77,24 +93,24 @@ strucplot <- function(## main parameters
     spacing <- spacing(dim(x), condvars)
 
   ## gp (color, fill, lty, etc.) argument
-  if (shade) {
-    if (is.null(gp))
-      gp <- gp.HCLshading()
-    if (is.function(gp)) {
-      gpfun <- gp
-      gp <- gpfun(residuals = residuals, observed = x, expected = expected)
+  if(shade) {
+    if(is.null(gp)) gp <- gp.HCLshading
+    if(is.function(gp)) {
+      
+      gpfun <- if(class(gp) == "vcdShading" || all(head(names(formals(gp)), 4) == c("observed", "residuals", "expected", "df")))
+                 do.call("gp", c(list(x, residuals, expected, df), as.list(gp.args))) else gp
+      gp <- gpfun(residuals)
     } else if (!is.null(legend))
       stop("gp argument must be a shading function for drawing a legend")
   } else {
-    if (!is.null(gp)) {
+    if(!is.null(gp)) {
       warning("gp parameter ignored since shade=FALSE")
       gp <- NULL
     }
   }
   
   ## choose gray when no shading is used
-  if (is.null(gp))
-    gp <- gpar(fill = rep.int(grey(0.8), length(x)))
+  if(is.null(gp)) gp <- gpar(fill = rep.int(grey(0.8), length(x)))
   
   ## set up page
   if (newpage) grid.newpage()
@@ -107,8 +123,7 @@ strucplot <- function(## main parameters
     legend <- if (legend) legend.resbased() else NULL
   if (shade && !is.null(legend)) {
     seekViewport("legend")
-    legend(obs = x, res = residuals, gp = gpfun,
-           autotext = paste(residuals.type, "residuals:", sep = "\n"))
+    legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
     if (pop) popViewport()
   }
 
@@ -127,6 +142,11 @@ strucplot <- function(## main parameters
 
   ## make plot
   seekViewport("plot")
+  
+  #Z# Two questions:
+  #Z# 1. Do we need to require all arguments to be named?
+  #Z# 2. Shouldn't the order of the arguments be 
+  #Z#    obs, res, exp?  
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
         expected = expected,

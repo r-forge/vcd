@@ -3,60 +3,54 @@ legend.resbased <- function(fontsize = 12,
                             y = unit(0.1, "npc"),
                             height = unit(0.8, "npc"),
                             width = unit(0.7, "lines"),
+			    digits = 3,           #Z# two new arguments
+			    check.overlap = TRUE, #Z# exported (defaults changed)
                             text = NULL,
                             steps = 200,
                             ticks = 10,
                             pvalue = TRUE) {
 
-  if (!is.unit(x))
-    x <- unit(x, "native")
-  if (!is.unit(y))
-    y <- unit(y, "npc")
-  if (!is.unit(width))
-    width <- unit(width, "lines")
-  if (!is.unit(height))
-    height <- unit(height, "npc")
+  if(!is.unit(x)) x <- unit(x, "native")
+  if(!is.unit(y)) y <- unit(y, "npc")
+  if(!is.unit(width)) width <- unit(width, "lines")
+  if(!is.unit(height)) height <- unit(height, "npc")
   
-  function(obs, res, gp, autotext) {
-    if (is.null(text))
-      text <- autotext
+  function(residuals, gp, autotext) {
+    res <- as.vector(residuals)
+    
+    if(is.null(text)) text <- autotext
     
     pushViewport(viewport(x = x, y = y, just = c("left", "bottom"),
                           yscale = range(res), default.unit = "native",
                           height = height, width = width))
 
-    if(!is.null(gp$legend.col)) {
-      ## fixme: gp was expected to contain a col.legend.col slot, but actually has legend.col?
-      col.legend <- gp$legend.col
+    p.value <- attr(gp, "p.value")
+    legend <- attr(gp, "legend")
+    
+    if(is.null(legend$col.bins)) {
+      col.bins <- seq(min(res), max(res), length = steps)
+      at <- NULL
     } else {
-      if (is.function(gp)) {
-        gpfun <- gp
-        gp <- gpfun(res, obs)
-      }
-      col.bins <- gp$col.bins
-      if(is.null(col.bins)) col.bins <- min(res) + diff(range(res)) * ((0:steps) / steps)
-      y.pos <- col.bins[-length(col.bins)]
-      y.height <- diff(col.bins)
-      y.col <- gpfun(y.pos + 0.5 * y.height, obs)$fill
-      col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+      col.bins <- sort(unique(c(legend$col.bins, range(res))))
+      col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+      at <- col.bins
     }
+    y.pos <- col.bins[-length(col.bins)]
+    y.height <- diff(col.bins)
 
-    grid.rect(x = unit(rep.int(0, length(col.legend$pos)), "npc"),
-              y = col.legend$pos,
-              height = col.legend$height, default.unit = "native",
-              gp = gpar(fill = col.legend$col, col = NULL),
+    grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
+              y = y.pos,
+              height = y.height, default.unit = "native",
+              gp = gpar(fill = gp(y.pos + 0.5 * y.height)$fill, col = NULL),
               just = c("left", "bottom"))
 
     grid.rect()
 
-    l <- length(col.legend$pos)
-    at <- seq(from = col.legend$pos[1],
-              to = col.legend$pos[l] + col.legend$height[l],
-              length = ticks)
-    grid.text(format(signif(at, 2)),
+    if(is.null(at)) at <- seq(from = head(col.bins, 1), to = tail(col.bins, 1), length = ticks)
+    grid.text(format(signif(at, digits = digits)),
               x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
               y = at,
-              default.unit = "native", just = c("right", "center"))
+              default.unit = "native", just = c("right", "center"), check.overlap = check.overlap)
     grid.segments(x0 = unit(1, "npc"), x1 = unit(1,"npc") + unit(0.5, "lines"),
                   y0 = at, y1 = at, default.unit = "native")
 
@@ -65,8 +59,8 @@ legend.resbased <- function(fontsize = 12,
               gp = gpar(fontsize = fontsize),
               just = c("left", "bottom")
               )
-    if(!is.null(gp$p.value) && pvalue) {
-      grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
+    if(!is.null(p.value) && pvalue) {
+      grid.text(paste("p-value =\n", format.pval(p.value), sep = ""),
                 x = x,
                 y = y - unit(1, "lines"),
                 gp = gpar(fontsize = fontsize),
@@ -80,45 +74,52 @@ legend.fixed <- function(fontsize = 12,
                          y = unit(0.2, "npc"),
                          height = unit(0.8, "npc"),
                          width = unit(1.5, "lines"),
+			 digits = 3,	       #Z# two new arguments
+			 check.overlap = TRUE, #Z# exported (defaults changed)
                          text = NULL) {
   
-  if (!is.unit(x))
-    x <- unit(x, "native")
-  if (!is.unit(y))
-    y <- unit(y, "npc")
-  if (!is.unit(width))
-    width <- unit(width, "lines")
-  if (!is.unit(height))
-    height <- unit(height, "npc")
+  if(!is.unit(x)) x <- unit(x, "native")
+  if(!is.unit(y)) y <- unit(y, "npc")
+  if(!is.unit(width)) width <- unit(width, "lines")
+  if(!is.unit(height)) height <- unit(height, "npc")
 
-  function(obs, res, gp, autotext) {
+  function(residuals, gp, autotext) {
+    res <- as.vector(residuals)
 
-    if (is.null(text))
-      text <- autotext
+    if(is.null(text)) text <- autotext
     
     pushViewport(viewport(x = x, y = y, just = c("left", "bottom"),
                           yscale = range(res), default.unit = "native",
                           height = height, width = width))
 
-    if (is.function(gp))
-      gp <- gp(obs, res)
-    col.legend <- gp$legend.col
+    p.value <- attr(gp, "p.value")
+    legend <- attr(gp, "legend")
+    
+    if(is.null(legend$col.bins)) {
+      col.bins <- seq(min(res), max(res), length = steps)
+      at <- NULL
+    } else {
+      col.bins <- sort(unique(c(legend$col.bins, range(res))))
+      col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+      at <- col.bins
+    }
+    y.pos <- col.bins[-length(col.bins)]
+    y.height <- diff(col.bins)
 
-    grid.rect(x = unit(rep.int(0, length(col.legend$pos)), "npc"),
-              y = col.legend$pos,
-              height = col.legend$height, default.unit = "native",
-              gp = gpar(fill = col.legend$col, col = NULL),
+    grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
+              y = y.pos,
+              height = y.height, default.unit = "native",
+              gp = gpar(fill = gp(y.pos + 0.5 * y.height)$fill, col = NULL),
               just = c("left", "bottom"))
 
     grid.rect()
 
     ## labeling for fixed intervals as returned in gp.objects
-    l <- length(col.legend$pos)
-    at <- c(col.legend$pos, col.legend$pos[l] + col.legend$height[l])
-    grid.text(format(signif(at, 2)),
+    if(is.null(at)) at <- seq(from = head(col.bins, 1), to = tail(col.bins, 1), length = ticks)
+    grid.text(format(signif(at, digits = digits)),
               x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
               y = at,
-              default.unit = "native", just = c("right", "center"))
+              default.unit = "native", just = c("right", "center"), check.overlap = check.overlap)
     grid.segments(x0 = unit(0, "npc"), x1 = unit(1,"npc") + unit(0.5, "lines"),
                   y0 = at, y1 = at, default.unit = "native")
 

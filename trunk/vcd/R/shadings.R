@@ -1,156 +1,209 @@
-gp.HSVshading <- function(hue = c(2/3, 0), saturation = c(1, 0), value = c(1, 0.5),
-                          interpolate = c(2, 4), lty = 1:2,
-                          test = chisq.test, level = 0.95)
-function(residuals, observed, ...) {
-  res <- as.vector(residuals)
+## vcdShading functions should take at least the arguments
+##   observed, residuals, expected
+## and return a function which takes a single argument (interpreted
+## to be a vector of residuals).
 
-  my.h <- rep(hue, length.out = 2)        ## positive and negative hue
+gp.HSVshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
+                          hue = c(2/3, 0), saturation = c(1, 0), value = c(1, 0.5),
+                          interpolate = c(2, 4), lty = 1,
+                          p.value = NULL, level = 0.95)
+{
+  ## get h/s/v and lty
+  my.h <- rep(hue, length.out = 2)	  ## positive and negative hue
   my.s <- rep(saturation, length.out = 2) ## maximum and minimum saturation
-  my.v <- rep(value, length.out = 2)      ## significant and non-significant value
-  lty <- rep(lty, length.out = 2)         ## positive and negative lty
+  my.v <- rep(value, length.out = 2)	  ## significant and non-significant value
+  lty <- rep(lty, length.out = 2)	  ## positive and negative lty
 
-  if(is.function(interpolate)) {
-    col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
-  } else {
-    cb <- col.bins <- sort(interpolate)
-    interpolate <- function(x) stepfun(cb,  seq(my.s[2], my.s[1], length = length(cb) + 1))(abs(x))
+  ## model fitting (if necessary)
+  if(is.null(expected) && !is.null(residuals)) stop("residuals without expected values specified")
+  if(!is.null(expected) && is.null(df) && is.null(p.value)) {
+    warning("no default inference available without degrees of freedom")
+    p.value <- NA
   }
-
-  hue <- ifelse(res > 0, my.h[1], my.h[2])
-  saturation <- pmax(pmin(interpolate(res), 1), 0)
-  if(is.null(test)) {
+  if(is.null(expected) && !is.null(observed)) {
+    expected <- loglin(observed, 1:length(dim(observed)), fit = TRUE, print = FALSE)
+    df <- expected$df
+    expected <- expected$df
+  }
+  if(is.null(residuals) && !is.null(observed)) residuals <- (observed - expected)/sqrt(expected)
+    
+  ## conduct significance test (if specified)
+  if(is.null(p.value)) p.value <- function(observed, residuals, expected, df)
+    pchisq(sum(as.vector(residuals)^2), df, lower.tail = FALSE)
+  if(!is.function(p.value) && is.na(p.value)) {
     value <- my.v[1]
     p.value <- NULL
   } else {
-    p.value <- test(observed)$p.value
-    value <- ifelse(p.value < (1-level), my.v[1], my.v[2])
+    if(is.function(p.value)) p.value <- p.value(observed, residuals, expected, df)
+    value <- if(p.value < (1-level)) my.v[1] else my.v[2]
   }
 
-  col <- hsv(hue, saturation, value)
-  dim(col) <- dim(residuals)
+  ## set up function for interpolation of saturation
+  if(!is.function(interpolate)) {
+    col.bins <- sort(interpolate)
+    interpolate <- stepfun(col.bins,  seq(my.s[2], my.s[1], length = length(col.bins) + 1))
+    col.bins <- sort(unique(c(col.bins, 0, -col.bins)))
+  } else {
+    col.bins <- NULL
+  }
 
-  ## col.bins
-  col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
-  col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+  ## store color and lty information for legend
+  if(!is.null(col.bins)) {
+    res2 <- col.bins
+    res2 <- c(head(res2, 1) - 1, res2[-1] - diff(res2)/2, tail(res2, 1) + 1)
+    legend.col <- hsv(ifelse(res2 > 0, my.h[1], my.h[2]),
+                      pmax(pmin(interpolate(abs(res2)), 1), 0),
+		      value)
+    lty.bins <- 0
+    legend.lty <- lty[2:1]
+    legend <- list(col = legend.col, col.bins = col.bins,
+                   lty = legend.lty, lty.bins = lty.bins)
+  }
 
-  ## legend.col
-  y.pos <- col.bins[-length(col.bins)]
-  y.height <- diff(col.bins)
-  res2 <- y.pos + 0.5*y.height
-  hue2 <- ifelse(res2 > 0, my.h[1], my.h[2])
-  saturation2 <- pmax(pmin(interpolate(res2), 1), 0)
-  y.col <- hsv(hue2, saturation2, value)
-  legend.col <- list(pos = y.pos, height = y.height, col = y.col)
+  ## set up function that computes color/lty from residuals
+  rval <- function(x) {
+    res <- as.vector(x)
 
-  ## lty and lty.bins
-  lty <- ifelse(residuals > 0, lty[1], lty[2])
-  lty.bins <- sort(c(range(res), 0))
+    col <- hsv(ifelse(res > 0, my.h[1], my.h[2]),
+               pmax(pmin(interpolate(abs(res)), 1), 0),
+	       value)
+    dim(col) <- dim(x)
+    
+    lty <- ifelse(x > 0, lty[1], lty[2])    
+    dim(lty) <- dim(x)
 
-  #Z# only needed if *only* positive or negative residuals could occur:
-  #Z# lty.bins <- lty.bins[lty.bins <= max(res) & lty.bins >= min(res)]
-  #Z# legend.lty <- NULL
-  #Z# if(any(lty.bins < 0)) legend.lty <- c(legend.lty, lty[2])
-  #Z# if(any(lty.bins > 0)) legend.lty <- c(legend.lty, lty[1])
-  legend.lty <- list(pos = lty.bins[1:2], height = diff(lty.bins), lty = lty[2:1])
-
-  rval <- list(fill = col, lty = lty, legend.col = legend.col, legend.lty = legend.lty, p.value = p.value)
-  class(rval) <- c("vcd.gpar", "gpar")
+    return(structure(list(fill = col, lty = lty), class = "gpar"))
+  }
+  attr(rval, "legend") <- legend
+  attr(rval, "p.value") <- p.value
   return(rval)
 }
+class(gp.HSVshading) <- "vcdShading"
 
-gp.HCLshading <- function(hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
-                          interpolate = c(2, 4), lty = 1:2,
-                          test = chisq.test, level = 0.95)
-function(residuals, observed, ...) {
-  res <- as.vector(residuals)
 
+gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
+                          hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
+                          interpolate = c(2, 4), lty = 1,
+                          p.value = NULL, level = 0.95)
+
+{
+  ## get h/c/l and lty
   my.h <- rep(hue, length.out = 2)       ## positive and negative hue
   my.c <- rep(chroma, length.out = 2)    ## significant and non-significant maximum chroma
   my.l <- rep(luminance, length.out = 2) ## maximum and minimum luminance
   lty <- rep(lty, length.out = 2)        ## positive and negative lty
 
-  if(is.function(interpolate)) {
-    col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
-  } else {
-    cb <- col.bins <- sort(interpolate)
-    interpolate <- function(x) stepfun(cb,  seq(0, 1, length = length(cb) + 1))(abs(x))
+  ## model fitting (if necessary)
+  if(is.null(expected) && !is.null(residuals)) stop("residuals without expected values specified")
+  if(!is.null(expected) && is.null(df) && is.null(p.value)) {
+    warning("no default inference available without degrees of freedom")
+    p.value <- NA
   }
-
-  hue <- ifelse(res > 0, my.h[1], my.h[2])
-  if(is.null(test)) {
+  if(is.null(expected) && !is.null(observed)) {
+    expected <- loglin(observed, 1:length(dim(observed)), fit = TRUE, print = FALSE)
+    df <- expected$df
+    expected <- expected$df
+  }
+  if(is.null(residuals) && !is.null(observed)) residuals <- (observed - expected)/sqrt(expected)
+    
+  ## conduct significance test (if specified)
+  if(is.null(p.value)) p.value <- function(observed, residuals, expected, df)
+    pchisq(sum(as.vector(residuals)^2), df, lower.tail = FALSE)
+  if(!is.function(p.value) && is.na(p.value)) {
     max.chroma <- my.c[1]
     p.value <- NULL
   } else {
-    p.value <- test(observed)$p.value
+    if(is.function(p.value)) p.value <- p.value(observed, residuals, expected, df)
     max.chroma <- ifelse(p.value < (1-level), my.c[1], my.c[2])
   }
-  chroma <- max.chroma * pmax(pmin(interpolate(res), 1), 0)
-  luminance <- my.l[1] + diff(my.l) * pmax(pmin(interpolate(res), 1), 0)
 
-  col <- hcl(hue, chroma, luminance)
-  dim(col) <- dim(residuals)
+  ## set up function for interpolation of saturation
+  if(!is.function(interpolate)) {
+    col.bins <- sort(interpolate)
+    interpolate <- stepfun(col.bins,  seq(0, 1, length = length(col.bins) + 1))
+    col.bins <- sort(unique(c(col.bins, 0, -col.bins)))
+  } else {
+    col.bins <- NULL
+  }
 
-  ## col.bins
-  col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
-  col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+  ## store color and lty information for legend
+  if(!is.null(col.bins)) {
+    res2 <- col.bins
+    res2 <- c(head(res2, 1) - 1, res2[-1] - diff(res2)/2, tail(res2, 1) + 1)
+    legend.col <- hcl(ifelse(res2 > 0, my.h[1], my.h[2]),
+                      max.chroma * pmax(pmin(interpolate(abs(res2)), 1), 0),
+	              my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res2)), 1), 0))
+    lty.bins <- 0
+    legend.lty <- lty[2:1]
+    legend <- list(col = legend.col, col.bins = col.bins,
+                   lty = legend.lty, lty.bins = lty.bins)
+  }
 
-  ## legend.col
-  y.pos <- col.bins[-length(col.bins)]
-  y.height <- diff(col.bins)
-  res2 <- y.pos + 0.5*y.height
-  hue2 <- ifelse(res2 > 0, my.h[1], my.h[2])
-  chroma2 <- max.chroma * pmax(pmin(interpolate(res2), 1), 0)
-  luminance2 <- my.l[1] + diff(my.l) * pmax(pmin(interpolate(res2), 1), 0)
-  y.col <- hcl(hue2, chroma2, luminance2)
-  legend.col <- list(pos = y.pos, height = y.height, col = y.col)
+  ## set up function that computes color/lty from residuals
+  rval <- function(x) {
+    res <- as.vector(x)
 
-  ## lty and lty.bins
-  lty <- ifelse(residuals > 0, lty[1], lty[2])
-  lty.bins <- sort(c(range(res), 0))
+    col <- hcl(ifelse(res > 0, my.h[1], my.h[2]),
+               max.chroma * pmax(pmin(interpolate(abs(res)), 1), 0),
+	       my.l[1] + diff(my.l) * pmax(pmin(interpolate(abs(res)), 1), 0))
+    dim(col) <- dim(x)
+    
+    lty <- ifelse(x > 0, lty[1], lty[2])    
+    dim(lty) <- dim(x)
 
-  #Z# only needed if *only* positive or negative residuals could occur:
-  #Z# lty.bins <- lty.bins[lty.bins <= max(res) & lty.bins >= min(res)]
-  #Z# legend.lty <- NULL
-  #Z# if(any(lty.bins < 0)) legend.lty <- c(legend.lty, lty[2])
-  #Z# if(any(lty.bins > 0)) legend.lty <- c(legend.lty, lty[1])
-  legend.lty <- list(pos = lty.bins[1:2], height = diff(lty.bins), lty = lty[2:1])
-
-  rval <- list(fill = col, lty = lty, legend.col = legend.col, legend.lty = legend.lty, p.value = p.value)
-  class(rval) <- c("vcd.gpar", "gpar")
+    return(structure(list(fill = col, lty = lty), class = "gpar"))
+  }
+  attr(rval, "legend") <- legend
+  attr(rval, "p.value") <- p.value
   return(rval)
 }
+class(gp.HCLshading) <- "vcdShading"
 
-gp.Friendly <- function(hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
-  gp.HSVshading(hue = hue, value = 1,
-                lty = lty, interpolate = interpolate, test = NULL)
 
-gp.max <- function(hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
+gp.Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+                        hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
+  gp.HSVshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+                hue = hue, value = 1,
+                lty = lty, interpolate = interpolate, p.value = NA)
+class(gp.Friendly) <- "vcdShading"
+
+gp.max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+                   hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50), 
                    interpolate = c(2, 4), lty = 1, level = c(0.9, 0.99), n = 1000)
-function(residuals, observed, ...) {
+{
+  stopifnot(length(dim(observed)) == 2)
   obs.test <- pearson.test(observed, n = n, return.distribution = TRUE)
   col.bins <- obs.test$qdist(sort(level))
-  rval <- gp.HCLshading(hue = hue, chroma = chroma, luminance = luminance,
-                        interpolate = col.bins, lty = lty, test = NULL)(observed, residuals)
-  rval$p.value <- obs.test$p.value
+  rval <- gp.HCLshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+                        hue = hue, chroma = chroma, luminance = luminance,
+                        interpolate = col.bins, lty = lty,
+			p.value = obs.test$p.value)
   return(rval)
 }
+class(gp.max) <- "vcdShading"
 
-gp.binary <- function(col = 1:2)
-function(residuals, observed, ...) {
-  fill <- ifelse(residuals > 0, col[1], col[2])
-  col.bins <- sort(c(range(residuals), 0))
-  col.bins <- col.bins[col.bins <= max(residuals) & col.bins >= min(residuals)]
+gp.binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+                      col = hcl(c(260, 0), 100, 50))
 
-  y.pos <- col.bins[-length(col.bins)]
-  y.height <- diff(col.bins)
-  res2 <- y.pos + 0.5*y.height
-  y.col <- ifelse(res2 > 0, col[1], col[2])
-  legend.col <- list(pos = y.pos, height = y.height, col = y.col)
+{
+  ## get col
+  my.col <- rep(col, length.out = 2)
+  
+  ## store color information for legend
+  legend <- list(col = my.col[2:1], col.bins = 0,
+                 lty = NULL, lty.bins = NULL)
 
-  rval <- list(fill = fill, legend.col = legend.col)
-  class(rval) <- c("vcd.gpar", "gpar")
+  ## set up function that computes color/lty from residuals
+  rval <- function(x) {
+    res <- as.vector(x)
+    col <- ifelse(res > 0, my.col[1], my.col[2])
+    dim(col) <- dim(x)    
+    return(structure(list(fill = col), class = "gpar"))
+  }
+  attr(rval, "legend") <- legend
+  attr(rval, "p.value") <- NULL
   return(rval)
 }
+class(gp.HCLshading) <- "vcdShading"
 
-gp.Z <- gp.HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
-
+## gp.Z <- gp.HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
