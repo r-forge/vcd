@@ -14,20 +14,12 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
       freq <- as.vector(obj[,1])
       count <- as.vector(obj[,2])
     }
+
+    ## eliminate zero frequencies
+    count <- count[!(freq < 1)]
+    freq <- freq[!(freq < 1)]
     n <- length(count)
-
-    if(n <= max(count)) {
-      warning("zero frequencies missing in `obj'")
-      old.count <- count
-      old.freq <- freq
-      count <- 0:max(count)
-      n <- length(count)
-      freq <- rep(0, n)
-      names(freq) <- count
-      freq[as.character(old.count)] <- old.freq
-    }
-
-    df <- length(count) - 1
+    df <- n - 1
 
     type <- match.arg(type)
     method <- match.arg(method)
@@ -51,8 +43,7 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 
 	chi2 <- function(x)
         {
-	  p.hat <- dpois(count, lambda = x)
-          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+	  p.hat <- diff(c(0, ppois(count[-n], lambda = x), 1))
 	  expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
@@ -84,8 +75,7 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 
 	chi2 <- function(x)
         {
-	  p.hat <- dbinom(count, prob = x, size = size)
-          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+	  p.hat <- diff(c(0, pbinom(count[-n], prob = x, size = size), 1))
           expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
@@ -125,8 +115,7 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 	## minChisq
         chi2 <- function(x)
         {
-	  p.hat <- dnbinom(count, size = x[1], prob = x[2])
-          p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+	  p.hat <- diff(c(0, pnbinom(count[-n], size = x[1], prob = x[2]), 1))
           expected <- sum(freq) * p.hat
           sum((freq - expected)^2/expected)
         }
@@ -165,18 +154,23 @@ summary.goodfit <- function(object, ...)
 {
     df <- object$df
     obsrvd <- object$observed
+    count <- object$count
     expctd <- fitted(object)
 
     G2 <- sum(obsrvd * log(obsrvd/expctd)) * 2
 
     n <- length(obsrvd)
-    p.hat <- predict(object, type = "prob")
-    p.hat[n] <- 1 - sum(p.hat[1:(n-1)])
+    switch(object$type,
+    "poisson" = { pfun <- "ppois" },
+    "binomial" = { pfun <- "pbinom" },
+    "nbinomial" = { pfun <- "pnbinom" })
+    p.hat <- diff(c(0, do.call(pfun, c(list(q = count[-n]), object$par)), 1))
     expctd <- p.hat * sum(obsrvd)
     X2 <- sum((obsrvd - expctd)^2/expctd)
 
     names(G2) <- "Likelihood Ratio"
     names(X2) <- "Pearson"
+    if(any(expctd) < 5 & object$method != "ML") warning("Chi-squared approximation may be incorrect")
 
     switch(object$method,
     "ML" = { RVAL <- G2 },
