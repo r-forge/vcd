@@ -1,4 +1,4 @@
-"grid.fourfoldplot" <-
+"fourfoldplot" <-
 function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
          conf.level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),

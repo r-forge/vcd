@@ -1,7 +1,7 @@
-"grid.agreementplot" <- function (x, ...)
+"agreementplot" <- function (x, ...)
   UseMethod ("grid.agreementplot")
 
-"grid.agreementplot.formula" <-
+"agreementplot.formula" <-
 function (formula, data = NULL, ..., subset) 
 {
     m <- match.call(expand.dots = FALSE)
@@ -44,7 +44,7 @@ function (formula, data = NULL, ..., subset)
     }
 }
 
-"grid.agreementplot.default" <-
+"agreementplot.default" <-
   function(x,
            reverse.y = TRUE,
            main = NULL,
