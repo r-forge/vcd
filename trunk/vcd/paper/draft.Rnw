@@ -367,7 +367,7 @@ assocation plot in Figure \ref{fig:UCB-assoc-signif}.
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=5,width=5>>=
+<<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
 tabplot(UCBAdmissions, color = "signif")
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
