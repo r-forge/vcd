@@ -6,8 +6,8 @@ grid.assocplot <- function(x, ...)
 grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
                            model.formula = NULL, transpose = FALSE, labels = TRUE,
 			   color.type = "Friendly", legend = TRUE, colbins = NULL,
-                           scale = 0.4, margin = 5, rot = 90, check.overlap = TRUE,
-			   show.grid = FALSE, panel = FALSE)
+                           scale = 0.4, rot = 90, check.overlap = TRUE, axis.labels = TRUE,
+			   show.grid = FALSE, panel = FALSE, margins = c(2, 4, 5, 2))
 {
   require(grid)
 
@@ -33,6 +33,7 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   expctd <- rowTotals %o% colTotals / sum(colTotals)
   sexpctd <- sqrt(expctd)
   res <- (x - expctd) / sexpctd
+  ##res[is.na(res)] <- 0
 
   ## Transposing - why??
   if(transpose)
@@ -43,8 +44,8 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     res <- t(res)
   }
 
-  if(is.null(xlab)) xlab <- names(dimnames(x))[2]
   if(is.null(ylab)) ylab <- names(dimnames(x))[1]
+  if(is.null(xlab)) xlab <- names(dimnames(x))[2]
 
   ncols <- ncol(x)
   nrows <- nrow(x)
@@ -64,22 +65,22 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   cell.col <- colorscheme(res, x, type = color.type)
 
   if(!panel) grid.newpage()
+  if(!is.null(main)) {
+    margins[3] <- margins[3] + 2
+    grid.text(main, y = unit(1, "npc") - unit(2, "lines"), gp = gpar(fontsize = 20))
+  }
+  push.viewport(plotViewport(margins))
 
   ## set up if legend is required
   if(legend) {
     push.viewport(viewport(layout = grid.layout(1, 2,
-                  widths = unit(c(0.85, 0.15), "npc"))))
+                  widths = unit(c(0.8, 0.2), "npc"))))
     push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
   }
 
   ## the core assocplot
-  push.viewport(viewport(x = unit(margin, "lines"),
-                y = unit(margin, "lines"),
-  	        width = unit(1, "npc") - unit(1.5*margin, "lines"),
-  	        height = unit(1, "npc") - unit(2*margin, "lines"),
-                xscale = c(0, sum(x.width + x.delta)),
-                yscale = c(0, sum(y.height + y.delta)),
-  	        just = c("left", "bottom")))
+  push.viewport(dataViewport(xscale = c(0, sum(x.width + x.delta)),
+                yscale = c(0, sum(y.height + y.delta))))
 
   grid.rect(x = as.vector(x.pos.matrix),
             y = as.vector(y.pos.matrix),
@@ -93,21 +94,20 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   grid.segments(0, unit(y.pos, "native"), 1, unit(y.pos, "native"), gp = gpar(lty = "dashed"))
   if(labels) grid.text(rev(rownames(x)), x = unit(-1, "lines"), y = unit(y.pos, "native"), rot = rot,
             check.overlap = check.overlap)
-  if(labels) grid.text(colnames(x), y = unit(-1, "lines"), x = unit(x.pos, "native"),
+  if(labels) grid.text(colnames(x), y = unit(1, "npc") + unit(1, "lines"), x = unit(x.pos, "native"),
             check.overlap = check.overlap)
+  if(axis.labels) grid.text(xlab, y = unit(1, "npc") + unit(3, "lines"), check.overlap = check.overlap)
+  if(axis.labels) grid.text(ylab, x = unit(-3, "lines"), rot = 90, check.overlap = check.overlap)
 
   pop.viewport()
-  grid.text(xlab, y = unit(1, "lines"), check.overlap = check.overlap)
-  grid.text(ylab, x = unit(1, "lines"), rot = rot, check.overlap = check.overlap)
-  grid.text(main, y = unit(1, "npc") - unit(2, "lines"), gp = gpar(fontsize = 20))
 
   ## legend drawing
   if(legend) {
     pop.viewport()
     push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-    push.viewport(viewport(x = 0.1, y = 0.2, just = c("left", "bottom"),
+    push.viewport(viewport(x = 0.2, y = 0.1, just = c("left", "bottom"),
                   yscale = range(res), default.unit = "npc",
-                  height = 0.6, width = 0.6))
+                  height = 0.8, width = 0.6))
 
     if(is.null(colbins)) {
       if(color.type == "Friendly") colbins <- c(min(res), 0, max(res))
@@ -132,11 +132,12 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
               just = c("centre", "bottom"))
 
     grid.rect()
-    grid.yaxis()
-    grid.text("Pearson\nresiduals:", x = 0.1, y = unit(1, "npc") + unit(0.5, "lines"),
-              gp = gpar(fontsize = 10), just = c("left", "bottom"))
-    pop.viewport(2)
+    grid.yaxis(main = FALSE)
+    if(!panel) grid.text("Pearson\nresiduals:", x = 0.1, y = unit(1, "npc") + unit(0.5, "lines"),
+                gp = gpar(fontsize = 10), just = c("left", "bottom"))
+    pop.viewport(3)
   }
+  pop.viewport()
 
   invisible(x)
 }
@@ -236,3 +237,92 @@ colorscheme <- function(residuals, xtab, type = c("Friendly", "Shading", "poly",
     return(color)
 }
 
+tabplot <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+                    margins = rep(1,4), ...)
+{
+  UseMethod("tabplot")
+}
+
+tabplot.formula <- function(formula, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+                    margins = rep(1,4), data, ...)
+{
+  formula <- as.character(formula)
+  formula <- paste(paste(c("Freq", formula[1:2]), collapse = " "), formula[3], sep = " + ")
+  formula <- gsub("\\|", "+", formula)
+  formula <- gsub("\\*", "+", formula)
+  x <- xtabs(as.formula(formula), data = as.data.frame(data))
+  tabplot(x, panel = panel, margins = margins, ...)
+}
+
+
+tabplot.table <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+                    margins = rep(1,4), ...)
+{
+  grid.newpage()
+
+  if(length(dim(x)) <= 2) panel(x, ...) ## no conditioning variables
+  else {
+
+  condition <- dimnames(x)[-(1:2)]
+  condvars <- names(condition)
+  ncond <- length(condvars)
+  nlevels <- sapply(condition, length)
+  nplots <- prod(nlevels)
+  condition <- as.matrix(sapply(expand.grid(condition), as.character))
+
+  ## compute layout
+  layout <- c(1,1,1) ## cols, rows, pages
+  if(ncond == 1) {
+    layout[1] <- ceiling(sqrt(floor(nlevels)))
+    layout[2] <- ceiling(nlevels/layout[1])
+    layout <- expand.grid(lapply(layout, function(x) 1:x))[1:nplots,]
+  }
+  else {
+    layout[2] <- nlevels[1]
+    layout[1] <- nlevels[2]
+    if(ncond > 3) layout[3] <- nplots/prod(nlevels[1:2])
+    if(layout[3] > 1) stop("multiple pages not supported yet")
+    layout <- expand.grid(lapply(layout, function(x) 1:x))
+  }
+
+  nr <- max(layout[,2])
+  nc <- max(layout[,1])
+  push.viewport(plotViewport(margins))
+  push.viewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
+
+  strUnit <- unit(2 * ncol(condition), "strheight", "A")
+  cellport <- viewport(layout = grid.layout(2, 1,
+        heights = unit.c(strUnit, unit(1, "npc") - strUnit)))
+
+  for(i in 1:nrow(condition)) {
+    condi <- paste(condvars, " = \"", condition[i,], "\"", sep = "", collapse = ", ")
+    condistr <- paste(condvars, condition[i,], sep = " = ")
+
+    tabi <- eval(parse(text = paste("x[,,", condi, "]", sep = "")))
+
+    push.viewport(viewport(layout.pos.row = layout[i,2], layout.pos.col = layout[i,1]))
+    push.viewport(cellport)
+    push.viewport(viewport(layout.pos.row = 1))
+    grid.rect(gp = gpar(fill = grey(0.9)))
+    grid.text(condistr, y = 1:ncond/ncond - 1/(2*ncond))
+    grid.segments(0, 0:ncond/ncond, 1, 0:ncond/ncond)
+    pop.viewport()
+
+    push.viewport(viewport(layout.pos.row = 2))
+    panel(tabi, ...)
+    pop.viewport(2)
+    grid.rect()
+    pop.viewport()
+  }
+  pop.viewport(2)
+  }
+
+  invisible(x)
+}
+
+birthwt <- data.frame(BW = factor(c(rep("yes", 8), rep("no", 8)), levels = c("yes", "no")),
+ freq = c(10,25,12,15,18,12,42,45,7,5,22,19,10,12,202,205),
+ Smoking = factor(rep(c("yes", "no"), 8), levels = c("yes", "no")),
+ Cardiac = factor(rep(c(rep("yes", 4), rep("no", 4)), 2), levels = c("yes", "no")),
+ Comps = factor(rep(c("yes", "yes", "no", "no"), 4), levels = c("yes", "no")))
+birthwt <- xtabs(freq ~ BW + Smoking + Cardiac + Comps, data = birthwt)
