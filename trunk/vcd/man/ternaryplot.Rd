@@ -1,0 +1,109 @@
+\name{ternaryplot}
+\alias{ternaryplot}
+%- Also NEED an `\alias' for EACH other topic documented here.
+\title{Ternary diagram}
+\description{
+Visualizes compositional, 3-dimensional data in an equilateral triangle.
+}
+\usage{
+ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position =
+c("corner","edge","none"), dimnames.color = "black", id = NULL, 
+id.color = "black", coordinates = FALSE, grid = TRUE, grid.color =
+"gray", labels = c("inside", "outside", "none"), labels.color =
+"darkgray", border = "black", bg = "white", pch = 19, col = "red",
+main = "ternary plot", ...)
+}
+%- maybe also `usage' for other objects documented here.
+\arguments{
+  \item{x}{a matrix with three columns.}
+  \item{scale}{row sums scale to be used.}
+  \item{dimnames}{dimension labels (defaults to the column names of
+    \code{x}).}
+  \item{dimnames.position, dimnames.color}{position and color of dimension labels.}
+  \item{id}{optional labels to be plotted below the plot
+    symbols. \code{coordinates} and \code{id} are mutual exclusive.}
+  \item{id.color}{color of these labels.}
+  \item{coordinates}{if \code{TRUE}, the coordinates of the points are
+    plotted below them. \code{coordinates} and \code{id} are mutual exclusive.}
+  \item{grid}{if \code{TRUE}, a grid is plotted. May optionally
+    be a string indicating the line type (default: \code{"dotted"}).}
+  \item{grid.color}{grid color.}
+  \item{labels, labels.color}{position and color of the grid labels.}
+  \item{border}{color of the triangle border.}
+  \item{bg}{triangle background.}
+  \item{pch}{plotting character. Defaults to filled dots.}
+  \item{col}{plotting color.}
+  \item{main}{main title.}
+  \item{\dots}{additional graphics parameters (see \code{par()})}
+}
+\details{
+A points' coordinates are found by computing the gravity center
+of mass points using the data entries as weights. Thus, the coordinates
+of a point P(a,b,c), \eqn{a + b + c = 1}, are: P(b + c/2, c * sqrt(3)/2).
+}
+\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
+  Publishing.
+}
+\author{
+  David Meyer\cr
+  \email{david.meyer@ci.tuwien.ac.at}
+}
+
+\examples{
+data(Arthritis)
+## extract data
+(tab <- ftable(xtabs(~Sex + Treatment + Improved, data = Arthritis)))
+## set column names == levels
+colnames(tab) <- attr(tab, "col.vars")[[1]]
+## build groups by crossing the row vars
+groups <- levels(do.call(":", lapply(attr(tab, "row.vars"), factor)))
+col <- c("red", "red", "blue", "blue")
+pch <- c(1, 19, 1, 19)
+## plot
+ternaryplot(
+  tab,
+  col = col,
+  pch = pch,
+  cex = 2,
+  bg = "gray",
+  grid.color = "white",
+  grid.labels.color = "white",
+  main = "Arthritits Treatment Data"
+)
+legend(0.7, 0.8, c("GROUP", groups), pch = c(NA, pch), col = c(NA, col))
+
+data(lifeboats)
+attach(lifeboats)
+ternaryplot(
+  lifeboats[,4:6],
+  pch = ifelse(side=="Port", 1, 19),
+  col = ifelse(side=="Port", "red", "blue"),
+  id  = ifelse(men/total > 0.1, as.character(boat), NA),
+  dimnames.position = "edge",
+  main = "Lifeboats on Titanic"
+)
+legend(
+  0.7, 0.8,
+  legend = c("SIDE", "Port", "Starboard")
+  pch = c(NA, 1, 19),
+  col = c("black", "red", "blue"),
+)
+
+data(hitters)
+attach(hitters)
+colors <- c("black","red","green","blue","red","black","blue")
+pch <- substr(levels(Positions), 1, 1)
+ternaryplot(
+  hitters[,2:4],
+  pch = as.character(Positions),
+  col = colors[codes(Positions)],
+  main = "Baseball Hitters Data"
+)
+legend(
+  0.7, 0.85,
+  legend = c("POSITION(S)", levels(Positions)),
+  pch = c("", pch),
+  col = c(NA, colors)
+)
+}
+\keyword{hplot}% at least one, from doc/KEYWORDS
