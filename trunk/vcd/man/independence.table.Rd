@@ -1,5 +1,5 @@
-\name{indifference.table}
-\alias{indifference.table}
+\name{independence.table}
+\alias{independence.table}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Indifference Table}
 \description{
@@ -7,7 +7,7 @@
   independence) from a n-way table.
 }
 \usage{
-indifference.table(x, frequency = c("absolute", "relative"))
+independence.table(x, frequency = c("absolute", "relative"))
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -24,8 +24,8 @@ indifference.table(x, frequency = c("absolute", "relative"))
 }
 \examples{
 data(MSPatients)
-indifference.table(MSPatients)
-indifference.table(MSPatients, frequency = "relative")
+independence.table(MSPatients)
+independence.table(MSPatients, frequency = "relative")
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{array}% __ONLY ONE__ keyword per line
