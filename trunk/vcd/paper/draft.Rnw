@@ -23,10 +23,9 @@ data(UCBAdmissions)
 
 
 \title{Visualizing Independence Using Extended Association and Mosaic Plots}
-\author{\hfill Achim Zeileis$^\dag$ \hfill David Meyer$^\dag$ \hfill Kurt Hornik$^\ddag$ \hfill \hfill \\[0.2cm]
-\dag {\it \small Institut f\"ur Statistik \& Wahrscheinlichkeitstheorie,
- Technische Universit\"at Wien}\\
-\ddag {\it \small Institut f\"ur Statistik, Wirtschaftsuniversit\"at Wien}
+\author{\hfill Achim Zeileis$^\dag$ \hfill David Meyer$^\ddag$ \hfill Kurt Hornik$^\dag$ \hfill \hfill \\[0.2cm]
+\dag {\it \small Institut f\"ur Statistik \& Mathematik, Wirtschaftsuniversit\"at Wien}\\
+\ddag {\it \small Institut f\"ur , Wirtschaftsuniversit\"at Wien}
 }
 \date{}
 \maketitle
