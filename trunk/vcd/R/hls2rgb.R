@@ -19,11 +19,9 @@ hls <- function(H, L, S) {
   else
     L + S - (L * S)
   p1 <- 2 * L - p2;
-  if (S == 0) {
-    R <- L
-    G <- L
-    B <- L
-  } else {
+  if (S == 0)
+    R <- G <- B <- L
+  else {
     R <- RGB(p1, p2, H + 120)
     G <- RGB(p1, p2, H)
     B <- RGB(p1, p2, H - 120)
