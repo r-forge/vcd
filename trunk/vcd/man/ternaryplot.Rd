@@ -33,7 +33,11 @@ main = "ternary plot", ...)
   \item{bg}{triangle background.}
   \item{pch}{plotting character. Defaults to filled dots.}
   \item{cex}{a numerical value giving the amount by which plotting text
-          and symbols should be scaled relative to the default.}
+    and symbols should be scaled relative to the default. Ignored for
+    the symbol size if \code{prop.size} is not \code{FALSE}.}
+  \item{prop.size}{if \code{TRUE}, the symbol size is plotted
+    proportional to the row sum of the three variables, i.e. represents
+    the weight of the observation.}
   \item{col}{plotting color.}
   \item{main}{main title.}
   \item{\dots}{additional graphics parameters (see \code{par()})}
@@ -66,7 +70,7 @@ ternaryplot(
             tab,
             col = col,
             pch = pch,
-            cex = 2,
+            prop.size = TRUE,
             bg = "lightgray",
             grid.color = "white",
             labels.color = "white",
@@ -86,6 +90,7 @@ ternaryplot(
   pch = ifelse(side=="Port", 1, 19),
   col = ifelse(side=="Port", "red", "blue"),
   id  = ifelse(men/total > 0.1, as.character(boat), NA),
+  prop.size = 2,
   dimnames.position = "edge",
   main = "Lifeboats on Titanic"
 )
@@ -114,4 +119,8 @@ legend(
 )
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
+
+
+
+
 
