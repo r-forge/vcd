@@ -2,13 +2,16 @@ assocplot <- function(x,
                       ## parameters for extended plot
                       color = NULL,
                       shade = TRUE,
-                      chisq.test = 0.95,
+                      test  = c("chisq","none"),
+                      conf.level = 0.95,
+                      density = 20,
                       ## layout parameters
                       main = NULL,
                       space = 0.3,
                       xlab = NULL,
                       ylab = NULL,
-                      cex.axis = 0.66)
+                      cex.axis = 0.66,
+                      ...)
 {
     if (length(dim(x)) != 2)
         stop("x must be a 2-d contingency table")
@@ -23,6 +26,11 @@ assocplot <- function(x,
         c(0, 2 / 3)
     } else if (length(color) != 2)
       stop("incorrect color specification")
+
+    test <- if (!is.logical(test))
+      match.arg(test)
+    else
+      if (test) "chisq" else "none"
 
     f <- x[ , rev(1:NCOL(x))]           # rename for convenience;
                                         # f is observed freqs
@@ -47,15 +55,12 @@ assocplot <- function(x,
         stop("invalid shade specification")
       shade <- sort(shade)
       breaks <- c(-Inf, - rev(shade), 0, shade, Inf)
-      color <- if (!chisq.test || chisq.test(x)$p.value <= 1 - chisq.test)
-        c(hsv(color[1], 
-              s = seq(1, to = 0, length = length(shade) + 1)),
-          hsv(color[2],   
-              s = seq(0, to = 1, length = length(shade) + 1)))
-      else
-        c(gray(seq(0, to = 1, length = length(shade) + 1)),
-          gray(seq(1, to = 0, length = length(shade) + 1)))
-
+      color <- c(hsv(color[1], 
+                     s = seq(1, to = 0, length = length(shade) + 1)),
+                 hsv(color[2],   
+                     s = seq(0, to = 1, length = length(shade) + 1)))
+      if (test == "none" || chisq.test(x)$p.value <= 1 - conf.level)
+        density <- NULL
       
       ## This code is extremely ugly, and certainly can be improved.
       ## In the case of extended displays, we also need to provide a
@@ -91,12 +96,17 @@ assocplot <- function(x,
       x.r <- offs * (1 + 0.7 * rtxtWidth)
       y.t <- rev(seq(from = 0.95, by = - bh, length = 2 * len))
       y.b <- y.t - 0.8 * bh
-      ltype <- c(rep(2, len), rep(1, len))
       for(i in 1 : (2 * len)) {
         polygon(c(x.l, x.r, x.r, x.l),
                 c(y.b[i], y.b[i], y.t[i], y.t[i]) * yscale,
                 col = color[i],
-                lty = ltype[i])
+                border = "black")
+        if (!is.null(density))
+          polygon(c(x.l, x.r, x.r, x.l),
+                  c(y.b[i], y.b[i], y.t[i], y.t[i]) * yscale,
+                  col = "white",
+                  border = "black",
+                  density = density)
       }
       brks <- round(breaks, 2)
       y.m <- y.b + 0.4 * bh
@@ -111,6 +121,7 @@ assocplot <- function(x,
       xlim <- c(0, sum(x.w) + NROW(f) * x.delta)
       plot.new()
       plot.window(xlim, ylim, log = "")
+      density <- NULL
     }
 
     x.r <- cumsum(x.w + x.delta)
@@ -118,10 +129,20 @@ assocplot <- function(x,
     y.u <- cumsum(y.h + y.delta)
     y.m <- y.u - apply(pmax(d, 0), 2, max) - y.delta / 2
     z <- expand.grid(x.m, y.m)
-    rect(z[, 1] - e / 2, z[, 2],
-         z[, 1] + e / 2, z[, 2] + d,
-         col = if (shade) color[as.numeric(cut(d, breaks))] else color[1 + (d < 0)]
+    rect(as.vector(z[, 1] - e / 2), as.vector(z[, 2]),
+         as.vector(z[, 1] + e / 2), as.vector(z[, 2] + d),
+         col = if (shade) color[as.numeric(cut(d, breaks))] else color[1 + (d < 0)],
+         border = if (shade && !is.null(density)) "black",
+         ...
          )
+    if(!is.null(density))
+      rect(as.vector(z[, 1] - e / 2), as.vector(z[, 2]),
+           as.vector(z[, 1] + e / 2), as.vector(z[, 2] + d),
+           col = "white",
+           density = density,
+           border = "black",
+           ...
+           )
     
     axis(1, at = x.m, labels = rownames(f), tick = FALSE)
     axis(2, at = y.m, labels = colnames(f), tick = FALSE)
