@@ -30,6 +30,11 @@ function (formula, data = NULL, ..., subset)
            title = NULL,
            values = c("none", "cells", "margins", "both"),
            frequencies = c("absolute", "relative"),
+           sieve.colors = c("red","blue"),
+           sieve.lty = c("longdash", "solid"),
+           exp.color = "gray",
+           exp.lty = "dotted",
+           margin = 0.2,
            cex.main = 3,
            cex.lab = 2,
            ...)
@@ -62,7 +67,8 @@ function (formula, data = NULL, ..., subset)
 
   ## set margins
   par(oma = c(5, 5, 10, 5),
-      mar = c(0.2, 0.2, 0.2, 0.2))
+      mar = rep(margin,4)
+      )
 
   ## title, etc.
   plot.new()
@@ -102,8 +108,8 @@ function (formula, data = NULL, ..., subset)
       square.side <- sqrt(cols[i] * rows[j] / if (type=="sieve") x[j, i] else ex[j, i])
       dev <- sgn[j, i] + 1
       grid(round(cols[i]/square.side), round(rows[j]/square.side),
-           col = if (type == "sieve") c("red", "blue")[dev] else "gray",
-           lty = if (type == "sieve") c("longdash", "solid")[dev] else "dotted"
+           col = if (type == "sieve") sieve.colors[dev] else exp.color,
+           lty = if (type == "sieve") sieve.lty[dev] else exp.lty
            )
 
       ## optionally, write cell frequencies
