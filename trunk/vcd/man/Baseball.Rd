@@ -9,31 +9,34 @@ Baseball data.
 \usage{data(Baseball)}
 \format{A data frame with 322 observations and 25 variables.
   \describe{
-    \item{name1}{factor indicating ,}
-    \item{name2}{factor indicating ,}
-    \item{atbat86}{,}
-    \item{hits86}{,}
-    \item{homer86}{,}
-    \item{runs86}{,}
-    \item{rbi86}{,}
-    \item{walks86}{,}
-    \item{years}{,}
-    \item{atbat}{,}
-    \item{hits}{,}
-    \item{homeruns}{,}
-    \item{runs}{,}
-    \item{rbi}{,}
-    \item{walks}{,}
-    \item{league86}{,}
-    \item{div86}{,}
-    \item{team86}{,}
-    \item{posit86}{,}
-    \item{outs86}{,}
-    \item{assist86}{,}
-    \item{error86}{,}
-    \item{sal87}{,}
-    \item{league87}{,}
-    \item{team87}{.}
+    \item{name1}{player's first name.}
+    \item{name2}{player's last name.}
+    \item{atbat86}{times at Bat: number of official plate appearances by a hitter. It counts as an official at-bat as long as the batter does not walk, sacrifice,
+          get hit by a pitch or reach base due to catcher's interference.}
+    \item{hits86}{hits.}
+    \item{homer86}{homeruns.}
+    \item{runs86}{the number of runs scored by a player. A run is scored by an offensive player who advances from batter to runner and touches
+          first, second, third and home base in that order without being put out.}
+    \item{rbi86}{Runs Batted In: A hitter earns a run batted in when he drives in a run via a hit, walk, sacrifice (bunt or fly) fielder's choice, hit- batsman or
+          on an error (when the official scorer rules that the run would have scored anyway).}
+    \item{walks86}{A ``walk'' (or ``base on balls'') is an award of first base granted to a batter who receives four pitches outside the strike zone.}
+    \item{years}{Years in the Major Leagues. Seems to count all years a player has actually played in the Major Leagues, not necessarily consectutive.}
+    \item{atbat}{career times at bat.}
+    \item{hits}{career hits.}
+    \item{homeruns}{career homeruns.}
+    \item{runs}{career runs.}
+    \item{rbi}{career runs batted in.}
+    \item{walks}{career walks.}
+    \item{league86}{player's league.}
+    \item{div86}{player's division.}
+    \item{team86}{player's team.}
+    \item{posit86}{player's position (see \code{\cite{Hitters}}).}
+    \item{outs86}{number of putouts (see \code{\cite{Hitters}})}
+    \item{assist86}{number of assists (see \code{\cite{Hitters}})}
+    \item{error86}{number of assists (see \code{\cite{Hitters}})}
+    \item{sal87}{annary salary on opening day (in $1000).}
+    \item{league87}{league in 1987.}
+    \item{team87}{team in 1987.}
   }
 }
 
@@ -42,7 +45,7 @@ M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Publishing.
 }
 
-\source{Michael Friendly (2000), Visualizing Categorical Data, p. ??.}
+\source{SAS System for Statistical Graphics, First Edition, P. A2.3}
 
 \examples{
 data(Baseball)
