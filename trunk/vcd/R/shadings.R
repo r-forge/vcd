@@ -127,7 +127,7 @@ gp.HCLshading <- function(observed, residuals,
 gp.Friendly <- function(observed, residuals,
                         hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
 {
-  gp.HSVshading(observed, residuals, hue = hue, value = 1, interpolate = col.bins, test = NULL)
+  gp.HSVshading(observed, residuals, hue = hue, value = 1, interpolate = interpolate, test = NULL)
 }
 
 gp.max <- function(observed, residuals,

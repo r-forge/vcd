@@ -18,7 +18,7 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
 
 panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                              margins = c(0, 0, 0, 0), abbreviate = FALSE,
-                             gp = gp.shading, ...) {
+                             gp = gp.Friendly, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
   grid.mosaicplot(x = margin.table(x,
@@ -58,7 +58,7 @@ grid.mosaicpairs <- function(x, main = NULL,
                              panel.margins = c(0, 0, 0, 0),
                              diag.fontsize = 20,
                              diag.dimnames = TRUE,
-                             gp = gp.shading,
+                             gp = gp.Friendly,
                              permute = TRUE,
                              ...)
 {
@@ -138,7 +138,7 @@ function(formula, data = NULL, ...,
 }
 
 legend.block <- function(res,
-                         gp = gp.shading,
+                         gp = gp.Friendly,
                          fontsize = 12,
                          panel = FALSE,
                          space = 2,        #Z# was: from left in "native", now: from right in "lines"
@@ -196,7 +196,7 @@ grid.mosaicplot.default <-
            type = c("Pearson", "deviance", "FT"),
            shade = TRUE,
            legend = TRUE,
-           gp = gp.shading,
+           gp = gp.Friendly,
            fontsize = 12,
 
            margins = c(1, 1, 1, 1),

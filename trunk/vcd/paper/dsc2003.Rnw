@@ -1,6 +1,5 @@
 \documentclass[10pt]{article}
 \usepackage{dsc2003}
-\usepackage{Sweave, graphicx}
 \usepackage{Z}
 
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
@@ -131,7 +130,7 @@ base::assocplot(t(HairEyeColor[,,2]))
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-improved1,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(HairEyeColor[,,2], gp = gp.shading)
+grid.assocplot(HairEyeColor[,,2], gp = gp.Friendly)
 @
 \caption{Extended association plot for `Hair' and `Eye' colors of female students.}
 \label{fig:assoc-improved1}
@@ -207,7 +206,7 @@ base::assocplot(margin.table(HairEyeColor, c(1,3)))
 \begin{figure}[htbp]
 \begin{center}
 <<assoc-improved,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(t(margin.table(HairEyeColor, c(1,3))), gp = gp.shading)
+grid.assocplot(t(margin.table(HairEyeColor, c(1,3))), gp = gp.Friendly)
 @
 \caption{Extended association plot for `Hair' and `Sex' in the `HairEyeColor' data.}
 \label{fig:assoc-improved2}
@@ -241,8 +240,8 @@ colored residuals.
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
- panel.assocplot <- function (x, i, j, ..., axes, abbreviate) grid.assocplot(margin.table(x, c(i,j)), ..., panel = T, axis.labels = F, labels = F, main = NULL) 
-grid.mosaicpairs(aperm(HairEyeColor), panel.upper= panel.assocplot, panel.lower = panel.assocplot, gp = gp.shading, main = NULL)
+ panel.assocplot <- function (x, i, j, ..., axes, abbreviate) grid.assocplot(margin.table(x, c(i,j)), ..., panel = T, axis.labels = F, labels = F, main = NULL)
+grid.mosaicpairs(aperm(HairEyeColor), panel.upper= panel.assocplot, panel.lower = panel.assocplot, gp = gp.Friendly, main = NULL)
 @
 \caption{Extended association pairs for the `HairEyeColor' data,
   visualizing all pairwise marginal associations.}
@@ -268,7 +267,7 @@ association plot in Figure \ref{fig:UCB-assoc-signif}.
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-assoc-signif,fig=TRUE,echo=FALSE,height=10,width=10>>=
-tabplot(UCBAdmissions, gp = gp.shading)
+tabplot(UCBAdmissions, gp = gp.Friendly)
 @
 \caption{Extended conditioning association plots for the `UCB Admissions' data.}
 \label{fig:UCB-assoc-signif}

@@ -1,6 +1,6 @@
 \name{pearson.test}
 \alias{pearson.test}
-%- Also NEED an `\alias' for EACH other topic documented here.
+
 \title{Conditional independence test}
 \description{
   Performs a test of independence on a 2d-contigency table by simulating
