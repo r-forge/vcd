@@ -114,7 +114,8 @@ strucplot <- function(## main parameters
   
   ## set up page
   if (newpage) grid.newpage()
-  pushViewport(vcdViewport(mar = margin, legend = shade && !is.null(legend),
+  pushViewport(vcdViewport(mar = margin,
+                           legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                            main = !is.null(main), sub = !is.null(sub), keepAR = keepAR,
                            legend.width = legend.width))
 
