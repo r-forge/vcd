@@ -40,25 +40,26 @@ M. Friendly (2000),
 \examples{
 data(PreSex)
 
-par(mfrow=c(1,2))
 ## Mosaic display for Gender and Premarital Sexual Expirience
 ## (Gender Pre)
-mosaicplot(margin.table(PreSex,c(3,4)), shade = TRUE,
-           clegend = FALSE, main = "Gender and Premarital Sex")
+grid.mosaicplot(margin.table(PreSex, c(3,4)), legend = FALSE,
+                main = "Gender and Premarital Sex")
+
 ## (Gender Pre)(Extra)
-mosaicplot(margin.table(PreSex,c(2,3,4)), shade = TRUE, clegend = FALSE,
-           margin = ~Gender*PremaritalSex + ExtramaritalSex ,
+grid.mosaicplot(margin.table(PreSex, c(2,3,4)), legend = FALSE,
+           margin = ~Gender * PremaritalSex + ExtramaritalSex ,
 	   main = "PreMaritalSex*Gender +Sex")
-par(mfrow=c(1,1))
 
 ## (Gender Pre Extra)(Marital)
-mosaicplot(PreSex, shade = TRUE, margin = ~Gender*PremaritalSex*ExtramaritalSex + MaritalStatus,
-           clegend = FALSE, main = "PreMarital*ExtraMarital + MaritalStatus")
+mosaicplot(PreSex,
+           margin = ~Gender*PremaritalSex*ExtramaritalSex + MaritalStatus,
+           legend = FALSE, main = "PreMarital*ExtraMarital + MaritalStatus")
 
 ## (GPE)(PEM)
-mosaicplot(PreSex, shade = TRUE,
-           margin = ~Gender*PremaritalSex*ExtramaritalSex + MaritalStatus*PremaritalSex*ExtramaritalSex,
-	   clegend = FALSE, main = "G*P*E + P*E*M")
+mosaicplot(PreSex, 
+           margin = ~ Gender * PremaritalSex * ExtramaritalSex
+                    + MaritalStatus * PremaritalSex * ExtramaritalSex,
+	   legend = FALSE, main = "G*P*E + P*E*M")
 }
 
 \keyword{datasets}

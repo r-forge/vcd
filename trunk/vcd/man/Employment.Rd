@@ -37,24 +37,21 @@ M. Friendly (2000),
 data(Employment)
 
 ## Employment Status ##
-mosaicplot(Employment, shade = TRUE,
-           margin = ~ LayoffCause*EmploymentLength + EmploymentStatus,
+grid.mosaicplot(Employment,
+           margin = ~ LayoffCause * EmploymentLength + EmploymentStatus,
 	   main = "Layoff*EmployLength + EmployStatus")
 
 
-mosaicplot(Employment, shade = TRUE,
-           margin = ~ LayoffCause*EmploymentLength + LayoffCause*EmploymentStatus,
+grid.mosaicplot(Employment,
+           margin = ~ LayoffCause * EmploymentLength + LayoffCause * EmploymentStatus,
 	   main = "Layoff*EmployLength + Layoff*EmployStatus")
 
-par(mfrow=c(1,2))
-
 ## Closure ##
-mosaicplot(Employment[,,1], shade = TRUE, main = "Layoff: Closure")
+grid.mosaicplot(Employment[,,1], main = "Layoff: Closure")
 
 ## Replaced ##
-mosaicplot(Employment[,,2], shade = TRUE, main = "Layoff : Replaced")
+grid.mosaicplot(Employment[,,2], main = "Layoff : Replaced")
 
-par(mfrow=c(1,1))
 }
 
 \keyword{datasets}

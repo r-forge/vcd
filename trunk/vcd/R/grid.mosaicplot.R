@@ -18,7 +18,7 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
 
 panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                              margins = c(0, 0, 0, 0), abbreviate = FALSE,
-                             gp = gp.signif, ...) {
+                             gp = gp.shading, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
   grid.mosaicplot(x = margin.table(x,
@@ -30,7 +30,7 @@ panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                     ),
                   panel = TRUE, main = NULL, labels = FALSE,
                   legend = legend, axes = axes, margins = margins,
-                  abbreviate = abbreviate, gp = gp, ...)
+                  abbreviate = abbreviate, gp = gp, permute = FALSE, ...)
 }
 
 panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {
@@ -58,7 +58,8 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
                              panel.margins = c(0, 0, 0, 0),
                              diag.fontsize = 20,
                              diag.dimnames = TRUE,
-                             gp = gp.signif,
+                             gp = gp.shading,
+                             permute = TRUE,
                              ...)
 {
   require(grid)
@@ -72,6 +73,7 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
     match.arg(type)
   else
     match.arg(type.lower, type)
+  if (permute) x <- aperm(x)
   
   d <- length(dim(x))
   l <- grid.layout(d, d)
@@ -135,7 +137,7 @@ function(formula, data = NULL, ...,
 }
 
 legend.block <- function(res,
-                         gp = gp.signif,
+                         gp = gp.shading,
                          fontsize = 12,
                          panel = FALSE,
                          space = 0.6, 
@@ -193,7 +195,7 @@ grid.mosaicplot.default <-
            type = c("pearson", "deviance", "FT"),
            shade = TRUE,
            legend = TRUE,
-           gp = gp.signif,
+           gp = gp.shading,
            fontsize = 12,
 
            margins = c(1, 1, 1, 1),
@@ -234,38 +236,39 @@ grid.mosaicplot.default <-
   }
   push.viewport(plotViewport(margins))
 
-  ## residuals
-  if(shade && is.null(residuals)) {
-    if (inherits(margin, "formula")) {
-      require(MASS)
-      E <- fitted(loglm(margin, x, fitted = TRUE))
-    } else {
-      if (is.null(margin)) 
-        margin <- as.list(1:maxdim)
-      E <- loglin(x, margin, fit = TRUE, print = FALSE)$fit
+  ## shading
+  if (shade) {
+    ## residuals
+    if(is.null(residuals)) {
+      if (inherits(margin, "formula")) {
+        require(MASS)
+        E <- fitted(loglm(margin, x, fitted = TRUE))
+      } else {
+        if (is.null(margin)) 
+          margin <- as.list(1:maxdim)
+        E <- loglin(x, margin, fit = TRUE, print = FALSE)$fit
+      }
+      residuals <- switch(type,
+                          pearson = (x - E) / sqrt(E), 
+                          deviance = {
+                            tmp <- 2 * (x * log(ifelse(x == 0, 1, x/E)) - (x - E))
+                            tmp <- sqrt(pmax(tmp, 0))
+                            ifelse(x > E, tmp, -tmp)
+                          },
+                          FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
     }
-    residuals <- switch(type,
-                        pearson = (x - E) / sqrt(E), 
-                        deviance = {
-                          tmp <- 2 * (x * log(ifelse(x == 0, 1, x/E)) - (x - E))
-                          tmp <- sqrt(pmax(tmp, 0))
-                          ifelse(x > E, tmp, -tmp)
-                        },
-                        FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
-  }
 
-  ## legend for shading
-  if(is.function(gp)) {
-    gpfun <- gp
-    gp <- gpfun(x, residuals)
-  } else legend <- FALSE
+    ## colors and legend
+    if(is.function(gp))
+      gp <- gp(x, residuals)
+    
+    if (legend && !is.null(residuals)) {
+      push.viewport(viewport(layout = grid.layout(1, 2,
+                               widths = unit(c(0.8, 0.2), "npc"))))
+      legend.block(residuals, gp, fontsize, panel, 0.4, "standardized\nresiduals:")
+    }
+  } else gp <- legend <- NULL
   
-  if (!is.null(residuals) && legend && shade) {
-    push.viewport(viewport(layout = grid.layout(1, 2,
-                  widths = unit(c(0.8, 0.2), "npc"))))
-    legend.block(residuals, gp, fontsize, panel, 0.4, "standardized\nresiduals:")
-  }
-
   ## compute unit shifts for labels
   rsh <- unit(1, "npc") + unit((1 + any(axes)) / 2, "lines")
   lsh <- unit(0, "npc") - unit((1 + any(axes)) / 2, "lines")
