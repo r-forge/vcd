@@ -40,7 +40,7 @@ contingency tables---are extended in three directions:
  \item The visualization is enhanced by using colors for the
   importance of the residuals.
  \item Two extensions for the use of multi-way tables are proposed.
- \item The implementation in the \textsf{R} system is improved using a more modular
+ \item The implementation currently available in \textsf{R} is improved using a more modular
   design and allowing a more flexible specification of plotting parameters.
 \end{enumerate}
 \end{abstract}
@@ -48,7 +48,7 @@ contingency tables---are extended in three directions:
 \section{Introduction} \label{sec:introduction}
 
 Given two categorical variables, or, equivalently, their contingency
-table, one is often interested in investigating whether they are 
+table, one is often interested in whether they are 
 independent or not. Usually, the $\chi^2$ test statistic---the sum of the
 squared Pearson residuals---is used as a measure of association.
 Now, whenever the statistic is
@@ -59,7 +59,7 @@ methods such as the association plot, for which we propose some
 extensions: the use of colors for the shading of the residuals, two
 possible extensions for multi-way tables, and a new, more flexible
 implementation using {\sf R}'s alternative graphical system,
-\texttt{grid}. The new functionality is provided by the {\sf R} package
+\texttt{grid} \cite{vcd:Murrell:2002}. The new functionality is provided by the {\sf R} package
 \texttt{vcd}, inspired by the book `Visualizing Categorical Data'
 \citep{vcd:Friendly:2000}.
 
@@ -68,7 +68,7 @@ implementation using {\sf R}'s alternative graphical system,
 To assess independence of 2 categorical variables, usually
 a 2-way contingency table is considered with cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$ and row and column sums
-$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$ respectively. For
+$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$, respectively. For
 convenience, the number of observations is denoted $n = n_{++}$.
 
 Given an underlying distribution with theoretical cell probabilities
@@ -88,31 +88,32 @@ r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
 Therefore, a rather intuitive idea is to reject the null hypothesis when
 there are residuals which are too extreme, i.e., not close enough to
 zero. The most convenient way to aggregate the $I \times J$ residuals
-to one test statistic is their squared sum
+into one test statistic is their squared sum
 \begin{equation} \label{eq:ChiSquare}
 X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 \end{equation}
-because this is known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
+which is known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
 This is the well-known $\chi^2$ test for independence in 2-way tables. 
 Now, when the $\chi^2$ test statistic turns out to be significant for some data, 
-it seems natural to go back to its components, i.e. the  residuals, for a more detailed analysis.
+it seems natural to go back to its components, i.e., the  residuals, for a more detailed analysis.
 
 Association plots \citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
 each cell is represented by a rectangle that has (signed) height
 proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
 square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
-the raw residuals $n_{ij} - \hat n_{ij}$. The sign of the residual is redundantly
+the raw residuals $n_{ij} - \hat n_{ij}$. In available
+implementations, the sign of the residual is typically redundantly
 coded by the rectangle's color and its position relative to the baseline.
 
 Figure \ref{fig:assoc-classic1} shows the association plot
 (produced by the implementation in \texttt{base} {\sf R}) for the
 variables `Hair' and `Eye' of the well-known `HairEyeColor' data
-set (Hair and Eye colors of 264 male and 328 female statistics students). 
+set \cite[Hair and Eye colors of 264 male and 328 female statistics
+students; see][]{vcd:Snee:1974}. 
 The biggest tiles are easily made out: e.g., the tiles for 
 brown and blue eyes, given blond hair, seem to represent important residuals. 
-But for the others, their classification in important and less important 
-categories seems not obvious.
+But assessing the ``importance'' of the others is far from obvious.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[htbp]
@@ -135,7 +136,7 @@ grid.assocplot(HairEyeColor[,,2], gp = gp.shading)
 \label{fig:assoc-improved1}
 \end{center}
 \end{figure}
-
+\pagebreak
 \section{Improved visualization through residual shading}
 
 We propose to use a color-shading similar to
@@ -145,8 +146,7 @@ visualization of the observed frequencies in a contingency table;
 see][]{vcd:Hartigan+Kleiner:1984}:
 this extension 
 uses a color coding of the mosaic tiles to visualize deviations
-(residuals) from a given log-linear model fitted to the table, that is, from
-the expected frequencies under independence.
+(residuals) from a given log-linear model fitted to the table.
 Positive and negative signs of the residuals are coded by rectangles with
 solid and dashed borders respectively. Furthermore, residuals can be
 classified according to specified shading levels: per default,
@@ -181,9 +181,9 @@ tiles is insufficient to assess the ``strength'' of association
 between two variables; again, information on the absolute size of the
 residuals would be useful.
 Using the extended shading (Figure \ref{fig:assoc-improved2}), we see at first glance
-that \emph{no} residual is bigger than 2 (or smaller than -2 for
+that \emph{no} residual is bigger than 2 (or smaller than $-2$ for
 negative ones, respectively) 
-because simply no tile is shaded. In fact, as we can depict from
+because simply no tile is shaded. In fact, as we can see from
 the legend, the overall range of the residuals is smaller than $[-1.5,1.5]$.
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -216,10 +216,8 @@ can follow much more complex patterns.
 These are again defined based on the underlying table of theoretical cell probabilities
 $(\pi_{ij\dots})$ with more than two dimensions. Apart from the
 analysis of all pairwise associations, models of interest include,
-e.g., the null hypotheses of conditional independence:
-
-\[\pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots}\]
-
+e.g., the null hypotheses of conditional independence (for example the
+model: $\pi_{ijk} = \pi_{i|k}\pi_{j|k}$).
 A general approach for visualizing such kind of hypotheses are
 extended mosaic plots. In this section, we give two examples for the
 applicability of association plots to multi-way tables.
@@ -227,7 +225,7 @@ A quick overview of the mutual independence structure of a multi-way
 table (i.e., all pairwise \textit{marginal} associations)
 can be given by a matrix of plots where each cell contains an
 association plot of the corresponding row and column variables. Such an
-\emph{association pairsplot} allows us to
+\emph{association pairs plot} allows us to
 quickly scan the association plots for all variable combinations. As
 an example, we again use the HairEyeColor data (see Figure
 \ref{fig:HEC-pairs}): only the cells corresponding to the variables
@@ -251,10 +249,10 @@ plots: like in trellis displays, we produce a separate plot
 for each level of a conditioning variable (in the case of two
 or more conditioning variables, for each level combination). 
 This can be illustrated using the famous admissions data of the University of
-California at Berkley (UCB) which is available in base \textsf{R}.
-In this data, the question whether there is sex
+California at Berkley (UCB)---see \cite{vcd:Bickel+Hammel+O'connell:1975}---which is available in base \textsf{R}.
+In this data, the question whether there is gender
 discrimination at the UCB leads to the result that although women seem to
-be disadvantaged at the aggregated level there is no sex discrimination
+be disadvantaged at the aggregated level there is no gender discrimination
 in the department strata---with the very exception of one department
 in which women are {\em more} likely to be admitted than would be plausible
 under independence. Exactly this is illustrated in the conditioning
@@ -290,7 +288,7 @@ like those described in the previous sections.
 
 \section{Conclusion}
 We suggest a set of enhancements for visualizing the independence
-problem in 2-way tables using association plots. The
+problem in contingency tables using association plots. The
 extensions aim at improving the visualization by displaying
 the size of the residuals, and by extending the concept of association
 plots to multi-way tables. Furthermore, a new
@@ -302,12 +300,12 @@ multi-way tables currently do not use the same scale for all subplots,
 and thus residuals of different subplots are not
 comparable. Furthermore, the current color scheme only allows the
 detection of ``patterns'' of independence. It would be nice, however, 
-that the shading levels were
-chosen such that a true visual test of independence can be performed,
-that is, such that the presence of ``significant'' residuals lead to a
+if the shading levels were
+chosen in a way that a true visual test of independence can be performed,
+that is, that the presence of ``significant'' residuals leads to a
 rejection of the hypothesis of independence. Current work includes the
 development of such color schemes, based on an alternative test
-statistic---the maximum of the absolute values of the pearson residuals.
+statistic---the maximum of the absolute values of the Pearson residuals.
 
 \bibliographystyle{asa}
 \bibliography{vcd}
