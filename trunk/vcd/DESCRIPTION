@@ -1,10 +1,10 @@
 Package: vcd
-Version: 0.2-0
-Date: 2003-07-08
+Version: 0.9-0
+Date: 2004-10-25
 Title: Visualizing Categorical Data
-Author: David Meyer, Achim Zeileis, Alexandros Karatzoglou, Kurt Hornik
+Author: David Meyer, Achim Zeileis, Kurt Hornik
 Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 Description: Functions and data sets based on the book "Visualizing
              Categorical Data" by Michael Friendly.
 License: GPL
-Depends: R (>= 1.9.0), MASS, grid
+Depends: R (>= 1.9.0), MASS, grid, stats

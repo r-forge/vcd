@@ -1,10 +1,10 @@
-tabplot <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+tabplot <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, ...),
                     margins = rep(1,4), ...)
 {
   UseMethod("tabplot")
 }
 
-tabplot.formula <- function(formula, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
+tabplot.formula <- function(formula, panel = function(x, ...) assoc(x, newpage = FALSE, ...),
                     margins = rep(1,4), data, ...)
 {
   formula <- as.character(formula)
@@ -16,8 +16,7 @@ tabplot.formula <- function(formula, panel = function(x, ...) grid.assocplot(x, 
 }
 
 
-tabplot.default <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, axis.labels = FALSE, fontsize = fontsize, ...),
-                    margins = rep(1, 4), fontsize = 12, ...)
+tabplot.default <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, labels = NULL, ...), margins = rep(1, 4), fontsize = 12, ...)
 {
   grid.newpage()
 
