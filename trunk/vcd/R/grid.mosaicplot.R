@@ -136,10 +136,15 @@ function(formula, data = NULL, ...,
     }
 }
 
-legend.block <- function(res, gp) {
-  pop.viewport()
+legend.block <- function(res,
+                         gp = gp.signif,
+                         fontsize = 12,
+                         panel = FALSE,
+                         space = 0.6, 
+                         text = "Pearson\nresiduals:") {
+  
   push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-  push.viewport(viewport(x = 0.6, y = 0.1, just = c("left", "bottom"),
+  push.viewport(viewport(x = space, y = 0.1, just = c("left", "bottom"),
                          yscale = range(res), default.unit = "npc",
                          height = 0.8, width = 0.2))
 
@@ -163,15 +168,17 @@ legend.block <- function(res, gp) {
   
   grid.yaxis(main = FALSE, gp = gpar(fontsize = fontsize))
   if (!panel)
-    grid.text("Pearson\nresiduals:", x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
-                       gp = gpar(fontsize = 0.8*fontsize), just = c("left", "bottom"))
+    grid.text(text, x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
+              gp = gpar(fontsize = 0.8 * fontsize),
+              just = c("left", "bottom")
+              )
   if(!is.null(gp$p.value))
     grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
               x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"),
               gp = gpar(fontsize = 0.8*fontsize),
               just = c("left", "top"))
   
-  pop.viewport(3)
+ pop.viewport(2)
 }
 
 grid.mosaicplot.default <-
@@ -188,23 +195,18 @@ grid.mosaicplot.default <-
            type = c("pearson", "deviance", "FT"),
            shade = TRUE,
            legend = TRUE,
-           granularity = 100,
-           color = vcd.Friendly,
+           gp = gp.signif,
+           fontsize = 12,
 
            margins = c(1, 1, 1, 1),
            space = 0.1,
            panel = FALSE,
-           permute = FALSE,
-           prange = c(-6,6),
-           test = TRUE,
-           level = 0.95,
-           gp = gp.signif
+           permute = TRUE
            )
 {
   require(grid)
 
   ## parameter handling
-  main
   if (is.null(dim(x))) 
     x <- as.array(x)
   else if (is.data.frame(x)) 
@@ -216,12 +218,9 @@ grid.mosaicplot.default <-
   direction <- match.arg(direction)
   type <- match.arg(type)
   if (permute) x <- aperm(x)
-  if(length(axes) == 1)
-    axes <- rep(axes, 4)
-  if(length(labels) == 1)
-    labels <- rep(labels, 4)
-  if(length(abbreviate) == 1)
-    abbreviate <- rep(abbreviate, 4)
+  if(length(axes) == 1) axes <- rep(axes, 4)
+  if(length(labels) == 1) labels <- rep(labels, 4)
+  if(length(abbreviate) == 1) abbreviate <- rep(abbreviate, 4)
   maxdim <- length(d <- dim(x))
   for (i in 1:maxdim)
     if (abbreviate[i])
@@ -229,11 +228,12 @@ grid.mosaicplot.default <-
   
   ## title
   if (!panel) grid.newpage()
-  if(!is.null(main))
-    grid.text(main, y = unit(0.95, "npc"),
-              gp = gpar(fontsize = 20))
-
-  if (!is.null(main)) margins[3] <- margins[3] + 3
+  if(!is.null(main)) {
+    grid.text(main,
+              y = unit(1, "npc") - unit(2, "lines"),
+              gp = gpar(fontsize = 1.5 * fontsize))
+    margins[3] <- margins[3] + 3
+  }
   push.viewport(plotViewport(margins))
 
   ## residuals
@@ -256,52 +256,26 @@ grid.mosaicplot.default <-
                         FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * E + 1))
   }
 
-  ## global test
-  luminance <- 1
-  if (shade && test) {
-    chi <- crossprod(as.vector(residuals))
-    df <- prod(d) - 1 - sum(d - 1)
-    if (pchisq(chi, df) <= level) luminance <- 0.5
-  }
-  
   ## legend for shading
+  if(is.function(gp)) {
+    gpfun <- gp
+    gp <- gpfun(x, residuals)
+  } else legend <- FALSE
+  
   if (!is.null(residuals) && legend && shade) {
-    legend.block(res = residuals, gp = gp)
-#     if(is.null(prange))
-#       prange <- range(residuals)
-#     CINT <- prange
-    
-#     l <- grid.layout(1, 2, widths = c(0.8, 0.2))
-#     push.viewport(viewport(layout = l))
-#     push.viewport(viewport(layout.pos.col = 2))
-#     push.viewport(viewport(width = 0.5, height = 0.8, y = 0.1,
-#                            just = c("centre","bottom"), yscale = prange))
-                           
-#     yp <- seq(prange[1], prange[2], length = granularity)[-1]
-#     colors <- color(yp, luminance = luminance, CINT = CINT)
-#     grid.rect(x = rep(0.5, granularity),
-#               y = yp,
-#               height = yp[2] - yp[1],
-#               just = c("centre", "top"),
-#               gp = gpar(fill = colors, col = colors),
-#               default = "native")
-#     grid.rect()
-#     grid.yaxis(at = c(0, seq(from = unique(trunc(yp))[1] + 1,
-#                  to = rev(unique(trunc(yp)))[1], 2),
-#                  ceiling(prange[1] * 10) / 10,
-#                  floor(prange[2] * 10) / 10),
-#                main = FALSE)
-#     if(!panel)
-#       grid.text(c("standardized", "residuals:"),
-#                 y = unit(c(1.1, 1.05), "npc"),
-#                 x = 0, just = "left",
-#                 gp = gpar(fontsize = unit(12, "native")))
-#     pop.viewport(2)
+    push.viewport(viewport(layout = grid.layout(1, 2,
+                  widths = unit(c(0.8, 0.2), "npc"))))
+    legend.block(residuals, gp, fontsize, panel, 0.4, "standardized\nresiduals:")
   }
 
+  ## compute unit shifts for labels
+  rsh <- unit(1, "npc") + unit((1 + any(axes)) / 2, "lines")
+  lsh <- unit(0, "npc") - unit((1 + any(axes)) / 2, "lines")
+
+  ## draw tiles
   cc <- 0
   lab <- list()
-  ## workhorse for tiles
+  ## workhorse
   split <- function(table, v, x0, y0, w, h, index = c()) {
     ## compute relative tile sizes and positions
     m <- apply(table, 1, sum)
@@ -320,44 +294,51 @@ grid.mosaicplot.default <-
     ## labels
     dim <- length(index) + 1
     
-## store all coorinates in the `lab' list and print all at the end
+## store all coordinates in the `lab' list and print all at the end
 ## to prevent overlapping text. Not really a neat solution.
 
     if (direction == "vertical") {
       if (dim == 1 && axes[1])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
-                                            x = -0.05, 
+                                            x = I(rep(list(lsh), l)), 
                                             y = coord[,2] - coord[,4] / 2,
                                             rot = 90)
       else if (dim == 2 && index[1] == 1 && axes[2])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[2]]),
                                             x = coord[,1] + coord[,3] / 2,
-                                            y = 1.05, rot = 0)
+                                            y = I(rep(list(rsh), l)),
+                                            rot = 0)
       else if (dim == 3 && index[2] == d[2] && axes[3])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
-                                            x = 1.05, rot = -90,
-                                            y = coord[,2] - coord[,4] / 2)
+                                            x = I(rep(list(rsh), l)), 
+                                            y = coord[,2] - coord[,4] / 2,
+                                            rot = -90)
       else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[4]]),
                                             x = coord[,1] + coord[,3] / 2,
-                                            y = -0.05, rot = 0)
+                                            y = I(rep(list(lsh), l)),
+                                            rot = 0)
     } else {
       if (dim == 1 && axes[1])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[1]]),
                                             x = coord[,1] + coord[,3] / 2,
-                                            y = 1.05, rot = 0)
+                                            y = I(rep(list(rsh), l)),
+                                            rot = 0)
       else if (dim == 2 && index[1] == 1 && axes[2])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[2]]),
+                                            x = I(rep(list(lsh), l)),
                                             y = coord[,2] - coord[,4] / 2,
-                                            x = -0.05, rot = 90)
+                                            rot = 90)
       else if (dim == 3 && index[2] == d[2] && axes[3])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[3]]),
                                             x = coord[,1] + coord[,3] / 2,
-                                            y = -0.05, rot = 0)
+                                            y = I(rep(list(lsh), l)),
+                                            rot = 0)
       else if (dim == 4 && index[3] == d[3] && index[1] == d[1] && axes[4])
         lab[[cc <<- cc + 1]] <<- data.frame(lab = I(dimnames(x)[[4]]),
+                                            x = I(rep(list(rsh), l)),
                                             y = coord[,2] - coord[,4] / 2,
-                                            x = 1.05, rot = -90)
+                                            rot = -90)
     }
       
     ## repeat recursively for all subtiles, and return coordinate matrix
@@ -379,68 +360,75 @@ grid.mosaicplot.default <-
   ## set margins
   push.viewport(viewport(layout.pos.col = 1))
   
-  w = 1; h = 1;
+  w = unit(1, "npc");
+  h = unit(1, "npc");
   if(any(labels)) {
-    w <- w - 0.1; h <- h - 0.1
+    w <- w - unit(4, "lines");
+    h <- h - unit(4, "lines");
   }
   if(any(axes)) {
-    w <- w - 0.1; h <- h - 0.1
+    w <- w - unit(2, "lines");
+    h <- h - unit(2, "lines");
   }
   push.viewport(viewport(width = w, height = h))
 
   ## compute coordinates
   coordinates <- split(x, v = direction == "vertical", 0, 1, 1, 1)
-
+  browser()
   ## draw tiles
   grid.rect(coordinates[,1], coordinates[,2], coordinates[,3], coordinates[,4],
             just = c("left", "top"),
-            gp = gpar(
-              fill = if (shade) color(residuals[coordinates[,-(1:4)]],
-                luminance = luminance),
-              lty = if (shade) ifelse(residuals[coordinates[,-(1:4)]] <= 0,
-                "dashed", "solid")
-              )
+            gp = do.call("gpar", lapply(gp, function(x) if(is.array(x)) aperm(x) else x))
             )
-
+              
   ## draw labels
   if (any(axes)) {
     lab = do.call("rbind", lab)
-    grid.text(lab[,1], x = lab[,2], y = lab[,3], rot = lab[,4], check.overlap = TRUE)
+    grid.text(lab[,1],
+              x = do.call("unit.c", lapply(lab[,2],
+                function(x) if(!is.unit(x)) unit(x, "npc") else x)),
+              y = do.call("unit.c", lapply(lab[,3],
+                function(x) if(!is.unit(x)) unit(x, "npc") else x)),
+              rot = lab[,4],
+              check.overlap = TRUE,
+              gp = gpar(fontsize = 0.8 * fontsize))
   }
   
   ## draw dim labels
+  rsh <- unit(1, "npc") + unit(2 + any(axes), "lines")
+  lsh <- unit(-2 - any(axes), "lines")
   if (direction == "vertical") {
     if (labels[1])
       grid.text(names(dimnames(x))[1],
-                y = 0.5, x = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 90)
+                y = 0.5, x = lsh, gp = gpar(fontsize = fontsize), rot = 90)
     
     if (maxdim > 1 && labels[2])
       grid.text(names(dimnames(x))[2],
-                x = 0.5, y = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = 0)
+                x = 0.5, y = rsh, gp = gpar(fontsize = fontsize), rot = 0)
     
     if (maxdim > 2 && labels[3])
       grid.text(names(dimnames(x))[3],
-                y = 0.5, x = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = -90)
+                y = 0.5, x = rsh, gp = gpar(fontsize = fontsize), rot = -90)
     
     if (maxdim > 3 && labels[4])
       grid.text(names(dimnames(x))[4],
-                x = 0.5, y = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 0)
+                x = 0.5, y = lsh, gp = gpar(fontsize = fontsize), rot = 0)
   } else {
     if (labels[1])
       grid.text(names(dimnames(x))[1],
-                x = 0.5, y = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2))
+                x = 0.5, y = rsh, gp = gpar(fontsize = fontsize))
     
     if (maxdim > 1 && labels[2])
       grid.text(names(dimnames(x))[2],
-                y = 0.5, x = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2), rot = 90)
+                y = 0.5, x = lsh, gp = gpar(fontsize = fontsize), rot = 90)
     
     if (maxdim > 2 && labels[3])
       grid.text(names(dimnames(x))[3],
-                x = 0.5, y = -0.05 - any(axes) * 0.05, gp = gpar(fontface = 2))
+                x = 0.5, y = lsh, gp = gpar(fontsize = fontsize))
     
     if (maxdim > 3 && labels[4])
       grid.text(names(dimnames(x))[4],
-                y = 0.5, x = 1.05 + any(axes) * 0.05, gp = gpar(fontface = 2), rot = -90)
+                y = 0.5, x = rsh, gp = gpar(fontsize = fontsize), rot = -90)
   }
   
   ## clean up and return
@@ -448,49 +436,3 @@ grid.mosaicplot.default <-
   invisible(x)
 }
 
-## colorschemes
-
-vcd.continous <- function(residuals, CINT = range(residuals),
-                                      luminance = 1,
-                                      positive = 0, negative = 2 / 3)
-  array(hsv(ifelse(residuals < 0, positive, negative),
-            pmin(residuals / CINT[1 + (residuals > 0)], 1),
-            luminance),
-        if (is.null(d <- dim(residuals))) length(residuals) else d
-        )
-
-vcd.continous2 <- function(residuals, CINT = range(residuals),
-                                       luminance = 1,
-                                       positive = 0, negative = 2 / 3)
-  array(hsv(ifelse(residuals < 0, positive, negative),
-            pmin(residuals / CINT[1 + (residuals > 0)], 1) ^ 2,
-            luminance),
-        if (is.null(d <- dim(residuals))) length(residuals) else d
-        )
-
-vcd.binary <- function(residuals, CINT = range(residuals),
-                                   luminance = 1,
-                                   positive = 0, negative = 2 / 3)
-  array(hsv(ifelse(residuals < 0, positive, negative),
-            1, luminance),
-        if (is.null(d <- dim(residuals))) length(residuals) else d
-        )
-
-vcd.Friendly <- function(residuals, CINT = range(residuals),
-                                     luminance = 1,
-                                     positive = 0, negative = 2 / 3)
-  array(hsv(ifelse(residuals < 0, positive, negative),
-            ifelse(abs(residuals) < 2, 0,
-                   ifelse(abs(residuals) <= 4, 0.5, 1)),
-        luminance),
-        if (is.null(d <- dim(residuals))) length(residuals) else d
-        )
-
-vcd.significant <- function(residuals, CINT = range(residuals),
-                                        luminance = 1,
-                                        positive = 0, negative = 2 / 3)
-  array(hsv(ifelse(residuals < 0, positive, negative),
-            residuals < CINT[1] | residuals > CINT[2],
-            luminance),
-        if (is.null(d <- dim(residuals))) length(residuals) else d
-        )
