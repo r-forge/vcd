@@ -186,8 +186,14 @@ gp.shading <- function(observed, residuals, hue = c(2/3, 0), colbins = c(2, 4),
   colbins <- sort(colbins)
   hue <- ifelse(res > 0, hue[1], hue[2])
   saturation <- rep(0, length(res)) + ifelse(abs(res) > colbins[1], 0.5, 0) + ifelse(abs(res) > colbins[2], 0.5, 0)
-  if(is.null(test)) value <- 1
-  else (test(observed)$p.value < (1-level))*0.5 + 0.5
+  if(is.null(test)) {
+    value <- 1
+    p.value <- NULL
+  } else {
+    p.value <- test(observed)$p.value
+    value <- (p.value < (1-level))*0.5 + 0.5
+  }
+
   col <- hsv(hue, saturation, value)
   dim(col) <- dim(residuals)
   colbins <- sort(c(range(res), colbins, -colbins, 0))
@@ -196,7 +202,7 @@ gp.shading <- function(observed, residuals, hue = c(2/3, 0), colbins = c(2, 4),
   lty <- ifelse(residuals > 0, lty[1], lty[2])
   ltybins <- range(res)
   if(diff(sign(ltybins)) > 0) ltybins <- sort(c(0, ltybins))
-  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins)
+  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins, p.value = p.value)
   class(rval) <- c("vcd.gpar", "gpar")
   return(rval)
 }
