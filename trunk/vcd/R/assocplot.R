@@ -19,7 +19,7 @@ assocplot <- function(x,
     if (is.null(color)) {
       color <- if (is.logical(shade) && !shade)
         c("black", "red")
-      else if (is.numeric(chisq.test))
+      else
         c(0, 2 / 3)
     } else if (length(color) != 2)
       stop("incorrect color specification")
@@ -47,7 +47,7 @@ assocplot <- function(x,
         stop("invalid shade specification")
       shade <- sort(shade)
       breaks <- c(-Inf, - rev(shade), 0, shade, Inf)
-      color <- if (chisq.test && chisq.test(x)$p.value <= 1 - chisq.test)
+      color <- if (!chisq.test || chisq.test(x)$p.value <= 1 - chisq.test)
         c(hsv(color[1], 
               s = seq(1, to = 0, length = length(shade) + 1)),
           hsv(color[2],   
