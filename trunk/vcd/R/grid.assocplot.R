@@ -5,7 +5,7 @@ grid.assocplot <- function(x, ...)
 
 grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
                            model.formula = NULL, labels = TRUE, fontsize = 12,
-			   gp = gp.signif, legend = TRUE, colbins = NULL,
+			   gp = gp.signif, legend = TRUE, col.bins = NULL,
                            scale = 0.4, rot = 90, check.overlap = TRUE, axis.labels = TRUE,
 			   show.grid = FALSE, panel = FALSE, margins = c(2, 4, 5, 2))
 {
@@ -97,28 +97,28 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
                   yscale = range(res), default.unit = "npc",
                   height = 0.8, width = 0.2))
 
-    colbins <- gp$colbins
-    if(is.null(colbins)) colbins <- 200
-    if(length(colbins) == 1) {
-      colbins <- floor(colbins) - 1
-      colbins <- min(res) + diff(range(res)) * ((0:colbins)/colbins)
+    if(!is.null(gp$col.legend)) {
+      col.legend <- gp$col.legend
+    } else {
+      col.bins <- gp$col.bins
+      if(is.null(col.bins)) col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
+      y.pos <- col.bins[-length(col.bins)]
+      y.height <- diff(col.bins)
+      y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
+      col.legend <- list(pos = y.pos, height = y.height, col = y.col)
     }
-    ltybins <- gp$ltybins
 
-    y.pos <- colbins[-length(colbins)]
-    y.height <- diff(colbins)
-    y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
-
-    grid.rect(x = unit(rep(0.5, length(y.pos)), "npc"), y = y.pos,
-              height = y.height, default.unit = "native",
-              gp = gpar(fill = y.col, col = NULL),
+    grid.rect(x = unit(rep(0.5, length(col.legend$pos)), "npc"), y = col.legend$pos,
+              height = col.legend$height, default.unit = "native",
+              gp = gpar(fill = col.legend$col, col = NULL),
               just = c("centre", "bottom"))
 
-    #Z# if(is.null(ltybins))
+    #Z# lty.bins <- gp$lty.bins
+    #Z# if(is.null(lty.bins))
           grid.rect()
     #Z# else {
-    #Z#   y.pos <- ltybins[-length(ltybins)]
-    #Z#   y.height <- diff(ltybins)
+    #Z#   y.pos <- lty.bins[-length(lty.bins)]
+    #Z#   y.height <- diff(lty.bins)
     #Z#   y.lty <- gpfun(x, y.pos + 0.5*y.height)$lty
     #Z#   if(is.null(y.lty)) y.lty <- 1
     #Z#   grid.rect(x = unit(rep(0.5, length(y.pos)), "npc"), y = y.pos,
@@ -126,7 +126,8 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     #Z#             gp = gpar(lty = y.lty),
     #Z#             just = c("centre", "bottom"))
     #Z# }
-    grid.yaxis(main = FALSE)
+
+    grid.yaxis(main = FALSE, gp = gpar(fontsize = fontsize))
     if(!panel) grid.text("Pearson\nresiduals:", x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
                 gp = gpar(fontsize = 0.8*fontsize), just = c("left", "bottom"))
     if(!is.null(gp$p.value)) grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
@@ -171,21 +172,29 @@ assocpairs <- function(x, margin = 2, ...)
 
 gp.binary <- function(observed, residuals, col = 1:2)
 {
-  col <- ifelse(residuals > 0, col[1], col[2])
-  colbins <- sort(c(range(residuals), 0))
-  colbins <- colbins[colbins <= max(residuals) & colbins >= min(residuals)]
-  rval <- list(fill = col, colbins = colbins)
+  fill <- ifelse(residuals > 0, col[1], col[2])
+  col.bins <- sort(c(range(residuals), 0))
+  col.bins <- col.bins[col.bins <= max(residuals) & col.bins >= min(residuals)]
+
+  y.pos <- col.bins[-length(col.bins)]
+  y.height <- diff(col.bins)
+  res2 <- y.pos + 0.5*y.height
+  y.col <- ifelse(res2 > 0, col[1], col[2])
+  col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+
+  rval <- list(fill = fill, col.bins = col.bins, col.legend = col.legend)
   class(rval) <- c("vcd.gpar", "gpar")
   return(rval)
 }
 
-gp.shading <- function(observed, residuals, hue = c(2/3, 0), colbins = c(2, 4),
-                        lty = 1:2, test = NULL, level = 0.95)
+gp.shading <- function(observed, residuals, hue = c(2/3, 0), col.bins = NULL,
+                        col.fun = NULL, lty = 1:2, test = NULL, level = 0.95)
 {
   res <- as.vector(residuals)
-  colbins <- sort(colbins)
-  hue <- ifelse(res > 0, hue[1], hue[2])
-  saturation <- rep(0, length(res)) + ifelse(abs(res) > colbins[1], 0.5, 0) + ifelse(abs(res) > colbins[2], 0.5, 0)
+
+  ## hue and value
+  hue.orig <- hue
+  hue <- ifelse(res > 0, hue.orig[1], hue.orig[2])
   if(is.null(test)) {
     value <- 1
     p.value <- NULL
@@ -194,15 +203,43 @@ gp.shading <- function(observed, residuals, hue = c(2/3, 0), colbins = c(2, 4),
     value <- (p.value < (1-level))*0.5 + 0.5
   }
 
+  ## saturation
+  if(is.null(col.fun)) {
+    if(is.null(col.bins)) col.bins <- c(2, 4)
+    discrete <- TRUE
+    cb <- sort(col.bins)
+    saturation <- rep(0, length(res)) + ifelse(abs(res) > cb[1], 0.5, 0) + ifelse(abs(res) > cb[2], 0.5, 0)
+  } else {
+    if(!is.null(col.bins)) stop("only one argument of `col.bins' or `col.fun' should be specified")
+    discrete <- FALSE
+    saturation <- pmax(pmin(col.fun(res) , 1), 0)
+    col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
+  }
+
   col <- hsv(hue, saturation, value)
   dim(col) <- dim(residuals)
-  colbins <- sort(c(range(res), colbins, -colbins, 0))
-  colbins <- colbins[colbins <= max(res) & colbins >= min(res)]
 
+  ## col.bins
+  col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
+  col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+
+  ## col.legend
+  y.pos <- col.bins[-length(col.bins)]
+  y.height <- diff(col.bins)
+  res2 <- y.pos + 0.5*y.height
+  hue2 <- ifelse(res2 > 0, hue.orig[1], hue.orig[2])
+  if(discrete)
+    saturation2 <- rep(0, length(res2)) + ifelse(abs(res2) > cb[1], 0.5, 0) + ifelse(abs(res2) > cb[2], 0.5, 0)
+  else
+    saturation2 <- pmax(pmin(col.fun(res2) , 1), 0)
+  y.col <- hsv(hue2, saturation2, value)
+  col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+
+  ## lty and lty.bins
   lty <- ifelse(residuals > 0, lty[1], lty[2])
-  ltybins <- range(res)
-  if(diff(sign(ltybins)) > 0) ltybins <- sort(c(0, ltybins))
-  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins, p.value = p.value)
+  lty.bins <- range(res)
+  if(diff(sign(lty.bins)) > 0) lty.bins <- sort(c(0, lty.bins))
+  rval <- list(fill = col, lty = lty, col.bins = col.bins, lty.bins = lty.bins, col.legend = col.legend, p.value = p.value)
   class(rval) <- c("vcd.gpar", "gpar")
   return(rval)
 }
@@ -211,73 +248,79 @@ gp.signif <- function(observed, residuals, hue = c(230, 330), lty = 1:2, level =
 {
   res <- as.vector(residuals)
   x.test <- pearson.test(observed, return = TRUE)
-  colbins <- x.test$qdist(sort(level))
+  col.bins <- cb <- x.test$qdist(sort(level))
+  hue.orig <- hue
 
-  hue <- ifelse(res > 0, hue[1], hue[2])
-
+  ## hue
+  hue <- ifelse(res > 0, hue.orig[1], hue.orig[2])
   ## chroma: 0 / 25 / 75
-  chroma <- ifelse(abs(res) < colbins[1], 0,
-                   ifelse(abs(res) <= colbins[2], 25, 75))
+  chroma <- ifelse(abs(res) < cb[1], 0, ifelse(abs(res) <= cb[2], 25, 75))
   ## luminance: 95 / 85 / 70
-  luminance <- ifelse(abs(res) < colbins[1], 95,
-                       ifelse(abs(res) <= colbins[2], 85, 70))
+  luminance <- ifelse(abs(res) < cb[1], 95, ifelse(abs(res) <= cb[2], 85, 70))
 
   col <- hcl(hue, chroma, luminance)
   dim(col) <- dim(residuals)
-  colbins <- sort(c(range(res), colbins, -colbins, 0))
-  colbins <- colbins[colbins <= max(res) & colbins >= min(res)]
 
+  ## col.bins
+  col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
+  col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
+
+  ## col.legend
+  y.pos <- col.bins[-length(col.bins)]
+  y.height <- diff(col.bins)
+  res2 <- y.pos + 0.5*y.height
+  hue2 <- ifelse(res2 > 0, hue.orig[1], hue.orig[2])
+  chroma2 <- ifelse(abs(res2) < cb[1], 0, ifelse(abs(res2) <= cb[2], 25, 75))
+  luminance2 <- ifelse(abs(res2) < cb[1], 95, ifelse(abs(res2) <= cb[2], 85, 70))
+  y.col <- hcl(hue2, chroma2, luminance2)
+  col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+
+  ## lty and lty.bins
   lty <- ifelse(residuals > 0, lty[1], lty[2])
-  ltybins <- range(res)
-  if(diff(sign(ltybins)) > 0) ltybins <- sort(c(0, ltybins))
-  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins, p.value = x.test$p.value)
+  lty.bins <- range(res)
+  if(diff(sign(lty.bins)) > 0) lty.bins <- sort(c(0, lty.bins))
+  rval <- list(fill = col, lty = lty, col.bins = col.bins, lty.bins = lty.bins, col.legend = col.legend, p.value = x.test$p.value)
   class(rval) <- c("vcd.gpar", "gpar")
   return(rval)
 }
 
-
-colorscheme <- function(residuals, xtab, type = c("Friendly", "Shading", "poly", "data", "significant", "Z"))
+gp.data <- function(observed, residuals, hue = c(2/3, 0), lty = 1:2)
 {
-    type <- match.arg(type)
-    switch(type,
+  res <- as.vector(residuals)
+  x.test <- pearson.test(observed, return = TRUE)
 
-    "poly" = {
-      ## val <- 1 - pearson.test(xtab)$p.value
-      color <- residuals
-      critval <- 4
-      residuals[residuals > critval] <- critval
-      residuals[residuals < -critval] <- -critval
-      color[residuals > 0] <- hsv(h = 2/3, s = (residuals[residuals > 0]/critval)^2, v = 1)
-      color[residuals <= 0] <- hsv(h = 0, s = (-residuals[residuals <= 0]/critval)^2, v = 1)
-    },
+  ## hue and value
+  hue.orig <- hue
+  hue <- ifelse(res > 0, hue.orig[1], hue.orig[2])
+  value <- 1
 
-    "data" = {
-      x.test <- pearson.test(xtab, return = TRUE)
-      color <- residuals
-      color[residuals > 0] <- hsv(h = 2/3, s = sapply(residuals[residuals > 0], x.test$pdist), v = 1)
-      color[residuals <= 0] <- hsv(h = 0, s = sapply(-residuals[residuals <= 0], x.test$pdist), v = 1)
-    },
+  ## saturation
+  saturation <- x.test$pdist(abs(res))
 
-    "significant" = {
-      x.test <- pearson.test(xtab, return = TRUE)
-      color <- residuals
-      critval <- x.test$qdist(0.95)
-      color[abs(residuals) < critval] <- "#FFFFFF"
-      color[residuals >= critval] <- hcl(h = 230, chroma = 55, luminance = 75)
-      color[residuals <= -critval] <- hcl(h = 330, chroma = 55, luminance = 75)
-    },
+  col <- hsv(hue, saturation, value)
+  dim(col) <- dim(residuals)
 
-    "Z" = {
-      x.test <- pearson.test(xtab, return = TRUE)
-      color <- residuals
-      critval <- 4 ## xtab.test$qdist(0.99)
-      residuals[residuals > critval] <- critval
-      residuals[residuals < -critval] <- -critval
-      color[residuals > 0] <- hcl(230, chroma = (residuals[residuals > 0]/critval)*100, luminance = (residuals[residuals > 0]/critval)*75, correct = TRUE)
-      color[residuals <= 0] <- hcl(330, chroma = (-residuals[residuals <= 0]/critval)*100, luminance = (-residuals[residuals <= 0]/critval)*75, correct = TRUE)
-    })
+  ## col.bins
+  col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
+  col.bins <- sort(c(range(res), col.bins, -col.bins, 0))
+  col.bins <- col.bins[col.bins <= max(res) & col.bins >= min(res)]
 
-    return(color)
+  ## col.legend
+  y.pos <- col.bins[-length(col.bins)]
+  y.height <- diff(col.bins)
+  res2 <- y.pos + 0.5*y.height
+  hue2 <- ifelse(res2 > 0, hue.orig[1], hue.orig[2])
+  saturation2 <- x.test$pdist(abs(res2))
+  y.col <- hsv(hue2, saturation2, value)
+  col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+
+  ## lty and lty.bins
+  lty <- ifelse(residuals > 0, lty[1], lty[2])
+  lty.bins <- range(res)
+  if(diff(sign(lty.bins)) > 0) lty.bins <- sort(c(0, lty.bins))
+  rval <- list(fill = col, lty = lty, col.bins = col.bins, lty.bins = lty.bins, col.legend = col.legend, p.value = x.test$p.value)
+  class(rval) <- c("vcd.gpar", "gpar")
+  return(rval)
 }
 
 tabplot <- function(x, panel = function(x, ...) grid.assocplot(x, panel = TRUE, legend = FALSE, ...),
