@@ -6,6 +6,7 @@ DM
 
 AZ
   * grid anschauen
+  * slice.index() anschauen
 
 KH
   * permtest/Patefield in R-devel (bis Ende JAN)
@@ -24,3 +25,8 @@ JCGS (-> Ende APR)
 JSS (-> Sommer)
   * log-linear Models (Friendly Kap.7, Theus-Paper)
   * moeglicherweise: Seminar-Output
+
+open
+  * graphical parameters for each cell (col, lty)
+  * style: function returning graphical parameters given a table
+  * implementation in grid?
