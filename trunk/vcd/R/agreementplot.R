@@ -76,8 +76,6 @@ function (formula, data = NULL, ..., subset)
   ylim = c(0, 1 + tm + bm)
 
   ## init device
-#  opar <- par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
-
   opar <- par(usr = c(xlim, ylim), mar = c(0, 0, 0, 0))
   on.exit(par(opar))
   plot.new()
