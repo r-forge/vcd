@@ -3,7 +3,7 @@ Version: 0.1-1
 Date: 2002-05-14
 Title: Visualizing Categorical Data
 Author: David Meyer, Achim Zeileis
-Maintainer: Kurt Hornik
+Maintainer: Kurt Hornik <kurt.hornik@ci.tuwien.ac.at>
 Description: Functions and data sets for the book "Visualizing Categorical
              Data" by Michael Friendly.
 License: GPL
