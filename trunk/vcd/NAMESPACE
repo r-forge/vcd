@@ -1,22 +1,82 @@
-export("Kappa", "Ord.estimate", "Ord.plot", "agreementplot", 
-    "agreementplot.default", "agreementplot.formula", "assoc.stats", 
-    "assocpairs", "assocplot", "birthwt", 
-    "confint.Kappa", "confint.oddsratio", "distplot", "fitted.goodfit", 
-    "fourfoldplot", "goodfit", "gp.binary", "gp.data", "gp.shading", 
-    "gp.signif", "grid.agreementplot", "grid.agreementplot.default", 
-    "grid.agreementplot.formula", "grid.assocplot", "grid.assocplot.default", 
-    "grid.assocplot.formula", "grid.mosaicpairs", "grid.mosaicplot", 
-    "grid.mosaicplot.default", "grid.mosaicplot.formula", "grid.sieveplot", 
-    "grid.sieveplot.default", "grid.sieveplot.formula", "hcl", 
-    "hls", "independence.table", "legend.block", "mar.table", 
-    "mosaicpairs", "mosaicpairs.default", "mosaicpairs.formula", 
-    "mosaicplot", "mosaicplot.default", "mosaicplot.formula", 
-    "oddsratio", "panel.barplot", "panel.mosaicplot", "panel.text", 
-    "pearson.test", "plot.goodfit", "plot.oddsratio", "predict.goodfit", 
-    "print.Kappa", "print.assoc.stats", "print.goodfit", "print.oddsratio", 
-    "print.summary.Kappa", "print.summary.assoc.stats", "print.summary.oddsratio", 
-    "print.table2d.summary", "rootogram", "rootogram.default", 
-    "rootogram.goodfit", "sieveplot", "sieveplot.default",
-    "sieveplot.formula", "summary.Kappa", "summary.assoc.stats", "summary.goodfit", 
-    "summary.oddsratio", "table2d.summary", "tabplot", "tabplot.default", 
-    "tabplot.formula", "ternaryplot", "woolf.test")
+export(
+## generic methods
+       "Kappa",
+       "assoc.stats",
+       "assocpairs"    ,
+       "assocplot",    
+       "distplot",	    
+       "fourfoldplot",
+       "goodfit",
+       "sieveplot",
+       "agreementplot", 
+       "mosaicpairs",
+       "rootogram", 
+       "grid.agreementplot",
+       "grid.assocplot",
+       "grid.mosaicplot",
+       "grid.sieveplot",
+       "tabplot", 
+       "table2d.summary",
+       "oddsratio",
+       
+## panel functions
+       "gp.binary", "gp.data", "gp.shading",  "gp.signif",
+       "panel.barplot", "panel.mosaicplot", "panel.text",
+
+## ``normal'' functions
+       "hcl", "hls",
+       "independence.table",
+       "mar.table", 
+       "Ord.estimate",
+       "Ord.plot",
+       "grid.mosaicpairs",
+       "birthwt", 
+       "pearson.test",
+       "ternaryplot",
+       "woolf.test")
+
+import(MASS)
+import(ctest)
+
+S3method(mosaicpairs, default)
+S3method(mosaicpairs, formula)
+S3method(agreementplot, default)
+S3method(agreementplot, formula)
+S3method(sieveplot, default)
+S3method(sieveplot, formula)
+S3method(rootogram, default)
+S3method(rootogram, goodfit)
+S3method(tabplot, default)
+S3method(tabplot, formula)
+
+S3method(grid.agreementplot, default)
+S3method(grid.agreementplot, formula)
+S3method(grid.assocplot, default)
+S3method(grid.assocplot, formula)
+S3method(grid.sieveplot, default)
+S3method(grid.sieveplot, formula)
+S3method(grid.mosaicplot, default)
+S3method(grid.mosaicplot, formula)
+
+S3method(fitted, goodfit)
+S3method(predict, goodfit)
+
+S3method(confint, Kappa)
+S3method(confint, oddsratio)
+
+S3method(plot, goodfit)
+S3method(plot, oddsratio)
+
+S3method(print, Kappa)
+S3method(print, summary.Kappa)
+S3method(print, goodfit)
+S3method(print, oddsratio)
+S3method(print, summary.oddsratio)
+S3method(print, assoc.stats)
+S3method(print, summary.assoc.stats)
+S3method(print, table2d.summary)
+
+S3method(summary, Kappa)
+S3method(summary, assoc.stats)
+S3method(summary, goodfit)
+S3method(summary, oddsratio)
