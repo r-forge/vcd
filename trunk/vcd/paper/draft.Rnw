@@ -1,4 +1,5 @@
 \documentclass[10pt]{article}
+\usepackage{Sweave, graphicx}
 \usepackage{Z}
 
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
@@ -415,7 +416,7 @@ a conditional independence model is fitted in each plot (see Figure
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
-grid.mosaicpairs(UCBAdmissions, type = "conditional", main = NULL)
+grid.mosaicpairs(UCBAdmissions, type = "conditional", gp = gp.shading, main = NULL)
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
 \label{fig:UCB-mosaic-signif}
