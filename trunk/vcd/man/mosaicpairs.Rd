@@ -65,9 +65,9 @@ M. Friendly (2000),
 data(UCBAdmissions)
 data(PreSex)
 
-mosaicpairs(PreSex, shade = TRUE)
-mosaicpairs(UCBAdmissions, shade = TRUE)
-mosaicpairs(UCBAdmissions, shade = TRUE, type="conditional")
+pairs(PreSex, shade = TRUE)
+pairs(UCBAdmissions, shade = TRUE)
+pairs(UCBAdmissions, shade = TRUE, type="conditional")
 }
 \keyword{hplot}
 

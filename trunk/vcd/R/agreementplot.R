@@ -1,5 +1,5 @@
 "agreementplot" <- function (x, ...)
-  UseMethod ("grid.agreementplot")
+  UseMethod ("agreementplot")
 
 "agreementplot.formula" <-
 function (formula, data = NULL, ..., subset) 

@@ -11,7 +11,7 @@ export(
        "assoc",
        "mosaic",
        "sieveplot",
-       "tabplot", 
+       "tabplot",
        "table2d.summary",
        "oddsratio",
        
@@ -20,6 +20,7 @@ export(
        "panel.barplot", "panel.mosaicplot", "panel.text", "panel.mosaic", "panel.assoc",
 
 ## ``normal'' functions
+       "co.table",
        "structable",
        "hcl", "hls",
        "independence.table",

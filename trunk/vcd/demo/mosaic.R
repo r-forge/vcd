@@ -12,7 +12,7 @@ data(HairEyeColor)
 
 HairEye <- margin.table(HairEyeColor, c(1,2))
 
-grid.mosaicplot(HairEye, main = "Basic Mosaic Display of Hair Eye Color data")
+mosaic(HairEye, main = "Basic Mosaic Display of Hair Eye Color data")
 
 ## Hair Mosaic Display with Pearson residuals ##
 Hair <- margin.table(HairEyeColor,1)
@@ -28,11 +28,11 @@ resid
 
 ## First Step in a Mosaic Display ##
 
-grid.mosaicplot(Hair, residuals = resid, main = "Hair Color Proportions")
+mosaic(Hair, residuals = resid, main = "Hair Color Proportions")
 
 ## Hair Eye Mosais Display with Pearson residuals ##
 
-grid.mosaicplot(HairEye, main = " Hair Eye Color with Pearson residuals")
+mosaic(HairEye, main = " Hair Eye Color with Pearson residuals")
 
 ## Show Pearson Residuals ##
 
@@ -47,7 +47,7 @@ data(UKSoccer)
 
 ## UKSoccer Mosaic Display ##
 
-grid.mosaicplot(UKSoccer, main = "UK Soccer Scores")
+mosaic(UKSoccer, main = "UK Soccer Scores")
 
 ###############################
 ## Repeat Victimization Data ##
@@ -55,7 +55,7 @@ grid.mosaicplot(UKSoccer, main = "UK Soccer Scores")
 
 data(RepVict)
 
-grid.mosaicplot(RepVict[-c(4, 7), -c(4, 7)], main = "Repeat Victimization Data")
+## mosaic(RepVict[-c(4, 7), -c(4, 7)], main = "Repeat Victimization Data")
 
 
 ##################
@@ -63,13 +63,13 @@ grid.mosaicplot(RepVict[-c(4, 7), -c(4, 7)], main = "Repeat Victimization Data")
 ##################
 
 ## Hair Eye Sex Mosais Display with Pearson residuals ##
-grid.mosaicplot(HairEyeColor, main = "Hair Eye Color Sex" )
+mosaic(HairEyeColor, main = "Hair Eye Color Sex" )
 
-grid.mosaicplot(HairEyeColor, margin = ~ Hair * Eye + Sex,
+mosaic(HairEyeColor, expected = ~ Hair * Eye + Sex,
                 main = "Model: (Hair Eye) (Sex)" )
 
-grid.mosaicplot(HairEyeColor, margin = ~ Hair * Sex + Eye*Sex,
-                main = "Model: (Hair Sex) (Eye Sex)")
+mosaic(HairEyeColor, expected = ~ Hair * Sex + Eye*Sex,
+               main = "Model: (Hair Sex) (Eye Sex)")
 
 
 ####################
@@ -81,26 +81,26 @@ data(PreSex)
 ## Mosaic display for Gender and Premarital Sexual Expirience ##
 
 ## (Gender Pre) ##
-grid.mosaicplot(margin.table(PreSex, c(3, 4)), legend = FALSE,
+mosaic(margin.table(PreSex, c(3, 4)), legend = FALSE,
                 main = "Gender and Premarital Sex")
 
 ## (Gender Pre)(Extra) ##
-grid.mosaicplot(margin.table(PreSex,c(2,3,4)), legend = FALSE,
-                margin = ~ Gender * PremaritalSex + ExtramaritalSex ,
+mosaic(margin.table(PreSex,c(2,3,4)), legend = FALSE,
+                expected = ~ Gender * PremaritalSex + ExtramaritalSex ,
                 main = "(PreMaritalSex Gender) (Sex)")
 
 ## (Gender Pre Extra)(Marital) ##
-grid.mosaicplot(PreSex,
-                margin = ~ Gender * PremaritalSex * ExtramaritalSex + MaritalStatus,
-                legend = FALSE,
-                main = "(PreMarital ExtraMarital) (MaritalStatus)")
+mosaic(PreSex,
+       expected = ~ Gender * PremaritalSex * ExtramaritalSex + MaritalStatus,
+       legend = FALSE,
+       main = "(PreMarital ExtraMarital) (MaritalStatus)")
 
 ## (GPE)(PEM) ##
-grid.mosaicplot(PreSex,
-                margin = ~ Gender * PremaritalSex * ExtramaritalSex
-                         + MaritalStatus * PremaritalSex * ExtramaritalSex,
-                legend = FALSE,
-                main = "(G P E) (P E M)")
+mosaic(PreSex,
+       expected = ~ Gender * PremaritalSex * ExtramaritalSex
+       + MaritalStatus * PremaritalSex * ExtramaritalSex,
+       legend = FALSE,
+       main = "(G P E) (P E M)")
 
 ############################
 ## Employment Status Data ##
@@ -109,21 +109,21 @@ grid.mosaicplot(PreSex,
 data(Employment)
 
 ## Employment Status ##
-grid.mosaicplot(Employment,
-                margin = ~ LayoffCause * EmploymentLength + EmploymentStatus,
-                main = "(Layoff Employment) + (EmployStatus)")
+# mosaic(Employment,
+#        expected = ~ LayoffCause * EmploymentLength + EmploymentStatus,
+#        main = "(Layoff Employment) + (EmployStatus)")
 
 
-grid.mosaicplot(Employment,
-                margin = ~ LayoffCause * EmploymentLength +
-                           LayoffCause * EmploymentStatus,
-                main = "(Layoff EmpL) (Layoff EmplS)")
+# mosaic(Employment,
+#        expected = ~ LayoffCause * EmploymentLength +
+#                 LayoffCause * EmploymentStatus,
+#        main = "(Layoff EmpL) (Layoff EmplS)")
 
-## Closure ##
-grid.mosaicplot(Employment[,,1], main = "Layoff : Closure")
+# ## Closure ##
+# mosaic(Employment[,,1], main = "Layoff : Closure")
 
-## Replaced ##
-grid.mosaicplot(Employment[,,2], main = "Layoff : Replaced")
+# ## Replaced ##
+# mosaic(Employment[,,2], main = "Layoff : Replaced")
 
 
 #####################
@@ -132,13 +132,13 @@ grid.mosaicplot(Employment[,,2], main = "Layoff : Replaced")
 
 data(UCBAdmissions)
 
-grid.mosaicpairs(PreSex)
+pairs(PreSex)
 
-grid.mosaicpairs(UCBAdmissions)
+pairs(UCBAdmissions)
 
-grid.mosaicpairs(UCBAdmissions, type="conditional")
+pairs(UCBAdmissions, type="conditional")
 
-grid.mosaicpairs(UCBAdmissions, type="pairwise", gp = gp.max)
+pairs(UCBAdmissions, type="pairwise", gp = gp.max())
 
 
 
