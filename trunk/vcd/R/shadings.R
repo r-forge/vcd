@@ -14,7 +14,6 @@ gp.HSVshading <- function(observed, residuals,
     col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
   } else {
     cb <- col.bins <- sort(interpolate)
-    require(stepfun)  #Z# require globally?
     interpolate <- function(x) stepfun(cb,  seq(my.s[2], my.s[1], length = length(cb) + 1))(abs(x))
   }
 
@@ -76,7 +75,6 @@ gp.HCLshading <- function(observed, residuals,
     col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
   } else {
     cb <- col.bins <- sort(interpolate)
-    require(stepfun)  #Z# require globally?
     interpolate <- function(x) stepfun(cb,  seq(0, 1, length = length(cb) + 1))(abs(x))
   }
 
@@ -125,9 +123,12 @@ gp.HCLshading <- function(observed, residuals,
 }
 
 gp.Friendly <- function(observed, residuals,
-                        hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
+                        hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), fuzz = 0.05)
 {
-  gp.HSVshading(observed, residuals, hue = hue, value = 1, lty = lty, interpolate = interpolate, test = NULL)
+  rval <- gp.HSVshading(observed, residuals, hue = hue, value = 1, lty = lty, interpolate = interpolate, test = NULL)
+  rval$col <- ifelse(rval$lty > 1, hsv(hue[2], 1, 1), hsv(hue[1], 1, 1)) ## as in VCD book
+  rval$col <- ifelse(abs(residuals) > fuzz, rval$col, hsv(0, 1, 0))      ## with FUZZ
+  return(rval)
 }
 
 gp.max <- function(observed, residuals,
