@@ -106,7 +106,8 @@ function (formula, data = NULL, ..., subset)
   ymid <- (y1 + y2) / 2
 
   ## setup device
-  par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
+  opar <- par(mar = c(0, 0, 0, 0))
+  on.exit(par(opar))
   plot.new()
   par(usr = c(xlim, ylim))
   plot.window(xlim = xlim, ylim = ylim, asp = 1)
