@@ -110,8 +110,8 @@ function (formula, data = NULL, ..., subset)
     }
 
     ## correct A[j,i] -> not done by Friendly==Bug?
-    for (j in length(weights):1) 
-      if (j > 1) A[j, i] <- A[j, i] - A[j - 1, i]
+#    for (j in length(weights):1) 
+#      if (j > 1) A[j, i] <- A[j, i] - A[j - 1, i]
   }
   if (reverse.y)
     lines(c(0, 1), c(0, 1), col = "red", lty = "longdash")
