@@ -13,6 +13,11 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
 			      bar.col = grey(0.7), line.col = 2,
 			      xlab = NULL, ylab = NULL, ylim = NULL, ...)
 {
+   if(is.null(names)) names <- names(x)
+   if(is.table(x)) {
+     if(length(dim(x)) > 1) stop ("x must be a 1-way table")
+     x <- as.vector(x)
+   }
    obs <- x
    fit <- fitted
    if(is.null(xlab)) {xlab <-  "Number of Occurences"}
