@@ -31,3 +31,5 @@ open
   * graphical parameters for each cell (col, lty)
   * style: function returning graphical parameters given a table
   * implementation in grid?
+  * pearson.test: name, two-sided alternatives, return.dist argument
+  
