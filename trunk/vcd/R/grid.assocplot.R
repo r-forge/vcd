@@ -4,19 +4,12 @@ grid.assocplot <- function(x, ...)
 }
 
 grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
-                           model.formula = NULL, transpose = FALSE, labels = TRUE,
-			   color.type = "Friendly", legend = TRUE, colbins = NULL,
+                           model.formula = NULL, labels = TRUE, fontsize = 12,
+			   gp = gp.signif, legend = TRUE, colbins = NULL,
                            scale = 0.4, rot = 90, check.overlap = TRUE, axis.labels = TRUE,
 			   show.grid = FALSE, panel = FALSE, margins = c(2, 4, 5, 2))
 {
   require(grid)
-
-  if(is.null(dimnames(x))) dimnames(x) <- list(rep("", ncol(x)), rep("", nrow(x)))
-  if(is.null(names(dimnames(x)))) {
-    names(dimnames(x)) <- c("Y", "X")
-    if(is.null(xlab)) xlab <- ""
-    if(is.null(ylab)) ylab <- ""
-  }
 
   ## This could be used to fit more complex models:
   ## require(MASS)
@@ -34,15 +27,6 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   sexpctd <- sqrt(expctd)
   res <- (x - expctd) / sexpctd
   ##res[is.na(res)] <- 0
-
-  ## Transposing - why??
-  if(transpose)
-  {
-    expctd <- t(expctd)
-    x <- t(x)
-    sexpctd <- t(sexpctd)
-    res <- t(res)
-  }
 
   if(is.null(ylab)) ylab <- names(dimnames(x))[1]
   if(is.null(xlab)) xlab <- names(dimnames(x))[2]
@@ -62,12 +46,16 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   y.pos.matrix <- matrix(rep(rev(y.pos), ncols), ncol = ncols)
   cell.height <- res
   cell.width <- sexpctd
-  cell.col <- colorscheme(res, x, type = color.type)
+  if(is.function(gp)) {
+    gpfun <- gp
+    gp <- gpfun(x, res)
+  } else legend <- FALSE
+
 
   if(!panel) grid.newpage()
   if(!is.null(main)) {
     margins[3] <- margins[3] + 2
-    grid.text(main, y = unit(1, "npc") - unit(2, "lines"), gp = gpar(fontsize = 20))
+    grid.text(main, y = unit(1, "npc") - unit(2, "lines"), gp = gpar(fontsize = 1.5*fontsize))
   }
   push.viewport(plotViewport(margins))
 
@@ -88,16 +76,16 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
             height = as.vector(cell.height),
             default.units = "native",
             just = c("centre", "bottom"),
-            gp = gpar(fill = as.vector(cell.col)))
+            gp = gp)
 
 
   grid.segments(0, unit(y.pos, "native"), 1, unit(y.pos, "native"), gp = gpar(lty = "dashed"))
   if(labels) grid.text(rev(rownames(x)), x = unit(-1, "lines"), y = unit(y.pos, "native"), rot = rot,
-            check.overlap = check.overlap)
+            gp = gpar(fontsize = fontsize), check.overlap = check.overlap)
   if(labels) grid.text(colnames(x), y = unit(1, "npc") + unit(1, "lines"), x = unit(x.pos, "native"),
-            check.overlap = check.overlap)
-  if(axis.labels) grid.text(xlab, y = unit(1, "npc") + unit(3, "lines"), check.overlap = check.overlap)
-  if(axis.labels) grid.text(ylab, x = unit(-3, "lines"), rot = 90, check.overlap = check.overlap)
+            gp = gpar(fontsize = fontsize), check.overlap = check.overlap)
+  if(axis.labels) grid.text(xlab, y = unit(1, "npc") + unit(3, "lines"), gp = gpar(fontsize = fontsize), check.overlap = check.overlap)
+  if(axis.labels) grid.text(ylab, x = unit(-3, "lines"), rot = 90, gp = gpar(fontsize = fontsize), check.overlap = check.overlap)
 
   pop.viewport()
 
@@ -105,36 +93,45 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   if(legend) {
     pop.viewport()
     push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-    push.viewport(viewport(x = 0.2, y = 0.1, just = c("left", "bottom"),
+    push.viewport(viewport(x = 0.6, y = 0.1, just = c("left", "bottom"),
                   yscale = range(res), default.unit = "npc",
-                  height = 0.8, width = 0.6))
+                  height = 0.8, width = 0.2))
 
-    if(is.null(colbins)) {
-      if(color.type == "Friendly") colbins <- c(min(res), 0, max(res))
-      else if(color.type == "Shading") {
-        colbins <- c(min(res), -4, -2, 2, 4, max(res))
-	colbins <- colbins[colbins >= min(res) & colbins <= max(res)]
-      }
-      else colbins <- 200
-    }
+    colbins <- gp$colbins
+    if(is.null(colbins)) colbins <- 200
     if(length(colbins) == 1) {
       colbins <- floor(colbins) - 1
       colbins <- min(res) + diff(range(res)) * ((0:colbins)/colbins)
     }
+    ltybins <- gp$ltybins
 
     y.pos <- colbins[-length(colbins)]
     y.height <- diff(colbins)
-    y.col <- colorscheme(y.pos + 0.5*y.height, x, type = color.type)
+    y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
 
     grid.rect(x = unit(rep(0.5, length(y.pos)), "npc"), y = y.pos,
               height = y.height, default.unit = "native",
-              gp = gpar(fill = y.col, col = y.col),
+              gp = gpar(fill = y.col, col = NULL),
               just = c("centre", "bottom"))
 
-    grid.rect()
+    #Z# if(is.null(ltybins))
+          grid.rect()
+    #Z# else {
+    #Z#   y.pos <- ltybins[-length(ltybins)]
+    #Z#   y.height <- diff(ltybins)
+    #Z#   y.lty <- gpfun(x, y.pos + 0.5*y.height)$lty
+    #Z#   if(is.null(y.lty)) y.lty <- 1
+    #Z#   grid.rect(x = unit(rep(0.5, length(y.pos)), "npc"), y = y.pos,
+    #Z#             height = y.height, default.unit = "native",
+    #Z#             gp = gpar(lty = y.lty),
+    #Z#             just = c("centre", "bottom"))
+    #Z# }
     grid.yaxis(main = FALSE)
-    if(!panel) grid.text("Pearson\nresiduals:", x = 0.1, y = unit(1, "npc") + unit(0.5, "lines"),
-                gp = gpar(fontsize = 10), just = c("left", "bottom"))
+    if(!panel) grid.text("Pearson\nresiduals:", x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
+                gp = gpar(fontsize = 0.8*fontsize), just = c("left", "bottom"))
+    if(!is.null(gp$p.value)) grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
+                x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"), gp = gpar(fontsize = 0.8*fontsize),
+		just = c("left", "top"))
     pop.viewport(3)
   }
   pop.viewport()
@@ -172,27 +169,71 @@ assocpairs <- function(x, margin = 2, ...)
   invisible(x)
 }
 
+gp.binary <- function(observed, residuals, col = 1:2)
+{
+  col <- ifelse(residuals > 0, col[1], col[2])
+  colbins <- sort(c(range(residuals), 0))
+  colbins <- colbins[colbins <= max(residuals) & colbins >= min(residuals)]
+  rval <- list(fill = col, colbins = colbins)
+  class(rval) <- c("vcd.gpar", "gpar")
+  return(rval)
+}
+
+gp.shading <- function(observed, residuals, hue = c(2/3, 0), colbins = c(2, 4),
+                        lty = 1:2, test = NULL, level = 0.95)
+{
+  res <- as.vector(residuals)
+  colbins <- sort(colbins)
+  hue <- ifelse(res > 0, hue[1], hue[2])
+  saturation <- rep(0, length(res)) + ifelse(abs(res) > colbins[1], 0.5, 0) + ifelse(abs(res) > colbins[2], 0.5, 0)
+  if(is.null(test)) value <- 1
+  else (test(observed)$p.value < (1-level))*0.5 + 0.5
+  col <- hsv(hue, saturation, value)
+  dim(col) <- dim(residuals)
+  colbins <- sort(c(range(res), colbins, -colbins, 0))
+  colbins <- colbins[colbins <= max(res) & colbins >= min(res)]
+
+  lty <- ifelse(residuals > 0, lty[1], lty[2])
+  ltybins <- range(res)
+  if(diff(sign(ltybins)) > 0) ltybins <- sort(c(0, ltybins))
+  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins)
+  class(rval) <- c("vcd.gpar", "gpar")
+  return(rval)
+}
+
+gp.signif <- function(observed, residuals, hue = c(230, 330), lty = 1:2, level = c(0.9, 0.99))
+{
+  res <- as.vector(residuals)
+  x.test <- pearson.test(observed, return = TRUE)
+  colbins <- x.test$qdist(sort(level))
+
+  hue <- ifelse(res > 0, hue[1], hue[2])
+
+  ## chroma: 0 / 25 / 75
+  chroma <- ifelse(abs(res) < colbins[1], 0,
+                   ifelse(abs(res) <= colbins[2], 25, 75))
+  ## luminance: 95 / 85 / 70
+  luminance <- ifelse(abs(res) < colbins[1], 95,
+                       ifelse(abs(res) <= colbins[2], 85, 70))
+
+  col <- hcl(hue, chroma, luminance)
+  dim(col) <- dim(residuals)
+  colbins <- sort(c(range(res), colbins, -colbins, 0))
+  colbins <- colbins[colbins <= max(res) & colbins >= min(res)]
+
+  lty <- ifelse(residuals > 0, lty[1], lty[2])
+  ltybins <- range(res)
+  if(diff(sign(ltybins)) > 0) ltybins <- sort(c(0, ltybins))
+  rval <- list(fill = col, lty = lty, colbins = colbins, ltybins = ltybins, p.value = x.test$p.value)
+  class(rval) <- c("vcd.gpar", "gpar")
+  return(rval)
+}
+
+
 colorscheme <- function(residuals, xtab, type = c("Friendly", "Shading", "poly", "data", "significant", "Z"))
 {
     type <- match.arg(type)
     switch(type,
-
-    "Friendly" = {
-      color <- residuals
-      color[color > 0] <- "black"
-      color[color <= 0] <- "red"
-    },
-
-    "Shading" = {
-      colorvec <- c(hsv(0, s = seq(1, to = 0, length = 3)),
-                    hsv(2/3, s = seq(0, to = 1, length = 3)))
-      color <- residuals
-      color[residuals > 4] <- colorvec[6]
-      color[residuals <= -4] <- colorvec[1]
-      color[residuals > -4 & residuals <= -2] <- colorvec[2]
-      color[residuals > -2 & residuals <= 2] <- colorvec[3]
-      color[residuals > 2 & residuals <= 4] <- colorvec[5]
-    },
 
     "poly" = {
       ## val <- 1 - pearson.test(xtab)$p.value
