@@ -130,8 +130,8 @@ test.
 \section{Visualization techniques for 2-way tables} \label{sec:visualization}
 
 The two best known visualization techniques for independence in 2-way tables are
-association plots and mosaic plots. Both are suitable to bring out departure of an
-observed table $(n_{ij})$ from the expected table $(\hat n_{ij})$ in a graphical way.
+association plots and mosaic plots. Both are suitable to bring out
+departures of an observed table $(n_{ij})$ from the expected table $(\hat n_{ij})$ in a graphical way.
 The former focuses on the visualization of the Pearson residuals $r_{ij}$ (under
 independence) while the latter primarily displays the observed frequencies
 $n_{ij}$.
