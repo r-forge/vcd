@@ -11,7 +11,7 @@
         xlim = NULL, ylim = NULL, xpd = TRUE,
         axes = TRUE, axisnames = TRUE,
         cex.axis = par("cex.axis"), cex.names = par("cex.axis"),
-        inside = TRUE, plot = TRUE, axis.lty = 0, shift = 0, \dots)
+        inside = TRUE, plot = TRUE, axis.lty = 0, offset = 0, \dots)
 }
 \arguments{
   \item{height}{either a vector or matrix of values describing the
@@ -83,7 +83,7 @@
   \item{axis.lty}{the graphics parameter \code{lty} applied to the axis
     and tick marks of the categorical (default horzontal) axis.  Note
     that by default the axis is suppressed.}
-  \item{shift}{a vector indicating how much the bars should be
+  \item{offset}{a vector indicating how much the bars should be
     shifted from the x axis.}
   \item{\dots}{further graphical parameters (\code{\link{par}}) are
     passed to \code{\link{plot.window}()}, \code{\link{title}()} and
