@@ -87,31 +87,36 @@ function (formula, data = NULL, ..., subset)
   ## signs of deviations
   sgn <- ex - x < 0
 
+  # margins (hard-coded, argh!)
+  bm <- 0.1
+  lm <- 0.1
+  tm <- 0.15
+  rm <- 0.1
+
   ## box coordinates for expected areas
-  x1 <- c(0, cumsum(cols + margin)[-nc])
+  x1 <- lm + c(0, cumsum(cols + margin)[-nc])
   x2 <- x1 + cols
   xmid <- (x1 + x2) / 2
   
-  y2 <- 1 + (nr - 1) * margin - c(0, cumsum(rows + margin)[-nr])
+  y2 <- bm + 1 + (nr - 1) * margin - c(0, cumsum(rows + margin)[-nr]) 
   y1 <- y2 - rows
   ymid <- (y1 + y2) / 2
 
   ## setup device
-  par(mar = c(5.1, 5.1, 6.1, 3.1))
+  par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
   plot.new()
-  xlim <- c(0, 1 + (nc - 1) * margin)
-  ylim <- c(0, 1 + (nr - 1) * margin)
+  xlim <- c(0, 1 + (nc - 1) * margin + lm + rm)
+  ylim <- c(0, 1 + (nr - 1) * margin + tm + bm)
   par(usr = c(xlim, ylim))
   plot.window(xlim = xlim, ylim = ylim, asp = 1)
   
-  ## title, etc.
-  title(main,
-        xlab = xlab,
-        ylab = ylab,
-        cex.main = cex.main,
-        cex.lab = cex.lab,
-        ...)
+  ## title
+  text(x = xlim[2] / 2, y = ylim[2], labels = main, cex = cex.main)
 
+  ## axis labels
+  text(x = xlim[2] / 2, y = 0, labels = xlab, cex = cex.lab)
+  text(x = 0, y = ylim[2] / 2, labels = ylab, cex = cex.lab, srt = 90)
+  
   ## boxes
   for (i in 1:nr)
     for (j in 1:nc) {
@@ -119,23 +124,21 @@ function (formula, data = NULL, ..., subset)
       ## WRITE LABELS
 
       if (j == 1) { ## y-axis
-        axis(2, at = ymid[i], labels = dimnames(x)[[1]][i], tick = FALSE, ...)
+        text(x = lm - 0.03, y = ymid[i], labels = dimnames(x)[[1]][i], srt = 90, ...)
         ## optionally, write marginal frequencies
         if (values %in%  c("margins","both"))
-          axis(4, at = ymid[i], font = 2,
+          text(x = 1 + nc * margin + lm + 0.03, y = ymid[i], font = 2,
                labels = if (frequencies == "relative") round(rows[i], 2)
-                        else round(rows[i] * n, 1),
-               tick = FALSE, ...)
+                        else round(rows[i] * n, 1), srt = 90, ...)
       }
       if (i == 1) { ## x-axis
-        axis(1 + 2 * values %in% c("margins","both"),
-             at = xmid[j], labels = dimnames(x)[[2]][j], tick = FALSE, ...)
+        text(y = bm - 0.03 + values %in% c("margins","both") * (1 + nr * margin + 0.04),
+             x = xmid[j], labels = dimnames(x)[[2]][j], ...)
         ## optionally, write marginal frequencies
         if (values %in%  c("margins","both"))
-          axis(1, at = xmid[j], font = 2,
+          text(pos = 1, x = xmid[j], y = bm - 0.01, font = 2,
                labels = if (frequencies == "relative") round(cols[j], 2)
-                        else round(cols[j] * n, 1),
-               tick = FALSE, ...)
+                        else round(cols[j] * n, 1), ...)
       }
 
       ## DRAW GRID
