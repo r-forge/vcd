@@ -372,7 +372,7 @@ function(formula, data = NULL, ...,
         if(all(varnames != ".")) {
             ind <- match(varnames, names(dimnames(dat)))
             if (any(is.na(ind)))
-              stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", main))
+              stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", deparse(substitute(data))))
             dat <- margin.table(dat, ind)
           }
         mosaicplot(dat, main = main, ...)
