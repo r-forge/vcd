@@ -14,6 +14,7 @@ function (x,
           border = "black",
           bg = "white",
           pch = 19,
+          cex = 1,
           col = "red",
           main = "ternary plot",
           ...)
@@ -102,11 +103,11 @@ function (x,
   ## plot points
   xp <- x[,2] + x[,3] / 2
   yp <- x[,3] * top
-  points(xp, yp, pch = pch, col = col, ...)
+  points(xp, yp, pch = pch, col = col, cex = cex, ...)
 
   ## plot 
   if (!is.null(id))
-    text (xp, yp, as.character(id), pos = 1, col = id.color)
+    text (xp, yp, as.character(id), pos = 1, offset = 0.5 * cex, col = id.color)
 }
 
 
