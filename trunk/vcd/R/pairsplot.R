@@ -104,8 +104,6 @@ panel.assoc <- function(x, i, j, type, legend = FALSE, axes = TRUE,
         main = NULL,
         pop = TRUE,
         ...)
-  seekViewport("base")
-  popViewport()
 }
 
 panel.mosaic <- function(x, i, j, type, legend = NULL, axes = TRUE,
@@ -123,13 +121,12 @@ panel.mosaic <- function(x, i, j, type, legend = NULL, axes = TRUE,
          shade = shade,
          labeling = labeling,
          margin = margins,
+         legend = legend,
          newpage = FALSE,
          main = NULL,
          pop = TRUE,
          condvars = if (type == "conditional") rest else NULL,
          ...)
-  seekViewport("base")
-  popViewport()
 }
 
 panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {

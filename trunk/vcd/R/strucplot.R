@@ -124,7 +124,7 @@ strucplot <- function(## main parameters
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
-    if (pop) popViewport() #Z# do we need this here? gets popped away anyhow...
+    #if (pop) popViewport() #Z# do we need this here? gets popped away anyhow...
   }
 
   ## titles
@@ -164,6 +164,8 @@ strucplot <- function(## main parameters
   #Z# we need to leave in the viewport in which we entered!!
   #Z# and pop should pop away everything!  
   seekViewport("base") #Z# was: "cell"
+  ## one more up if sandwich-mode
+  if (!is.null(main) || !is.null(sub) || (shade && !is.null(legend))) upViewport()
   if (pop) popViewport() else upViewport()
   #Z# the names of the vcdViewport should probably be less ambigious
   #Z# or maybe concatenated from something else, maybe
@@ -193,10 +195,8 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   vpCornerBR <- viewport(layout.pos.col = 3, layout.pos.row = 3, name = "cornerBR")
 
   if(legend) {
-    vpLegend <- viewport(layout.pos.col = 4,
-      layout.pos.row = 2, name = "legend")
-    vpPval <- viewport(layout.pos.col = 4,
-      layout.pos.row = 3, name = "pval")
+    vpLegend <- viewport(layout.pos.col = 4, layout.pos.row = 2, name = "legend")
+    vpPval <- viewport(layout.pos.col = 4, layout.pos.row = 3, name = "pval")
     vpBase <- viewport(layout.pos.row = 1 + (legend || main),
                        layout = grid.layout(3, 4,
                          widths = unit.c(mar[4],
@@ -245,7 +245,8 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
                  height = unit.c(unit(2, "lines"), unit(1, "npc") - unit(2, "lines"))))
     } else {
       vplist <- vpList(vpPlotregion, vpSub)
-      viewport(layout = grid.layout(2, 1, height = unit.c(unit(1, "npc") - unit(2, "lines"), unit(2, "lines"))))
+      viewport(layout = grid.layout(2, 1,
+                 height = unit.c(unit(1, "npc") - unit(2, "lines"), unit(2, "lines"))))
     }
 
     vpTree(sandwich, vplist)

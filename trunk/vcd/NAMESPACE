@@ -53,6 +53,7 @@ export(
        "birthwt", 
        "pearson.test",
        "ternaryplot",
+       "vcdLegend",
        "woolf.test")
 
 import(MASS)
