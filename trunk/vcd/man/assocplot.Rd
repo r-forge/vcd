@@ -34,6 +34,8 @@ assocplot(x, color = NULL, shade = TRUE, chisq.test = 0.95,
     variable in \code{x} if non-\code{NULL}.}
   \item{ylab}{a label for the y axis.  Defaults to the column names of
     the column variable in \code{x} if non-\code{NULL}.}
+  \item{cex.axis}{The magnification to be used for axis annotation,
+    as a multiple of \code{par("cex")}.}
 }
 \details{
   For a two-way contingency table, the signed contribution to Pearson's
