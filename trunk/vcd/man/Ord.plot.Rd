@@ -57,7 +57,7 @@ J. K. Ord (1967), Graphical methods for a class of discrete distributions,
 \emph{Journal of the Royal Statistical Society}, \bold{A 130}, 232-238.
 
 Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

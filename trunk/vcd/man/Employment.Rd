@@ -27,7 +27,7 @@ and the length of employment before they were laid off.
 E. B. Anderson (1991), \emph{Statistical Analysis of Categorical Data}. Springer-Verlag, Berlin.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 126-129.
@@ -53,6 +53,8 @@ mosaicplot(Employment[,,1], shade = TRUE, main = "Layoff: Closure")
 
 ## Replaced ##
 mosaicplot(Employment[,,2], shade = TRUE, main = "Layoff : Replaced")
+
+par(mfrow=c(1,1))
 }
 
 \keyword{datasets}

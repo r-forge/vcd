@@ -28,7 +28,7 @@ scaled to a common range by dividing each variable by the maximum of the variabl
 
 \references{
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{SAS System for Statistical Graphics, First Edition, P. A2.3}

@@ -31,7 +31,7 @@ B. Thornes & J. Collard (1979), \emph{Who Divorces?}. Routledge
 & Kegan, London.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data:

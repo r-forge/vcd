@@ -25,7 +25,7 @@ data. In K. E. Peace (ed.), \emph{Biopharmaceutical Statistics for Drug Developm
 403-451. Marcel Dekker, New York.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data:

@@ -27,7 +27,7 @@ L. Mersey (1912), Report on the loss of the ``Titanic'' (S. S.).
 Parliamentary command paper 6452.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data:

@@ -38,15 +38,16 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge"
     the weight of the observation.}
   \item{col}{plotting color.}
   \item{main}{main title.}
-  \item{\dots}{additional graphics parameters (see \code{par()})}
+  \item{\dots}{additional graphics parameters (see \code{par})}
 }
 \details{
 A points' coordinates are found by computing the gravity center
 of mass points using the data entries as weights. Thus, the coordinates
 of a point P(a,b,c), \eqn{a + b + c = 1}, are: P(b + c/2, c * sqrt(3)/2).
 }
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+\references{
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr

@@ -20,7 +20,7 @@ oddsratio(x, stratum = NULL, log = TRUE, conf.level = 0.95)
 }
 \value{
   An object of class \code{logoddratio}, which is simply a
-  vector of (log) odds ratios with dimensionality depending on \code{stratum}, along with 
+  vector of (log) odds ratios with dimensionality depending on \code{stratum}, along with
   the following attributes:
   \item{ASE}{a vector with the asymptotic standard errors}
   \item{lwr, upr}{a vector with lower/upper confidence bounds}
@@ -32,8 +32,10 @@ an asymptotic normal distribution.}
     ratios are computed.}
 }
 \note{The \code{summary} method prints the standard errors.}
-\references{Friendly, Michael (2000): Visualizing Categorical Data, SAS
-  Publishing.
+
+\references{
+M. Friendly (2000),
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
   David Meyer\cr

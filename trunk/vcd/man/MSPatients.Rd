@@ -29,7 +29,7 @@ Winnipeg, Manitoba and New Orleans, Lousiana, \emph{American Journal of
 Hygiene}, \bold{57}, 380-396.
 
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 
 \source{Michael Friendly (2000), Visualizing Categorical Data:
@@ -41,6 +41,7 @@ data(MSPatients)
 par(mfrow = c(1,2))
 agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
 agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
+par(mfrow = c(1,1))
 }
 
 \keyword{datasets}

@@ -52,7 +52,7 @@ distributions. In D. C. Hoaglin, F. Mosteller, J. W. Tukey (eds.),
 Wiley & Sons, New York.
 
 Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

@@ -44,7 +44,7 @@ mosaicpairs(x, main = NULL, xlab = NULL, ylab = NULL, labels, \dots,
 
 \references{
 M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Publishing.
+\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \seealso{
   \code{\link{mosaicplot}},
