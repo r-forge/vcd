@@ -1,12 +1,13 @@
-\name{expected}
-\alias{expected}
+\name{indifference.table}
+\alias{indifference.table}
 %- Also NEED an `\alias' for EACH other topic documented here.
-\title{Expected Frequencies Table}
+\title{Indifference Table}
 \description{
-Computes table of expected frequencies from a n-way table.
+  Computes table of expected frequencies (under the null hypotheses of
+  independence) from a n-way table.
 }
 \usage{
-expected(x, frequency = c("absolute", "relative"))
+indifference.table(x, frequency = c("absolute", "relative"))
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -23,8 +24,8 @@ expected(x, frequency = c("absolute", "relative"))
 }
 \examples{
 data(MSPatients)
-expected(MSPatients)
-expected(MSPatients, frequency = "relative")
+indifference.table(MSPatients)
+indifference.table(MSPatients, frequency = "relative")
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{array}% __ONLY ONE__ keyword per line

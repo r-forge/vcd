@@ -1,14 +1,14 @@
-\name{summary.table}
-\alias{summary.table}
-\alias{print.summary.table}
+\name{table2d.summary}
+\alias{table2d.summary}
+\alias{print.table2d.summary}
 %- Also NEED an `\alias' for EACH other topic documented here.
-\title{Summary of a m x n-table}
+\title{Summary of a 2-d - table}
 \description{
-Prints a m x n-contingency table along with percentages, marginal and conditional distributions.
+Prints a 2-d - contingency table along with percentages, marginal and conditional distributions.
 }
 \usage{
-summary.table(object, margins = TRUE, percentages = FALSE,
-        conditionals = c("none", "row", "column"), ...)
+table2d.summary(object, margins = TRUE, percentages = FALSE,
+                conditionals = c("none", "row", "column"), ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -27,10 +27,10 @@ choices (max 3).
   David Meyer\cr
   \email{david.meyer@ci.tuwien.ac.at}
 }
-\seealso{\code{\link{mar.table}}, \code{\link{prop.table}}}
+\seealso{\code{\link{mar.table}}, \code{\link{prop.table}}, \code{\link{indifference.table}}}
 
 \examples{
 data(UCBAdmissions)
-summary(margin.table(UCBAdmissions, 1:2))
+table2d.summary(margin.table(UCBAdmissions, 1:2))
 }
 \keyword{category}% at least one, from doc/KEYWORDS
