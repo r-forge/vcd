@@ -1,6 +1,6 @@
 \name{WomenQueue}
 \alias{WomenQueue}
-\non_function{}
+\docType{data}
 \title{Women in Queues}
 \description{
 Data from Jinkinson & Slater (1981) and Hoaglin & Tukey (1985)

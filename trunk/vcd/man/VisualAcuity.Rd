@@ -1,6 +1,6 @@
 \name{VisualAcuity}
 \alias{VisualAcuity}
-\non_function{}
+\docType{data}
 \title{Visual Acuity in Left and Right Eyes}
 \description{
 Data from Kendall & Stuart (1961) on unaided vision among 3,242 men

@@ -1,7 +1,7 @@
 distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
                      size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
                      line.col = 2, conf.int = TRUE, conf.level = 0.95, main = NULL,
-		     xlab = "Number of occurences", ylab = "Distribution metameter", ...)
+		     xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 {
   if(is.vector(obj)) {
   obj <- table(obj)

@@ -1,6 +1,6 @@
 \name{Saxony}
 \alias{Saxony}
-\non_function{}
+\docType{data}
 \title{Families in Saxony}
 \description{
 Data from Geissler, cited in Sokal & Rholf (1969) and Lindsey (1995)

@@ -1,10 +1,10 @@
 \name{CoalMiners}
 \alias{CoalMiners}
-\non_function{}
-\title{Breathelessness and Wheeze in Coal Miners}
+\docType{data}
+\title{Breathlessness and Wheeze in Coal Miners}
 \description{
 Data from Ashford & Snowden (1970) given by Agresti (1990) on the
-association between two pulmonary conditions, breathelessness and
+association between two pulmonary conditions, breathlessness and
 wheeze, in a large sample of coal miners.
 }
 
@@ -17,7 +17,7 @@ wheeze, in a large sample of coal miners.
   \tabular{rll}{
     No \tab Name \tab Levels \cr
     1 \tab Wheeze \tab W, NoW \cr
-    2 \tab Breathelessness \tab B, NoB \cr
+    2 \tab Breathlessness \tab B, NoB \cr
     3 \tab Age \tab 25-29, 30-34, \dots, 60-64
   }
 }
@@ -46,7 +46,7 @@ summary(l <- oddsratio(CoalMiners))
 g <- seq(25, 60, by = 5)
 plot(l,
      xlab = "Age Group",
-     main = "Breathelessness and Wheeze in Coal Miners")
+     main = "Breathlessness and Wheeze in Coal Miners")
 m <- lm(l ~ g + I(g^2))
 lines(fitted(m), col = "red")
 

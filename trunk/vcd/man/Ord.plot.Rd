@@ -7,7 +7,7 @@ Ord plots for diagnosing discrete distributions.
 }
 \usage{
 Ord.plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,
-         ylim = NULL, xlab = "Number of occurences",
+         ylim = NULL, xlab = "Number of occurrences",
 	 ylab = "Frequency ratio", main = "Ord plot", ...)
 Ord.estimate(x, type = NULL, tol = 0.1)
 }
@@ -34,7 +34,7 @@ Ord.estimate(x, type = NULL, tol = 0.1)
 
 }
 \details{
-The Ord plot plots the number of occurences against a certain
+The Ord plot plots the number of occurrences against a certain
 frequency ratio (see Friendly (2000) for details) and
 should give a straight line if the data comes from
 a poisson, binomial, negative binomial or log-series distribution. The

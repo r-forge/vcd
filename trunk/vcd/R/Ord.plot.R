@@ -1,5 +1,5 @@
 Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
-                     type = NULL, ylim = NULL, xlab = "Number of occurences",
+                     type = NULL, ylim = NULL, xlab = "Number of occurrences",
 		     ylab = "Frequency ratio", main = "Ord plot", ...)
 {
   if(is.vector(obj)) {

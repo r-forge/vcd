@@ -1,6 +1,6 @@
 \name{UKSoccer}
 \alias{UKSoccer}
-\non_function{}
+\docType{data}
 \title{UK Soccer Scores}
 \description{
 Data from Lee (1997), on the goals scored by Home and Away teams

@@ -1,6 +1,6 @@
 \name{WeldonDice}
 \alias{WeldonDice}
-\non_function{}
+\docType{data}
 \title{Weldon's Dice Data}
 \description{
 Data from Pearson (1900) about the frequency of 5s and 6s in throws

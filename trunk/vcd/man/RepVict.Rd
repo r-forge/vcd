@@ -1,6 +1,6 @@
 \name{RepVict}
 \alias{RepVict}
-\non_function{}
+\docType{data}
 \title{Repeat Victimization}
 \description{
 Data from Reiss (1980) given by Fienberg (1980) about

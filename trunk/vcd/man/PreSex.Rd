@@ -1,6 +1,6 @@
 \name{PreSex}
 \alias{PreSex}
-\non_function{}
+\docType{data}
 \title{Pre-marital Sex and Divorce}
 \description{
 Data from Thornes & Collard (1979), reported in Gilbert (1981),
@@ -15,7 +15,7 @@ on pre- and extra-marital sex and divorce.
 
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab MaritalStatus \tab Divorced, Maried \cr
+    1 \tab MaritalStatus \tab Divorced, Married \cr
     2 \tab ExtramaritalSex \tab Yes, No \cr
     3 \tab PremaritalSex \tab Yes, No \cr
     4 \tab Gender \tab Women, Men

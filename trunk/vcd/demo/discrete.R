@@ -9,7 +9,7 @@
 
   data(Federalist)
   barplot(Federalist, col = 2,
-          xlab = "Occurences of 'may'", ylab = "Number of Blocks of Text",
+          xlab = "Occurrences of 'may'", ylab = "Number of Blocks of Text",
           main = "'may' in Federalist papers")
 
   data(WomenQueue)

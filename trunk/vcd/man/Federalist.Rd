@@ -1,6 +1,6 @@
 \name{Federalist}
 \alias{Federalist}
-\non_function{}
+\docType{data}
 \title{`May' in Federalist Papers}
 \description{
 Data from Mosteller & Wallace (1984) investigating the use
@@ -11,7 +11,7 @@ Hamilton, John Jay and James Madison.
 
 \usage{data(Federalist)}
 
-\format{A 1-way table giving the number of occurences
+\format{A 1-way table giving the number of occurrences
         of `may' in 262 blocks of text. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr

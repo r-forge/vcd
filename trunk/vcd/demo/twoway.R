@@ -189,8 +189,8 @@
 
   detach(Hitters)
 
-  ### Lifeboats on Titanic ###
-  ############################
+  ### Lifeboats on the Titanic ###
+  ################################
   data(Lifeboats)
   attach(Lifeboats)
 
@@ -201,7 +201,7 @@
               id  = ifelse(men/total > 0.1, as.character(boat), NA),
               dimnames.position = "edge",
               dimnames = c("Men of Crew", "Men passengers", "Women and Children"),
-              main = "Lifeboats on Titanic"
+              main = "Lifeboats on the Titanic"
               )
   legend(
          0.7, 0.8,
@@ -216,7 +216,7 @@
        col = ifelse(side == "Port", "red", "darkblue"),
        xlab = "Launch Time",
        ylab = "Total loaded",
-       main = "Lifeboats on Titanic"
+       main = "Lifeboats on the Titanic"
        )
   legend(as.POSIXct("1912-04-15 01:48:00"), 70,
          legend = c("SIDE","Port","Starboard"),

@@ -1,6 +1,6 @@
 \name{Suicide}
 \alias{Suicide}
-\non_function{}
+\docType{data}
 \title{Suicide Rates in Germany}
 \description{
 Data from Heuer (1979) on suicide rates in West Germany

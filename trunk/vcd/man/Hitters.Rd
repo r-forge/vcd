@@ -1,6 +1,6 @@
 \name{Hitters}
 \alias{Hitters}
-\non_function{}
+\docType{data}
 \title{Hitters}
 \description{
 This data set is deduced from the \code{\link{Baseball}} fielding data set:

@@ -1,6 +1,6 @@
 \name{HorseKicks}
 \alias{HorseKicks}
-\non_function{}
+\docType{data}
 \title{Death by Horse Kicks}
 \description{
 Data from von Bortkiewicz (1898), given by

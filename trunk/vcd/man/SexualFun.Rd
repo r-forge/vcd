@@ -1,6 +1,6 @@
 \name{SexualFun}
 \alias{SexualFun}
-\non_function{}
+\docType{data}
 \title{Sex Is Fun}
 \description{
 Data from Hout et al. (1987) given by Agresti (1990) summarizing

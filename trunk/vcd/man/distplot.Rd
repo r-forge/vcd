@@ -9,7 +9,7 @@ negative bionomialness plots.
 distplot(obj, type = c("poisson", "binomial", "nbinomial"),
          size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
          line.col = 2, conf.int = TRUE, conf.level = 0.95, main = NULL,
-	 xlab = "Number of occurences", ylab = "Distribution metameter", ...)
+	 xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 }
 \arguments{
   \item{obj}{either a vector of counts, a 1-way table of frequencies
@@ -34,7 +34,7 @@ distplot(obj, type = c("poisson", "binomial", "nbinomial"),
   \item{...}{further arguments passed to \code{\link{plot}}.}
 }
 \details{
-\code{distplot} plots the number of occurences (counts) against the
+\code{distplot} plots the number of occurrences (counts) against the
 distribution metameter of the specified distribution. If
 the distribution fits the data, the plot should show a
 straight line. See Friendly (2000) for details.

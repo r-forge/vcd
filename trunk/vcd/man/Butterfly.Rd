@@ -1,6 +1,6 @@
 \name{Butterfly}
 \alias{Butterfly}
-\non_function{}
+\docType{data}
 \title{Butterfly Species in Malaya}
 \description{
 Data from Fisher et al. (1943) giving the number of tokens found
