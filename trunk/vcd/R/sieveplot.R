@@ -126,13 +126,13 @@ function (formula, data = NULL, ..., subset)
       if (j == 1) { ## y-axis
         text(x = lm - 0.03, y = ymid[i], labels = dimnames(x)[[1]][i], srt = 90, ...)
         ## optionally, write marginal frequencies
-        if (values %in%  c("margins","both"))
+        if (values %in%  c("margins", "both"))
           text(x = 1 + nc * margin + lm + 0.03, y = ymid[i], font = 2,
                labels = if (frequencies == "relative") round(rowFreqs[i], 2)
                         else round(rowFreqs[i] * n, 1), srt = 90, ...)
       }
       if (i == 1) { ## x-axis
-        text(y = bm - 0.03 + values %in% c("margins","both") * (1 + nr * margin + 0.04),
+        text(y = bm - 0.03 + values %in% c("margins", "both") * (1 + nr * margin + 0.04),
              x = xmid[j], labels = dimnames(x)[[2]][j], ...)
         ## optionally, write marginal frequencies
         if (values %in%  c("margins","both"))
@@ -156,9 +156,9 @@ function (formula, data = NULL, ..., subset)
               col = line.color, lty = line.type
               )
         
-      ## OPTIONALLY, WRITE CELL FREQURNCIES
+      ## OPTIONALLY, WRITE CELL FREQUENCIES
 
-      if (values %in% c("cells","both"))
+      if (values %in% c("cells", "both"))
           text(xmid[j], ymid[i],
                if (frequencies == "relative")
                  round((if (type == "sieve") x[i, j] else ex[i, j]) / n, 2)
