@@ -21,14 +21,35 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
     switch(type,
 
     "poisson" = {
+
+      chi2 <- function(x)
+      {
+	p.hat <- dpois(count, lambda = x)
+        expected <- sum(freq) * p.hat
+        sum((freq - expected)^2/expected)
+      }
+
       if(is.null(par)) {
         df <- df - 1
-	lambda <- weighted.mean(count,freq)
-        par <- lambda
+	## ML/MM
+	par1 <- weighted.mean(count,freq)
+	## minChisq
+	chi2opt <- optimize(chi2, range(count))
+	par2 <- chi2opt$minimum
+	statistic <- chi2opt$objective
+        par <- rbind(par1, par2)
+        rownames(par) <- c("ML", "minChisq")
       }
-        else lambda <- par
-      names(par) <- "lambda"
-      p.hat <- dpois(count, lambda)
+      else {
+        if(!is.list(par)) stop("`par' must be a named list")
+        if(!(names(par) == "lambda"))
+	  stop("`par' must specify `lambda'")
+	par <- matrix(par$lambda, ncol = 1)
+	rownames(par) <- "fixed"
+	statistic <- chi2(par[1,1])
+      }
+      colnames(par) <- "lambda"
+      p.hat <- dpois(count, lambda = par[1,1])
     },
 
     "binomial" = {
@@ -36,51 +57,99 @@ goodfit <- function(obj, type = c("poisson", "binomial", "nbinomial"),
         size <- max(count)
         warning("size was not given, taken as maximum count")
       }
+
+      chi2 <- function(x)
+      {
+	p.hat <- dbinom(count, prob = x, size = size)
+        expected <- sum(freq) * p.hat
+        sum((freq - expected)^2/expected)
+      }
+
       if(is.null(par)) {
         df <- df - 1
-	p <- weighted.mean(count/size, freq)
-        par <- p
+        ## ML/MM
+	par1 <- weighted.mean(count/size, freq)
+	## minChisq
+	chi2opt <- optimize(chi2, c(0,1))
+	par2 <- chi2opt$minimum
+	statistic <- chi2opt$objective
+        par <- rbind(par1, par2)
+        rownames(par) <- c("ML", "minChisq")
       }
-        else p <- par
-      names(par) <- "prob"
-      p.hat <- dbinom(count, prob = p, size = size)
+      else {
+        if(!is.list(par)) stop("`par' must be a named list")
+        if(!(names(par) == "prob"))
+	  stop("`par' must specify `prob'")
+	par <- matrix(par$prob, ncol = 1)
+	rownames(par) <- "fixed"
+	statistic <- chi2(par[1,1])
+      }
+      colnames(par) <- "prob"
+      p.hat <- dbinom(count, prob = par[1,1], size = size)
     },
 
+
     "nbinomial" = {
+
+      chi2 <- function(x)
+      {
+	p.hat <- dnbinom(count, size = x[1], prob = x[2])
+        expected <- sum(freq) * p.hat
+        sum((freq - expected)^2/expected)
+      }
+
       if(is.null(par)) {
         df <- df - 2
+
+	## MM
 	xbar <- weighted.mean(count,freq)
 	s2 <- var(rep(count,freq))
 	p <- xbar / s2
 	n <- xbar^2/(s2 - xbar)
-        par <- c(p, n)
+        par1 <- c(n, p)
+
+	## ML
+	require(package = MASS)
+        par <- fitdistr(rep(count, freq), "negative binomial")$estimate
+        par <- par[1]/c(1, sum(par))
+
+	## minChisq
+	chi2opt <- optim(par1, chi2)
+	par2 <- chi2opt$par
+	statistic <- chi2opt$value
+        par <- rbind(par, par2, par1)
+        rownames(par) <- c("ML", "minChisq", "MM")
       } else {
-        p <- par[1]
-	n <- par[2]
+        if(!is.list(par)) stop("`par' must be a named list")
+        if(is.character(all.equal(sum(match(names(par), c("size", "prob"))), 3)))
+	  stop("`par' must specify `prob' and `size'")
+        par <- matrix(c(par$size, par$prob), nrow = 1)
+	rownames(par) <- "fixed"
+	statistic <- chi2(par[1,])
       }
-      names(par) <- c("prob", "size")
-      p.hat <- dnbinom(count, size = n, prob = p)
+      colnames(par) <- c("size", "prob")
+      p.hat <- dnbinom(count, size = par[1,1], prob = par[1,2])
     })
 
     expected <- sum(freq) * p.hat
+
+    statistic <- c(statistic, sum(freq*log(freq/expected)) * 2)
+    names(statistic) <- c("Pearson", "Likelihood Ratio")
+
     RVAL <- list(observed = freq,
                  count = count, fitted = expected,
-		 type = type, df = df, estimate = par)
+		 type = type, df = df, estimate = par,
+		 statistic = statistic)
     class(RVAL) <- "goodfit"
     RVAL
 }
 
 summary.goodfit <- function(object, ...)
 {
-    freq <- object$observed
-    expected <- object$fitted
     df <- object$df
-    chi2 <- sum((freq - expected)^2/expected)
-    G2 <- sum(freq*log(freq/expected)) * 2
-    RVAL <- c(chi2, G2)
-    RVAL <- cbind(RVAL, c(df,df), pchisq(RVAL, df = object$df, lower = FALSE))
+    RVAL <- object$statistic
+    RVAL <- cbind(RVAL, c(df,df), pchisq(RVAL, df = df, lower = FALSE))
     colnames(RVAL) <- c("X^2", "df", "P(> X^2)")
-    rownames(RVAL) <- c("Pearson", "Likelihood Ratio")
 
     cat(paste("\n\t Goodness-of-fit tests for", object$type, "distribution\n\n"))
     print(RVAL)

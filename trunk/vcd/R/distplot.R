@@ -17,7 +17,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
     count <- as.vector(obj[,2])
   }
 
-  par.ml <- goodfit(obj, type = type, size = size)$estimate
+  par.ml <- goodfit(obj, type = type, size = size)$estimate["ML",]
 
   myindex <- (1:length(freq))[freq > 0]
   mycount <- count[myindex]
@@ -52,7 +52,8 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   },
 
   "nbinomial" = {
-    size <- par.ml[2]
+    size <- par.ml[1]
+    par.ml <- par.ml[2]
     phi <- function(nk, k, N, size)
       log(nk) - log(N * choose(size + k - 1, k))
     y <- phi(myfreq, mycount, sum(freq), size = size)
@@ -96,7 +97,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
 
     legend.text <- c(paste("slope =", round(coef(fm)[2], digits = 3)),
                      paste("intercept =", round(coef(fm)[1], digits = 3)),
-		     "", paste(names(par.estim),": mm =", round(par.ml[1], digits=3)),
+		     "", paste(names(par.estim),": ML =", round(par.ml, digits=3)),
 		     legend.text)
     legend(leg.x, leg.y, legend.text, bty = "n")
   }
