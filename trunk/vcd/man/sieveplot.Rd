@@ -68,8 +68,8 @@ sieveplot(tab, type = "expected", values = "both")
 sieveplot(tab)
 
 ## an example for the formula interface:
-data(mtcars)
-sieveplot(~ gear + carb, data = mtcars)
+data(VisualAcuity)
+sieveplot(Freq ~ right + left,  data = VisualAcuity, reverse.y = FALSE)
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{hplot}% __ONLY ONE__ keyword per line
