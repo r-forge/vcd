@@ -41,7 +41,7 @@ panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {
     grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""), y = 0.4)
 }
 
-grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
+grid.mosaicpairs <- function(x, main = NULL,
                              panel.upper = panel.mosaicplot,
                              panel.lower = panel.mosaicplot,
                              panel.diag = panel.text,
@@ -77,6 +77,7 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
   
   d <- length(dim(x))
   l <- grid.layout(d, d)
+  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   push.viewport(viewport(layout = l,
                          height = if (is.null(main)) 1 else 0.9,
                          y = 0, just = "bottom"))
@@ -100,7 +101,7 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
 
       pop.viewport(2)
     }
-  pop.viewport(1)
+  pop.viewport(2)
   invisible(x)
 }
 
@@ -227,14 +228,16 @@ grid.mosaicplot.default <-
       dimnames(x)[[i]] <- substr(dimnames(x)[[i]], 1, abbreviate[i])
   
   ## title
-  if (!panel) grid.newpage()
-  if(!is.null(main)) {
-    grid.text(main,
-              y = unit(1, "npc") - unit(2, "lines"),
-              gp = gpar(fontsize = 1.5 * fontsize))
+  if (!panel)
+    grid.newpage()
+  if(!is.null(main))
     margins[3] <- margins[3] + 3
-  }
+  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   push.viewport(plotViewport(margins))
+  if (!is.null(main))
+    grid.text(main,
+              y = unit(1, "npc") + unit(1, "lines"),
+              gp = gpar(fontsize = 1.5 * fontsize))
 
   ## shading
   if (shade) {
@@ -371,6 +374,7 @@ grid.mosaicplot.default <-
     w <- w - unit(2, "lines");
     h <- h - unit(2, "lines");
   }
+  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   push.viewport(viewport(width = w, height = h))
 
   ## compute coordinates
@@ -433,7 +437,7 @@ grid.mosaicplot.default <-
   }
   
   ## clean up and return
-  pop.viewport(3 + legend)
+  pop.viewport(5 + legend)
   invisible(x)
 }
 
