@@ -24,31 +24,17 @@ sieveplot <- function(x,
   ex <- rows %o% cols * n
   sgn <- ex - x < 0
 
-  nx <- 2 * ncol(x) - 1
-  ny <- 2 * ncol(x) - 1
-
-  ## build index matrix for layout
-  ind <- matrix (0, ny, nx)
-  count <- 0
-  for (j in 1:ny)
-    for (i in 1:nx)
-      if ((i * j) %% 2 > 0)
-        ind[j, i] <- (count <- count + 1)
-
   ## build layout
-  inserts <- function(x, ins) {
-    tmp <- c(sapply(x, function(y) c(y, ins)))
-    tmp[-length(tmp)]
-  }
-
-  layout(ind,
-         widths = inserts(cols, 0.01),
-         heights = inserts(rows, 0.01)
+  layout(matrix(1:(ncol(x) * nrow(x)), ncol(x), nrow(x), byrow=TRUE),
+         widths = cols,
+         heights = rows
          )
 
-  ## title, etc.
+  ## set margins
   par(oma = c(5, 5, 10, 5),
-      mar = c(0, 0, 0, 0))
+      mar = c(0.2, 0.2, 0.2, 0.2))
+
+  ## title, etc.
   plot.new()
   title(title,
         xlab = names(dimnames(x))[2],
