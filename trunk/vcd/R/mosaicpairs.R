@@ -4,14 +4,14 @@
            shade = FALSE, oma = NULL, cex.labels = NULL, label.pos = 0.5,
 	   font.labels = 1, gap = 1)
   {
-    
-    
+
+
     type <- match.arg(type)
     nc<-length(dim(x))
     index<-1:length(dim(x))
     if (nc < 2)
       stop("dimensions less than 2 in the argument to mosaicpairs")
-    
+
     if (missing(labels)) {
       labels <-  names(dimnames(x))
       if (is.null(labels))
@@ -23,16 +23,16 @@
         oma[3] <- 6
     }
 
-    
-    
+
+
     opar <- par(mfrow = c(nc, nc), mar = rep(gap/2, 4),oma=oma)
     on.exit(par(opar))
-    
+
     for (i in 1:nc)
       for (j in 1:nc) {mfg <- par("mfg")
-                       if (i == j) { 
-                         
-                         plot(1,type="n",axes=F, xlab = "", ylab = "");
+                       if (i == j) {
+
+                         plot(1,type = "n",axes = FALSE, xlab = "", ylab = "");
                          par(usr = c(0, 1, 0, 1))
                          if (is.null(cex.labels)) {
                            l.wid <- strwidth(labels, "user")
@@ -41,17 +41,17 @@
                          text(0.5, label.pos, labels[i], cex = cex.labels, font = font.labels);
                          box();
                        }
-                       else 
-                         
+                       else
+
                          {
                            switch(type,
                                   simple = mosaicplot(margin.table(x,c(j,i)),shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),
                                   independent = mosaicplot(x,shade=shade,clegend=FALSE, xlab="",ylab="",cex=1 ),
                                   conditional = mosaicplot(margin.table(x,c(j,i,index[!index%in%c(j,i)])), shade=shade,margin=list(c(j,index[!index%in%c(j,i)]),c(i,index[!index%in%c(j,i)])), clegend=FALSE, xlab="",ylab="",cex=1.2 )
                                   )
-                           
+
                          }
-                     }	
+                     }
 
  if (!is.null(main))
         mtext(main, 3, 3, TRUE, 0.5, cex = 2)
