@@ -120,6 +120,16 @@ function(x,
     }
 }
 
+"confint.oddsratio" <-
+function(object, parm, level = 0.95, ...) {
+  ASE <- attr(object, "ASE")
+  LOG <- attr(object, "log")
+  I <- ASE * qnorm((1 + level) / 2)
+  cbind(
+        lwr = if (LOG) object - I else exp(log(object) - I),
+        upr = if (LOG) object + I else exp(log(object) + I)
+        )
+}
 
 
 

@@ -234,6 +234,18 @@ print.summary.Kappa <- function (x, ...) {
   invisible(x)
 }
 
+confint.Kappa <- function(object, parm, level = 0.95, ...) {
+  q <- qnorm((1 + level) / 2)
+  matrix(c(object[[1]][1] - object[[1]][2] * q,
+           object[[1]][1] + object[[1]][2] * q,
+           object[[2]][1] - object[[2]][2] * q,
+           object[[2]][1] + object[[2]][2] * q),
+         nc = 2, byrow = T, 
+         dimnames = list(Kappa = c("Unweighted","Weighted"), c("lwr","upr"))
+         )
+}
+
+
 independence.table <- function(x, frequency = c("absolute", "relative")) {
   if (!is.array(x))
     stop("Need array of absolute frequencies!")
