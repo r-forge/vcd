@@ -16,7 +16,7 @@ mosaicplot <- function(x, ...) UseMethod("mosaicplot")
 mosaicplot.default <-
 function(x, main = deparse(substitute(x)), sub = NULL, xlab = NULL,
          ylab = NULL, sort = NULL, off = NULL, dir = NULL,
-         color = FALSE, shade = FALSE, margin = NULL,
+         color = FALSE, shade = !(is.null(residuals) && is.null(margin)), margin = NULL,
          cex.axis = 0.66, las = par("las"), clegend = TRUE, 
          type = c("pearson", "deviance", "FT"), residuals = NULL, ...)
 {
@@ -369,9 +369,12 @@ function(formula, data = NULL, ...,
        || length(dim(edata)) > 2) {
         dat <- as.table(data)
         varnames <- attr(terms(formula), "term.labels")
-        if(all(varnames != "."))
-            dat <- margin.table(dat,
-                                 match(varnames, names(dimnames(dat))))
+        if(all(varnames != ".")) {
+            ind <- match(varnames, names(dimnames(dat)))
+            if (any(is.na(ind)))
+              stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", main))
+            dat <- margin.table(dat, ind)
+          }
         mosaicplot(dat, main = main, ...)
     }
     else {
