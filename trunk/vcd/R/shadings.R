@@ -1,8 +1,7 @@
-gp.HSVshading <- function(observed, residuals,
-                          hue = c(2/3, 0), saturation = c(1, 0), value = c(1, 0.5),
+gp.HSVshading <- function(hue = c(2/3, 0), saturation = c(1, 0), value = c(1, 0.5),
                           interpolate = c(2, 4), lty = 1:2,
                           test = chisq.test, level = 0.95)
-{
+function(observed, residuals) {
   res <- as.vector(residuals)
 
   my.h <- rep(hue, length.out = 2)        ## positive and negative hue
@@ -59,11 +58,10 @@ gp.HSVshading <- function(observed, residuals,
   return(rval)
 }
 
-gp.HCLshading <- function(observed, residuals,
-                          hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
+gp.HCLshading <- function(hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
                           interpolate = c(2, 4), lty = 1:2,
                           test = chisq.test, level = 0.95)
-{
+function(observed, residuals) {
   res <- as.vector(residuals)
 
   my.h <- rep(hue, length.out = 2)       ## positive and negative hue
@@ -122,30 +120,23 @@ gp.HCLshading <- function(observed, residuals,
   return(rval)
 }
 
-gp.Friendly <- function(observed, residuals,
-                        hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), fuzz = 0.05)
-{
-  rval <- gp.HSVshading(observed, residuals, hue = hue, value = 1, lty = lty, interpolate = interpolate, test = NULL)
-  #Z# rval$col <- ifelse(rval$lty > 1, hsv(hue[2], 1, 1), hsv(hue[1], 1, 1)) ## as in VCD book
-  #Z# rval$col <- ifelse(abs(residuals) > fuzz, rval$col, hsv(0, 1, 0))      ## with FUZZ
-  #Z# rval$lty <- ifelse(abs(residuals) > fuzz, rval$lty, 1)                 ## with FUZZ
-  return(rval)
-}
+gp.Friendly <- function(hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
+  gp.HSVshading(hue = hue, value = 1,
+                lty = lty, interpolate = interpolate, test = NULL)
 
-gp.max <- function(observed, residuals,
-                   hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
+gp.max <- function(hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
                    interpolate = c(2, 4), lty = 1, level = c(0.9, 0.99), n = 1000)
-{
+function(observed, residuals) {
   obs.test <- pearson.test(observed, n = n, return.distribution = TRUE)
   col.bins <- obs.test$qdist(sort(level))
-  rval <- gp.HCLshading(observed, residuals, hue = hue, chroma = chroma, luminance = luminance,
-                        interpolate = col.bins, lty = lty, test = NULL)
+  rval <- gp.HCLshading(hue = hue, chroma = chroma, luminance = luminance,
+                        interpolate = col.bins, lty = lty, test = NULL)(observed, residuals)
   rval$p.value <- obs.test$p.value
   return(rval)
 }
 
-gp.binary <- function(observed, residuals, col = 1:2)
-{
+gp.binary <- function(col = 1:2)
+function(observed, residuals) {
   fill <- ifelse(residuals > 0, col[1], col[2])
   col.bins <- sort(c(range(residuals), 0))
   col.bins <- col.bins[col.bins <= max(residuals) & col.bins >= min(residuals)]
@@ -161,7 +152,5 @@ gp.binary <- function(observed, residuals, col = 1:2)
   return(rval)
 }
 
-gp.Z <- function(observed, residuals)
-{
-  gp.HCLshading(observed, residuals, hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
-}
+gp.Z <- gp.HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
+

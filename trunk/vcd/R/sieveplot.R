@@ -1,7 +1,7 @@
-"grid.sieveplot" <- function (x, ...)
-  UseMethod ("grid.sieveplot")
+"sieveplot" <- function (x, ...)
+  UseMethod ("sieveplot")
 
-"grid.sieveplot.formula" <-
+"sieveplot.formula" <-
 function (formula, data = NULL, ..., subset) 
 {
     m <- match.call(expand.dots = FALSE)
@@ -44,7 +44,7 @@ function (formula, data = NULL, ..., subset)
       }
 }
 
-"grid.sieveplot.default" <-
+"sieveplot.default" <-
   function(x,
            reverse.y = TRUE,
            type = c("sieve","expected"),
