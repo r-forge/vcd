@@ -124,7 +124,7 @@ strucplot <- function(## main parameters
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
-    if (pop) popViewport()
+    if (pop) popViewport() #Z# do we need this here? gets popped away anyhow...
   }
 
   ## titles
@@ -160,8 +160,15 @@ strucplot <- function(## main parameters
   if (!is.null(labeling)) labeling(dn, split.vertical, condvars)
 
   ## pop/move up viewport
-  seekViewport("cell")
-  if (pop) popViewport()
+
+  #Z# we need to leave in the viewport in which we entered!!
+  #Z# and pop should pop away everything!  
+  seekViewport("base") #Z# was: "cell"
+  if (pop) popViewport() else upViewport()
+  #Z# the names of the vcdViewport should probably be less ambigious
+  #Z# or maybe concatenated from something else, maybe
+  #Z#   deparse(substitute(x))
+  #Z# or something like that.
 }
 
 vcdViewport <- function(mar = rep.int(2.5, 4),
