@@ -30,7 +30,7 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
     if \code{type} is \code{"binomial"} it is taken to be the maximum count.}
   \item{object}{an object of class \code{"goodfit"}.}
   \item{newcount}{a vector of counts. By default the counts stored in \code{object}
-    are used, i.e. the fitted values are computed. These can also be
+    are used, i.e., the fitted values are computed. These can also be
     extracted by \code{fitted(object)}.}
   \item{\dots}{\emph{currently not used}.}
 }
