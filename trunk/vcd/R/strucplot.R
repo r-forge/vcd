@@ -1,4 +1,4 @@
-#######################################################################
+########################################################################
 ### strucplot - generic plot framework for mosaic-like layouts
 ### 2 panel functions are provided: panel.mosaicplot and panel.assocplot
 ########################################################################

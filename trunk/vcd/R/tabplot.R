@@ -92,9 +92,10 @@ tabplot.default <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE
 tplot <- function(x,
                   indep = NULL,
 		  cond = NULL,
-                  panel = function(x, ...) mosaic(x, newpage = FALSE, legend = NULL, gp = NULL, pop = FALSE, ...),
+                  panel = function(x, ...) mosaic(x, newpage = FALSE, legend = NULL, gp = NULL, pop = TRUE, ...),
 		  margins = rep(1, 4),
-		  fontsize = 12,
+		  text.gp = gpar(fontsize = 12),
+		  pop = TRUE,
 		  ...)
 {
   grid.newpage()
@@ -121,6 +122,14 @@ tplot <- function(x,
   cond.dnam <- dimnames(x)[cond.num]
   cond.char <- names(cond.dnam)
 
+  ## only for coindep.plot!!
+  indep.formula <- as.formula(paste("~ (",
+                                    paste(ind.char, collapse = " + "),
+				    ") * ",
+				    paste(cond.char, collapse = " * "),
+				    sep = ""))
+  fm <- loglm(indep.formula, data = x, fitted = TRUE)
+  ## expected
   xx <- co.table(x, cond.num)
 
   cond.nlevels <- sapply(cond.dnam, length)
@@ -154,26 +163,25 @@ tplot <- function(x,
 	name = name)
 
   for(i in 1:nrow(condition)) {
-    condi <- paste(cond.char, " = \"", condition[i,], "\"", sep = "", collapse = ", ") #Z# or \n
+    tabi <- xx[[i]]
     condistr <- paste(cond.char, condition[i,], sep = " = ")
 
-    tabi <- xx[[i]]
-
     pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
-    pushViewport(cellport(paste("cell", i, sep = "")))
-    pushViewport(viewport(layout.pos.row = 1, name = paste("lab", i, sep = "")))
+    pushViewport(cellport(paste("cell", paste(condition[i,], collapse = "."), sep = ".")))
+    pushViewport(viewport(layout.pos.row = 1, name = paste("lab", paste(condition[i,], collapse = "."), sep = ".")))
     grid.rect(gp = gpar(fill = grey(0.9)))
-    grid.text(condistr, y = cond.n:1/cond.n - 1/(2*cond.n)) #Z# , gp = gpar(fontsize = fontsize))
+    grid.text(condistr, y = cond.n:1/cond.n - 1/(2*cond.n), gp = text.gp)
     grid.segments(0, 0:cond.n/cond.n, 1, 0:cond.n/cond.n)
     upViewport()
 
-    pushViewport(viewport(layout.pos.row = 2, name = paste("plot", i, sep = "")))
+    pushViewport(viewport(layout.pos.row = 2, name = paste("plot", paste(condition[i,], collapse = "."), sep = ".")))
     panel(tabi, ...)
     upViewport(2)
     grid.rect()
     upViewport()
   }
   upViewport()
+  if(pop) popViewport() else upViewport()
   }
 
   invisible(x)
