@@ -3,7 +3,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
          conf.level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
          space = 0.2, main = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
-         ticks = 0.2, p.adjust.method = p.adjust.methods, panel = FALSE)
+         ticks = 0.15, p.adjust.method = p.adjust.methods, panel = FALSE,
+         fontsize = 12)
 {
     ## Code for producing fourfold displays.
     ## Reference:
@@ -139,8 +140,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     }
 
     gamma <- 1.25                       # Scale factor for strata labels
-    debug <- FALSE                      # Visualize the geometry.
-                                        # Not settable by user!
+
     angle.f <- c( 90, 180,  0, 270)     # `f' for `from'
     angle.t <- c(180, 270, 90, 360)     # `t' for `to'
 
@@ -175,13 +175,14 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         nr * (2 + (2 + gamma) * space) + (nr - 1) * space
     xlim <- c(0, totalWidth)
     ylim <- c(0, totalHeight)
-#    plot.new()
-#    plot.window(xlim = xlim, ylim = ylim, asp = 1)
-    if (!panel) grid.newpage()
+    if (!panel)
+      grid.newpage()
     if (!is.null(main))
       push.viewport(viewport(height = 0.9, width = 0.9, y = 0.45))
                   
-    push.viewport(viewport(xscale = xlim, yscale = ylim))
+    push.viewport(viewport(xscale = xlim, yscale = ylim,
+                           width = unit(min(totalWidth / totalHeight, 1), "snpc"),
+                           height = unit(min(totalHeight / totalWidth, 1), "snpc")))
     o <- odds(x)
 
     ## perform logoddsratio-test for each stratum (H0: lor = 0) and adjust p-values
@@ -193,10 +194,11 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                              method = p.adjust.method
                              )
     
-#    scale <- space / (2 * strheight("Ag"))
     scale <- space / (2 * convertNative(unit(1, "strheight", "Ag")))
     v <- 0.95 - max(convertNative(unit(1, "strwidth", as.character(c(x))))) / 2
 
+    fontsize = fontsize * scale
+    
     for(i in 1 : k) {
 
         tab <- x[ , , i]
@@ -213,14 +215,6 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
              - (2 * yInd - 1 + ((3 + gamma) * yInd - 2) * space))
         push.viewport(viewport(xscale = xlim - xOrig, yscale = ylim - yOrig))
 
-#        if(debug) {
-#            abline(h = -1 - space)
-#            abline(h =  1 + space)
-#            abline(h =  1 + (1 + gamma) * space)
-#            abline(v = -1 - space)
-#            abline(v =  1 + space)
-#        }
-
         ## drawLabels()
         u <- 1 + space / 2
         adjCorr <- 0.2
@@ -229,9 +223,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                         dimnames(x)[[1]][1],
                         sep = ": "),
                   0, u,
-#             adj = c(0.5, 0.5 - adjCorr),
-#             cex = scale
-                  gp = gpar(fontsize = 20),
+                  gp = gpar(fontsize = fontsize),
                   default.units = "native"
              )
         grid.text(
@@ -239,19 +231,15 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                         dimnames(x)[[2]][1],
                         sep = ": "),
                   -u, 0,
-#             adj = c(0.5, 0.5 - adjCorr),
-#             cex = scale,
                   default.units = "native",
-                  gp = gpar(fontsize = 20),
+                  gp = gpar(fontsize = fontsize),
                   rot = 90)
         grid.text(
                   paste(names(dimnames(x))[1],
                         dimnames(x)[[1]][2],
                         sep = ": "),
                   0, -u,
-#             adj = c(0.5, 0.5 + adjCorr),
-#             cex = scale
-                  gp = gpar(fontsize = 20),
+                  gp = gpar(fontsize = fontsize),
                   default.units = "native"
              )
         grid.text(
@@ -259,10 +247,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                         dimnames(x)[[2]][2],
                         sep = ": "),
                   u, 0,
-#             adj = c(0.5, 0.5 + adjCorr),
-#             cex = scale,
                   default.units = "native",
-                  gp = gpar(fontsize = 20),
+                  gp = gpar(fontsize = fontsize),
                   rot = 90)
         if (k > 1) {
             grid.text(
@@ -270,9 +256,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
                             dimnames(x)[[3]][i],
                             sep = ": "),
                       0, 1 + (1 + gamma / 2) * space,
-                      gp = gpar(fontsize = 20),
+                      gp = gpar(fontsize = fontsize * gamma),
                       default.units = "native"
-#                 cex = gamma * scale)
                       )
           }
 
@@ -288,16 +273,29 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         drawPie(sqrt(fit[2,1]), 180, 270, col = color[2 - (d > 1) + emphasize])
         drawPie(sqrt(fit[1,2]),   0,  90, col = color[2 - (d > 1) + emphasize])
         drawPie(sqrt(fit[2,2]), 270, 360, col = color[1 + (d > 1) + emphasize])
-        u <- 1 - space / 2
-        grid.text(
-                  as.character(c(tab)),
-                  c(-v, -v,  v,  v),
-                  c( u, -u,  u, -u),
-#             cex = scale)
-                  gp = gpar(fontsize = 20),
-                  default.units = "native"
-             )
 
+        u <- 1 - space / 2
+        grid.text(as.character(c(tab))[1],
+                  -v, u,
+                  just = c("left", "top"),
+                  gp = gpar(fontsize = fontsize),
+                  default.units = "native")
+        grid.text(as.character(c(tab))[2],
+                  -v, -u,
+                  just = c("left", "bottom"),
+                  gp = gpar(fontsize = fontsize),
+                  default.units = "native")
+        grid.text(as.character(c(tab))[3],
+                  v, u,
+                  just = c("right", "top"),
+                  gp = gpar(fontsize = fontsize),
+                  default.units = "native")
+        grid.text(as.character(c(tab))[4],
+                  v, -u,
+                  just = c("right", "bottom"),
+                  gp = gpar(fontsize = fontsize),
+                  default.units = "native")
+        
         ## draw ticks
         if(extended && ticks)
           if(d > 1) {

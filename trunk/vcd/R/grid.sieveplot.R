@@ -90,18 +90,21 @@ function (formula, data = NULL, ..., subset)
   sgn <- ex - x < 0
 
   if (!panel) grid.newpage()
-  if(!is.null(main)) {
+  if(!is.null(main))
     margins[2] <- margins[2] + 2
-    grid.text(main, y = unit(0.98, "npc"),
-              gp = gpar(fontsize = 25))
-  }
   
   if (values %in% c("margins","both")) {
     margins[3] <- margins[3] + 1
     margins[4] <- margins[4] + 1
   }
+  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
   push.viewport(plotViewport(margins))
 
+  if(!is.null(main))
+     grid.text(main, y = unit(1.1, "npc"),
+               gp = gpar(fontsize = 25))
+
+  
   ## box coordinates for expected areas
   x1 <- c(0, cumsum(colFreqs + margin)[-nc])
   x2 <- x1 + colFreqs
