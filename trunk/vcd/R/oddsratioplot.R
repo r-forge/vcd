@@ -42,9 +42,9 @@ function (x, stratum = NULL, log = TRUE, conf.level = 0.95) {
 "print.oddsratio" <-
 function(x, ...) {
   if (length(dim(x)) > 1)
-    print(cbind(unclass(x)))
+    print(cbind(unclass(x)), ...)
   else
-    print(c(x))
+    print(c(x), ...)
   invisible(x)
 }
 
@@ -73,11 +73,11 @@ function(x, ...) {
   if(!is.null(attr(x, "log"))) {
     cat("\n")
     cat(if(attr(x, "log")) "Log Odds Ratio(s):" else "Odds Ratio(s):", "\n\n")
-    print.oddsratio(x)
+    print.oddsratio(x, ...)
     cat("\nAsymptotic Standard Error(s):\n\n")
-    print(attr(x, "ASE"))
+    print(attr(x, "ASE"), ...)
     cat("\n")
-  } else print(unclass(x))
+  } else print(unclass(x), ...)
   invisible(x)
 }
 
