@@ -31,7 +31,7 @@ choices (max 3).
 \seealso{\code{\link{mar.table}}, \code{\link{prop.table}}}
 
 \examples{
-data(UCBadmissions)
+data(UCBAdmissions)
 Summary(margin.table(UCBAdmissions, c(1,2)))
 }
 \keyword{category}% at least one, from doc/KEYWORDS

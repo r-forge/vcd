@@ -30,7 +30,7 @@ plot.oddsratio(x, confidence = TRUE,
   \email{david.meyer@ci.tuwien.ac.at}
 }
 
-\seealso{\code{\link{logoddsratio}}}
+\seealso{\code{\link{oddsratio}}}
 
 \examples{
 data(CoalMiners)
