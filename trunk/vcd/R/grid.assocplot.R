@@ -9,7 +9,6 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
                            scale = 0.4, margin = 5, rot = 90, check.overlap = TRUE,
 			   show.grid = FALSE, panel = FALSE)
 {
-  require(MASS)
   require(grid)
 
   if(is.null(dimnames(x))) dimnames(x) <- list(rep("", ncol(x)), rep("", nrow(x)))
@@ -19,14 +18,21 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
     if(is.null(ylab)) ylab <- ""
   }
 
+  ## This could be used to fit more complex models:
+  ## require(MASS)
+  ## if(is.null(model.formula))
+  ##   model.formula <- as.formula(paste("~ ", paste(names(dimnames(x)), collapse = " + "), sep = " "))
+  ## x.fit <- loglm(model.formula, data = x, fit = TRUE)
+  ## expctd <- fitted(x.fit)
+  ## res <- residuals(x.fit, type = "pearson")
+
+
   ## independence model fitting
-  if(is.null(model.formula))
-    model.formula <- as.formula(paste("~ ", paste(names(dimnames(x)), collapse = " + "), sep = " "))
-  x.fit <- loglm(model.formula, data = x, fit = TRUE)
-  expctd <- fitted(x.fit)
-  x <- x
+  rowTotals <- rowSums(x)
+  colTotals <- colSums(x)
+  expctd <- rowTotals %o% colTotals / sum(colTotals)
   sexpctd <- sqrt(expctd)
-  res <- residuals(x.fit, type = "pearson")
+  res <- (x - expctd) / sexpctd
 
   ## Transposing - why??
   if(transpose)
@@ -55,7 +61,7 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
   y.pos.matrix <- matrix(rep(rev(y.pos), ncols), ncol = ncols)
   cell.height <- res
   cell.width <- sexpctd
-  cell.col <- colorscheme(res, type = color.type)
+  cell.col <- colorscheme(res, x, type = color.type)
 
   if(!panel) grid.newpage()
 
@@ -105,11 +111,11 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
 
     if(is.null(colbins)) {
       if(color.type == "Friendly") colbins <- c(min(res), 0, max(res))
-      if(color.type == "Shading") {
+      else if(color.type == "Shading") {
         colbins <- c(min(res), -4, -2, 2, 4, max(res))
 	colbins <- colbins[colbins >= min(res) & colbins <= max(res)]
       }
-      if(color.type == "CI") colbins <- 200
+      else colbins <- 200
     }
     if(length(colbins) == 1) {
       colbins <- floor(colbins) - 1
@@ -118,7 +124,7 @@ grid.assocplot.default <- function(x, xlab = NULL, ylab = NULL, main = NULL,
 
     y.pos <- colbins[-length(colbins)]
     y.height <- diff(colbins)
-    y.col <- colorscheme(y.pos + 0.5*y.height, type = color.type)
+    y.col <- colorscheme(y.pos + 0.5*y.height, x, type = color.type)
 
     grid.rect(x = unit(rep(0.5, length(y.pos)), "npc"), y = y.pos,
               height = y.height, default.unit = "native",
@@ -169,7 +175,7 @@ assocpairs <- function(x, margin = 2, ...)
   invisible(x)
 }
 
-colorscheme <- function(residuals, type = c("Friendly", "Shading", "CI"))
+colorscheme <- function(residuals, xtab, type = c("Friendly", "Shading", "poly", "data", "significant", "Z"))
 {
     type <- match.arg(type)
     switch(type,
@@ -191,13 +197,40 @@ colorscheme <- function(residuals, type = c("Friendly", "Shading", "CI"))
       color[residuals > 2 & residuals <= 4] <- colorvec[5]
     },
 
-    "CI" = {
+    "poly" = {
+      ## val <- 1 - pearson.test(xtab)$p.value
       color <- residuals
       critval <- 4
       residuals[residuals > critval] <- critval
       residuals[residuals < -critval] <- -critval
-      color[residuals > 0] <- hsv(h = 2/3, s = residuals[residuals > 0]/critval, v = 1)
-      color[residuals <= 0] <- hsv(h = 0, s = -residuals[residuals <= 0]/critval, v = 1)
+      color[residuals > 0] <- hsv(h = 2/3, s = (residuals[residuals > 0]/critval)^2, v = 1)
+      color[residuals <= 0] <- hsv(h = 0, s = (-residuals[residuals <= 0]/critval)^2, v = 1)
+    },
+
+    "data" = {
+      x.test <- pearson.test(xtab, return = TRUE)
+      color <- residuals
+      color[residuals > 0] <- hsv(h = 2/3, s = sapply(residuals[residuals > 0], x.test$pdist), v = 1)
+      color[residuals <= 0] <- hsv(h = 0, s = sapply(-residuals[residuals <= 0], x.test$pdist), v = 1)
+    },
+
+    "significant" = {
+      x.test <- pearson.test(xtab, return = TRUE)
+      color <- residuals
+      critval <- x.test$qdist(0.95)
+      color[abs(residuals) < critval] <- "#FFFFFF"
+      color[residuals >= critval] <- hcl(h = 230, chroma = 55, luminance = 75)
+      color[residuals <= -critval] <- hcl(h = 330, chroma = 55, luminance = 75)
+    },
+
+    "Z" = {
+      x.test <- pearson.test(xtab, return = TRUE)
+      color <- residuals
+      critval <- 4 ## xtab.test$qdist(0.99)
+      residuals[residuals > critval] <- critval
+      residuals[residuals < -critval] <- -critval
+      color[residuals > 0] <- hcl(230, chroma = (residuals[residuals > 0]/critval)*100, luminance = (residuals[residuals > 0]/critval)*75, correct = TRUE)
+      color[residuals <= 0] <- hcl(330, chroma = (-residuals[residuals <= 0]/critval)*100, luminance = (-residuals[residuals <= 0]/critval)*75, correct = TRUE)
     })
 
     return(color)
