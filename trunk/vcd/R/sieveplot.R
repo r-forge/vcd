@@ -1,12 +1,42 @@
-sieveplot <- function(x,
-                      reverse.y = TRUE,
-                      type = c("sieve","expected"),
-                      title = NULL,
-                      values = c("none", "cells", "margins", "both"),
-                      frequencies = c("absolute", "relative"),
-                      cex.main = 3,
-                      cex.lab = 2,
-                      ...) {
+"sieveplot" <- function (x, ...)
+  UseMethod ("sieveplot")
+
+"sieveplot.formula" <-
+function (formula, data = NULL, ..., subset) 
+{
+    m <- match.call(expand.dots = FALSE)
+    edata <- eval(m$data, parent.frame())
+    if (inherits(edata, "ftable") || inherits(edata, "table")) {
+        data <- as.table(data)
+        varnames <- attr(terms(formula), "term.labels")
+        if (all(varnames != ".")) 
+            data <- margin.table(data, match(varnames, names(dimnames(data))))
+        sieveplot(data, ...)
+    }
+    else {
+        if (is.matrix(edata)) 
+            m$data <- as.data.frame(data)
+        m$... <- NULL
+        m[[1]] <- as.name("model.frame")
+        mf <- eval(m, parent.frame())
+        sieveplot(table(mf), ...)
+    }
+}
+
+"sieveplot.default" <-
+  function(x,
+           reverse.y = TRUE,
+           type = c("sieve","expected"),
+           title = NULL,
+           values = c("none", "cells", "margins", "both"),
+           frequencies = c("absolute", "relative"),
+           cex.main = 3,
+           cex.lab = 2,
+           ...)
+{
+  if (length(dim(x)) > 2)
+    stop ("Function only implemented for two-way tables")
+  
   type <- match.arg(type)
   values <- match.arg(values)
   frequencies <- match.arg(frequencies)
