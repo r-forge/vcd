@@ -43,7 +43,7 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 }
 \author{David Meyer\cr
 \email{david.meyer@ci.tuwien.ac.at}}
-\seealso{\code{\link{agreementplot}}, \code{\link{confint.Kappa}}}
+\seealso{\code{\link{agreementplot}}, \code{\link{confint}}}
 \examples{
 data(SexualFun)
 Kappa(SexualFun)

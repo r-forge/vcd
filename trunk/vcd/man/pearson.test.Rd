@@ -8,13 +8,18 @@
   conditional the marginals of the input table.
 }
 \usage{
-pearson.test(x, n = 1000, FUN = function(x) max(abs(x)), return.distribution = TRUE)
+pearson.test(x, n = 1000, FUN = function(x) max(abs(x)), alternative =
+c("greater","less"), conf.level = 0.95, return.distribution = TRUE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a 2d-contingency table}
   \item{n}{Number of independence tables to be drawn}
   \item{FUN}{Test statistic to be applied to all tables}
+  \item{alternative}{a character string specifying the alternative hypothesis,
+    must be one \code{"greater"} (default) or \code{"less"}.
+    You can specify just the initial letter.}
+  \item{conf.level}{currently not used}
   \item{return.distribution}{If \code{TRUE}, the simulated distribution
     of \code{FUN} under the null is returned}
 }

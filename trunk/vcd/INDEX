@@ -26,7 +26,6 @@ agreementplot.default   Bangdiwala's Observer Agreement Chart
 assoc.stats             Association Statistics
 assocplot               Extended Association Plots
 barplot                 Bar Plots
-confint                 Confidence Intervals
 distplot                Diagnostic distribution plots
 fourfoldplot            Fourfold Plots
 goodfit                 Goodness-of-fit tests for discrete data
