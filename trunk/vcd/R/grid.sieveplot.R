@@ -97,8 +97,8 @@ function (formula, data = NULL, ..., subset)
     margins[3] <- margins[3] + 1
     margins[4] <- margins[4] + 1
   }
-  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
   push.viewport(plotViewport(margins))
+  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
 
   if(!is.null(main))
      grid.text(main, y = unit(1.1, "npc"),
@@ -122,7 +122,8 @@ function (formula, data = NULL, ..., subset)
   js <- 1:nc
   
   ## labels
-  grid.text(dimnames(x)[[1]][is], x = -0.03, y = ymid[is], rot = 90, ...)
+  grid.text(dimnames(x)[[1]][is], x = -0.03, y = ymid[is],
+            rot = 90, check.overlap = TRUE, ...)
   
   ## optionally, write marginal frequencies
   if (values %in%  c("margins", "both"))
@@ -134,7 +135,7 @@ function (formula, data = NULL, ..., subset)
   
   grid.text(dimnames(x)[[2]][js], x = xmid[js], 
             y = -0.03 + values %in% c("margins", "both") *
-            (1 + nr * margin + 0.04), ...)
+            (1 + nr * margin + 0.04), check.overlap = TRUE, ...)
   
   ## optionally, write marginal frequencies
   if (values %in%  c("margins","both"))
@@ -191,6 +192,8 @@ function (formula, data = NULL, ..., subset)
               xmid[js], ymid[is], gp = gpar(fontsize = 12, fontface = 2),
               check.overlap = TRUE, ...
               )
+  pop.viewport(2)
+  invisible(x)
 }
 
 
