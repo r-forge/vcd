@@ -35,8 +35,9 @@ function (formula, data = NULL, ..., subset)
           tapply(y, by, sum)
         else {
           z <- lapply(as.data.frame(y), tapply, by, sum)
-          array(unlist(z), dim = c(dim(z[[1]]), length(z)), dimnames = c(dimnames(z[[1]]), 
-                                                              list(names(z))))
+          array(unlist(z), dim = c(dim(z[[1]]), length(z)),
+                dimnames = c(dimnames(z[[1]]), 
+                  list(names(z))))
         }
         x[is.na(x)] <- 0
         grid.agreementplot(x, ...)
@@ -104,12 +105,12 @@ function (formula, data = NULL, ..., subset)
     ## x - axis
     grid.text(dimnames(x)[[2]][i],
               x = xc[i] + (xc[i+1] - xc[i]) / 2,
-              y = - 0.04, ...)
+              y = - 0.04, check.overlap = TRUE, ...)
 
     ## y - axis
     my.text(dimnames(x)[[1]][i],
             y = yc[i] + (yc[i+1] - yc[i]) / 2,
-            x = - 0.03, rot = 90, ...)
+            x = - 0.03, check.overlap = TRUE, rot = 90, ...)
     
     ## expected rectangle
     my.rect(xc[i], yc[i], xc[i+1], yc[i+1])
@@ -118,20 +119,20 @@ function (formula, data = NULL, ..., subset)
     y0 <- c(0, cumsum(x[i,])) / sum(x[i,])
     x0 <- c(0, cumsum(x[,i])) / sum(x[,i])
 
-    rec <- function (col, dens)
+    rec <- function (col, dens, lb, tr)
       my.rect(xc[i] + (xc[i+1] - xc[i]) * x0[lb],
               yc[i] + (yc[i+1] - yc[i]) * y0[lb],
               xc[i] + (xc[i+1] - xc[i]) * x0[tr],
               yc[i] + (yc[i+1] - yc[i]) * y0[tr],
-              gp = gpar(fill = gray(1-(weights[j])^4), col = col, rot = 135)
+              gp = gpar(fill = gray((1-(weights[j])^2)^0.5), col = col, rot = 135)
               )
 
     for (j in length(weights):1) {
       lb <- max(1, i - j + 1)
       tr <- 1 + min(nc, i + j - 1)
       A[j, i] <- sum(x[lb:(tr-1),i]) * sum(x[i, lb:(tr-1)])
-      rec("white", NULL) ## erase background
-      rec("black", if (weights[j] < 1) weights[j] * 20 else NULL)
+      rec("white", NULL, lb, tr) ## erase background
+      rec("black", if (weights[j] < 1) weights[j] * 20 else NULL, lb, tr)
     }
 
     ## correct A[j,i] -> not done by Friendly==Bug?
@@ -191,8 +192,9 @@ function (formula, data = NULL, ..., subset)
           tapply(y, by, sum)
         else {
           z <- lapply(as.data.frame(y), tapply, by, sum)
-          array(unlist(z), dim = c(dim(z[[1]]), length(z)), dimnames = c(dimnames(z[[1]]), 
-                                                              list(names(z))))
+          array(unlist(z), dim = c(dim(z[[1]]), length(z)),
+                dimnames = c(dimnames(z[[1]]), 
+                  list(names(z))))
         }
         x[is.na(x)] <- 0
         agreementplot(x, ...)
