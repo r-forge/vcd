@@ -62,8 +62,8 @@
   \item{data}{a data.frame (or list), or a contingency table from which
     the variables in \code{formula} should be taken.}
   \item{\dots}{further arguments to be passed to or from methods.}
-  \item{subset}{an optional vector specifying a subset of observations
-    to be used for plotting.}
+  \item{subset}{an optional vector specifying a subset of the rows in
+    the dataframe to be used for plotting.}
   \item{residuals}{explicit argument for the residuals to be used in
     extended mosaic plots.}
 }
