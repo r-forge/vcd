@@ -305,7 +305,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
             for(j in 1 : 4)
                 drawPie(r[j], angle.f[j], angle.t[j])
             ## upper
-            theta <- or * exp(qnorm(1 - (1 - conf.level) / 2) * se)
+            theta <- or * exp(qnorm((1 + conf.level) / 2) * se)
             tau <- findTableWithOAM(theta, tab)
             r <- sqrt(c(stdize(tau, std, x)))
             for(j in 1 : 4)
