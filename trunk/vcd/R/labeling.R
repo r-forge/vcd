@@ -3,15 +3,19 @@
 
 pexpand <- function(par, len, default.value, default.names) {
   nam <- names(par)
+  if (is.null(nam))
+    default.value <- par
+  else if (length(nam[nam == ""])) {
+    default.value <- par[nam == ""]
+    nam <- nam[nam != ""]
+  }
+  ret <- rep(default.value, length.out = len)
   if (!is.null(nam)) {
-    ret <- rep(default.value, length.out = len)
     names(ret) <- default.names
     ret[nam] <- par[nam]
     ret
-  } else if (length(par) < len)
-    rep(par, length.out = len)
-  else
-    par
+  } 
+  ret
 }
 
 labels.list <- function(gp = gpar(),

@@ -14,6 +14,26 @@ export(
        "tabplot",
        "table2d.summary",
        "oddsratio",
+       "structable",
+
+       ## spacings
+       "spaces.conditional",
+       "spaces.equal",
+       "spaces.dimequal",
+       "spaces.increase",
+       "spaces.doubledecker",
+
+       "labels.augsburg",
+       "labels.text",
+       "labels.boxed",
+       "labels.left",
+       "labels.cells",
+       "labels.conditional",
+       "labels.list",
+       "labels.doubledecker",
+
+       "legend.resbased",
+       "legend.fixed",
        
 ## panel functions
        "gp.binary", "gp.HCLshading", "gp.HSVshading", "gp.max",  "gp.Friendly",
@@ -21,7 +41,6 @@ export(
 
 ## ``normal'' functions
        "co.table",
-       "structable",
        "hcl", "hls",
        "independence.table",
        "mar.table", 
@@ -44,6 +63,8 @@ S3method("mosaic", "default")
 S3method("mosaic", "formula")
 S3method("assoc", "default")
 S3method("assoc", "formula")
+S3method("structable", "default")
+S3method("structable", "formula")
 S3method("agreementplot", "default")
 S3method("agreementplot", "formula")
 S3method("sieveplot", "default")

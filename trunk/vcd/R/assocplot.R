@@ -16,7 +16,8 @@ function(formula, data = NULL, subset, na.action, ..., main = NULL)
 assoc.default <- function(x,
                           row.vars = NULL, col.vars = NULL,
                           compress = TRUE, xlim = NULL, ylim = NULL,
-                          space = NULL, split.vertical = NULL, ...) {
+                          space = spaces.conditional(sp = 0),
+                          split.vertical = NULL, ...) {
 
   if (!inherits(x, "ftable")) {
     if (is.null(row.vars) && is.null(col.vars) && is.table(x))
@@ -27,17 +28,16 @@ assoc.default <- function(x,
   tab <- as.table(x)
   dl <- length(dim(tab))
   
+  ## spacing
+  cond <- rep(TRUE, dl)
+  cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
+  space <- space(dim(tab), condvars = which(cond))
+
   ## splitting arguments
   split.vertical <- rep(FALSE, dl)
   names(split.vertical) <- names(dimnames(tab))
   split.vertical[names(attr(x, "col.vars"))] <- TRUE
   
-  ## spacing argument
-  if (is.null(space))
-# FIXME: which spacing?
-#    space <- if (dl < 3) spaces.equal(sp = 1) else spaces.increase(rate = 2)
-    space = spaces.equal(1)
-
   strucplot(tab,
             space = space,
             split.vertical = split.vertical,
@@ -46,7 +46,7 @@ assoc.default <- function(x,
             ...)
 }
 
-panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, xfactor = 0.8)
+panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, factor = 0.8)
   function(observed = NULL, expected, residuals,
            space = NULL, gp = NULL, split.vertical = TRUE) {
     dn <- dimnames(expected)
@@ -123,18 +123,6 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, xfactor =
     ## start spltting on top, creates viewport-tree
     pushViewport(split(ylim, xlim, i = 1, name = "cell", row = 1, col = 1))
 
-    ## draw baselines (relies on vertical splits coming first!)
-    vsplit <- 1:sum(!split.vertical)
-    mnames <- paste("cell",
-                    apply(expand.grid(dn[vsplit]), 1,
-                          function(i) paste(dnn[vsplit], i, collapse="..", sep = ".")
-                          ),
-                    sep = "..")
-    for (i in seq(along = mnames)) {
-      seekViewport(mnames[i])
-      grid.lines(y = unit(0, "native"), gp = gpar(lty = 5))
-    }
-    
     ## draw tiles
     mnames <- paste("cell",
                     apply(expand.grid(dn), 1,
@@ -143,8 +131,9 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL, xfactor =
                     sep = "..")
     for (i in seq(along = mnames)) {
       seekViewport(mnames[i])
+      grid.lines(y = unit(0, "native"), gp = gpar(lty = 5))
       grid.rect(y = 0, x = 0,
-                height = residuals[i], width = sqrt(expected[i]) * xfactor,
+                height = residuals[i] * factor, width = sqrt(expected[i]) * factor,
                 default.units = "native",
                 gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"))
