@@ -30,6 +30,7 @@ export(
        "Ord.estimate",
        "Ord.plot",
        "grid.mosaicpairs",
+       "grid.fourfoldplot",
        "birthwt", 
        "pearson.test",
        "ternaryplot",
