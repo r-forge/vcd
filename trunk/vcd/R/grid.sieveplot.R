@@ -97,8 +97,8 @@ function (formula, data = NULL, ..., subset)
     margins[3] <- margins[3] + 1
     margins[4] <- margins[4] + 1
   }
-  push.viewport(plotViewport(margins))
-  push.viewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
+  pushViewport(plotViewport(margins))
+  pushViewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
 
   if(!is.null(main))
      grid.text(main, y = unit(1.1, "npc"),
@@ -192,7 +192,7 @@ function (formula, data = NULL, ..., subset)
               xmid[js], ymid[is], gp = gpar(fontsize = 12, fontface = 2),
               check.overlap = TRUE, ...
               )
-  pop.viewport(2)
+  popViewport(2)
   invisible(x)
 }
 

@@ -180,9 +180,9 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     if (!panel)
       grid.newpage()
     if (!is.null(main))
-      push.viewport(viewport(height = 0.9, width = 0.9, y = 0.45))
+      pushViewport(viewport(height = 0.9, width = 0.9, y = 0.45))
                   
-    push.viewport(viewport(xscale = xlim, yscale = ylim,
+    pushViewport(viewport(xscale = xlim, yscale = ylim,
                            width = unit(min(totalWidth / totalHeight, 1), "snpc"),
                            height = unit(min(totalHeight / totalWidth, 1), "snpc")))
     o <- odds(x)
@@ -215,7 +215,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         else
             (totalHeight
              - (2 * yInd - 1 + ((3 + gamma) * yInd - 2) * space))
-        push.viewport(viewport(xscale = xlim - xOrig, yscale = ylim - yOrig))
+        pushViewport(viewport(xscale = xlim - xOrig, yscale = ylim - yOrig))
 
         ## drawLabels()
         u <- 1 + space / 2
@@ -366,7 +366,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         for(j in seq(from = -0.9, to = 0.9, by = 0.2))
             grid.lines(c(-0.01, 0.01), c(j, j), default.units = "native")
 
-        pop.viewport(1)
+        popViewport(1)
         
     }
 
@@ -374,10 +374,10 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         grid.text(main,
                   y = unit(1, "npc") + unit(2, "lines"),
                   gp = gpar(fontsize = 20, fontface = 2))
-        pop.viewport(1)
+        popViewport(1)
       }
 
-    pop.viewport(1)
+    popViewport(1)
     
     return(invisible())
 }

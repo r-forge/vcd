@@ -1,5 +1,5 @@
 panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
-  push.viewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
+  pushViewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
                          yscale = c(0,max(x)), just = c("left", "bottom"))
                 )
   xpos <- seq(0, 1, length = length(x) + 1)[-1]
@@ -10,7 +10,7 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
   grid.yaxis(at = pretty(c(0,max(x))))
   grid.text(names(x), y = unit(-0.15, "npc"),
             x = xpos - halfstep, just = c("center", "bottom"))
-  pop.viewport(1)
+  popViewport(1)
   grid.text(names(dimnames(x)), y = 1, just = c("center", "top"),
             gp = gpar(fontsize = fontsize))
 
@@ -77,8 +77,8 @@ grid.mosaicpairs <- function(x, main = NULL,
 
   d <- length(dim(x))
   l <- grid.layout(d, d)
-  push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
-  push.viewport(viewport(layout = l,
+  pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  pushViewport(viewport(layout = l,
                          height = if (is.null(main)) 1 else 0.9,
                          y = 0, just = "bottom"))
   grid.text(main, y = unit(1.05, "npc"), gp = gpar(fontsize = 20))
@@ -86,8 +86,8 @@ grid.mosaicpairs <- function(x, main = NULL,
 
   for (i in 1:d)
     for(j in 1:d) {
-      push.viewport(viewport(layout.pos.col = i, layout.pos.row = j))
-      push.viewport(viewport(width = 1 - space, height = 1 - space))
+      pushViewport(viewport(layout.pos.col = i, layout.pos.row = j))
+      pushViewport(viewport(width = 1 - space, height = 1 - space))
 
       if (i > j)
         panel.upper(x, i, j, type.upper, legend = legend, axes = axes,
@@ -99,9 +99,9 @@ grid.mosaicpairs <- function(x, main = NULL,
         panel.diag(margin.table(x, i), fontsize = diag.fontsize,
                    dimnames = diag.dimnames, ...)
 
-      pop.viewport(2)
+      popViewport(2)
     }
-  pop.viewport(2)
+  popViewport(2)
   invisible(x)
 }
 
@@ -144,8 +144,8 @@ legend.block <- function(res,
                          space = 2,        #Z# was: from left in "native", now: from right in "lines"
                          text = "Pearson\nresiduals:") {
 
-  push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-  push.viewport(viewport(x = unit(1, "native") - unit(space, "lines"), y = 0.1, just = c("right", "bottom"),
+  pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+  pushViewport(viewport(x = unit(1, "native") - unit(space, "lines"), y = 0.1, just = c("right", "bottom"),
                          yscale = range(res), default.unit = "npc",
                          height = 0.75, width = 0.2))
 
@@ -179,7 +179,7 @@ legend.block <- function(res,
               gp = gpar(fontsize = 0.8*fontsize),
               just = c("left", "top"))
 
- pop.viewport(2)
+ popViewport(2)
 }
 
 grid.mosaicplot.default <-
@@ -235,10 +235,10 @@ grid.mosaicplot.default <-
   if (!panel) grid.newpage()
   if(!is.null(main)) margins[3] <- margins[3] + 3
 
-  #Z# push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  #Z# pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   #Z# needed for what?
 
-  push.viewport(plotViewport(margins))
+  pushViewport(plotViewport(margins))
   if (!is.null(main))
     grid.text(main,
               y = unit(1, "npc") + unit(1, "lines"),
@@ -289,12 +289,12 @@ grid.mosaicplot.default <-
 
 
     if (legend && !is.null(residuals)) {
-      push.viewport(viewport(layout = grid.layout(1, 2,
+      pushViewport(viewport(layout = grid.layout(1, 2,
                                widths = unit(c(0.85, 0.15), "npc"))))
       #Z# legend.block(residuals, gp, fontsize, panel, 2, "standardized\nresiduals:")
       #Z# difficult to still use legend.block...
-      push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-      push.viewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
+      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+      pushViewport(viewport(x = unit(1, "npc") - unit(2, "lines"), y = unit(2 + 2*(1-panel), "lines"), just = c("right", "bottom"),
                     yscale = range(residuals), default.unit = "npc",
                     height = h - unit(4, "lines"),
                     width = unit(0.75, "npc") - unit(2, "lines")))
@@ -322,7 +322,7 @@ grid.mosaicplot.default <-
       if(!is.null(gp$p.value)) grid.text(paste("p-value:\n", format.pval(gp$p.value), sep = ""),
                   x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"), gp = gpar(fontsize = 0.8*fontsize),
                   just = c("left", "top"))
-      pop.viewport(2)
+      popViewport(2)
 
     }
   } else {
@@ -422,7 +422,7 @@ grid.mosaicplot.default <-
   }
 
   ## set margins
-  push.viewport(viewport(layout.pos.col = 1))
+  pushViewport(viewport(layout.pos.col = 1))
 
   w <- unit(1, "npc")
   h <- unit(1, "npc")
@@ -437,10 +437,10 @@ grid.mosaicplot.default <-
 
 
 
-  #Z# push.viewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+  #Z# pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
   #Z# better adjustment of viewport instead of
-  #Z# push.viewport(viewport(width = w, height = h))
-  push.viewport(viewport(x = unit(1, "npc") - unit(2*(1-panel), "lines"), y = unit(2*(1-panel), "lines"),
+  #Z# pushViewport(viewport(width = w, height = h))
+  pushViewport(viewport(x = unit(1, "npc") - unit(2*(1-panel), "lines"), y = unit(2*(1-panel), "lines"),
                 height = h, width = w, just = c("right", "bottom")))
 
   ## compute coordinates
@@ -503,8 +503,8 @@ grid.mosaicplot.default <-
   }
 
   ## clean up and return
-  #Z# pop.viewport(5 + legend)
-      pop.viewport(3 + legend)
+  #Z# popViewport(5 + legend)
+      popViewport(3 + legend)
   invisible(x)
 }
 
