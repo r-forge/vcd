@@ -131,6 +131,7 @@ function(formula, data = NULL, ...,
         if(is.matrix(edata))
             m$data <- as.data.frame(data)
         m$... <- NULL
+        m$main <- NULL
         m[[1]] <- as.name("model.frame")
         mf <- eval(m, parent.frame())
         grid.mosaicplot(table(mf), main = main, ...)
