@@ -136,9 +136,47 @@ function(formula, data = NULL, ...,
     }
 }
 
+legend.block <- function(res, gp) {
+  pop.viewport()
+  push.viewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+  push.viewport(viewport(x = 0.6, y = 0.1, just = c("left", "bottom"),
+                         yscale = range(res), default.unit = "npc",
+                         height = 0.8, width = 0.2))
+
+  if(!is.null(gp$col.legend)) {
+    col.legend <- gp$col.legend
+  } else {
+    col.bins <- gp$col.bins
+    if(is.null(col.bins)) col.bins <- min(res) + diff(range(res)) * ((0:200)/200)
+    y.pos <- col.bins[-length(col.bins)]
+    y.height <- diff(col.bins)
+    y.col <- gpfun(x, y.pos + 0.5*y.height)$fill
+    col.legend <- list(pos = y.pos, height = y.height, col = y.col)
+  }
+  
+  grid.rect(x = unit(rep(0.5, length(col.legend$pos)), "npc"), y = col.legend$pos,
+            height = col.legend$height, default.unit = "native",
+            gp = gpar(fill = col.legend$col, col = NULL),
+            just = c("centre", "bottom"))
+
+  grid.rect()
+  
+  grid.yaxis(main = FALSE, gp = gpar(fontsize = fontsize))
+  if (!panel)
+    grid.text("Pearson\nresiduals:", x = 0, y = unit(1, "npc") + unit(0.5, "lines"),
+                       gp = gpar(fontsize = 0.8*fontsize), just = c("left", "bottom"))
+  if(!is.null(gp$p.value))
+    grid.text(paste("p-value =\n", format.pval(gp$p.value), sep = ""),
+              x = 0, y = unit(0, "npc") - unit(0.5, "strheight", "A"),
+              gp = gpar(fontsize = 0.8*fontsize),
+              just = c("left", "top"))
+  
+  pop.viewport(3)
+}
+
 grid.mosaicplot.default <-
   function(x,
-           main = deparse(substitute(x)),
+           main = NULL,
            labels = TRUE,
            axes = TRUE,
            abbreviate = FALSE,
@@ -159,7 +197,8 @@ grid.mosaicplot.default <-
            permute = FALSE,
            prange = c(-6,6),
            test = TRUE,
-           level = 0.95
+           level = 0.95,
+           gp = gp.signif
            )
 {
   require(grid)
@@ -227,36 +266,37 @@ grid.mosaicplot.default <-
   
   ## legend for shading
   if (!is.null(residuals) && legend && shade) {
-    if(is.null(prange))
-      prange <- range(residuals)
-    CINT <- prange
+    legend.block(res = residuals, gp = gp)
+#     if(is.null(prange))
+#       prange <- range(residuals)
+#     CINT <- prange
     
-    l <- grid.layout(1, 2, widths = c(0.8, 0.2))
-    push.viewport(viewport(layout = l))
-    push.viewport(viewport(layout.pos.col = 2))
-    push.viewport(viewport(width = 0.5, height = 0.8, y = 0.1,
-                           just = c("centre","bottom"), yscale = prange))
+#     l <- grid.layout(1, 2, widths = c(0.8, 0.2))
+#     push.viewport(viewport(layout = l))
+#     push.viewport(viewport(layout.pos.col = 2))
+#     push.viewport(viewport(width = 0.5, height = 0.8, y = 0.1,
+#                            just = c("centre","bottom"), yscale = prange))
                            
-    yp <- seq(prange[1], prange[2], length = granularity)[-1]
-    colors <- color(yp, luminance = luminance, CINT = CINT)
-    grid.rect(x = rep(0.5, granularity),
-              y = yp,
-              height = yp[2] - yp[1],
-              just = c("centre", "top"),
-              gp = gpar(fill = colors, col = colors),
-              default = "native")
-    grid.rect()
-    grid.yaxis(at = c(0, seq(from = unique(trunc(yp))[1] + 1,
-                 to = rev(unique(trunc(yp)))[1], 2),
-                 ceiling(prange[1] * 10) / 10,
-                 floor(prange[2] * 10) / 10),
-               main = FALSE)
-    if(!panel)
-      grid.text(c("standardized", "residuals:"),
-                y = unit(c(1.1, 1.05), "npc"),
-                x = 0, just = "left",
-                gp = gpar(fontsize = unit(12, "native")))
-    pop.viewport(2)
+#     yp <- seq(prange[1], prange[2], length = granularity)[-1]
+#     colors <- color(yp, luminance = luminance, CINT = CINT)
+#     grid.rect(x = rep(0.5, granularity),
+#               y = yp,
+#               height = yp[2] - yp[1],
+#               just = c("centre", "top"),
+#               gp = gpar(fill = colors, col = colors),
+#               default = "native")
+#     grid.rect()
+#     grid.yaxis(at = c(0, seq(from = unique(trunc(yp))[1] + 1,
+#                  to = rev(unique(trunc(yp)))[1], 2),
+#                  ceiling(prange[1] * 10) / 10,
+#                  floor(prange[2] * 10) / 10),
+#                main = FALSE)
+#     if(!panel)
+#       grid.text(c("standardized", "residuals:"),
+#                 y = unit(c(1.1, 1.05), "npc"),
+#                 x = 0, just = "left",
+#                 gp = gpar(fontsize = unit(12, "native")))
+#     pop.viewport(2)
   }
 
   cc <- 0
