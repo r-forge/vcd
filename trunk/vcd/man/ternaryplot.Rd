@@ -10,7 +10,8 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge"
             dimnames.color = "black", id = NULL, id.color = "black", coordinates = FALSE,
 	    grid = TRUE, grid.color = "gray", labels = c("inside", "outside", "none"),
 	    labels.color = "darkgray", border = "black", bg = "white", pch = 19, cex = 1,
-	    prop.size = FALSE, col = "red", main = "ternary plot", ...)
+	    prop.size = FALSE, col = "red", main = "ternary plot",
+            newpage = TRUE, ...)
 }
 \arguments{
   \item{x}{a matrix with three columns.}
@@ -38,6 +39,7 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge"
     the weight of the observation.}
   \item{col}{plotting color.}
   \item{main}{main title.}
+  \item{newpage}{if \code{TRUE}, the plot will apear on a new graphics page.}
   \item{\dots}{additional graphics parameters (see \code{par})}
 }
 \details{
@@ -76,12 +78,9 @@ ternaryplot(
             main = "Arthritits Treatment Data"
            )
 ## legend
-legend(0.7, 0.8,
-       c("GROUP", rownames(tab)),
-       pch = c(NA, pch),
-       col = c(NA, col)
-      )
+vcdLegend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
 
+## Titanic
 data(Lifeboats)
 attach(Lifeboats)
 ternaryplot(
@@ -93,13 +92,10 @@ ternaryplot(
   dimnames.position = "edge",
   main = "Lifeboats on Titanic"
 )
-legend(
-  0.8, 0.9,
-  legend = c("SIDE", "Port", "Starboard"),
-  pch = c(NA, 1, 19),
-  col = c("black", "red", "blue"),
-)
+vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
 
+
+## Hitters
 data(Hitters)
 attach(Hitters)
 colors <- c("black","red","green","blue","red","black","blue")
@@ -110,12 +106,8 @@ ternaryplot(
   col = colors[as.numeric(Positions)],
   main = "Baseball Hitters Data"
 )
-legend(
-  0.8, 0.9,
-  legend = c("POSITION(S)", levels(Positions)),
-  pch = c("", pch),
-  col = c(NA, colors)
-)
+vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
+
 }
 \keyword{hplot}
 
