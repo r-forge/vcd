@@ -49,9 +49,12 @@ function (x,
   top <- sqrt(3) / 2
   par(plt = c(0.06, 0.94, 0.15, 0.87))
   plot.new()
-  par(usr = c(-0.03, 1.03, 0, top),
+  xlim <- c(-0.03, 1.03)
+  ylim <- c(0, top)
+  par(usr = c(xlim, ylim),
       oma = c(0, 0, 1, 0)
       )
+  plot.window(xlim = xlim, ylim = ylim, asp = 1)
   eps <- 0.01
 
   ## coordinates of point P(a,b,c): xp = b + c/2, yp = c * sqrt(3)/2
