@@ -161,7 +161,7 @@ But this does not yet imply the significance of some test statistic.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(goals, rot = 0, gp = gp.binary)
+assoc(goals, shade = TRUE, gp = gp.binary())
 @
 \caption{Association plot for the Bundesliga data.}
 \label{fig:goals-assoc-classic}
@@ -180,7 +180,7 @@ sizes are proportional to the observed cell frequencies
 \begin{figure}[htbp]
 \begin{center}
 <<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=6,width=7>>=
-mosaicplot(t(goals), shade = TRUE, main = "")
+mosaic(goals, shade = TRUE)
 @
 \caption{Friendly mosaic plot for the Bundesliga data.}
 \label{fig:goals-mosaic-classic}
@@ -286,7 +286,7 @@ the home team nor for the away team.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-assoc-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.assocplot(goals, rot = 0)
+assoc(goals)
 @
 \caption{Extended association plots for the Bundesliga data.}
 \label{fig:goals-assoc-signif}
@@ -307,7 +307,7 @@ cell is significant at the 10\% level.
 \begin{figure}[htbp]
 \begin{center}
 <<haireye-assoc-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.assocplot(haireye)
+assoc(haireye)
 @
 \caption{Extended association plots for the Hair-Eye-Color data (female students).}
 \label{fig:haireye-assoc-signif}
@@ -334,10 +334,10 @@ null hypothesis has to be rejected for the Hair-Eye-Color data.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.mosaicplot(t(goals), main = NULL)
+mosaic(goals)
 @
 <<haireye-mosaic-signif,fig=TRUE,echo=FALSE,height=6,width=6>>=
-grid.mosaicplot(t(haireye), main = NULL)
+mosaic(haireye)
 @
 \caption{Extended mosaic plots for the Bundesliga and Hair-Eye-Color data (female students).}
 \label{fig:both-mosaic-signif}
@@ -422,7 +422,7 @@ a conditional independence model is fitted in each plot (see Figure
 \begin{center}
 <<UCB-mosaic-signif,fig=TRUE,echo=FALSE,height=8,width=8>>=
 ##grid.mosaicpairs(UCBAdmissions, type = "conditional", main = NULL)
-grid.mosaicpairs(UCBAdmissions, type = "conditional", permute = FALSE)
+pairs(UCBAdmissions, type = "conditional")
 @
 \caption{Extended conditioned association plots for the UCB Admissions data.}
 \label{fig:UCB-mosaic-signif}

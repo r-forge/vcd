@@ -162,3 +162,246 @@ function (formula, data = NULL, ..., subset)
 
 
 
+Kappa <- function (x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
+{
+  if (is.character(weights))
+      weights <- match.arg(weights)
+
+  d  <- diag(x)
+  n  <- sum(x)
+  nc <- ncol(x)
+  colFreqs <- colSums(x)/n
+  rowFreqs <- rowSums(x)/n
+  
+  ## Kappa
+  kappa <- function (po, pc)
+    (po - pc) / (1 - pc)
+  std  <- function (po, pc, W = 1)
+    sqrt(sum(W * W * po * (1 - po)) / crossprod(1 - pc) / n)
+    
+  ## unweighted
+  po <- sum(d) / n
+  pc <- crossprod(colFreqs, rowFreqs)
+  k <- kappa(po, pc)
+  s <- std(po, pc)
+  
+  ## weighted 
+  W <- if (is.matrix(weights))
+    weights
+  else if (weights == "Equal-Spacing")
+    1 - abs(outer(1:nc, 1:nc, "-")) / (nc - 1)
+  else
+    1 - (abs(outer(1:nc, 1:nc, "-")) / (nc - 1))^2
+  pow <- sum(W * x) / n
+  pcw <- sum(W * colFreqs %o% rowFreqs)
+  kw <- kappa(pow, pcw)
+  sw <- std(x / n, 1 - pcw, W)
+
+  structure(
+            list(Unweighted = c(
+                   value = k,
+                   ASE   = s
+                   ),
+                 Weighted = c(
+                   value = kw,
+                   ASE   = sw
+                   ),
+                 Weights = W
+                 ),
+            class = "Kappa"
+       )
+}
+
+print.Kappa <- function (x, ...) {
+  tab <- rbind(x$Unweighted, x$Weighted)
+  rownames(tab) <- names(x)[1:2]
+  print(tab, ...)
+  invisible(x)
+}
+
+summary.Kappa <- function (object, ...)
+  structure(object, class = "summary.Kappa")
+
+print.summary.Kappa <- function (x, ...) {
+  print.Kappa(x, ...)
+  cat("\nWeights:\n")
+  print(x$Weights, ...)
+  invisible(x)
+}
+
+confint.Kappa <- function(object, parm, level = 0.95, ...) {
+  q <- qnorm((1 + level) / 2)
+  matrix(c(object[[1]][1] - object[[1]][2] * q,
+           object[[1]][1] + object[[1]][2] * q,
+           object[[2]][1] - object[[2]][2] * q,
+           object[[2]][1] + object[[2]][2] * q),
+         nc = 2, byrow = T, 
+         dimnames = list(Kappa = c("Unweighted","Weighted"), c("lwr","upr"))
+         )
+}
+
+
+independence.table <- function(x, frequency = c("absolute", "relative")) {
+  if (!is.array(x))
+    stop("Need array of absolute frequencies!")
+  frequency <- match.arg(frequency)
+
+  n <- sum(x)
+  x <- x / n
+  d <- dim(x)
+
+  ## build margins
+  margins <- lapply(1:length(d), function(i) apply(x, i, sum))
+
+  ## multiply all combinations & reshape
+  tab <- array(apply(expand.grid(margins), 1, prod), d)
+  
+  if (frequency == "relative") tab else tab * n
+}
+
+mar.table <- function(x) {
+  if(!is.matrix(x))
+    stop("Function only defined for 2-d - tables.")
+  tab <- rbind(cbind(x, TOTAL = rowSums(x)), TOTAL = c(colSums(x), sum(x)))
+  names(dimnames(tab)) <- names(dimnames(x))
+  tab
+}
+
+table2d.summary <- function(object,
+                            margins = TRUE,
+                            percentages = FALSE,
+                            conditionals = c("none", "row", "column"),
+                            ...
+                            )
+{
+  ret <- list()
+  ret$chisq <- summary.table(object, ...)
+  
+  if(is.matrix(object)) {
+    
+    conditionals <- match.arg(conditionals)
+  
+    tab <- array(0, c(dim(object) + margins, 1 + percentages + (conditionals != "none")))
+
+    ## frequencies
+    tab[,,1] <- if(margins) mar.table(object) else object
+
+    ## percentages
+    if(percentages) {
+      tmp <- prop.table(object)
+      tab[,,2] <- 100 * if(margins) mar.table(tmp) else tmp
+    }
+
+    ## conditional distributions
+    if(conditionals != "none") {
+      tmp <- prop.table(object, margin = 1 + (conditionals == "column"))
+      tab[,,2 + percentages] <- 100 * if(margins) mar.table(tmp) else tmp
+    }
+
+    ## dimnames
+    dimnames(tab) <- c(dimnames(if(margins) mar.table(object) else object),
+                       list(c("freq",
+                              if(percentages) "%",
+                              switch(conditionals, row = "row%", column = "col%")
+                              )
+                            )
+                       )
+
+    ## patch row% / col% margins
+    if(conditionals == "row") 
+      tab[dim(tab)[1],,2 + percentages] <- NA
+    
+    if(conditionals == "column")
+      tab[,dim(tab)[2],2 + percentages] <- NA
+    
+    ret$table <- tab
+  }    
+
+  class(ret) <- "table2d.summary"
+  ret
+}
+
+print.table2d.summary <- 
+function (x, digits = max(1, getOption("digits") - 3), ...) 
+{
+  if (!is.null(x$table))
+    if(dim(x$table)[3] == 1)
+      print(x$table[,,1], digits = digits, ...)
+    else
+      print(ftable(aperm(x$table, c(1,3,2))), 2, digits = digits, ...)
+  
+  cat("\n")
+  
+  if (!is.null(x$chisq))
+    print.summary.table(x$chisq, digits, ...)
+  invisible(x)
+}
+
+assoc.stats <- function(x) {
+  if(!is.matrix(x))
+    stop("Function only defined for 2-d - tables.")
+##  require(MASS)
+  
+  tab    <- summary(loglm(~1+2, x))$tests
+  phi    <- sqrt(tab[2,1] / sum(x))
+  cont   <- sqrt(phi^2 / (1 + phi^2))
+  cramer <- sqrt(phi^2 / min(dim(x) - 1))
+  structure(
+            list(table = x,
+                 chisq.tests = tab,
+                 phi = phi,
+                 contingency = cont,
+                 cramer = cramer),
+            class = "assoc.stats"
+            )
+}
+
+print.assoc.stats <- function(x,
+                              digits = 3,
+                              ...)
+{
+  print(x$chisq.tests, digits = 5, ...)
+  cat("\n")
+  cat("Phi-Coefficient   :", round(x$phi,    digits = digits), "\n")
+  cat("Contingency Coeff.:", round(x$cont,   digits = digits), "\n")
+  cat("Cramer's V        :", round(x$cramer, digits = digits), "\n")
+  invisible(x)
+}
+
+summary.assoc.stats <- function(object, percentage = FALSE, ...) {
+  tab <- summary(object$table, percentage = percentage, ...)
+  tab$chisq <- NULL
+  structure(list(summary = tab,
+                 object  = object),
+            class   = "summary.assoc.stats"
+            )
+}
+
+print.summary.assoc.stats <- function(x, ...) {
+  cat("\n")
+  print(x$summary, ...)
+  print(x$object, ...)
+  cat("\n")
+  invisible(x)
+}
+
+woolf.test <- function(x) {
+  DNAME <- deparse(substitute(x))
+  if (any(x == 0))
+    x <- x + 1 / 2
+  k <- dim(x)[3]
+  or <- apply(x, 3, function(x) (x[1,1] * x[2,2]) / (x[1,2] * x[2,1]))
+  w <-  apply(x, 3, function(x) 1 / sum(1 / x))
+  o <- log(or)
+  e <- weighted.mean(log(or), w)
+  STATISTIC <- sum(w * (o - e)^2)
+  PARAMETER <- k - 1
+  PVAL <- 1 - pchisq(STATISTIC, PARAMETER)
+  METHOD <- "Woolf-test on Homogeneity of Odds Ratios (no 3-Way assoc.)"
+  names(STATISTIC) <- "X-squared"
+  names(PARAMETER) <- "df"
+  structure(list(statistic = STATISTIC, parameter = PARAMETER, 
+                 p.value = PVAL, method = METHOD, data.name = DNAME, observed = o, 
+                 expected = e), class = "htest")
+}
+
