@@ -12,8 +12,9 @@ the deviations of the observed from the expected values.
 \usage{
 \method{sieveplot}{default}(x, reverse.y = TRUE, type = c("sieve",
 "expected"), title = NULL, values = c("none", "cells", "margins",
-"both"), frequencies = c("absolute", "relative"), cex.main = 3, cex.lab
-= 2, ...)
+"both"), frequencies = c("absolute", "relative"), sieve.colors = c("red","blue"),
+sieve.lty = c("longdash", "solid"), exp.color = "gray", exp.lty = "dotted", margin = 0.2,
+cex.main = 3, cex.lab = 2, ...)
 \method{sieveplot}{formula}(formula, data = NULL, ..., subset)
 }
 %- maybe also `usage' for other objects documented here.
@@ -28,6 +29,12 @@ the deviations of the observed from the expected values.
     \code{margins} or of \code{both} can be plotted.}
   \item{frequencies}{chooses the type of these frequencies:
     \code{relative} or \code{absolute}.}
+  \item{sieve.colors, sieve.lty}{vectors with up to two color/line type entries: the first
+    is used for negative and the second for positive deviations
+    from the expected frequencies.}
+  \item{exp.color, exp.lty}{color/line type entry for the expected
+    values grid.}
+  \item{margin}{lines of margin between the cell rectangles.}
   \item{cex.main}{font size of title.}
   \item{cex.lab}{font size of labels.}
   \item{formula}{a formula, such as \code{y ~ x}.}
