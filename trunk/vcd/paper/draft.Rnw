@@ -1,6 +1,5 @@
 \documentclass[10pt]{article}
-\usepackage{color, natbib, graphicx}
-\usepackage{dsc2003}
+\usepackage{Z}
 
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
 \setlength{\parindent}{0em}
@@ -24,12 +23,12 @@ data(UCBAdmissions)
 
 
 \title{Visualizing Independence Using Extended Association and Mosaic Plots}
-\author{\hfill David Meyer$^\dag$ \hfill Achim Zeileis$^\dag$ \hfill Kurt Hornik$^\ddag$ \hfill \hfill \\[0.2cm]
+\author{\hfill Achim Zeileis$^\dag$ \hfill David Meyer$^\dag$ \hfill Kurt Hornik$^\ddag$ \hfill \hfill \\[0.2cm]
 \dag {\it \small Institut f\"ur Statistik \& Wahrscheinlichkeitstheorie,
  Technische Universit\"at Wien}\\
 \ddag {\it \small Institut f\"ur Statistik, Wirtschaftsuniversit\"at Wien}
 }
-
+\date{}
 \maketitle
 
 \begin{abstract}
