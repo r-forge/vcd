@@ -164,3 +164,29 @@ assocplot <- function(x,
     }
     title(main = main, xlab = xlab, ylab = ylab)
   }
+
+pearson.test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
+                          return.distribution = TRUE)
+{
+  DNAME <- deparse(substitute(x))
+  rowTotals <- rowSums(x)
+  colTotals <- colSums(x)
+  expected <- rowTotals %o% colTotals / sum(colTotals)
+  Pearson <- function(x) (x - expected) / sqrt(expected)
+  FUNPearson <- function(x) FUN(Pearson(x))
+  dist <- sapply(r2dtable(n, rowTotals, colTotals), FUNPearson)
+  STATISTIC <- FUNPearson(x)
+  PVAL <- sum(dist >= STATISTIC) / n
+  METHOD <- "Permutation test of independence (based on simulated Pearson residuals)"
+  names(STATISTIC) <- "P"
+  structure(list(statistic = STATISTIC,
+                 p.value = PVAL,
+                 method = METHOD,
+                 data.name = DNAME,
+                 observed = x,
+                 expected = expected,
+                 residuals = Pearson(x),
+                 dist = if (return.distribution) dist else NULL),
+            class = "htest"
+            )
+}
