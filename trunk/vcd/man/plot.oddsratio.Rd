@@ -7,7 +7,7 @@ k-tables, along with confidence intervals.
 }
 \usage{
 \method{plot}{oddsratio}(x, conf.level = 0.95,
-                  type ="o", ylab = "Log Odds Ratio", xlab = "Strata",
+                  type ="o", ylab = NULL, xlab = "Strata",
                   whiskers = 0.1, ...)
 }
 %- maybe also `usage' for other objects documented here.
