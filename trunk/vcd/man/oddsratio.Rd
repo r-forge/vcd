@@ -40,7 +40,7 @@ an asymptotic normal distribution.}
   \email{david.meyer@ci.tuwien.ac.at}
 }
 
-\seealso{\code{\link{plot.logoddsratio}}}
+\seealso{\code{\link{plot.oddsratio}}}
 
 \examples{
 data(CoalMiners)
