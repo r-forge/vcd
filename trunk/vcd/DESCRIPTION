@@ -7,4 +7,4 @@ Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 Description: Functions and data sets based on the book "Visualizing
              Categorical Data" by Michael Friendly.
 License: GPL
-Depends: R(>= 1.9.0), MASS, ctest, grid, stepfun
+Depends: R (>= 1.9.0), MASS, grid
