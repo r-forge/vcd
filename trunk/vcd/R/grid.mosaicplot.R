@@ -1,5 +1,5 @@
-panel.barplot <- function(x, color = "blue", fontsize = 20, ...) {
-  push.viewport(viewport(x = 0.2, y = 0.1, width = 0.7, height = 0.7,
+panel.barplot <- function(x, color = "blue", fontsize = 20, dimnames, ...) {
+  push.viewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
                          yscale = c(0,max(x)), just = c("left", "bottom"))
                 )
   xpos <- seq(0, 1, length = length(x) + 1)[-1]
@@ -8,10 +8,10 @@ panel.barplot <- function(x, color = "blue", fontsize = 20, ...) {
             just = c("centre", "bottom"), width = halfstep,
             gp = gpar(fill = color), default = "native", ...)
   grid.yaxis(at = pretty(c(0,max(x))))
-  grid.text(names(x), y = unit(-0.1, "npc"),
+  grid.text(names(x), y = unit(-0.15, "npc"),
             x = xpos - halfstep, just = c("center", "bottom"))
   pop.viewport(1)
-  grid.text(names(dimnames(x)), y = 0.95, just = c("center", "top"),
+  grid.text(names(dimnames(x)), y = 1, just = c("center", "top"),
             gp = gpar(fontsize = fontsize))
   
 }
@@ -21,15 +21,10 @@ panel.mosaicplot <- function(x, i, j, type, legend = FALSE, axes = TRUE,
                              abbreviate = FALSE, ...) {
   index <- 1:length(dim(x))
   rest <- index[!index %in% c(i, j)]
-  grid.mosaicplot(x = switch(type,
-                         pairwise = margin.table(x, c(i, j)),
-                         total = margin.table(x, c(i, j, rest)),
-                         conditional = margin.table(x, c(i, j, rest)),
-                         joint = margin.table(x, c(i, j, rest))
-                         ),
+  grid.mosaicplot(x = margin.table(x,
+                    if (type == "pairwise") c(i, j) else c(i, j, rest)),
                   margin = switch(type,
-                    pairwise = NULL,
-                    total = NULL,
+                    pairwise =, total = NULL,
                     conditional = list(c(i, rest), c(j, rest)),
                     joint = list(c(i, j), rest)
                     ),
@@ -43,8 +38,7 @@ panel.text <- function(x, fontsize = 20, dimnames = TRUE, ...) {
   grid.text(names(dimnames(x)), gp = gpar(fontsize = fontsize),
             y = 0.5 + dimnames * 0.05, ...)
   if (dimnames)
-    grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
-              y = 0.4)
+    grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""), y = 0.4)
 }
 
 grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
@@ -67,6 +61,7 @@ grid.mosaicpairs <- function(x, main = deparse(substitute(x)),
                              diag.dimnames = TRUE,
                              ...)
 {
+  require(grid)
   grid.newpage()
   main
   type.upper <- if (is.null(type.upper))
@@ -213,7 +208,7 @@ grid.mosaicplot.default <-
       E <- loglin(x, margin, fit = TRUE, print = FALSE)$fit
     }
     residuals <- switch(type,
-                        pearson = (x - E)/sqrt(E), 
+                        pearson = (x - E) / sqrt(E), 
                         deviance = {
                           tmp <- 2 * (x * log(ifelse(x == 0, 1, x/E)) - (x - E))
                           tmp <- sqrt(pmax(tmp, 0))
@@ -270,11 +265,12 @@ grid.mosaicplot.default <-
   split <- function(table, v, x0, y0, w, h, index = c()) {
     ## compute relative tile sizes and positions
     m <- apply(table, 1, sum)
+    m[m == 0] <- 0.000001
     m <- (1 - space) * m / sum(m)
     l <- length(m)
     sp <- space / (l - 1)
     pos <- c(0, cumsum(m + sp)[-l])
-
+    
     ## compute absolute sizes / coordinates
     coord <- if (v)
       cbind(x0, y0 - pos * h, w, m * h)
