@@ -6,9 +6,9 @@
 \description{Plots a mosaic on the current graphics device.}
 \usage{
 \method{mosaicplot}{default}(x, main = NULL, xlab = NULL, ylab = NULL,
-                   sort = NULL, off = NULL, dir = NULL,
-                   color = FALSE, shade = FALSE, margin = NULL,
-                   type = c("pearson", "deviance", "FT"),
+                   sort = NULL, off = NULL, dir = NULL, color = FALSE,
+		   cex = .66, shade = FALSE, clegend = TRUE,
+		   margin = NULL, type = c("pearson", "deviance", "FT"),
                    residuals = NULL, \dots)
 \method{mosaicplot}{formula}(formula, data = NULL, \dots, subset)
 }
@@ -34,16 +34,19 @@
   \item{color}{logical or (recycling) vector of colors for color
     shading, used only when \code{shade} is \code{FALSE}.  The default
     \code{color=FALSE} gives empty boxes with no shading.}
+  \item{cex}{the magnification to be used for annotations.}
   \item{shade}{a logical indicating whether to produce extended mosaic
     plots, or a numeric vector of at most 5 distinct positive numbers
     giving the absolute values of the cut points for the residuals.  By
     default, \code{shade} is \code{FALSE}, and simple mosaics are
     created.  Using \code{shade = TRUE} cuts absolute values at 2 and
     4.}
+  \item{clegend}{logical. Should a color legend be plotted? (only needed
+    if \code{shade} is \code{TRUE}).}
   \item{margin}{a list of vectors with the marginal totals to be fit in
     the log-linear model, or a formula as used in \code{loglm}.
     By default, an independence model is fitted.
-    See \code{\link{loglin}} and \code{\link{loglm}}for further information.}
+    See \code{\link{loglin}} and \code{\link{loglm}} for further information.}
   \item{type}{a character string indicating the type of residual to be
     represented.  Must be one of \code{"pearson"} (giving components of
     Pearson's \eqn{\chi^2}{chi-squared}), \code{"deviance"} (giving

@@ -66,4 +66,4 @@ F.fit <- goodfit(Federalist, type = "nbinomial")
 summary(F.fit)
 plot(F.fit)
 }
-\keyword{category}
+\keyword{hplot}
