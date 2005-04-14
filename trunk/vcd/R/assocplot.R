@@ -17,6 +17,7 @@ assoc.default <- function(x,
                           row.vars = NULL, col.vars = NULL,
                           compress = TRUE, xlim = NULL, ylim = NULL,
                           spacing = spacing.conditional(sp = 0),
+                          spacing.args = NULL,
                           split.vertical = NULL,
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
@@ -32,6 +33,8 @@ assoc.default <- function(x,
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
+  if (inherits(spacing, "vcdSpacing"))
+    spacing <- do.call("spacing", spacing.args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
@@ -131,20 +134,21 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     pushViewport(split(ylim, xlim, i = 1, name = "cell", row = 1, col = 1))
 
     ## draw tiles
-    mnames <- paste("cell",
-                    apply(expand.grid(dn), 1,
+    mnames <- paste(apply(expand.grid(dn), 1,
                           function(i) paste(dnn, i, collapse="..", sep = ".")
-                          ),
-                    sep = "..")
+                          )
+                    )
     for (i in seq(along = mnames)) {
-      seekViewport(mnames[i])
+      seekViewport(paste("cell", mnames[i], sep = ".."))
       grid.lines(y = unit(0, "native"), gp = gpar(lty = 5))
       grid.rect(y = 0, x = 0,
                 height = residuals[i],
                 width = xscale * unit(sqrt(expected[i]), "native"),
                 default.units = "native",
                 gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
-                just = c("center", "bottom"))
+                just = c("center", "bottom"),
+                name = paste("rect", mnames[i], sep = "..")
+                )
     }
 
   }

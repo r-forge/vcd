@@ -68,6 +68,7 @@ legend.resbased <- function(fontsize = 12,
     }
   }
 }
+class(legend.resbased) <- "vcdLegend"
 
 legend.fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
@@ -131,3 +132,4 @@ legend.fixed <- function(fontsize = 12,
               )
   }
 }
+class(legend.fixed) <- "vcdLegend"

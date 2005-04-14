@@ -3,4 +3,6 @@
     stop("could not load package grid")
   if(!("package:MASS" %in% search() || require(MASS)))
     stop("could not load package MASS")
+  if(!("package:colorspace" %in% search() || require(colorspace)))
+    stop("could not load package colorspace")
 }

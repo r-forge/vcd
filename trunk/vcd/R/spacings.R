@@ -5,12 +5,14 @@ spacing.equal <- function(sp = unit(0.5, "lines")) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL) lapply(d, function(x) unit.rep(sp, x - 1))
 }
+class(spacing.equal) <- "vcdSpacing"
 
 spacing.dimequal <- function(sp) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL)
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
 }
+class(spacing.dimequal) <- "vcdSpacing"
 
 spacing.increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
   if (!is.unit(start)) start <- unit(start, "lines")
@@ -19,10 +21,12 @@ spacing.increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
   }
 }
+class(spacing.increase) <- "vcdSpacing"
 
 spacing.doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
   function(d, condvars)
     spacing.conditional(sp = 0, start = start, rate = rate)(d, condvars)
+class(spacing.doubledecker) <- "vcdSpacing"
 
 spacing.conditional <- function(sp = unit(0.5, "lines"),
                                start = unit(2, "lines"), rate = 1.8) {
@@ -41,3 +45,4 @@ spacing.conditional <- function(sp = unit(0.5, "lines"),
     ret
   }
 }
+class(spacing.conditional) <- "vcdSpacing"

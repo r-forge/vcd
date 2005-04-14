@@ -59,7 +59,7 @@ function(formula, data = NULL, ..., main = NULL)
 
 mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
                            split.vertical = FALSE, direction = NULL,
-                           spacing = NULL, ...) {
+                           spacing = NULL, spacing.args = NULL, ...) {
   dl <- length(dim(x))
   
   ## splitting argument
@@ -72,7 +72,9 @@ mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
 
   ## spacing argument
   if (is.null(spacing))
-    spacing <- if (dl < 3) spacing.equal() else spacing.increase()
+    spacing <- if (dl < 3) spacing.equal else spacing.increase
+  if (inherits(spacing, "vcdSpacing"))
+    spacing <- do.call("spacing", spacing.args)
 
   strucplot(x,
             panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize),
@@ -125,16 +127,15 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
                        i = 1, name = "cell", row = 1, col = 1))
 
     ## draw rectangles
-    mnames <- paste("cell",
-                    apply(expand.grid(dn), 1,
-                          function(i) paste(dnn, i, collapse="..", sep = ".")
-                          ),
-                    sep = "..")
+    mnames <-  apply(expand.grid(dn), 1,
+                     function(i) paste(dnn, i, collapse="..", sep = ".")
+                     )
     zeros <- observed <= .Machine$double.eps
 
     for (i in seq(along = mnames)) {
-      seekViewport(mnames[i])
-      grid.rect(gp = structure(lapply(gp, function(x) x[i]), class = "gpar"))
+      seekViewport(paste("cell", mnames[i], sep = ".."))
+      grid.rect(gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
+                name = paste("rect", mnames[i], sep = ".."))
       if (visZero && zeros[i]) {
         grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
                     gp = gpar(col = gp$fill[i]))
