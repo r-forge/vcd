@@ -16,15 +16,15 @@ strucplot <- function(## main parameters
                       ## layout
                       split.vertical = TRUE, 
                       spacing = NULL,
-                      spacing.args = NULL,
+                      spacing.args = list(),
                       gp = NULL,
-		      gp.args = NULL,   
+		      gp.args = list(),   
                       labeling = labeling.text,
-                      labeling.args = NULL,
-                      panel = panel.mosaic,
-                      panel.args = NULL,
+                      labeling.args = list(),
+                      panel = panel.mosaicplot,
+                      panel.args = list(),
                       legend = legend.resbased,
-                      legend.args = NULL,
+                      legend.args = list(),
                       
                       main = NULL,
                       sub = NULL,
@@ -128,7 +128,7 @@ strucplot <- function(## main parameters
 
   ## legend
   if (is.logical(legend))
-    legend <- if (legend) legend.resbased() else NULL
+    legend <- if (legend) legend.resbased else NULL
   if (inherits(legend, "vcdLegend"))
     legend <- do.call("legend", legend.args)
   if (shade && !is.null(legend)) {
