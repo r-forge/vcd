@@ -47,6 +47,7 @@ labeling.list <- function(gp = gpar(),
                 gp = gp
                 )
   }
+class(labeling.list) <- "vcdLabeling"
 
 labeling.conditional <- function(...)
   function (d, split.vertical, condvars) {
@@ -57,6 +58,7 @@ labeling.conditional <- function(...)
     labeling.text(labels = !v, ...)(d, split.vertical, condvars)
     labeling.cells(labels = v, ...)(d, split.vertical, condvars)
   }
+class(labeling.conditional) <- "vcdLabeling"
 
 labeling.cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate.labels = FALSE, abbreviate.varnames = FALSE,
@@ -126,6 +128,7 @@ labeling.cells <- function(labels = TRUE, varnames = TRUE,
     split()
     
 }
+class(labeling.cells) <- "vcdLabeling"
 
 labeling.text <- function(labels = TRUE, varnames = labels,
                         tl.labels = NULL, tl.varnames = NULL, 
@@ -445,6 +448,7 @@ labeling.text <- function(labels = TRUE, varnames = labels,
     split()
     
   }
+class(labeling.text) <- "vcdLabeling"
 
 labeling.doubledecker <- function(labels = "bottom", ...)
   function(d, split.vertical, condvars) {
@@ -463,15 +467,18 @@ labeling.doubledecker <- function(labels = "bottom", ...)
               x = unit(0.5, "lines"), y = unit(1, "npc"), just = c("left","top"),
               gp = gpar(fontface = 2))
   }
+class(labeling.doubledecker) <- "vcdLabeling"
 
 labeling.left <- function(tl.labels = TRUE, clip = TRUE, pos.varnames = "left",
                         pos.labels = "left", just.labels = "left", ...)
   labeling.text(tl.labels = tl.labels, clip = clip, pos.varnames = pos.varnames,
               pos.labels = pos.labels, just.labels = just.labels, ...)
+class(labeling.left) <- "vcdLabeling"
 
 labeling.boxed <- function(tl.labels = TRUE, boxes = TRUE, clip = TRUE, pos.labels = "center", ...)
   labeling.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, ...)
+class(labeling.boxed) <- "vcdLabeling"
 
 labeling.augsburg <- function(tl.labels = FALSE, boxes = TRUE, clip = TRUE, pos.labels = "left", just.labels = "left", labbl.varnames = FALSE, ...)
   labeling.text(tl.labels = tl.labels, boxes = boxes, clip = clip, pos.labels = pos.labels, labbl.varnames = labbl.varnames, just.labels = just.labels, ...)
-
+class(labeling.augsburg) <- "vcdLabeling"

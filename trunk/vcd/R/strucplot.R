@@ -16,11 +16,15 @@ strucplot <- function(## main parameters
                       ## layout
                       split.vertical = TRUE, 
                       spacing = NULL,
+                      spacing.args = NULL,
                       gp = NULL,
-		      gp.args = NULL,   #Z# new argument for specifying gp arguments
-                      labeling = labeling.text(),
-                      panel = panel.mosaic(),
-                      legend = legend.resbased(),
+		      gp.args = NULL,   
+                      labeling = labeling.text,
+                      labeling.args = NULL,
+                      panel = panel.mosaic,
+                      panel.args = NULL,
+                      legend = legend.resbased,
+                      legend.args = NULL,
                       
                       main = NULL,
                       sub = NULL,
@@ -31,8 +35,8 @@ strucplot <- function(## main parameters
                       pop = FALSE,
                       title.gp = gpar(fontsize = 20),
                       newpage = TRUE,
-                      keepAR = TRUE,
-                      eDLlimit = 3
+                      keepAR = TRUE
+##                      eDLlimit = 3
                       ) {
   #Z# changed default behaviour of shade
   if(is.null(shade)) shade <- is.function(gp) || !is.null(expected)
@@ -50,7 +54,7 @@ strucplot <- function(## main parameters
     dnn <- names(dn) <- names(dimnames(x)) <- LETTERS[1:dl]
 
   ## performance hack
-  engine.display.list(dl <= eDLlimit)
+##  engine.display.list(dl <= eDLlimit)
   
   #Z# model fitting
   #Z# maybe, after all, this should be done in the shading generating
@@ -59,7 +63,7 @@ strucplot <- function(## main parameters
   #Z# For now, this is done here. A parameter df is added for inference
   #Z# (which is done in the shading (generating) functions).
   #Z# Finally, expected can also be the table of expected values.
-  if(!(!is.null(expected) && is.numeric(expected))) {
+  if(is.null(expected) || !is.numeric(expected)) {
     if(inherits(expected, "formula")) {
       fm <- loglm(expected, x, fitted = TRUE)
       expected <- fitted(fm)
@@ -90,14 +94,17 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing))
-    spacing <- spacing(dim(x), condvars)
+    spacing <- if (inherits(spacing, "vcdSpacing"))
+      do.call("spacing", spacing.args)
+    else
+      spacing(dim(x), condvars)
 
   ## gp (color, fill, lty, etc.) argument
   if(shade) {
     if(is.null(gp)) gp <- gp.HCLshading
     if(is.function(gp)) {
       
-      gpfun <- if(class(gp) == "vcdShading" || all(head(names(formals(gp)), 4) == c("observed", "residuals", "expected", "df")))
+      gpfun <- if(inherits(gp, "vcdShading") || all(head(names(formals(gp)), 4) == c("observed", "residuals", "expected", "df")))
                  do.call("gp", c(list(x, residuals, expected, df), as.list(gp.args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend))
@@ -122,6 +129,8 @@ strucplot <- function(## main parameters
   ## legend
   if (is.logical(legend))
     legend <- if (legend) legend.resbased() else NULL
+  if (inherits(legend, "vcdLegend"))
+    legend <- do.call("legend", legend.args)
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
@@ -144,10 +153,8 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  #Z# Two questions:
-  #Z# 1. Do we need to require all arguments to be named?
-  #Z# 2. Shouldn't the order of the arguments be 
-  #Z#    obs, res, exp?  
+  if (inherits(panel, "vcdPanel"))
+    panel <- do.call("panel", panel.args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
         expected = expected,
@@ -158,20 +165,20 @@ strucplot <- function(## main parameters
   upViewport(dl)
 
   ## labels
-  if (!is.null(labeling)) labeling(dn, split.vertical, condvars)
+  if (!is.null(labeling)) {
+    if (inherits(labeling, "vcdLabeling"))
+      labeling <- do.call("labeling", labeling.args)
+    labeling(dn, split.vertical, condvars)
+  }
 
   ## pop/move up viewport
 
-  #Z# we need to leave in the viewport in which we entered!!
-  #Z# and pop should pop away everything!  
-  seekViewport("base") #Z# was: "cell"
+  seekViewport("base") 
   ## one more up if sandwich-mode
   if (!is.null(main) || !is.null(sub) || (shade && !is.null(legend))) upViewport()
   if (pop) popViewport() else upViewport()
-  #Z# the names of the vcdViewport should probably be less ambigious
-  #Z# or maybe concatenated from something else, maybe
-  #Z#   deparse(substitute(x))
-  #Z# or something like that.
+  invisible(strucplot(if (type == "observed") x else expected,
+                      split.vertical = split.vertical))
 }
 
 vcdViewport <- function(mar = rep.int(2.5, 4),
