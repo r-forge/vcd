@@ -41,7 +41,7 @@ export(
 
 ## ``normal'' functions
        "co.table",
-       "hcl", "hls",
+       "hls",
        "independence.table",
        "mar.table", 
        "Ord.estimate",

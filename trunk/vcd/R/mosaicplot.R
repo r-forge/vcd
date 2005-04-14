@@ -59,7 +59,7 @@ function(formula, data = NULL, ..., main = NULL)
 
 mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
                            split.vertical = FALSE, direction = NULL,
-                           spacing = NULL, spacing.args = NULL, ...) {
+                           spacing = NULL, spacing.args = list(), ...) {
   dl <- length(dim(x))
   
   ## splitting argument

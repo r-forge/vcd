@@ -17,7 +17,7 @@ assoc.default <- function(x,
                           row.vars = NULL, col.vars = NULL,
                           compress = TRUE, xlim = NULL, ylim = NULL,
                           spacing = spacing.conditional(sp = 0),
-                          spacing.args = NULL,
+                          spacing.args = list(),
                           split.vertical = NULL,
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
