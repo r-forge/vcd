@@ -10,7 +10,7 @@
 \usage{
 \method{mosaic}{default}(x, visZero = TRUE, zeroSize = 0.5,
 split.vertical = FALSE, direction = NULL, spacing = NULL,
-spacing.args = NULL, ...)
+spacing.args = list(), ...)
 \method{mosaic}{formula}(formula, data, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.

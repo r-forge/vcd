@@ -152,4 +152,4 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-
+class(panel.assocplot) <- "vcdPanel"

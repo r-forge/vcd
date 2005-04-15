@@ -12,7 +12,7 @@ contingency table.
 \usage{
 \method{assoc}{default}(x, row.vars = NULL, col.vars = NULL, compress =
 TRUE, xlim = NULL, ylim = NULL, spacing = spacing.conditional(sp = 0),
-spacing.args = NULL, split.vertical = NULL, xscale = 0.9, yspace = unit(0.5, "lines"), ...)
+spacing.args = list(), split.vertical = NULL, xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
