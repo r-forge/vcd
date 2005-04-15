@@ -177,7 +177,9 @@ strucplot <- function(## main parameters
   ## one more up if sandwich-mode
   if (!is.null(main) || !is.null(sub) || (shade && !is.null(legend))) upViewport()
   if (pop) popViewport() else upViewport()
-  invisible(strucplot(if (type == "observed") x else expected,
+
+  #Z# Before, this returned strucplot() instead of structable(), argh...
+  invisible(structable(if (type == "observed") x else expected,
                       split.vertical = split.vertical))
 }
 

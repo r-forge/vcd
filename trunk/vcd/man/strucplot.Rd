@@ -2,19 +2,22 @@
 \alias{strucplot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plots a strucplot object.}
+%Z% really a strucplot object?
 \description{
   This modular function visualizes certain
   aspects of high-dimensional contingency tables in a hierarchical way. 
 }
 \usage{
-strucplot(x, residuals = NULL, expected = NULL, df = NULL, condvars =
-NULL, shade = NULL, type = c("observed", "expected"), residuals.type =
-c("Pearson", "deviance", "FT"), split.vertical = TRUE, spacing = NULL,
-spacing.args = NULL, gp = NULL, gp.args = NULL, labeling =
-labeling.text, labeling.args = NULL, panel = panel.mosaic, panel.args =
-NULL, legend = legend.resbased, legend.args = NULL, main = NULL, sub =
-NULL, margin = rep.int(2.5, 4), legend.width = unit(0.15, "npc"), pop =
-FALSE, title.gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
+strucplot(x, residuals = NULL, expected = NULL, df = NULL,
+  condvars = NULL, shade = NULL, type = c("observed", "expected"),
+  residuals.type = c("Pearson", "deviance", "FT"), split.vertical = TRUE, 
+  spacing = NULL, spacing.args = list(),
+  gp = NULL, gp.args = list(),
+  labeling = labeling.text, labeling.args = list(),
+  panel = panel.mosaicplot, panel.args = list(),
+  legend = legend.resbased, legend.args = list(),
+  main = NULL, sub = NULL, margin = rep.int(2.5, 4), legend.width = unit(0.15, "npc"),
+  pop = FALSE, title.gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

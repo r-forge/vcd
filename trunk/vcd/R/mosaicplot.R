@@ -91,6 +91,11 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
     dx <- dim(observed)
     dl <- length(dx)
 
+    #Z# this seems to be needed as well!
+    if (length(split.vertical) == 1)
+      split.vertical <- rep(c(split.vertical, !split.vertical), length.out = dl)
+
+
     ## split workhorse
     split <- function(x, i, name, row, col) {
       cotab <- co.table(x, 1)
@@ -144,3 +149,4 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
     }
 
   }
+class(panel.mosaicplot) <- "vcdPanel"
