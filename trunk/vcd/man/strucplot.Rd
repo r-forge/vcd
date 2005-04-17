@@ -1,8 +1,7 @@
 \name{strucplot}
 \alias{strucplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Plots a strucplot object.}
-%Z% really a strucplot object?
+\title{Produces a strucplot visualizing a contingency table.}
+
 \description{
   This modular function visualizes certain
   aspects of high-dimensional contingency tables in a hierarchical way. 
@@ -106,12 +105,37 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     fixed or not.}
 }
 \details{
---- many details ---
+  This function---usually called by higher-level functions such as
+  \code{\link{assoc}} and \code{\link{mosaic}}---generates conditioning
+  plots of contingency tables. First, it sets up a set of viewports for main-
+  and subtitles, legend, and the actual plot region. Then, residuals are
+  computed as needed from observed and expected frequencies, where the
+  expected frequencies are optionally computed for a specified
+  independence model. Finally, the specified functions for spacing,
+  shading, main plot, legend, and labeling are called to produce the plot. The
+  function invisibly returns an object of class \code{"structable"}
+  corresponding to the structure of the plot.
+
+  Most elements of the plot, such as the panel function,
+  the spacing between the tiles, the shading of the tiles, the
+  labeling, and the legend, are modularized in functions and specified as
+  parameters. For each element \emph{foo}, there are two parameters: \var{foo} and
+  \var{foo.args}. Basically, there are two ways of specification:
+  either, a suitable function passed to \var{foo} which subsequently is
+  called from \code{strucplot} to compute shadings, labelings, etc., or a corresponding
+  \emph{generating function} passed to \var{foo}, along with parameters
+  passed to \var{foo.args}, that generates such a function.
+  Except for the shading-functions (\var{gp.bar}), there is a third way
+  of specifying the function by directly passing \code{foo(foo.args)} to
+  the \var{foo} parameter.
+  
+  If legends are drawn, a \sQuote{cinemascope}-like layout is used for
+  the plot to preserve the 1:1 aspect ratio.
 }
 \value{
-Invisibly, an object of class "structable".
+  Invisibly, an object of class "structable" corresponding to the plot.
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer (\email{David.Meyer@R-project.org})}
 
 \seealso{
   \code{\link{assoc}},
@@ -127,6 +151,11 @@ Invisibly, an object of class "structable".
 }
 
 \examples{
+  strucplot(Titanic)
+  strucplot(Titanic, panel = panel.assocplot)
+  strucplot(Titanic, spacing = spacing.increase,
+                     spacing.args = list(start = 0.5, rate = 1.5))
+  strucplot(Titanic, spacing = spacing.increase(start = 0.5, rate = 1.5))
 
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
