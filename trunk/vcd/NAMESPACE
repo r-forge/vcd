@@ -47,7 +47,6 @@ export(
        "mar.table", 
        "Ord.estimate",
        "Ord.plot",
-       "pairs",
        "fourfoldplot",
        "doubledecker",
        "strucplot",
@@ -75,6 +74,8 @@ S3method("rootogram", "default")
 S3method("rootogram", "goodfit")
 S3method("tabplot", "default")
 S3method("tabplot", "formula")
+
+S3method("pairs", "table")
 
 S3method("fitted", "goodfit")
 S3method("predict", "goodfit")

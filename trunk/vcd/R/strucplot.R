@@ -140,7 +140,6 @@ strucplot <- function(## main parameters
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
-    #if (pop) popViewport() #Z# do we need this here? gets popped away anyhow...
   }
 
   ## titles

@@ -57,7 +57,8 @@ function(formula, data = NULL, ..., main = NULL)
       }
   }
 
-mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
+mosaic.default <- function(x,
+                           visZero = TRUE, zeroSize = 0.5, gp.zeroLine = gpar(col = "gray"),
                            split.vertical = FALSE, direction = NULL,
                            spacing = NULL, spacing.args = list(), ...) {
   dl <- length(dim(x))
@@ -75,14 +76,15 @@ mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
     spacing <- if (dl < 3) spacing.equal else spacing.increase
 
   strucplot(x,
-            panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize),
+            panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize, gp.zeroLine = gp.zeroLine),
             split.vertical = split.vertical,
             spacing = spacing,
             spacing.args = spacing.args,
             ...)
 }
 
-panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
+panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.5,
+                             gp.zeroLine = gpar(col = "gray"))
   function(residuals, observed, expected = NULL, 
            spacing = NULL, gp = NULL, split.vertical = TRUE) {
     dn <- dimnames(observed)
@@ -99,7 +101,7 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
 
       ## compute total cols/rows and build split layout
       dist <- unit.c(unit(margin, "null"), spacing[[i]])
-      idx <- matrix(1:(2*d), nrow = 2, byrow = TRUE)[-2*d]
+      idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2*d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])
       else
@@ -133,12 +135,17 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.6)
 
     for (i in seq(along = mnames)) {
       seekViewport(paste("cell", mnames[i], sep = ".."))
-      grid.rect(gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
-                name = paste("rect", mnames[i], sep = ".."))
-      if (visZero && zeros[i]) {
+      if (!zeros[i]) {
+        grid.rect(gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
+                  name = paste("rect", mnames[i], sep = ".."))
+      } else if (visZero) {
+        grid.lines(x = 0.5, gp = gp.zeroLine)
+        grid.lines(y = 0.5, gp = gp.zeroLine)
         grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
-                    gp = gpar(col = gp$fill[i]))
-        grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"))
+                    gp = gpar(col = gp$fill[i]),
+                    name = paste("disc", mnames[i], sep = ".."))
+        grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"),
+                    name = paste("circle", mnames[i], sep = ".."))
       }
     }
 

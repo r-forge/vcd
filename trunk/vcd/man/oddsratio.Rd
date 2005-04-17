@@ -2,6 +2,7 @@
 \alias{oddsratio}
 \alias{print.oddsratio}
 \alias{summary.oddsratio}
+\alias{confint.oddsratio}
 \alias{print.summary.oddsratio}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Odds Ratios}
