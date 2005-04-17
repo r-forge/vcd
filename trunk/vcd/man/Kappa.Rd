@@ -1,6 +1,7 @@
 \name{Kappa}
 \alias{Kappa}
 \alias{print.Kappa}
+\alias{confint.Kappa}
 \alias{summary.Kappa}
 \alias{print.summary.Kappa}
 %- Also NEED an `\alias' for EACH other topic documented here.

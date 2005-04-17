@@ -11,7 +11,7 @@
 strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
   residuals.type = c("Pearson", "deviance", "FT"), split.vertical = TRUE, 
-  spacing = NULL, spacing.args = list(),
+  spacing = spacing.equal, spacing.args = list(),
   gp = NULL, gp.args = list(),
   labeling = labeling.text, labeling.args = list(),
   panel = panel.mosaicplot, panel.args = list(),
