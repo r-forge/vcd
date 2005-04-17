@@ -73,13 +73,12 @@ mosaic.default <- function(x, visZero = TRUE, zeroSize = 0.5,
   ## spacing argument
   if (is.null(spacing))
     spacing <- if (dl < 3) spacing.equal else spacing.increase
-  if (inherits(spacing, "vcdSpacing"))
-    spacing <- do.call("spacing", spacing.args)
 
   strucplot(x,
             panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize),
             split.vertical = split.vertical,
             spacing = spacing,
+            spacing.args = spacing.args,
             ...)
 }
 
