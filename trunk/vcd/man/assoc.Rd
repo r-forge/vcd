@@ -144,6 +144,7 @@ An object of class \code{"structable"}
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
+\author{David Meyer (\email{david.meyer@R-project.org})}
 \examples{
 data(HairEyeColor)
 ## Aggregate over sex:
