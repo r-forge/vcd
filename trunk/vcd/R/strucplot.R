@@ -15,7 +15,7 @@ strucplot <- function(## main parameters
                       
                       ## layout
                       split.vertical = TRUE, 
-                      spacing = NULL,
+                      spacing = spacing.equal,
                       spacing.args = list(),
                       gp = NULL,
 		      gp.args = list(),   
@@ -36,7 +36,6 @@ strucplot <- function(## main parameters
                       title.gp = gpar(fontsize = 20),
                       newpage = TRUE,
                       keepAR = TRUE
-##                      eDLlimit = 3
                       ) {
   #Z# changed default behaviour of shade
   if(is.null(shade)) shade <- is.function(gp) || !is.null(expected)
@@ -53,9 +52,6 @@ strucplot <- function(## main parameters
   if (is.null(dnn))
     dnn <- names(dn) <- names(dimnames(x)) <- LETTERS[1:dl]
 
-  ## performance hack
-##  engine.display.list(dl <= eDLlimit)
-  
   #Z# model fitting
   #Z# maybe, after all, this should be done in the shading generating
   #Z# function because strucplot() really does not need to know anything
@@ -85,19 +81,23 @@ strucplot <- function(## main parameters
                         ## FIXME: expected == 0 ??
                         Pearson = (x - expected) / sqrt(ifelse(expected > 0, expected, 1)),
                         deviance = {
-                          tmp <- 2 * (x * log(ifelse(x == 0, 1, x / expected)) - (x - expected))
+                          tmp <- 2 * (x * log(ifelse(x == 0, 1, x / ifelse(expected > 0, expected, 1))) - (x - expected))
                           tmp <- sqrt(pmax(tmp, 0))
                           ifelse(x > expected, tmp, -tmp)
                         },
                         FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * expected + 1)
                         )
 
+  ## splitting
+  if (length(split.vertical) == 1)
+    split.vertical <- rep(c(split.vertical, !split.vertical), length.out = dl)
+
   ## spacing
-  if (is.function(spacing))
-    spacing <- if (inherits(spacing, "vcdSpacing"))
-      do.call("spacing", spacing.args)
-    else
-      spacing(dim(x), condvars)
+  if (is.function(spacing)) {
+    if (inherits(spacing, "vcdSpacing"))
+      spacing <- do.call("spacing", spacing.args)
+    spacing <- spacing(dim(x), condvars)
+  }
 
   ## gp (color, fill, lty, etc.) argument
   if(shade) {
