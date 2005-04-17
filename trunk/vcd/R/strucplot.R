@@ -52,6 +52,9 @@ strucplot <- function(## main parameters
   if (is.null(dnn))
     dnn <- names(dn) <- names(dimnames(x)) <- LETTERS[1:dl]
 
+  ## replace NAs by 0
+  if (any(nas <- is.na(x))) x[nas] <- 0
+
   #Z# model fitting
   #Z# maybe, after all, this should be done in the shading generating
   #Z# function because strucplot() really does not need to know anything
@@ -87,6 +90,9 @@ strucplot <- function(## main parameters
                         },
                         FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * expected + 1)
                         )
+
+  ## replace NAs by 0
+  if (any(nas <- is.na(residuals))) residuals[nas] <- 0
 
   ## splitting
   if (length(split.vertical) == 1)
