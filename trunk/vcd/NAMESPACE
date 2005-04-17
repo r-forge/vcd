@@ -38,6 +38,7 @@ export(
 ## panel functions
        "gp.binary", "gp.HCLshading", "gp.HSVshading", "gp.max",  "gp.Friendly",
        "panel.barplot", "panel.mosaicplot", "panel.text", "panel.mosaic", "panel.assoc",
+       "panel.mosaicplot", "panel.assocplot",
 
 ## ``normal'' functions
        "co.table",
