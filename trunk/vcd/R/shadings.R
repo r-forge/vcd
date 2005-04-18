@@ -209,3 +209,23 @@ gp.binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = N
 class(gp.HCLshading) <- "vcdShading"
 
 ## gp.Z <- gp.HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
+
+rainbowHCL <- function(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n,
+  gamma = 2.2, fixup = TRUE)
+{
+  if(n > 0) hcl(seq(start, end, length = n), c = c, l = l, gamma = gamma, fixup = fixup)
+    else character(0)
+}
+
+cmHCL <- function(n, h = c(260, 0), c = 100, l = c(90, 50), gamma = 2.2, fixup = TRUE)
+{
+  h <- rep(h, length.out = 2)
+  c <- c[1]
+  l <- rep(l, length.out = 2)
+  rval <- seq(-1, 1, length = n)
+  rval <- hcl(h = ifelse(rval > 0, h[1], h[2]),
+              c = c * abs(rval),
+              l = l[1] + diff(l) * abs(rval),
+              gamma = gamma, fixup = fixup)
+  if(n > 0) return(rval) else return(character(0))	      
+}
