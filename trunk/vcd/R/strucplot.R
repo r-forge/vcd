@@ -7,7 +7,7 @@ strucplot <- function(## main parameters
                       x,
                       residuals = NULL,
                       expected = NULL,
-		      df = NULL,         #Z# new argument for inference
+		      df = NULL,
 		      condvars = NULL,
                       shade = NULL,
                       type = c("observed", "expected"),
@@ -37,7 +37,7 @@ strucplot <- function(## main parameters
                       newpage = TRUE,
                       keepAR = TRUE
                       ) {
-  #Z# changed default behaviour of shade
+  ## default behaviour of shade
   if(is.null(shade)) shade <- is.function(gp) || !is.null(expected)
 		      
   type <- match.arg(type)
@@ -55,13 +55,13 @@ strucplot <- function(## main parameters
   ## replace NAs by 0
   if (any(nas <- is.na(x))) x[nas] <- 0
 
-  #Z# model fitting
-  #Z# maybe, after all, this should be done in the shading generating
-  #Z# function because strucplot() really does not need to know anything
-  #Z# about model fitting
-  #Z# For now, this is done here. A parameter df is added for inference
-  #Z# (which is done in the shading (generating) functions).
-  #Z# Finally, expected can also be the table of expected values.
+  ## model fitting
+  ## maybe, after all, this should be done in the shading generating
+  ## function because strucplot() really does not need to know anything
+  ## about model fitting
+  ## For now, this is done here. A parameter df is added for inference
+  ## (which is done in the shading (generating) functions).
+  ## Finally, expected can also be the table of expected values.
   if(is.null(expected) || !is.numeric(expected)) {
     if(inherits(expected, "formula")) {
       fm <- loglm(expected, x, fitted = TRUE)
@@ -78,10 +78,9 @@ strucplot <- function(## main parameters
     }
   }
   
-  #Z# compute residuals
+  ## compute residuals
   if (is.null(residuals))
     residuals <- switch(residuals.type,
-                        ## FIXME: expected == 0 ??
                         Pearson = (x - expected) / sqrt(ifelse(expected > 0, expected, 1)),
                         deviance = {
                           tmp <- 2 * (x * log(ifelse(x == 0, 1, x / ifelse(expected > 0, expected, 1))) - (x - expected))
@@ -90,7 +89,6 @@ strucplot <- function(## main parameters
                         },
                         FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * expected + 1)
                         )
-
   ## replace NAs by 0
   if (any(nas <- is.na(residuals))) residuals[nas] <- 0
 
@@ -183,7 +181,7 @@ strucplot <- function(## main parameters
   if (!is.null(main) || !is.null(sub) || (shade && !is.null(legend))) upViewport()
   if (pop) popViewport() else upViewport()
 
-  #Z# Before, this returned strucplot() instead of structable(), argh...
+  ## return visualized table
   invisible(structable(if (type == "observed") x else expected,
                       split.vertical = split.vertical))
 }
