@@ -58,9 +58,9 @@ function(formula, data = NULL, ..., main = NULL)
   }
 
 mosaic.default <- function(x,
-                           visZero = TRUE, zeroSize = 0.5, gp.zeroLine = gpar(col = "gray"),
                            split.vertical = FALSE, direction = NULL,
-                           spacing = NULL, spacing.args = list(), ...) {
+                           spacing = NULL, spacing.args = list(), ...,
+                           visZero = TRUE, zeroSize = 0.5, gp.zeroLine = gpar(col = "gray")) {
   dl <- length(dim(x))
   
   ## splitting argument

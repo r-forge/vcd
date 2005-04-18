@@ -1,4 +1,4 @@
-plot.loglm <- function(x,
+mosaic.loglm <- plot.loglm <- function(x,
                        panel = mosaic,
                        type = c("observed", "expected"),
                        residuals.type = c("pearson", "deviance"),
@@ -11,7 +11,7 @@ plot.loglm <- function(x,
   observed <- residuals * sqrt(expected) + expected
   if(residuals.type == "deviance") residuals <- residuals(x, type = "deviance")
   panel(observed, residuals = residuals, expected = expected, df = x$df,
-        type = type, shade = TRUE, ...)
+        type = type, ...)
 }
 
 #Z# example:
