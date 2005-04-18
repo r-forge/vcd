@@ -3,8 +3,8 @@ legend.resbased <- function(fontsize = 12,
                             y = unit(0.1, "npc"),
                             height = unit(0.8, "npc"),
                             width = unit(0.7, "lines"),
-			    digits = 3,           #Z# two new arguments
-			    check.overlap = TRUE, #Z# exported (defaults changed)
+			    digits = 3, 
+			    check.overlap = TRUE,
                             text = NULL,
                             steps = 200,
                             ticks = 10,
@@ -75,8 +75,8 @@ legend.fixed <- function(fontsize = 12,
                          y = unit(0.2, "npc"),
                          height = unit(0.8, "npc"),
                          width = unit(1.5, "lines"),
-			 digits = 3,	       #Z# two new arguments
-			 check.overlap = TRUE, #Z# exported (defaults changed)
+			 digits = 3, 
+			 check.overlap = TRUE,
                          text = NULL) {
   
   if(!is.unit(x)) x <- unit(x, "native")
