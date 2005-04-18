@@ -217,12 +217,12 @@ rainbowHCL <- function(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n,
     else character(0)
 }
 
-cmHCL <- function(n, h = c(260, 0), c = 100, l = c(90, 50), gamma = 2.2, fixup = TRUE)
+brHCL <- function(n, h = c(260, 0), c = 100, l = c(90, 50), gamma = 2.2, fixup = TRUE)
 {
   h <- rep(h, length.out = 2)
   c <- c[1]
   l <- rep(l, length.out = 2)
-  rval <- seq(-1, 1, length = n)
+  rval <- seq(1, -1, length = n)
   rval <- hcl(h = ifelse(rval > 0, h[1], h[2]),
               c = c * abs(rval),
               l = l[1] + diff(l) * abs(rval),

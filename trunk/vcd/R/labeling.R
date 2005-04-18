@@ -459,7 +459,7 @@ labeling.doubledecker <- function(labels = "bottom", ...)
                 labbl.varnames = FALSE,
                 rot.labels = rep.int(0, 4),
                 pos.labels = c("left", "center", "left", "center"),
-                just.labels = c("left", "center", "left", "center"),
+                just.labels = c("left", "left", "left", "center"),
                 varnames = c(c(rep.int(TRUE, length(d) - 1), FALSE)),
                 tl.labels = c(rep.int(labels == "top", length(d) - 1), FALSE))(d, split.vertical, condvars)
     seekViewport("marginRight")

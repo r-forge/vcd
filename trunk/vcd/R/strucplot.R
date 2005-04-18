@@ -38,7 +38,7 @@ strucplot <- function(## main parameters
                       keepAR = TRUE
                       ) {
   ## default behaviour of shade
-  if(is.null(shade)) shade <- is.function(gp) || !is.null(expected)
+  if(is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
 		      
   type <- match.arg(type)
   residuals.type = match.arg(residuals.type)
@@ -108,7 +108,7 @@ strucplot <- function(## main parameters
     if(is.null(gp)) gp <- gp.HCLshading
     if(is.function(gp)) {
       
-      gpfun <- if(inherits(gp, "vcdShading") || all(head(names(formals(gp)), 4) == c("observed", "residuals", "expected", "df")))
+      gpfun <- if(inherits(gp, "vcdShading"))
                  do.call("gp", c(list(x, residuals, expected, df), as.list(gp.args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend))
