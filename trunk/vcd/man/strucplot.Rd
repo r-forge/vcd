@@ -15,7 +15,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   labeling = labeling.text, labeling.args = list(),
   panel = panel.mosaicplot, panel.args = list(),
   legend = legend.resbased, legend.args = list(),
-  main = NULL, sub = NULL, margin = rep.int(2.5, 4), legend.width = unit(0.15, "npc"),
+  main = NULL, sub = NULL, margins = rep.int(2.5, 4), legend.width = unit(0.15, "npc"),
   pop = FALSE, title.gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -84,7 +84,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{sub}{either a logical, or a character string used for
     plotting the subtitle. If \code{sub} is a logical and
     \code{TRUE}, the name of the object supplied as \code{x} is used.}
-  \item{margin}{either an object of class \code{"unit"} of length 4, or
+  \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as
     needed. The four components specify the top, right, bottom, and left
     margin of the plot, respectively. When a numeric vector is supplied,

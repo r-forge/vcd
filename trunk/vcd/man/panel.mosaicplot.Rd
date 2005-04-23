@@ -7,15 +7,13 @@
   producing mosaic plots.
 }
 \usage{
-panel.mosaicplot(visZero = TRUE, zeroSize = 0.5, gp.zeroLine = gpar(col = "gray"))
+panel.mosaicplot(visZero = TRUE, zeroSize = 0.5)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{visZero}{logical; shall zero entries in the contingency table be
   visualized using a bullet?}
   \item{zeroSize}{size of the zero-entries bullet (ignored if \code{visZero} is \code{TRUE})}
-  \item{gp.zeroLine}{object of class \code{"gpar"} controlling the
-    visual attributes of the line drawn through the bullet}
 }
 \details{
   This function is usually called by \code{strucplot} (typically when called

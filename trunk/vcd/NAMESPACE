@@ -23,9 +23,9 @@ export(
        "spacing.increase",
        "spacing.doubledecker",
 
-       "labeling.augsburg",
+       "labeling.lboxed",
        "labeling.text",
-       "labeling.boxed",
+       "labeling.cboxed",
        "labeling.left",
        "labeling.cells",
        "labeling.conditional",

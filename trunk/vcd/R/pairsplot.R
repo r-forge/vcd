@@ -53,7 +53,7 @@ panel.assoc <- function(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
   function(x, i, j) assoc(x = margin.table(x, c(i, j)),
                           
                           labeling = labeling,
-                          margin = margins,
+                          margins = margins,
                           legend = legend,
                           shade = shade,
                           
@@ -78,7 +78,7 @@ panel.mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
            condvars = if (type == "conditional") rest else NULL,
            
            labeling = labeling,
-           margin = margins,
+           margins = margins,
            legend = legend,
            shade = shade,
            
@@ -116,7 +116,7 @@ panel.barplot <- function(dimnames = NULL,
     xpos <- seq(0, 1, length = length(x) + 1)[-1]
     halfstep <- (xpos[2] - xpos[1]) / 2
     grid.rect(xpos - halfstep, rep.int(0, length(x)), height = x,
-              just = c("centre", "bottom"), width = halfstep,
+              just = c("center", "bottom"), width = halfstep,
               gp = gp.bars, default = "native", ...)
     grid.yaxis(at = pretty(c(0,max(x))))
     grid.text(names(x), y = unit(-0.15, "npc"),
