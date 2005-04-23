@@ -35,7 +35,7 @@ function (x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
       fg <- placeGrob(fg, textGrob(labels[i],
                                    x = 0 + 0.3 * tit,
                                    y = 0.5, 
-                                   just = c("left", "centre")),
+                                   just = c("left", "center")),
                       col = 2 - tit, row = i)
     }
     pushViewport(viewport(x, y, height = unit(nkeys, "lines"),

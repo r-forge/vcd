@@ -127,7 +127,7 @@ legend.fixed <- function(fontsize = 12,
     popViewport(1)
     grid.text(text, x = x + 0.5 * width, y = 0,
               gp = gpar(fontsize = fontsize),
-              just = c("left", "centre"),
+              just = c("left", "center"),
               rot = 90
               )
   }

@@ -28,7 +28,7 @@ strucplot <- function(## main parameters
                       
                       main = NULL,
                       sub = NULL,
-                      margin = rep.int(2.5, 4),
+                      margins = rep.int(2.5, 4),
                       legend.width = unit(0.15, "npc"),
                       
                       ## control parameters
@@ -41,7 +41,7 @@ strucplot <- function(## main parameters
   if(is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
 		      
   type <- match.arg(type)
-  residuals.type = match.arg(residuals.type)
+  residuals.type = match.arg(tolower(residuals.type), c("pearson", "deviance", "ft"))
 
   ## table characteristics
   dl <- length(dim(x))
@@ -81,13 +81,13 @@ strucplot <- function(## main parameters
   ## compute residuals
   if (is.null(residuals))
     residuals <- switch(residuals.type,
-                        Pearson = (x - expected) / sqrt(ifelse(expected > 0, expected, 1)),
+                        pearson = (x - expected) / sqrt(ifelse(expected > 0, expected, 1)),
                         deviance = {
                           tmp <- 2 * (x * log(ifelse(x == 0, 1, x / ifelse(expected > 0, expected, 1))) - (x - expected))
                           tmp <- sqrt(pmax(tmp, 0))
                           ifelse(x > expected, tmp, -tmp)
                         },
-                        FT = sqrt(x) + sqrt(x + 1) - sqrt(4 * expected + 1)
+                        ft = sqrt(x) + sqrt(x + 1) - sqrt(4 * expected + 1)
                         )
   ## replace NAs by 0
   if (any(nas <- is.na(residuals))) residuals[nas] <- 0
@@ -125,7 +125,7 @@ strucplot <- function(## main parameters
   
   ## set up page
   if (newpage) grid.newpage()
-  pushViewport(vcdViewport(mar = margin,
+  pushViewport(vcdViewport(mar = margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                            main = !is.null(main), sub = !is.null(sub), keepAR = keepAR,
                            legend.width = legend.width))
@@ -137,6 +137,7 @@ strucplot <- function(## main parameters
     legend <- do.call("legend", legend.args)
   if (shade && !is.null(legend)) {
     seekViewport("legend")
+    residuals.type = switch(residuals.type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
     legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
   }
 

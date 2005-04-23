@@ -8,10 +8,9 @@
   Plots (extended) mosaic displays.
 }
 \usage{
-\method{mosaic}{default}(x, visZero = TRUE, zeroSize = 0.5,
-gp.zeroLine = gpar(col = "gray"),
+\method{mosaic}{default}(x, 
 split.vertical = FALSE, direction = NULL, spacing = NULL,
-spacing.args = list(), ...)
+spacing.args = list(), visZero = TRUE, zeroSize = 0.5, ...)
 \method{mosaic}{formula}(formula, data, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -31,9 +30,6 @@ spacing.args = list(), ...)
   \item{visZero}{if \code{TRUE}, zero entries are represented by
     a bullet.}
   \item{zeroSize}{size of the bullet used for zero entries (ignored if 
-    \code{visZero} is \code{FALSE}.}
-  \item{gp.zeroLine}{object of class \code{"gpar"} controlling the
-    graphical attributes of the line drawn for 0 entries (ignored if 
     \code{visZero} is \code{FALSE}.}
   \item{split.vertical}{logical vector of length \eqn{k},
     \eqn{k} dimensionality of \code{x} (values are recycled as needed).

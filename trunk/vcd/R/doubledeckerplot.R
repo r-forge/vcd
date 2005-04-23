@@ -21,7 +21,6 @@ doubledecker <- function(x,
          margin = margin,
          legend = NULL,
          keepAR = FALSE,
-         
          ...
          )
 }
