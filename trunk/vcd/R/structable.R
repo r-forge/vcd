@@ -102,7 +102,7 @@ structable.formula <- function(formula, data = NULL, direction = "h",
 }
   
 
-structable.default <- function(..., split.vertical = FALSE, direction = NULL) {
+structable.default <- function(..., split_vertical = FALSE, direction = NULL) {
   ## several checks & transformations for arguments
   args <- list(...)
   
@@ -122,26 +122,26 @@ structable.default <- function(..., split.vertical = FALSE, direction = NULL) {
   ## splitting argument
   dl <- length(dim(x))
   if (!is.null(direction))
-    split.vertical <- direction == "v"
-  if (length(split.vertical) == 1)
-    split.vertical <- rep(c(split.vertical, !split.vertical), length.out = dl)
-  if (length(split.vertical) < dl)
-    split.vertical <- rep(split.vertical, length.out = dl)
+    split_vertical <- direction == "v"
+  if (length(split_vertical) == 1)
+    split_vertical <- rep(c(split_vertical, !split_vertical), length.out = dl)
+  if (length(split_vertical) < dl)
+    split_vertical <- rep(split_vertical, length.out = dl)
     
 
   ## permute & reshape
-  ret <- aperm(x, c(rev(which(!split.vertical)), rev(which(split.vertical))))
+  ret <- aperm(x, c(rev(which(!split_vertical)), rev(which(split_vertical))))
 
   dn <- dimnames(x)
-  rv <- dn[split.vertical]
-  cv <- dn[!split.vertical]
+  rv <- dn[split_vertical]
+  cv <- dn[!split_vertical]
   rl <- if (length(rv)) sapply(rv, length) else 1
   cl <- if (length(cv)) sapply(cv, length) else 1
   dim(ret) <- c(prod(cl), prod(rl))
   
   ## add dimnames
   attr(ret, "dnames") <- dn
-  attr(ret, "split.vertical") <- split.vertical
+  attr(ret, "split_vertical") <- split_vertical
 
   ## add dimension attributes in ftable-format
   attr(ret, "col.vars") <- rv
@@ -159,7 +159,7 @@ structable.default <- function(..., split.vertical = FALSE, direction = NULL) {
       return(x[[ ..1[1] ]] [[ ..1[-1] ]])
     else
       ## resolve x[[foo]] 
-      return(if (attr(x, "split.vertical")[1]) x[[,..1]] else x[[..1,]])
+      return(if (attr(x, "split_vertical")[1]) x[[,..1]] else x[[..1,]])
 
   ## handle calls like x[[c(1,2), c(3,4)]]
   if (length(..1) > 1 && length(..2) > 1)
@@ -172,8 +172,8 @@ structable.default <- function(..., split.vertical = FALSE, direction = NULL) {
     return(x[[ ..1, ..2[[1]] ]] [[ , ..2[-1] ]])
 
   ## final cases like x[[1,2]] or x[[1,]] or x[[,1]]
-  rv <- attr(x, "dnames")[!attr(x, "split.vertical")]
-  cv <- attr(x, "dnames")[attr(x, "split.vertical")]
+  rv <- attr(x, "dnames")[!attr(x, "split_vertical")]
+  cv <- attr(x, "dnames")[attr(x, "split_vertical")]
 
   if (!is.symbol(..1)) rstep <- dim(x)[1] / length(rv[[1]])
   if (!is.symbol(..2)) cstep <- dim(x)[2] / length(cv[[1]])
@@ -183,19 +183,19 @@ structable.default <- function(..., split.vertical = FALSE, direction = NULL) {
            drop = FALSE
            ]
 
-  attr(ret, "split.vertical") <- attr(x, "split.vertical")
+  attr(ret, "split_vertical") <- attr(x, "split_vertical")
   attr(ret, "dnames") <- attr(x, "dnames")
   
   if (!is.symbol(..1)) {
-    i <- which(!attr(ret, "split.vertical"))[1]
-    attr(ret, "split.vertical") <- attr(ret, "split.vertical")[-i]
+    i <- which(!attr(ret, "split_vertical"))[1]
+    attr(ret, "split_vertical") <- attr(ret, "split_vertical")[-i]
     attr(ret, "dnames") <- attr(ret, "dnames")[-i]
   }
     
 
   if (!is.symbol(..2)) {
-    i <- which(attr(ret, "split.vertical"))[1]
-    attr(ret, "split.vertical") <- attr(ret, "split.vertical")[-i]
+    i <- which(attr(ret, "split_vertical"))[1]
+    attr(ret, "split_vertical") <- attr(ret, "split_vertical")[-i]
     attr(ret, "dnames") <- attr(ret, "dnames")[-i]
   }
 

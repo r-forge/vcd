@@ -1,5 +1,5 @@
 \name{panel.mosaicplot}
-\alias{panel.mosaicplot}
+\alias{panel_mosaicplot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Panel-generating function for mosaic plots}
 \description{
@@ -7,7 +7,7 @@
   producing mosaic plots.
 }
 \usage{
-panel.mosaicplot(visZero = TRUE, zeroSize = 0.5)
+panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,7 +28,7 @@ panel.mosaicplot(visZero = TRUE, zeroSize = 0.5)
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles}
   \item{gp}{list of \code{gpar} objects used for the drawing the tiles}
-  \item{split.vertical}{vector of logicals indicating, for each
+  \item{split_vertical}{vector of logicals indicating, for each
     dimension of the table, the split direction}
 }
 \author{David Meyer (\email{david.meyer@R-project.org})}

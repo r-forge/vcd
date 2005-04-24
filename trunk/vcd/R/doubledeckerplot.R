@@ -6,7 +6,7 @@ doubledecker <- function(x,
                          main = NULL, 
                          labeling = NULL,
                          margin = c(1, 4, length(dim(x)) + 1, 1),
-                         spacing = spacing.doubledecker(),
+                         spacing = spacing_doubledecker(),
                          ...) {
   d <- dim(x)
   l <- length(d)
@@ -16,7 +16,7 @@ doubledecker <- function(x,
          split = c(rep.int(TRUE, l - 1), FALSE),
          gp = gpar(fill = col[colind]),
          shade = TRUE,
-         labeling = if (is.null(labeling)) labeling.doubledecker() else labeling,
+         labeling = if (is.null(labeling)) labeling_doubledecker() else labeling,
          main = main,
          margin = margin,
          legend = NULL,

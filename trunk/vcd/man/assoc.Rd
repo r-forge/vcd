@@ -10,9 +10,9 @@ from a specified independence model in a possibly high-dimensional
 contingency table.
 }
 \usage{
-\method{assoc}{default}(x, row.vars = NULL, col.vars = NULL, compress =
-TRUE, xlim = NULL, ylim = NULL, spacing = spacing.conditional(sp = 0),
-spacing.args = list(), split.vertical = NULL, xscale = 0.9, yspace = unit(0.5, "lines"), ...)
+\method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress =
+TRUE, xlim = NULL, ylim = NULL, spacing = spacing_conditional(sp = 0),
+spacing_args = list(), split_vertical = NULL, xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -21,10 +21,10 @@ spacing.args = list(), split.vertical = NULL, xscale = 0.9, yspace = unit(0.5, "
     labels specified in the \code{dimnames(x)} attribute, or an
     object inheriting from the \code{"ftable"} class (such as
     \code{"structable"} objects)}
-  \item{row.vars}{a vector of integers giving the numbers of the variables, or
+  \item{row_vars}{a vector of integers giving the numbers of the variables, or
     a character vector giving the names of the variables to be
     used for the rows of the association plot.}
-  \item{col.vars}{a vector of integers giving the numbers of the variables, or
+  \item{col_vars}{a vector of integers giving the numbers of the variables, or
     a character vector giving the names of the variables to be
     used for the columns of the association plot.}
   \item{compress}{logical; if \code{FALSE}, the space between the
@@ -48,12 +48,12 @@ spacing.args = list(), split.vertical = NULL, xscale = 0.9, yspace = unit(0.5, "
     if \code{FALSE} from the whole association plot matrix)}
   \item{spacing}{either a spacing-generating function, or a spacing function
     (see \code{\link{strucplot}} for more information). The
-    default is \code{\link{spacing.conditional}} (see
+    default is \code{\link{spacing_conditional}} (see
     \code{spacings} for more information).}
-  \item{spacing.args}{list of arguments for the
+  \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified
     (see \code{\link{strucplot}} for more information).}
-  \item{split.vertical}{logical vector of length k, k 
+  \item{split_vertical}{logical vector of length k, k 
     dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     corresponding dimension is fold into the columns,

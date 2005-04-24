@@ -6,16 +6,16 @@
 Priduces a matrix of association of mosaic plots.
 }
 \usage{
-pairs.table(x, upper.panel = panel.mosaic(), lower.panel = panel.mosaic(), diag.panel = panel.barplot(), main = NULL, title.gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
+pairs.table(x, upper_panel = panel_mosaic(), lower_panel = panel_mosaic(), diag_panel = panel_barplot(), main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{A contingency table}
-  \item{upper.panel}{Panel function for the upper triangle of the matrix}
-  \item{lower.panel}{Panel function for the lower triangle of the matrix}
-  \item{diag.panel}{Panel function for the diagonal of the matrix}
+  \item{upper_panel}{Panel function for the upper triangle of the matrix}
+  \item{lower_panel}{Panel function for the lower triangle of the matrix}
+  \item{diag_panel}{Panel function for the diagonal of the matrix}
   \item{main}{Main title}
-  \item{title.gp}{Object of class \code{"gpar"} used for the title}
+  \item{title_gp}{Object of class \code{"gpar"} used for the title}
   \item{space}{double specifying the distance between the cells}
   \item{newpage}{logical controlling whether a new grid page should be created}
   \item{\dots}{currently not used}
@@ -57,7 +57,7 @@ data(PreSex)
 
 pairs(PreSex)
 pairs(UCBAdmissions)
-pairs(UCBAdmissions, lower.panel = panel.mosaic(type="conditional"))
-pairs(UCBAdmissions, upper.panel = panel.assoc())
+pairs(UCBAdmissions, lower_panel = panel_mosaic(type="conditional"))
+pairs(UCBAdmissions, upper_panel = panel_assoc())
 }
 \keyword{hplot}

@@ -2,12 +2,12 @@
 ### pairsplot
 
 pairs.table <- function(x,
-                  upper.panel = panel.mosaic(),
-                  lower.panel = panel.mosaic(),
-                  diag.panel = panel.barplot(),
+                  upper_panel = panel_mosaic(),
+                  lower_panel = panel_mosaic(),
+                  diag_panel = panel_barplot(),
                   
                   main = NULL,
-                  title.gp = gpar(fontsize = 20),
+                  title_gp = gpar(fontsize = 20),
                   
                   space = 0.1,
                   newpage = TRUE,
@@ -25,7 +25,7 @@ pairs.table <- function(x,
 
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
-  grid.text(main, y = unit(1.05, "npc"), gp = title.gp)
+  grid.text(main, y = unit(1.05, "npc"), gp = title_gp)
 
 
   for (i in 1:d)
@@ -34,11 +34,11 @@ pairs.table <- function(x,
       pushViewport(viewport(width = 1 - space, height = 1 - space))
 
       if (i > j)
-        upper.panel(x, j, i)
+        upper_panel(x, j, i)
       else if (i < j)
-        lower.panel(x, j, i)
+        lower_panel(x, j, i)
       else
-        diag.panel(margin.table(x, i))
+        diag_panel(margin.table(x, i))
 
       popViewport(2)
     }
@@ -48,7 +48,7 @@ pairs.table <- function(x,
 
 ## upper/lower panels
 
-panel.assoc <- function(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
+panel_assoc <- function(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
                         labeling = NULL, shade = TRUE, ...)
   function(x, i, j) assoc(x = margin.table(x, c(i, j)),
                           
@@ -62,7 +62,7 @@ panel.assoc <- function(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
                           ...)
 
 
-panel.mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
+panel_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
                          legend = FALSE, margins = c(0, 0, 0, 0),
                          labeling = NULL, shade = TRUE, ...) {
   type = match.arg(type)
@@ -90,24 +90,24 @@ panel.mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
   
 ## diagonal panels
 
-panel.text <- function(dimnames = TRUE,
-                       gp.vartext = gpar(fontsize = 17),
-                       gp.leveltext = gpar(),
-                       gp.border = gpar(),
+panel_text <- function(dimnames = TRUE,
+                       gp_vartext = gpar(fontsize = 17),
+                       gp_leveltext = gpar(),
+                       gp_border = gpar(),
                        ...)
 
   function(x) {
-    grid.rect(gp = gp.border)
-    grid.text(names(dimnames(x)), gp = gp.vartext,  y = 0.5 + dimnames * 0.05, ...)
+    grid.rect(gp = gp_border)
+    grid.text(names(dimnames(x)), gp = gp_vartext,  y = 0.5 + dimnames * 0.05, ...)
     if (dimnames)
       grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
-                y = 0.4, gp = gp.leveltext)
+                y = 0.4, gp = gp_leveltext)
   }
 
-panel.barplot <- function(dimnames = NULL,
-                          gp.bars = gpar(fill = "gray"),
-                          gp.vartext = gpar(fontsize = 17),
-                          gp.leveltext = gpar(),
+panel_barplot <- function(dimnames = NULL,
+                          gp_bars = gpar(fill = "gray"),
+                          gp_vartext = gpar(fontsize = 17),
+                          gp_leveltext = gpar(),
                           ...)
   function(x) {
     pushViewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
@@ -117,12 +117,12 @@ panel.barplot <- function(dimnames = NULL,
     halfstep <- (xpos[2] - xpos[1]) / 2
     grid.rect(xpos - halfstep, rep.int(0, length(x)), height = x,
               just = c("center", "bottom"), width = halfstep,
-              gp = gp.bars, default = "native", ...)
+              gp = gp_bars, default = "native", ...)
     grid.yaxis(at = pretty(c(0,max(x))))
     grid.text(names(x), y = unit(-0.15, "npc"),
-              x = xpos - halfstep, just = c("center", "bottom"), gp = gp.leveltext)
+              x = xpos - halfstep, just = c("center", "bottom"), gp = gp_leveltext)
     popViewport(1)
-    grid.text(names(dimnames(x)), y = 1, just = c("center", "top"), gp = gp.vartext)
+    grid.text(names(dimnames(x)), y = 1, just = c("center", "top"), gp = gp_vartext)
 
   }
 

@@ -1,15 +1,15 @@
 \name{panel.assoc}
-\alias{panel.assoc}
-\alias{panel.mosaic}
+\alias{panel_assoc}
+\alias{panel_mosaic}
 \title{Panel Functions for Pairs Plot}
 \description{
   Panel-generating functions wrapping \code{assoc} and \code{mosaic} for the
   \code{pairs.table} function.
 }
 \usage{
-panel.assoc(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
+panel_assoc(type = NULL, legend = FALSE, margins = c(0, 0, 0, 0),
             labeling = NULL, shade = TRUE, ...)
-panel.mosaic(type = c("pairwise", "total", "conditional", "joint"),
+panel_mosaic(type = c("pairwise", "total", "conditional", "joint"),
              legend = FALSE, margins = c(0, 0, 0, 0),
              labeling = NULL, shade = TRUE, ...)
 }
@@ -48,6 +48,6 @@ usable by \code{pairs.table}.
 \author{David Meyer (\email{david.meyer@R-project.org})}
 \seealso{\code{\link{pairs.table}}, \code{\link{assoc}}, \code{\link{mosaic}}}
 \examples{
-pairs(Titanic, upper.panel = panel.assoc())
+pairs(Titanic, upper_panel = panel_assoc())
 }
 \keyword{hplot}

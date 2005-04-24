@@ -58,33 +58,33 @@ function(formula, data = NULL, ..., main = NULL)
   }
 
 mosaic.default <- function(x,
-                           split.vertical = FALSE, direction = NULL,
-                           spacing = NULL, spacing.args = list(),
+                           split_vertical = FALSE, direction = NULL,
+                           spacing = NULL, spacing_args = list(),
                            visZero = TRUE, zeroSize = 0.5, ...) {
   dl <- length(dim(x))
   
   ## splitting argument
   if (!is.null(direction))
-    split.vertical <- direction == "v"
-  if (length(split.vertical) == 1)
-    split.vertical <- rep(c(split.vertical, !split.vertical), length.out = dl)
-  if (length(split.vertical) < dl)
-    split.vertical <- rep(split.vertical, length.out = dl)
+    split_vertical <- direction == "v"
+  if (length(split_vertical) == 1)
+    split_vertical <- rep(c(split_vertical, !split_vertical), length.out = dl)
+  if (length(split_vertical) < dl)
+    split_vertical <- rep(split_vertical, length.out = dl)
 
   ## spacing argument
   if (is.null(spacing))
-    spacing <- if (dl < 3) spacing.equal else spacing.increase
+    spacing <- if (dl < 3) spacing_equal else spacing_increase
 
   strucplot(x,
-            panel = panel.mosaicplot(visZero = visZero, zeroSize = zeroSize),
-            split.vertical = split.vertical,
+            panel = panel_mosaicplot(visZero = visZero, zeroSize = zeroSize),
+            split_vertical = split_vertical,
             spacing = spacing,
-            spacing.args = spacing.args,
+            spacing_args = spacing_args,
             ...)
 }
 
-panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
-  function(residuals, observed, expected = NULL, spacing, gp, split.vertical) {
+panel_mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
+  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
     dn <- dimnames(observed)
     dnn <- names(dn)
     dx <- dim(observed)
@@ -94,7 +94,7 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
     split <- function(x, i, name, row, col) {
       cotab <- co.table(x, 1)
       margin <- sapply(cotab, sum)
-      v <- split.vertical[i]
+      v <- split_vertical[i]
       d <- dx[i]
 
       ## compute total cols/rows and build split layout
@@ -148,4 +148,4 @@ panel.mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
     }
 
   }
-class(panel.mosaicplot) <- "vcdPanel"
+class(panel_mosaicplot) <- "vcdPanel"

@@ -1,10 +1,10 @@
-legend.resbased <- function(fontsize = 12,
+legend_resbased <- function(fontsize = 12,
                             x = unit(1, "lines"),
                             y = unit(0.1, "npc"),
                             height = unit(0.8, "npc"),
                             width = unit(0.7, "lines"),
 			    digits = 3, 
-			    check.overlap = TRUE,
+			    check_overlap = TRUE,
                             text = NULL,
                             steps = 200,
                             ticks = 10,
@@ -50,7 +50,7 @@ legend.resbased <- function(fontsize = 12,
     grid.text(format(signif(at, digits = digits)),
               x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
               y = at,
-              default.unit = "native", just = c("right", "center"), check.overlap = check.overlap)
+              default.unit = "native", just = c("right", "center"), check.overlap = check_overlap)
     grid.segments(x0 = unit(1, "npc"), x1 = unit(1,"npc") + unit(0.5, "lines"),
                   y0 = at, y1 = at, default.unit = "native")
 
@@ -68,15 +68,15 @@ legend.resbased <- function(fontsize = 12,
     }
   }
 }
-class(legend.resbased) <- "vcdLegend"
+class(legend_resbased) <- "vcdLegend"
 
-legend.fixed <- function(fontsize = 12,
+legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
                          y = unit(0.2, "npc"),
                          height = unit(0.8, "npc"),
                          width = unit(1.5, "lines"),
 			 digits = 3, 
-			 check.overlap = TRUE,
+			 check_overlap = TRUE,
                          text = NULL) {
   
   if(!is.unit(x)) x <- unit(x, "native")
@@ -120,7 +120,7 @@ legend.fixed <- function(fontsize = 12,
     grid.text(format(signif(at, digits = digits)),
               x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
               y = at,
-              default.unit = "native", just = c("right", "center"), check.overlap = check.overlap)
+              default.unit = "native", just = c("right", "center"), check.overlap = check_overlap)
     grid.segments(x0 = unit(0, "npc"), x1 = unit(1,"npc") + unit(0.5, "lines"),
                   y0 = at, y1 = at, default.unit = "native")
 
@@ -132,4 +132,4 @@ legend.fixed <- function(fontsize = 12,
               )
   }
 }
-class(legend.fixed) <- "vcdLegend"
+class(legend_fixed) <- "vcdLegend"

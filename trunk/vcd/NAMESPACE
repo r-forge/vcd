@@ -17,28 +17,28 @@ export(
        "structable",
 
        ## spacings
-       "spacing.conditional",
-       "spacing.equal",
-       "spacing.dimequal",
-       "spacing.increase",
-       "spacing.doubledecker",
+       "spacing_conditional",
+       "spacing_equal",
+       "spacing_dimequal",
+       "spacing_increase",
+       "spacing_doubledecker",
 
-       "labeling.lboxed",
-       "labeling.text",
-       "labeling.cboxed",
-       "labeling.left",
-       "labeling.cells",
-       "labeling.conditional",
-       "labeling.list",
-       "labeling.doubledecker",
+       "labeling_lboxed",
+       "labeling_text",
+       "labeling_cboxed",
+       "labeling_left",
+       "labeling_cells",
+       "labeling_conditional",
+       "labeling_list",
+       "labeling_doubledecker",
 
-       "legend.resbased",
-       "legend.fixed",
+       "legend_resbased",
+       "legend_fixed",
        
 ## panel functions
        "gp.binary", "gp.HCLshading", "gp.HSVshading", "gp.max",  "gp.Friendly",
-       "panel.barplot", "panel.mosaicplot", "panel.text", "panel.mosaic", "panel.assoc",
-       "panel.mosaicplot", "panel.assocplot",
+       "panel_barplot", "panel_mosaicplot", "panel_text", "panel_mosaic", "panel_assoc",
+       "panel_mosaicplot", "panel_assocplot",
 
 ## ``normal'' functions
        "co.table",
