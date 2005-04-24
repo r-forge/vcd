@@ -1,5 +1,5 @@
 \name{panel.assocplot}
-\alias{panel.assocplot}
+\alias{panel_assocplot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Panel-generating function for association plots}
 \description{
@@ -7,7 +7,7 @@
   producing association plots.
 }
 \usage{
-panel.assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "lines"), xscale = 0.9)
+panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "lines"), xscale = 0.9)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,12 +43,12 @@ panel.assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "l
 \value{
   A function with arguments:
   \item{residuals}{table of residuals}
-  \item{observed}{not used by \code{panel.assocplot}}
+  \item{observed}{not used by \code{panel_assocplot}}
   \item{expected}{table of expected frequencies}
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles}
   \item{gp}{list of \code{gpar} objects used for the drawing the tiles}
-  \item{split.vertical}{vector of logicals indicating, for each
+  \item{split_vertical}{vector of logicals indicating, for each
     dimension of the table, the split direction}
 }
 \author{David Meyer (\email{david.meyer@R-project.org})}

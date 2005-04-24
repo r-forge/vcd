@@ -14,17 +14,17 @@ function(formula, data = NULL, subset, na.action, ..., main = NULL)
 }
 
 assoc.default <- function(x,
-                          row.vars = NULL, col.vars = NULL,
+                          row_vars = NULL, col_vars = NULL,
                           compress = TRUE, xlim = NULL, ylim = NULL,
-                          spacing = spacing.conditional(sp = 0),
-                          spacing.args = list(),
-                          split.vertical = NULL,
+                          spacing = spacing_conditional(sp = 0),
+                          spacing_args = list(),
+                          split_vertical = NULL,
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
   if (!inherits(x, "ftable")) {
-    if (is.null(row.vars) && is.null(col.vars) && is.table(x))
-      row.vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
-    x <- ftable(x, row.vars = row.vars, col.vars = col.vars)
+    if (is.null(row_vars) && is.null(col_vars) && is.table(x))
+      row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
+    x <- ftable(x, row_vars = row_vars, col_vars = col_vars)
   }
 
   tab <- as.table(x)
@@ -32,37 +32,37 @@ assoc.default <- function(x,
   
   ## spacing
   cond <- rep(TRUE, dl)
-  cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
+  cond[length(attr(x, "row_vars")) + c(0, length(attr(x, "col_vars")))] <- FALSE
   if (inherits(spacing, "vcdSpacing"))
-    spacing <- do.call("spacing", spacing.args)
+    spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
-  split.vertical <- rep(FALSE, dl)
-  names(split.vertical) <- names(dimnames(tab))
-  split.vertical[names(attr(x, "col.vars"))] <- TRUE
+  split_vertical <- rep(FALSE, dl)
+  names(split_vertical) <- names(dimnames(tab))
+  split_vertical[names(attr(x, "col_vars"))] <- TRUE
   
   strucplot(tab,
             spacing = spacing,
-            split.vertical = split.vertical,
-            panel = panel.assocplot(compress = compress, xlim = xlim, ylim = ylim,
+            split_vertical = split_vertical,
+            panel = panel_assocplot(compress = compress, xlim = xlim, ylim = ylim,
               yspace = yspace, xscale = xscale),
             keepAR = FALSE,
-            residuals.type = "Pearson",
+            residuals_type = "Pearson",
             ...)
 }
 
-panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
+panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                             yspace = unit(0.5, "lines"), xscale = 0.9)
-  function(residuals, observed = NULL, expected, spacing, gp, split.vertical) {
+  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
     dl <- length(dx)
 
     ## axis limits
-    resid <- structable(residuals, split.vertical = split.vertical)
-    sexpected <- structable(sqrt(expected), split.vertical = split.vertical)
+    resid <- structable(residuals, split_vertical = split_vertical)
+    sexpected <- structable(sqrt(expected), split_vertical = split_vertical)
     rfunc <- function(x) c(min(x, 0), max(x, 0))
     if(is.null(ylim))
       ylim <- matrix(if (compress)
@@ -71,8 +71,8 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                        rep.int(rfunc(resid), nrow(resid)),
                      nrow = 2)
 
-    attr(ylim, "split.vertical") <- rep(TRUE, sum(!split.vertical))
-    attr(ylim, "dnames") <- dn[!split.vertical]
+    attr(ylim, "split_vertical") <- rep(TRUE, sum(!split_vertical))
+    attr(ylim, "dnames") <- dn[!split_vertical]
     class(ylim) <- "structable"
 
     if(is.null(xlim))
@@ -81,13 +81,13 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                      else
                        rep.int(c(-1,1) * max(sexpected), ncol(resid)),
                      nrow = 2) / 2
-    attr(xlim, "split.vertical") <- rep(TRUE, sum(split.vertical))
-    attr(xlim, "dnames") <- dn[split.vertical]
+    attr(xlim, "split_vertical") <- rep(TRUE, sum(split_vertical))
+    attr(xlim, "dnames") <- dn[split_vertical]
     class(xlim) <- "structable"
 
     ## split workhorse
     split <- function(res, sexp, i, name, row, col) {
-      v <- split.vertical[i]
+      v <- split_vertical[i]
       splitbase <- if (v) sexp else res
       splittab <- lapply(seq(dx[i]), function(j) splitbase[[j]])
       len <- sapply(splittab, function(x) sum(x[1,] - x[2,]))
@@ -151,4 +151,4 @@ panel.assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(panel.assocplot) <- "vcdPanel"
+class(panel_assocplot) <- "vcdPanel"

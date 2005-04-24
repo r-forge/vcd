@@ -9,14 +9,14 @@
 \usage{
 strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
-  residuals.type = c("Pearson", "deviance", "FT"), split.vertical = TRUE, 
-  spacing = spacing.equal, spacing.args = list(),
-  gp = NULL, gp.args = list(),
-  labeling = labeling.text, labeling.args = list(),
-  panel = panel.mosaicplot, panel.args = list(),
-  legend = legend.resbased, legend.args = list(),
-  main = NULL, sub = NULL, margins = rep.int(2.5, 4), legend.width = unit(0.15, "npc"),
-  pop = FALSE, title.gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
+  residuals_type = c("Pearson", "deviance", "FT"), split_vertical = TRUE, 
+  spacing = spacing_equal, spacing_args = list(),
+  gp = NULL, gp_args = list(),
+  labeling = labeling_text, labeling_args = list(),
+  panel = panel_mosaicplot, panel_args = list(),
+  legend = legend_resbased, legend_args = list(),
+  main = NULL, sub = NULL, margins = rep.int(2.5, 4), legend_width = unit(0.15, "npc"),
+  pop = FALSE, title_gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,7 +39,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     just expect the numbers? --}
   \item{shade}{logical specifying whether shading should be used or not
     (see \code{gp})}
-  \item{residuals.type}{a character string indicating the type of residuals to be
+  \item{residuals_type}{a character string indicating the type of residuals to be
     computed when none are supplied.
     Must be one of \code{"pearson"} (giving components
     of Pearson's chi-squared), \code{"deviance"} (giving components of
@@ -49,7 +49,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{type}{a character string indicating whether the
     \code{"observed"} or the \code{"expected"} values of the table shall be
     visualized.}
-  \item{split.vertical}{logical vector of length \eqn{k},
+  \item{split_vertical}{logical vector of length \eqn{k},
     \eqn{k} dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     tile(s) of the corresponding dimension 
@@ -58,25 +58,25 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     Ignored if \code{direction} is not \code{NULL}.}
   \item{spacing}{either a spacing-generating function, or a spacing
     function (see details and \code{\link{spacings}}.}
-  \item{spacing.args}{list of arguments for the
+  \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified.}
   \item{gp}{either a shading-generating function, or a shading
     function (see details and \code{\link{shadings}}.}
-  \item{gp.args}{list of arguments for the
+  \item{gp_args}{list of arguments for the
     shading-generating function, if specified.}
   \item{labeling}{either a labeling-generating function, or a labeling
     function (see details and \code{\link{labelings}}.}
-  \item{labeling.args}{list of arguments for the
+  \item{labeling_args}{list of arguments for the
     labeling-generating function, if specified.}
   \item{panel}{either a panel-generating function, or a panel
     function (see details). Currently, panel-generating functions for
-    mosaic plots (\code{\link{panel.mosaic}}) and association plots
-    (\code{\link{panel.assoc}}) are provided.}
-  \item{panel.args}{list of arguments for the
+    mosaic plots (\code{\link{panel_mosaic}}) and association plots
+    (\code{\link{panel_assoc}}) are provided.}
+  \item{panel_args}{list of arguments for the
     panel-generating function, if specified.}
   \item{legend}{either a legend-generating function, or a legend
     function (see details and \code{\link{legends}}.}
-  \item{legend.args}{list of arguments for the
+  \item{legend_args}{list of arguments for the
     legend-generating function, if specified.}
   \item{main}{either a logical, or a character string used for
     plotting the main title. If \code{main} is a logical and
@@ -92,12 +92,12 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     it may have named arguments ("top", "right", "bottom", and "left"),
     in which case the non-named arguments specify the default values
     (recycled as needed), overloaded by the named arguments.}
-  \item{legend.width}{either an object of class "unit" of length 1, or a
+  \item{legend_width}{either an object of class "unit" of length 1, or a
   numeric value interpreted as proportion of the available horizontal
   space, specifying the width of the legend (if any).}
   \item{pop}{logical indicating whether the generated viewport-tree
     shall be removed at the end of the drawing or not.}
-  \item{title.gp}{object of class \code{"gpar"} containing the graphical
+  \item{title_gp}{object of class \code{"gpar"} containing the graphical
   parameters used for the main and sub titles.}
   \item{newpage}{logical indicating whether a new page should be created
   for the plot or not.}
@@ -120,13 +120,13 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   the spacing between the tiles, the shading of the tiles, the
   labeling, and the legend, are modularized in functions and specified as
   parameters. For each element \emph{foo}, there are two parameters: \var{foo} and
-  \var{foo.args}. Basically, there are two ways of specification:
+  \var{foo\_args}. Basically, there are two ways of specification:
   either, a suitable function passed to \var{foo} which subsequently is
   called from \code{strucplot} to compute shadings, labelings, etc., or a corresponding
   \emph{generating function} passed to \var{foo}, along with parameters
-  passed to \var{foo.args}, that generates such a function.
-  Except for the shading-functions (\var{gp.bar}), there is a third way
-  of specifying the function by directly passing \code{foo(foo.args)} to
+  passed to \var{foo\_args}, that generates such a function.
+  Except for the shading-functions (\var{gp\_bar}), there is a third way
+  of specifying the function by directly passing \var{foo(foo\_args)} to
   the \var{foo} parameter.
   
   If legends are drawn, a \sQuote{cinemascope}-like layout is used for
@@ -140,8 +140,8 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
 \seealso{
   \code{\link{assoc}},
   \code{\link{mosaic}},
-  \code{\link{panel.assoc}},
-  \code{\link{panel.mosaic}},
+  \code{\link{panel_assoc}},
+  \code{\link{panel_mosaic}},
   \code{\link{structable}},
   \code{\link{doubledeckerplot}}
   \code{\link{labelings}}
@@ -152,10 +152,10 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
 
 \examples{
   strucplot(Titanic)
-  strucplot(Titanic, panel = panel.assocplot)
-  strucplot(Titanic, spacing = spacing.increase,
-                     spacing.args = list(start = 0.5, rate = 1.5))
-  strucplot(Titanic, spacing = spacing.increase(start = 0.5, rate = 1.5))
+  strucplot(Titanic, panel = panel_assocplot)
+  strucplot(Titanic, spacing = spacing_increase,
+                     spacing_args = list(start = 0.5, rate = 1.5))
+  strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
 
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

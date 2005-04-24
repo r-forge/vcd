@@ -11,29 +11,29 @@ strucplot <- function(## main parameters
 		      condvars = NULL,
                       shade = NULL,
                       type = c("observed", "expected"),
-                      residuals.type = c("Pearson", "deviance", "FT"),
+                      residuals_type = c("Pearson", "deviance", "FT"),
                       
                       ## layout
-                      split.vertical = TRUE, 
-                      spacing = spacing.equal,
-                      spacing.args = list(),
+                      split_vertical = TRUE, 
+                      spacing = spacing_equal,
+                      spacing_args = list(),
                       gp = NULL,
-		      gp.args = list(),   
-                      labeling = labeling.text,
-                      labeling.args = list(),
-                      panel = panel.mosaicplot,
-                      panel.args = list(),
-                      legend = legend.resbased,
-                      legend.args = list(),
+		      gp_args = list(),   
+                      labeling = labeling_text,
+                      labeling_args = list(),
+                      panel = panel_mosaicplot,
+                      panel_args = list(),
+                      legend = legend_resbased,
+                      legend_args = list(),
                       
                       main = NULL,
                       sub = NULL,
                       margins = rep.int(2.5, 4),
-                      legend.width = unit(0.15, "npc"),
+                      legend_width = unit(0.15, "npc"),
                       
                       ## control parameters
                       pop = FALSE,
-                      title.gp = gpar(fontsize = 20),
+                      title_gp = gpar(fontsize = 20),
                       newpage = TRUE,
                       keepAR = TRUE
                       ) {
@@ -41,7 +41,7 @@ strucplot <- function(## main parameters
   if(is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
 		      
   type <- match.arg(type)
-  residuals.type = match.arg(tolower(residuals.type), c("pearson", "deviance", "ft"))
+  residuals_type = match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
 
   ## table characteristics
   dl <- length(dim(x))
@@ -80,7 +80,7 @@ strucplot <- function(## main parameters
   
   ## compute residuals
   if (is.null(residuals))
-    residuals <- switch(residuals.type,
+    residuals <- switch(residuals_type,
                         pearson = (x - expected) / sqrt(ifelse(expected > 0, expected, 1)),
                         deviance = {
                           tmp <- 2 * (x * log(ifelse(x == 0, 1, x / ifelse(expected > 0, expected, 1))) - (x - expected))
@@ -93,13 +93,13 @@ strucplot <- function(## main parameters
   if (any(nas <- is.na(residuals))) residuals[nas] <- 0
 
   ## splitting
-  if (length(split.vertical) == 1)
-    split.vertical <- rep(c(split.vertical, !split.vertical), length.out = dl)
+  if (length(split_vertical) == 1)
+    split_vertical <- rep(c(split_vertical, !split_vertical), length.out = dl)
 
   ## spacing
   if (is.function(spacing)) {
     if (inherits(spacing, "vcdSpacing"))
-      spacing <- do.call("spacing", spacing.args)
+      spacing <- do.call("spacing", spacing_args)
     spacing <- spacing(dim(x), condvars)
   }
 
@@ -109,7 +109,7 @@ strucplot <- function(## main parameters
     if(is.function(gp)) {
       
       gpfun <- if(inherits(gp, "vcdShading"))
-                 do.call("gp", c(list(x, residuals, expected, df), as.list(gp.args))) else gp
+                 do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend))
       stop("gp argument must be a shading function for drawing a legend")
@@ -128,17 +128,17 @@ strucplot <- function(## main parameters
   pushViewport(vcdViewport(mar = margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                            main = !is.null(main), sub = !is.null(sub), keepAR = keepAR,
-                           legend.width = legend.width))
+                           legend_width = legend_width))
 
   ## legend
   if (is.logical(legend))
-    legend <- if (legend) legend.resbased else NULL
+    legend <- if (legend) legend_resbased else NULL
   if (inherits(legend, "vcdLegend"))
-    legend <- do.call("legend", legend.args)
+    legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend)) {
     seekViewport("legend")
-    residuals.type = switch(residuals.type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
-    legend(residuals, gpfun, paste(residuals.type, "residuals:", sep = "\n"))
+    residuals_type = switch(residuals_type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
+    legend(residuals, gpfun, paste(residuals_type, "residuals:", sep = "\n"))
   }
 
   ## titles
@@ -146,33 +146,33 @@ strucplot <- function(## main parameters
     seekViewport("main")
     if (is.logical(main) && main)
       main <- deparse(substitute(x))
-    grid.text(main, gp = title.gp)
+    grid.text(main, gp = title_gp)
   }
 
   if (!is.null(sub)) {
     seekViewport("sub")
-    grid.text(sub, gp = title.gp)
+    grid.text(sub, gp = title_gp)
   }
 
   ## make plot
   seekViewport("plot")
   
   if (inherits(panel, "vcdPanel"))
-    panel <- do.call("panel", panel.args)
+    panel <- do.call("panel", panel_args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
         expected = expected,
         spacing = spacing,
         gp = gp,
-        split.vertical = split.vertical)
+        split_vertical = split_vertical)
 
   upViewport(dl)
 
   ## labels
   if (!is.null(labeling)) {
     if (inherits(labeling, "vcdLabeling"))
-      labeling <- do.call("labeling", labeling.args)
-    labeling(dn, split.vertical, condvars)
+      labeling <- do.call("labeling", labeling_args)
+    labeling(dn, split_vertical, condvars)
   }
 
   ## pop/move up viewport
@@ -184,11 +184,11 @@ strucplot <- function(## main parameters
 
   ## return visualized table
   invisible(structable(if (type == "observed") x else expected,
-                      split.vertical = split.vertical))
+                      split_vertical = split_vertical))
 }
 
 vcdViewport <- function(mar = rep.int(2.5, 4),
-                        legend.width = unit(0.15, "npc"),
+                        legend_width = unit(0.15, "npc"),
                         legend = FALSE, main = FALSE, sub = FALSE,
                         keepAR = TRUE)
 {
@@ -196,8 +196,8 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
     unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
   else
     unit.rep(mar, length.out = 4)
-  if (!is.unit(legend.width))
-    legend.width <- unit(legend.width, "npc")
+  if (!is.unit(legend_width))
+    legend_width <- unit(legend_width, "npc")
   vpPlot <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot")
   vpMarginBottom <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "marginBottom")
   vpMarginLeft <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginLeft")
@@ -215,8 +215,8 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
                        layout = grid.layout(3, 4,
                          widths = unit.c(mar[4],
                            unit(1, if (keepAR) "snpc" else "npc") -
-                           (mar[2] + mar[4] + (1 * !keepAR) * legend.width),
-                           mar[2], legend.width),
+                           (mar[2] + mar[4] + (1 * !keepAR) * legend_width),
+                           mar[2], legend_width),
                          heights = unit.c(mar[1], unit(1, if (keepAR) "snpc" else "npc") -
                            (mar[1] + mar[3]), mar[3])),
                        name = "base")
@@ -243,7 +243,7 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
     vpTop <- viewport(layout.pos.row = 1, name = "main")
     vpSub <- viewport(layout.pos.row = 2 + main, name = "sub")
     
-    space <- legend.width + mar[2] + mar[4] - mar[1] - mar[3]
+    space <- legend_width + mar[2] + mar[4] - mar[1] - mar[3]
     sandwich <- if (legend) {
       vplist <- vpList(vpTop, vpPlotregion, vpSub)
       viewport(layout = grid.layout(3, 1, height = unit.c(0.5 * space, unit(1, "npc") -
@@ -252,7 +252,7 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
       vplist <- vpList(vpTop, vpPlotregion, vpSub)
       viewport(layout = grid.layout(3, 1,
                  height = unit.c(unit(2, "lines"),
-                   unit(1, "npc") - legend.width, unit(2, "lines"))))
+                   unit(1, "npc") - legend_width, unit(2, "lines"))))
     } else if (main) {
       vplist <- vpList(vpTop, vpPlotregion)
       viewport(layout = grid.layout(2, 1,

@@ -9,8 +9,8 @@
 }
 \usage{
 \method{mosaic}{default}(x, 
-split.vertical = FALSE, direction = NULL, spacing = NULL,
-spacing.args = list(), visZero = TRUE, zeroSize = 0.5, ...)
+split_vertical = FALSE, direction = NULL, spacing = NULL,
+spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
 \method{mosaic}{formula}(formula, data, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -31,7 +31,7 @@ spacing.args = list(), visZero = TRUE, zeroSize = 0.5, ...)
     a bullet.}
   \item{zeroSize}{size of the bullet used for zero entries (ignored if 
     \code{visZero} is \code{FALSE}.}
-  \item{split.vertical}{logical vector of length \eqn{k},
+  \item{split_vertical}{logical vector of length \eqn{k},
     \eqn{k} dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     tile(s) of the corresponding dimension 
@@ -48,7 +48,7 @@ spacing.args = list(), visZero = TRUE, zeroSize = 0.5, ...)
     The default is \code{spacing.equal} if \code{x} has two
     dimensions, and  \code{spacing.increase} for more 
     dimensions.}
-  \item{spacing.args}{list of arguments for the
+  \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified
     (see \code{\link{strucplot}} for more information).}
   \item{main}{either a logical, or a character string used for
