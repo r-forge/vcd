@@ -34,11 +34,21 @@ export(
 
        "legend_resbased",
        "legend_fixed",
+
+       # shadings
+       "shading_binary",
+       "shading_HCLshading",
+       "shading_HSVshading",
+       "shading_max",
+       "shading_Friendly",
        
 ## panel functions
-       "gp.binary", "gp.HCLshading", "gp.HSVshading", "gp.max",  "gp.Friendly",
-       "panel_barplot", "panel_mosaicplot", "panel_text", "panel_mosaic", "panel_assoc",
-       "panel_mosaicplot", "panel_assocplot",
+       "panel_barplot",
+       "panel_text",
+       "panel_mosaic",
+       "panel_assoc",
+       "panel_mosaicplot",
+       "panel_assocplot",
 
 ## ``normal'' functions
        "co.table",

@@ -11,7 +11,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
   residuals_type = c("Pearson", "deviance", "FT"), split_vertical = TRUE, 
   spacing = spacing_equal, spacing_args = list(),
-  gp = NULL, gp_args = list(),
+  shading = NULL, shading_args = list(),
   labeling = labeling_text, labeling_args = list(),
   panel = panel_mosaicplot, panel_args = list(),
   legend = legend_resbased, legend_args = list(),
@@ -38,7 +38,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     \code{1:k}, \code{k} number of conditioning variables. -- FIXME: so
     just expect the numbers? --}
   \item{shade}{logical specifying whether shading should be used or not
-    (see \code{gp})}
+    (see \code{shading})}
   \item{residuals_type}{a character string indicating the type of residuals to be
     computed when none are supplied.
     Must be one of \code{"pearson"} (giving components
@@ -60,9 +60,9 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     function (see details and \code{\link{spacings}}.}
   \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified.}
-  \item{gp}{either a shading-generating function, or a shading
+  \item{shading}{either a shading-generating function, or a shading
     function (see details and \code{\link{shadings}}.}
-  \item{gp_args}{list of arguments for the
+  \item{shading_args}{list of arguments for the
     shading-generating function, if specified.}
   \item{labeling}{either a labeling-generating function, or a labeling
     function (see details and \code{\link{labelings}}.}
@@ -125,7 +125,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   called from \code{strucplot} to compute shadings, labelings, etc., or a corresponding
   \emph{generating function} passed to \var{foo}, along with parameters
   passed to \var{foo\_args}, that generates such a function.
-  Except for the shading-functions (\var{gp\_bar}), there is a third way
+  Except for the shading-functions (\var{shading\_bar}), there is a third way
   of specifying the function by directly passing \var{foo(foo\_args)} to
   the \var{foo} parameter.
   

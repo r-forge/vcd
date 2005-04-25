@@ -15,7 +15,7 @@ legend_resbased <- function(fontsize = 12,
   if(!is.unit(width)) width <- unit(width, "lines")
   if(!is.unit(height)) height <- unit(height, "npc")
   
-  function(residuals, gp, autotext) {
+  function(residuals, shading, autotext) {
     res <- as.vector(residuals)
     
     if(is.null(text)) text <- autotext
@@ -24,8 +24,8 @@ legend_resbased <- function(fontsize = 12,
                           yscale = range(res), default.unit = "native",
                           height = height, width = width))
 
-    p.value <- attr(gp, "p.value")
-    legend <- attr(gp, "legend")
+    p.value <- attr(shading, "p.value")
+    legend <- attr(shading, "legend")
     
     if(is.null(legend$col.bins)) {
       col.bins <- seq(min(res), max(res), length = steps)
@@ -41,7 +41,7 @@ legend_resbased <- function(fontsize = 12,
     grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
               y = y.pos,
               height = y.height, default.unit = "native",
-              gp = gpar(fill = gp(y.pos + 0.5 * y.height)$fill, col = NULL),
+              gp = gpar(fill = shading(y.pos + 0.5 * y.height)$fill, col = NULL),
               just = c("left", "bottom"))
 
     grid.rect()
@@ -84,7 +84,7 @@ legend_fixed <- function(fontsize = 12,
   if(!is.unit(width)) width <- unit(width, "lines")
   if(!is.unit(height)) height <- unit(height, "npc")
 
-  function(residuals, gp, autotext) {
+  function(residuals, shading, autotext) {
     res <- as.vector(residuals)
 
     if(is.null(text)) text <- autotext
@@ -93,8 +93,8 @@ legend_fixed <- function(fontsize = 12,
                           yscale = range(res), default.unit = "native",
                           height = height, width = width))
 
-    p.value <- attr(gp, "p.value")
-    legend <- attr(gp, "legend")
+    p.value <- attr(shading, "p.value")
+    legend <- attr(shading, "legend")
     
     if(is.null(legend$col.bins)) {
       col.bins <- seq(min(res), max(res), length = steps)
@@ -110,12 +110,12 @@ legend_fixed <- function(fontsize = 12,
     grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
               y = y.pos,
               height = y.height, default.unit = "native",
-              gp = gpar(fill = gp(y.pos + 0.5 * y.height)$fill, col = NULL),
+              gp = gpar(fill = shading(y.pos + 0.5 * y.height)$fill, col = NULL),
               just = c("left", "bottom"))
 
     grid.rect()
 
-    ## labeling for fixed intervals as returned in gp.objects
+    ## labeling for fixed intervals as returned in shading.objects
     if(is.null(at)) at <- seq(from = head(col.bins, 1), to = tail(col.bins, 1), length = ticks)
     grid.text(format(signif(at, digits = digits)),
               x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),

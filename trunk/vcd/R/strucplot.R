@@ -17,8 +17,8 @@ strucplot <- function(## main parameters
                       split_vertical = TRUE, 
                       spacing = spacing_equal,
                       spacing_args = list(),
-                      gp = NULL,
-		      gp_args = list(),   
+                      shading = NULL,
+		      shading_args = list(),   
                       labeling = labeling_text,
                       labeling_args = list(),
                       panel = panel_mosaicplot,
@@ -38,7 +38,7 @@ strucplot <- function(## main parameters
                       keepAR = TRUE
                       ) {
   ## default behaviour of shade
-  if(is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
+  if(is.null(shade)) shade <- !is.null(shading) || !is.null(expected)
 		      
   type <- match.arg(type)
   residuals_type = match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
@@ -103,25 +103,25 @@ strucplot <- function(## main parameters
     spacing <- spacing(dim(x), condvars)
   }
 
-  ## gp (color, fill, lty, etc.) argument
+  ## shading (color, fill, lty, etc.) argument
   if(shade) {
-    if(is.null(gp)) gp <- gp.HCLshading
-    if(is.function(gp)) {
+    if(is.null(shading)) shading <- shading_HCLshading
+    if(is.function(shading)) {
       
-      gpfun <- if(inherits(gp, "vcdShading"))
-                 do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
-      gp <- gpfun(residuals)
+      shadingfun <- if(inherits(shading, "vcdShading"))
+                 do.call("shading", c(list(x, residuals, expected, df), as.list(shading_args))) else shading
+      shading <- shadingfun(residuals)
     } else if (!is.null(legend))
-      stop("gp argument must be a shading function for drawing a legend")
+      stop("shading argument must be a shading function for drawing a legend")
   } else {
-    if(!is.null(gp)) {
-      warning("gp parameter ignored since shade=FALSE")
-      gp <- NULL
+    if(!is.null(shading)) {
+      warning("shading parameter ignored since shade=FALSE")
+      shading <- NULL
     }
   }
   
   ## choose gray when no shading is used
-  if(is.null(gp)) gp <- gpar(fill = rep.int(grey(0.8), length(x)))
+  if(is.null(shading)) shading <- gpar(fill = rep.int(grey(0.8), length(x)))
   
   ## set up page
   if (newpage) grid.newpage()
@@ -138,7 +138,7 @@ strucplot <- function(## main parameters
   if (shade && !is.null(legend)) {
     seekViewport("legend")
     residuals_type = switch(residuals_type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
-    legend(residuals, gpfun, paste(residuals_type, "residuals:", sep = "\n"))
+    legend(residuals, shadingfun, paste(residuals_type, "residuals:", sep = "\n"))
   }
 
   ## titles
@@ -163,7 +163,7 @@ strucplot <- function(## main parameters
         observed = if (type == "observed") x else expected,
         expected = expected,
         spacing = spacing,
-        gp = gp,
+        shading = shading,
         split_vertical = split_vertical)
 
   upViewport(dl)

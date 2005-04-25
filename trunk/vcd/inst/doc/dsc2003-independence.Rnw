@@ -161,7 +161,7 @@ But this does not yet imply the significance of some test statistic.
 \begin{figure}[htbp]
 \begin{center}
 <<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-assoc(goals, shade = TRUE, gp = gp.binary())
+assoc(goals, shade = TRUE, shading = shading_binary())
 @
 \caption{Association plot for the Bundesliga data.}
 \label{fig:goals-assoc-classic}

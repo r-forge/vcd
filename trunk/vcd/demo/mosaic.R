@@ -136,9 +136,9 @@ pairs(PreSex)
 
 pairs(UCBAdmissions)
 
-pairs(UCBAdmissions, type="conditional")
+pairs(UCBAdmissions, type = "conditional")
 
-pairs(UCBAdmissions, type="pairwise", gp = gp.max)
+pairs(UCBAdmissions, type = "pairwise", shading = shading_max)
 
 
 

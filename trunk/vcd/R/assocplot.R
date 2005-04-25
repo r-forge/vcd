@@ -54,7 +54,7 @@ assoc.default <- function(x,
 
 panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                             yspace = unit(0.5, "lines"), xscale = 0.9)
-  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
+  function(residuals, observed = NULL, expected, spacing, shading, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -144,7 +144,7 @@ panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                 height = residuals[i],
                 width = xscale * unit(sqrt(expected[i]), "native"),
                 default.units = "native",
-                gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
+                gp = structure(lapply(shading, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"),
                 name = paste("rect", mnames[i], sep = "..")
                 )
