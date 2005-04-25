@@ -1,7 +1,5 @@
 export(
 ## generic functions
-       "Kappa",
-       "assocstats",
        "distplot",	    
        "fourfoldplot",
        "goodfit",
@@ -12,7 +10,6 @@ export(
        "mosaic",
        "sieveplot",
        "tabplot",
-       "table2d.summary",
        "oddsratio",
        "structable",
 
@@ -37,8 +34,8 @@ export(
 
        # shadings
        "shading_binary",
-       "shading_HCLshading",
-       "shading_HSVshading",
+       "shading_HCL",
+       "shading_HSV",
        "shading_max",
        "shading_Friendly",
        
@@ -51,10 +48,13 @@ export(
        "panel_assocplot",
 
 ## ``normal'' functions
+       "Kappa",
+       "assocstats",
+       "table2d_summary",
        "co.table",
        "hls",
-       "independence.table",
-       "mar.table", 
+       "independence_table",
+       "mar_table", 
        "Ord.estimate",
        "Ord.plot",
        "fourfoldplot",
@@ -103,7 +103,7 @@ S3method("print", "oddsratio")
 S3method("print", "summary.oddsratio")
 S3method("print", "assocstats")
 S3method("print", "summary.assocstats")
-S3method("print", "table2d.summary")
+S3method("print", "table2d_summary")
 
 S3method("summary", "Kappa")
 S3method("summary", "assocstats")

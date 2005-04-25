@@ -9,10 +9,10 @@
 }
 \usage{
 fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
-             conf.level = 0.95, std = c("margins", "ind.max", "all.max"),
+             conf_level = 0.95, std = c("margins", "ind.max", "all.max"),
              margin = c(1, 2), space = 0.2, main = NULL,
              mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.15,
-             p.adjust.method = p.adjust.methods, panel = FALSE,
+             p_adjust_method = p.adjust.methods, panel = FALSE,
              fontsize = 12)
 }
 \arguments{
@@ -24,7 +24,7 @@ fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#
     for the extended version: the second/third pair is used for tables with
     non-significant/significant logoddsratios, respectively, the latter
     being visualized in brighter colors.}
-  \item{conf.level}{confidence level used for the confidence rings on
+  \item{conf_level}{confidence level used for the confidence rings on
     the odds ratios.  Must be a single nonnegative number less than 1;
     if set to 0, confidence rings are suppressed.}
   \item{std}{a character string specifying how to standardize the table.
@@ -54,7 +54,7 @@ fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#
     are plotted for pies with positive logodds.}
   \item{ticks}{the length of the ticks. If set to 0, no ticks are
     plotted.}
-  \item{p.adjust.method}{method to be used for p-value adjustments for
+  \item{p_adjust_method}{method to be used for p-value adjustments for
     multistratum-plots. The p-values are used for the ``visual''
     significance tests of the oddsratios.}
   \item{panel}{if \code{FALSE}, \code{grid.newpage()} is called before

@@ -1,13 +1,13 @@
-\name{table2d.summary}
-\alias{table2d.summary}
-\alias{print.table2d.summary}
+\name{table2d_summary}
+\alias{table2d_summary}
+\alias{print.table2d_summary}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Summary of a 2-d - table}
 \description{
 Prints a 2-d - contingency table along with percentages, marginal and conditional distributions.
 }
 \usage{
-table2d.summary(object, margins = TRUE, percentages = FALSE,
+table2d_summary(object, margins = TRUE, percentages = FALSE,
                 conditionals = c("none", "row", "column"), ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -31,6 +31,6 @@ choices (max 3).
 
 \examples{
 data(UCBAdmissions)
-table2d.summary(margin.table(UCBAdmissions, 1:2))
+table2d_summary(margin.table(UCBAdmissions, 1:2))
 }
 \keyword{category}% at least one, from doc/KEYWORDS

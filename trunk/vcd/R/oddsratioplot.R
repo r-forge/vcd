@@ -80,7 +80,7 @@ function(x, ...) {
 
 "plot.oddsratio" <-
 function(x,
-         conf.level = 0.95,
+         conf_level = 0.95,
          type = "o",
          ylab = NULL,
          xlab = "Strata",
@@ -90,11 +90,11 @@ function(x,
   if (length(dim(x)) > 1)
     stop ("Plot function works only on vectors.")
 
-  confidence <- !(is.null(conf.level) || conf.level == FALSE)
+  confidence <- !(is.null(conf_level) || conf_level == FALSE)
   yrange <- range(x)
   
   if(confidence) {
-    CI  <- confint(x, level = conf.level)
+    CI  <- confint(x, level = conf_level)
     lwr <- CI[,1]
     upr <- CI[,2]
     yrange[1] <- trunc(min(yrange[1], min(lwr)))

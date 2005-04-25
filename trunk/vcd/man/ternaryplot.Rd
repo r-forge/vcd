@@ -6,11 +6,11 @@
 Visualizes compositional, 3-dimensional data in an equilateral triangle.
 }
 \usage{
-ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge","none"),
-            dimnames.color = "black", id = NULL, id.color = "black", coordinates = FALSE,
-	    grid = TRUE, grid.color = "gray", labels = c("inside", "outside", "none"),
-	    labels.color = "darkgray", border = "black", bg = "white", pch = 19, cex = 1,
-	    prop.size = FALSE, col = "red", main = "ternary plot",
+ternaryplot(x, scale = 1, dimnames = NULL, dimnames_position = c("corner","edge","none"),
+            dimnames_color = "black", id = NULL, id_color = "black", coordinates = FALSE,
+	    grid = TRUE, grid_color = "gray", labels = c("inside", "outside", "none"),
+	    labels_color = "darkgray", border = "black", bg = "white", pch = 19, cex = 1,
+	    prop_size = FALSE, col = "red", main = "ternary plot",
             newpage = TRUE, ...)
 }
 \arguments{
@@ -18,23 +18,23 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames.position = c("corner","edge"
   \item{scale}{row sums scale to be used.}
   \item{dimnames}{dimension labels (defaults to the column names of
     \code{x}).}
-  \item{dimnames.position, dimnames.color}{position and color of dimension labels.}
+  \item{dimnames_position, dimnames_color}{position and color of dimension labels.}
   \item{id}{optional labels to be plotted below the plot
     symbols. \code{coordinates} and \code{id} are mutual exclusive.}
-  \item{id.color}{color of these labels.}
+  \item{id_color}{color of these labels.}
   \item{coordinates}{if \code{TRUE}, the coordinates of the points are
     plotted below them. \code{coordinates} and \code{id} are mutual exclusive.}
   \item{grid}{if \code{TRUE}, a grid is plotted. May optionally
     be a string indicating the line type (default: \code{"dotted"}).}
-  \item{grid.color}{grid color.}
-  \item{labels, labels.color}{position and color of the grid labels.}
+  \item{grid_color}{grid color.}
+  \item{labels, labels_color}{position and color of the grid labels.}
   \item{border}{color of the triangle border.}
   \item{bg}{triangle background.}
   \item{pch}{plotting character. Defaults to filled dots.}
   \item{cex}{a numerical value giving the amount by which plotting text
     and symbols should be scaled relative to the default. Ignored for
-    the symbol size if \code{prop.size} is not \code{FALSE}.}
-  \item{prop.size}{if \code{TRUE}, the symbol size is plotted
+    the symbol size if \code{prop_size} is not \code{FALSE}.}
+  \item{prop_size}{if \code{TRUE}, the symbol size is plotted
     proportional to the row sum of the three variables, i.e. represents
     the weight of the observation.}
   \item{col}{plotting color.}
@@ -71,10 +71,10 @@ ternaryplot(
             tab,
             col = col,
             pch = pch,
-            prop.size = TRUE,
+            prop_size = TRUE,
             bg = "lightgray",
-            grid.color = "white",
-            labels.color = "white",
+            grid_color = "white",
+            labels_color = "white",
             main = "Arthritits Treatment Data"
            )
 ## legend
@@ -85,11 +85,11 @@ data(Lifeboats)
 attach(Lifeboats)
 ternaryplot(
   Lifeboats[,4:6],
-  pch = ifelse(side=="Port", 1, 19),
-  col = ifelse(side=="Port", "red", "blue"),
-  id  = ifelse(men/total > 0.1, as.character(boat), NA),
-  prop.size = 2,
-  dimnames.position = "edge",
+  pch = ifelse(side == "Port", 1, 19),
+  col = ifelse(side == "Port", "red", "blue"),
+  id  = ifelse(men / total > 0.1, as.character(boat), NA),
+  prop_size = 2,
+  dimnames_position = "edge",
   main = "Lifeboats on Titanic"
 )
 vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")

@@ -1,6 +1,6 @@
 vcdLegend <-
 function (x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"), 
-    vgap = unit(0.3, "lines"), default.units = "lines", gp = gpar(), 
+    vgap = unit(0.3, "lines"), default_units = "lines", gp = gpar(), 
     draw = TRUE, title = "Legend:") 
 {
     labels <- as.character(labels)
@@ -15,11 +15,11 @@ function (x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
     if (length(pch) != nkeys) 
         stop("pch and labels not the same length")
     if (!is.unit(hgap)) 
-        hgap <- unit(hgap, default.units)
+        hgap <- unit(hgap, default_units)
     if (length(hgap) != 1) 
         stop("hgap must be single unit")
     if (!is.unit(vgap)) 
-        vgap <- unit(vgap, default.units)
+        vgap <- unit(vgap, default_units)
     if (length(vgap) != 1) 
         stop("vgap must be single unit")
     legend.layout <- grid.layout(nkeys, 3, widths = unit.c(unit(2, 
