@@ -3,7 +3,7 @@
 ## and return a function which takes a single argument (interpreted
 ## to be a vector of residuals).
 
-gp.HSVshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
+shading_HSVshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
                           hue = c(2/3, 0), saturation = c(1, 0), value = c(1, 0.5),
                           interpolate = c(2, 4), lty = 1,
                           p.value = NULL, level = 0.95)
@@ -78,10 +78,10 @@ gp.HSVshading <- function(observed, residuals = NULL, expected = NULL, df = NULL
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(gp.HSVshading) <- "vcdShading"
+class(shading_HSVshading) <- "vcdShading"
 
 
-gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
+shading_HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL,
                           hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50),
                           gamma = 2.2, fixup = TRUE, interpolate = c(2, 4), lty = 1,
                           p.value = NULL, level = 0.95)
@@ -159,32 +159,32 @@ gp.HCLshading <- function(observed, residuals = NULL, expected = NULL, df = NULL
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(gp.HCLshading) <- "vcdShading"
+class(shading_HCLshading) <- "vcdShading"
 
 
-gp.Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         hue = c(2/3, 0), lty = 1:2, interpolate = c(2, 4))
-  gp.HSVshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+  shading_HSVshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                 hue = hue, value = 1,
                 lty = lty, interpolate = interpolate, p.value = NA)
-class(gp.Friendly) <- "vcdShading"
+class(shading_Friendly) <- "vcdShading"
 
-gp.max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                    hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50), 
                    interpolate = c(2, 4), lty = 1, level = c(0.9, 0.99), n = 1000)
 {
   stopifnot(length(dim(observed)) == 2)
   obs.test <- pearson.test(observed, n = n, return.distribution = TRUE)
   col.bins <- obs.test$qdist(sort(level))
-  rval <- gp.HCLshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+  rval <- shading_HCLshading(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         hue = hue, chroma = chroma, luminance = luminance,
                         interpolate = col.bins, lty = lty,
 			p.value = obs.test$p.value)
   return(rval)
 }
-class(gp.max) <- "vcdShading"
+class(shading_max) <- "vcdShading"
 
-gp.binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                       col = hcl(c(260, 0), 100, 50))
 
 {
@@ -206,9 +206,9 @@ gp.binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = N
   attr(rval, "p.value") <- NULL
   return(rval)
 }
-class(gp.HCLshading) <- "vcdShading"
+class(shading_HCLshading) <- "vcdShading"
 
-## gp.Z <- gp.HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
+## shading_Z <- shading_HCLshading(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
 
 rainbowHCL <- function(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n,
   gamma = 2.2, fixup = TRUE)
