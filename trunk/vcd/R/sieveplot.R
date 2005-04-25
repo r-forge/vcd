@@ -46,15 +46,15 @@ function (formula, data = NULL, ..., subset)
 
 "sieveplot.default" <-
   function(x,
-           reverse.y = TRUE,
+           reverse_y = TRUE,
            type = c("sieve","expected"),
            main = deparse(substitute(x)),
            values = c("none", "cells", "margins", "both"),
            frequencies = c("absolute", "relative"),
-           sieve.colors = c("red","blue"),
-           sieve.lty = c("longdash", "solid"),
-           exp.color = "gray",
-           exp.lty = "dotted",
+           sieve_colors = c("red","blue"),
+           sieve_lty = c("longdash", "solid"),
+           exp_color = "gray",
+           exp_lty = "dotted",
            margin = 0.01,
            panel = FALSE,
            margins = c(4,3,4,4),
@@ -76,7 +76,7 @@ function (formula, data = NULL, ..., subset)
 
   nc <- ncol(x)
   nr <- nrow(x)
-  if (reverse.y) x <- x[nr:1,]
+  if (reverse_y) x <- x[nr:1,]
 
   ## compute relative frequencies
   n <- sum(x)
@@ -152,8 +152,8 @@ function (formula, data = NULL, ..., subset)
       cc <- cc + 1
       
       dev <- sgn[i, j] + 1
-      line.color <- if (type == "sieve") sieve.colors[dev] else exp.color
-      line.type  <- if (type == "sieve") sieve.lty[dev] else exp.lty
+      line.color <- if (type == "sieve") sieve_colors[dev] else exp_color
+      line.type  <- if (type == "sieve") sieve_lty[dev] else exp_lty
       
       square.side <- sqrt(colFreqs[j] * rowFreqs[i] /
                           ifelse (type == "sieve", x[i, j], ex[i, j]))

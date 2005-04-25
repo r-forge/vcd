@@ -64,7 +64,7 @@
   sieveplot(Freq ~ right + left,
                  data = VisualAcuity,
                  subset = gender == "female",
-                 reverse.y = FALSE,
+                 reverse_y = FALSE,
                  main = "Unaided distant vision data",
                  xlab = "Left Eye Grade",
                  ylab = "Right Eye Grade")
@@ -77,7 +77,7 @@
   data(UCBAdmissions)
 
   (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
-  sieveplot(tab, reverse.y = FALSE,
+  sieveplot(tab, reverse_y = FALSE,
                  xlab = "Gender:Admission",
                  ylab = "Department",
                  main = "Berkeley Admissions Data"
@@ -157,16 +157,12 @@
               pch = pch,
               cex = 2,
               bg = "lightgray",
-              grid.color = "white",
-              labels.color = "white",
+              grid_color = "white",
+              labels_color = "white",
               main = "Arthritits Treatment Data"
               )
   ## legend
-  legend(0.7, 0.8,
-         c("GROUP", rownames(tab)),
-         pch = c(NA, pch),
-         col = c(NA, col)
-         )
+  vcdLegend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
 
   ### Baseball Hitters Data ###
   #############################
@@ -181,12 +177,7 @@
               col = colors[as.numeric(Positions)],
               main = "Baseball Hitters Data"
               )
-  legend(
-         0.8, 0.9,
-         legend = c("POSITION(S)", levels(Positions)),
-         pch = c("", pch),
-         col = c(NA, colors)
-         )
+  vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
 
   detach(Hitters)
 
@@ -200,16 +191,11 @@
               pch = ifelse(side=="Port", 1, 19),
               col = ifelse(side=="Port", "red", "blue"),
               id  = ifelse(men/total > 0.1, as.character(boat), NA),
-              dimnames.position = "edge",
+              dimnames_position = "edge",
               dimnames = c("Men of Crew", "Men passengers", "Women and Children"),
               main = "Lifeboats on the Titanic"
               )
-  legend(
-         0.7, 0.8,
-         legend = c("SIDE", "Port", "Starboard"),
-         pch = c(NA, 1, 19),
-         col = c("black", "red", "blue"),
-         )
+  vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
 
   ## Load against time for Port/Starboard boats
   plot(launch, total,

@@ -41,8 +41,8 @@ ternaryplot(
   pch = ifelse(side=="Port", 1, 19),
   col = ifelse(side=="Port", "red", "blue"),
   id  = ifelse(men/total > 0.1, as.character(boat), NA),
-  prop.size = 2,
-  dimnames.position = "edge",
+  prop_size = 2,
+  dimnames_position = "edge",
   main = "Lifeboats on the Titanic"
 )
 legend(

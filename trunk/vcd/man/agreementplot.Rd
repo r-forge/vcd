@@ -12,7 +12,7 @@
   area sums).
 }
 \usage{
-\method{agreementplot}{default}(x, reverse.y = TRUE, main = NULL,
+\method{agreementplot}{default}(x, reverse_y = TRUE, main = NULL,
               weights = c(1, 1 - 1/(ncol(x) - 1)^2), margins = par("mar"),
               panel = FALSE, xlab = names(dimnames(x))[2],
               ylab = names(dimnames(x))[1], ...)
@@ -21,7 +21,7 @@
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a confusion matrix, i.e. a table with equal-sized dimensions.}
-  \item{reverse.y}{if \code{TRUE}, the y axis is reversed (i.e., the
+  \item{reverse_y}{if \code{TRUE}, the y axis is reversed (i.e., the
     rectangles' positions correspond to the contingency table).}
   \item{main}{user-specified main title.}
   \item{weights}{vector of weights for successive larger observed areas, used

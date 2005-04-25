@@ -1,9 +1,9 @@
 "fourfoldplot" <-
 function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
-         conf.level = 0.95,
+         conf_level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
          space = 0.2, main = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
-         ticks = 0.15, p.adjust.method = p.adjust.methods, panel = FALSE,
+         ticks = 0.15, p_adjust_method = p.adjust.methods, panel = FALSE,
          fontsize = 12)
 {
     ## Code for producing fourfold displays.
@@ -63,11 +63,11 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     dimnames(x) <- dnx
     k <- dim(x)[3]
 
-    if(!((length(conf.level) == 1) && is.finite(conf.level) &&
-         (conf.level >= 0) && (conf.level < 1)))
-        stop("conf.level must be a single number between 0 and 1")
-    if(conf.level == 0)
-        conf.level <- FALSE
+    if(!((length(conf_level) == 1) && is.finite(conf_level) &&
+         (conf_level >= 0) && (conf_level < 1)))
+        stop("conf_level must be a single number between 0 and 1")
+    if(conf_level == 0)
+        conf_level <- FALSE
 
     std <- match.arg(std)
 
@@ -188,12 +188,12 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     o <- odds(x)
 
     ## perform logoddsratio-test for each stratum (H0: lor = 0) and adjust p-values
-    if(is.numeric(conf.level) && extended)
+    if(is.numeric(conf_level) && extended)
       p.lor.test <- p.adjust(sapply(1 : k, function(i) {
                                u <- abs(log(o$or[i])) / o$se[i]
                                2 * (1 - pnorm(u))
                              }),
-                             method = p.adjust.method
+                             method = p_adjust_method
                              )
     
     scale <- space / (2 * convertY(unit(1, "strheight", "Ag"), "native", valueOnly = TRUE) )
@@ -266,8 +266,8 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         ## drawFrequencies()
         
         ### in extended plots, emphasize charts with significant logoddsratios
-        emphasize <- if(extended && is.numeric(conf.level))
-          2 * extended * (1 + (p.lor.test[i] < 1 - conf.level))
+        emphasize <- if(extended && is.numeric(conf_level))
+          2 * extended * (1 + (p.lor.test[i] < 1 - conf_level))
         else 0
         
         d <- odds(tab)$or
@@ -333,17 +333,17 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
           }
         
         ## drawConfBands()
-        if(is.numeric(conf.level)) {
+        if(is.numeric(conf_level)) {
             or <- o$or[i]
             se <- o$se[i]
             ## lower
-            theta <- or * exp(qnorm((1 - conf.level) / 2) * se)
+            theta <- or * exp(qnorm((1 - conf_level) / 2) * se)
             tau <- findTableWithOAM(theta, tab)
             r <- sqrt(c(stdize(tau, std, x)))
             for(j in 1 : 4)
                 drawPie(r[j], angle.f[j], angle.t[j])
             ## upper
-            theta <- or * exp(qnorm((1 + conf.level) / 2) * se)
+            theta <- or * exp(qnorm((1 + conf_level) / 2) * se)
             tau <- findTableWithOAM(theta, tab)
             r <- sqrt(c(stdize(tau, std, x)))
             for(j in 1 : 4)
