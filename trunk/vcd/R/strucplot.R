@@ -105,7 +105,7 @@ strucplot <- function(## main parameters
 
   ## shading (color, fill, lty, etc.) argument
   if(shade) {
-    if(is.null(shading)) shading <- shading_HCLshading
+    if(is.null(shading)) shading <- shading_HCL
     if(is.function(shading)) {
       
       shadingfun <- if(inherits(shading, "vcdShading"))
