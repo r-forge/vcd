@@ -51,7 +51,7 @@ export(
        "Kappa",
        "assocstats",
        "table2d_summary",
-       "co.table",
+       "co_table",
        "hls",
        "independence_table",
        "mar_table", 
