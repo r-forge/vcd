@@ -1,7 +1,7 @@
-coindep.test <- function(x, margin = NULL, n = 1000,
+coindep_test <- function(x, margin = NULL, n = 1000,
   indepfun = function(x) max(abs(x)), aggfun = max,
   alternative = c("greater", "less"),
-  pearson = TRUE, return.distribution = TRUE)
+  pearson = TRUE, return_distribution = TRUE)
 {
   DNAME <- deparse(substitute(x))
   alternative <- match.arg(alternative)
@@ -62,7 +62,7 @@ coindep.test <- function(x, margin = NULL, n = 1000,
                p.value = PVAL,
 	       method = METHOD,
 	       data.name = DNAME, ## observed, expected, residuals
-	       dist = if(return.distribution) dist else NULL,
+	       dist = if(return_distribution) dist else NULL,
 	       qdist = qdist,
 	       pdist = pdist)
   class(rval) <- "htest"

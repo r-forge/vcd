@@ -1,7 +1,7 @@
-pearson.test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
+pearson_test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
                           alternative = c("greater", "less"),
-                          conf.level = 0.95,
-                          return.distribution = TRUE)
+                          conf_level = 0.95,
+                          return_distribution = TRUE)
 {
   alternative <- match.arg(alternative)
   DNAME <- deparse(substitute(x))
@@ -19,11 +19,11 @@ pearson.test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
                  less = mean(dist <= STATISTIC)
                  )
   ## CINT <- switch(alternative,
-  ##                greater = c(0, quantile(dist, conf.level)),
-  ##                less = c(quantile(dist, 1 - conf.level), 0),
+  ##                greater = c(0, quantile(dist, conf_level)),
+  ##                less = c(quantile(dist, 1 - conf_level), 0),
   ##                )
   ## names(CINT) <- NULL
-  ## attr(CINT, "conf.level") <- conf.level
+  ## attr(CINT, "conf_level") <- conf_level
   METHOD <- "Permutation test of independence (based on simulated Pearson residuals)"
   names(STATISTIC) <- "P"
   structure(list(statistic = STATISTIC,
@@ -33,7 +33,7 @@ pearson.test <- function (x, n = 1000, FUN = function(x) max(abs(x)),
                  observed = x,
                  expected = expected,
                  residuals = Pearson(x),
-                 dist = if (return.distribution) dist else NULL,
+                 dist = if (return_distribution) dist else NULL,
                  ## conf.int = CINT,
 		 qdist = qdist,
 		 pdist = pdist),

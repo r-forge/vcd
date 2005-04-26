@@ -10,7 +10,7 @@ rootogram.goodfit <- function(x, ...)
 
 rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
                               type = c("hanging", "standing", "deviation"),
-			      bar.col = grey(0.7), line.col = 2,
+			      bar_col = grey(0.7), line_col = 2,
 			      xlab = NULL, ylab = NULL, ylim = NULL, ...)
 {
    if(is.null(names)) names <- names(x)
@@ -35,25 +35,25 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
    "hanging" = {
      if(is.null(ylim)) {ylim <- range(-0.1 * c(fit-obs,fit),
                         c(fit-obs,fit)) + c(0, 0.1)}
-     dummy <- barplot(obs, names = names, col = bar.col, beside = FALSE,
+     dummy <- barplot(obs, names = names, col = bar_col, beside = FALSE,
              xlab = xlab, ylab = ylab, offset = fit - obs, ylim = ylim, ...)
-     lines(dummy, fit, col = line.col, type = "b", pch = 19)
+     lines(dummy, fit, col = line_col, type = "b", pch = 19)
      abline(h = 0)
    },
 
    "standing" = {
      if(is.null(ylim)) {ylim <- range(-0.01 * c(obs,fit), c(obs,fit)) }
-     dummy <- barplot(obs, names = names, col = bar.col,
+     dummy <- barplot(obs, names = names, col = bar_col,
                       xlab = xlab, ylab = ylab, ylim = ylim, ...)
-     lines(dummy, fit, col = line.col, type = "b", pch = 19)
+     lines(dummy, fit, col = line_col, type = "b", pch = 19)
    },
 
    "deviation" = {
      if(is.null(ylim)) {ylim <- range(-0.1 * c(fit-obs,fit),
                         c(fit-obs,fit)) + c(0, 0.1)}
-     dummy <- barplot(fit - obs, names = names, col = bar.col,
+     dummy <- barplot(fit - obs, names = names, col = bar_col,
                       xlab = xlab, ylab = ylab, ylim = ylim, ...)
-     lines(dummy, fit, col = line.col, type = "b", pch = 19)
+     lines(dummy, fit, col = line_col, type = "b", pch = 19)
    })
 }
 

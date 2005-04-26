@@ -9,7 +9,7 @@ assocstats <- function(x) {
   cramer <- sqrt(phi^2 / min(dim(x) - 1))
   structure(
             list(table = x,
-                 chisq.tests = tab,
+                 chisq_tests = tab,
                  phi = phi,
                  contingency = cont,
                  cramer = cramer),
@@ -21,7 +21,7 @@ print.assocstats <- function(x,
                              digits = 3,
                              ...)
 {
-  print(x$chisq.tests, digits = 5, ...)
+  print(x$chisq_tests, digits = 5, ...)
   cat("\n")
   cat("Phi-Coefficient   :", round(x$phi,    digits = digits), "\n")
   cat("Contingency Coeff.:", round(x$cont,   digits = digits), "\n")
