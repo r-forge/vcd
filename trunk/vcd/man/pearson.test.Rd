@@ -1,5 +1,5 @@
-\name{pearson.test}
-\alias{pearson.test}
+\name{pearson_test}
+\alias{pearson_test}
 
 \title{Conditional independence test}
 \description{
@@ -8,8 +8,8 @@
   conditional the marginals of the input table.
 }
 \usage{
-pearson.test(x, n = 1000, FUN = function(x) max(abs(x)), alternative =
-c("greater","less"), conf.level = 0.95, return.distribution = TRUE)
+pearson_test(x, n = 1000, FUN = function(x) max(abs(x)), alternative =
+c("greater","less"), conf_level = 0.95, return_distribution = TRUE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -19,8 +19,8 @@ c("greater","less"), conf.level = 0.95, return.distribution = TRUE)
   \item{alternative}{a character string specifying the alternative hypothesis,
     must be one \code{"greater"} (default) or \code{"less"}.
     You can specify just the initial letter.}
-  \item{conf.level}{currently not used}
-  \item{return.distribution}{If \code{TRUE}, the simulated distribution
+  \item{conf_level}{currently not used}
+  \item{return_distribution}{If \code{TRUE}, the simulated distribution
     of \code{FUN} under the null is returned}
 }
 \details{
@@ -44,7 +44,7 @@ A list with class `"htest"' containing the following components:
 \item{expected}{the independence table}
 \item{residuals}{the Pearson residuals (standardized deviations of
   observed and expected table)}
-\item{dist}{if \code{return.distribution} is \code{TRUE}, a vector of
+\item{dist}{if \code{return_distribution} is \code{TRUE}, a vector of
   size \code{n} with simulated values of the distributiion of \code{FUN}
 under the null.}
 }
@@ -58,8 +58,8 @@ under the null.}
 \examples{
 TeaTasting <- matrix(c(3, 1, 1, 3), nr = 2, dimnames = list(Guess = c("Milk", 
     "Tea"), Truth = c("Milk", "Tea")))
-pearson.test(TeaTasting)
-pearson.test(TeaTasting, FUN = function(x) sum(x*x))
+pearson_test(TeaTasting)
+pearson_test(TeaTasting, FUN = function(x) sum(x * x))
 chisq.test(TeaTasting)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

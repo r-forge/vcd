@@ -27,7 +27,7 @@ coindep_test <- function(x, margin = NULL, n = 1000,
     ff <- if(pearson) function(x) indepfun(Pearson(x))
       else function(x) indepfun(x)
 
-    cox <- co.table(x, margin)
+    cox <- co_table(x, margin)
     nc <- length(cox)
     if(length(dim(cox[[1]])) > 2) stop("currently only implemented for conditional 2d tables")
   

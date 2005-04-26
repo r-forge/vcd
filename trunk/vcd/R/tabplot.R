@@ -130,7 +130,7 @@ tplot <- function(x,
 				    sep = ""))
   fm <- loglm(indep.formula, data = x, fitted = TRUE)
   ## expected
-  xx <- co.table(x, cond.num)
+  xx <- co_table(x, cond.num)
 
   cond.nlevels <- sapply(cond.dnam, length)
   nplots <- prod(cond.nlevels)

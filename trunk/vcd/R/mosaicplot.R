@@ -92,7 +92,7 @@ panel_mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
 
     ## split workhorse
     split <- function(x, i, name, row, col) {
-      cotab <- co.table(x, 1)
+      cotab <- co_table(x, 1)
       margin <- sapply(cotab, sum)
       v <- split_vertical[i]
       d <- dx[i]
