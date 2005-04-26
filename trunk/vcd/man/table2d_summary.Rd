@@ -27,7 +27,7 @@ choices (max 3).
   David Meyer\cr
   \email{david.meyer@ci.tuwien.ac.at}
 }
-\seealso{\code{\link{mar.table}}, \code{\link{prop.table}}, \code{\link{independence.table}}}
+\seealso{\code{\link{mar_table}}, \code{\link{prop.table}}, \code{\link{independence_table}}}
 
 \examples{
 data(UCBAdmissions)
