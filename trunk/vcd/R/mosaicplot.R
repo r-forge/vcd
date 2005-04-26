@@ -99,7 +99,7 @@ panel_mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
 
       ## compute total cols/rows and build split layout
       dist <- unit.c(unit(margin, "null"), spacing[[i]])
-      idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2*d]
+      idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2 * d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])
       else
