@@ -58,7 +58,7 @@ plot(gf1)
 plot(gf2)
 plot(gf3)
 
-Ord.plot(ntore1)
+Ord_plot(ntore1)
 distplot(ntore1)
 }
 

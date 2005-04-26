@@ -1,15 +1,15 @@
-\name{Ord.plot}
-\alias{Ord.plot}
-\alias{Ord.estimate}
+\name{Ord_plot}
+\alias{Ord_plot}
+\alias{Ord_estimate}
 \title{Ord plots}
 \description{
 Ord plots for diagnosing discrete distributions.
 }
 \usage{
-Ord.plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,
+Ord_plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,
          ylim = NULL, xlab = "Number of occurrences",
 	 ylab = "Frequency ratio", main = "Ord plot", ...)
-Ord.estimate(x, type = NULL, tol = 0.1)
+Ord_estimate(x, type = NULL, tol = 0.1)
 }
 \arguments{
   \item{obj}{either a vector of counts, a 1-way table of frequencies
@@ -41,13 +41,13 @@ a poisson, binomial, negative binomial or log-series distribution. The
 intercept and slope of this straight line conveys information about
 the underlying distribution.
 
-\code{Ord.plot} fits a usual OLS line (black) and a weighted OLS line
+\code{Ord_plot} fits a usual OLS line (black) and a weighted OLS line
 (red). From the coefficients of the latter the distribution is
-estimated by \code{Ord.estimate} as described in Table 2.10 in Friendly
+estimated by \code{Ord_estimate} as described in Table 2.10 in Friendly
 (2000). To judge whether a coefficient is positive or negative a
 tolerance given by \code{tol} is used. If none of the distributions
 fits well, no parameters are estimated. Be careful with the conclusions
-from \code{Ord.estimate} as it implements just some simple heuristics!
+from \code{Ord_estimate} as it implements just some simple heuristics!
 }
 \value{a vector giving the intercept and slope of the weighted OLS line.}
 \author{
@@ -63,7 +63,7 @@ Michael Friendly (2000),
 \examples{
 ## Simulated data examples:
 dummy <- rnbinom(1000, size = 1.5, prob = 0.8)
-Ord.plot(dummy)
+Ord_plot(dummy)
 
 ## Real data examples:
 data(HorseKicks)
@@ -71,10 +71,10 @@ data(Federalist)
 data(Butterfly)
 data(WomenQueue)
 par(mfrow = c(2,2))
-Ord.plot(HorseKicks, main = "Death by horse kicks")
-Ord.plot(Federalist, main = "Instances of 'may' in Federalist papers")
-Ord.plot(Butterfly, main = "Butterfly species collected in Malaya")
-Ord.plot(WomenQueue, main = "Women in queues of length 10")
+Ord_plot(HorseKicks, main = "Death by horse kicks")
+Ord_plot(Federalist, main = "Instances of 'may' in Federalist papers")
+Ord_plot(Butterfly, main = "Butterfly species collected in Malaya")
+Ord_plot(WomenQueue, main = "Women in queues of length 10")
 par(mfrow = c(1,1))
 }
 \keyword{category}

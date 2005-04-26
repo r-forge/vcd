@@ -55,16 +55,17 @@ export(
        "hls",
        "independence_table",
        "mar_table", 
-       "Ord.estimate",
-       "Ord.plot",
+       "Ord_estimate",
+       "Ord_plot",
        "fourfoldplot",
        "doubledecker",
        "strucplot",
        "birthwt", 
-       "pearson.test",
        "ternaryplot",
        "vcdLegend",
-       "woolf.test")
+       "pearson_test",
+       "coindep_test",
+       "woolf_test")
 
 import(MASS)
 import(stats)

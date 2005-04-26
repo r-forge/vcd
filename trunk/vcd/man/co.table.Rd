@@ -1,12 +1,12 @@
-\name{co.table}
-\alias{co.table}
+\name{co_table}
+\alias{co_table}
 \title{Compute conditional tables}
 \description{
   For a contingency table in array form, compute a list of conditional
   tables given some margins.
 }
 \usage{
-co.table(x, margin, collapse = ".")
+co_table(x, margin, collapse = ".")
 }
 \arguments{
   \item{x}{array}
@@ -23,8 +23,8 @@ co.table(x, margin, collapse = ".")
 }
 \examples{
 data(HairEyeColor)
-co.table(HairEyeColor, 1)
-co.table(HairEyeColor, c("Hair", "Eye"))
-co.table(HairEyeColor, 1:2, collapse = "")
+co_table(HairEyeColor, 1)
+co_table(HairEyeColor, c("Hair", "Eye"))
+co_table(HairEyeColor, 1:2, collapse = "")
 }
 \keyword{array}

@@ -1,4 +1,4 @@
-co.table <- function(x, margin, collapse = ".")
+co_table <- function(x, margin, collapse = ".")
 {
   if (!is.array(x)) 
       stop("x is not an array")

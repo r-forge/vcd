@@ -1,5 +1,5 @@
-\name{woolf.test}
-\alias{woolf.test}
+\name{woolf_test}
+\alias{woolf_test}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Woolf test}
 \description{
@@ -7,7 +7,7 @@ Test for homogeneity on 2 x 2 x k - tables over strata (i.e., if the log
 odds ratios are the same in all strata).
 }
 \usage{
-woolf.test(x)
+woolf_test(x)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -29,7 +29,7 @@ woolf.test(x)
 
 \examples{
 data(CoalMiners)
-woolf.test(CoalMiners)
+woolf_test(CoalMiners)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS
 

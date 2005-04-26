@@ -30,7 +30,7 @@ M. Friendly (2000),
 
 \examples{
 data(Butterfly)
-Ord.plot(Butterfly)
+Ord_plot(Butterfly)
 }
 
 \keyword{datasets}

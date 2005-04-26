@@ -9,7 +9,7 @@ Rootograms of observed and fitted values.
 \usage{
 \method{rootogram}{default}(x, fitted, names = NULL, scale = c("sqrt", "raw"),
                             type = c("hanging", "standing", "deviation"),
-			    bar.col = grey(0.7), line.col = 2,
+			    bar_col = grey(0.7), line_col = 2,
 			    xlab = NULL, ylab = NULL, ylim = NULL, ...)
 }
 \arguments{
@@ -22,8 +22,8 @@ Rootograms of observed and fitted values.
   \item{type}{a character string indicating if the bars for the observed
     frequencies should be hanging or standing or indicate the deviation
     between observed and fitted frequencies.}
-  \item{bar.col}{bar color (observed frequencies).}
-  \item{line.col}{line color (fitted frequencies).}
+  \item{bar_col}{bar color (observed frequencies).}
+  \item{line_col}{line color (fitted frequencies).}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
   \item{ylim}{limits for the y axis.}

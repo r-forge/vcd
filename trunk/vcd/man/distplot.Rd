@@ -8,7 +8,7 @@ negative bionomialness plots.
 \usage{
 distplot(obj, type = c("poisson", "binomial", "nbinomial"),
          size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-         line.col = 2, conf.int = TRUE, conf.level = 0.95, main = NULL,
+         line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
 	 xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 }
 \arguments{
@@ -25,9 +25,9 @@ distplot(obj, type = c("poisson", "binomial", "nbinomial"),
     poissonness plot is produced.}
   \item{legend}{logical. Should a legend be plotted?.}
   \item{ylim}{limits for the y axis.}
-  \item{line.col}{color for fitted line.}
-  \item{conf.int}{logical. Should confidence intervals be plotted?.}
-  \item{conf.level}{confidence level for confidence intervals.}
+  \item{line_col}{color for fitted line.}
+  \item{conf_int}{logical. Should confidence intervals be plotted?.}
+  \item{conf_level}{confidence level for confidence intervals.}
   \item{main}{a title for the plot.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
