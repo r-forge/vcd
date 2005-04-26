@@ -174,7 +174,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
                    interpolate = c(2, 4), lty = 1, level = c(0.9, 0.99), n = 1000)
 {
   stopifnot(length(dim(observed)) == 2)
-  obs.test <- pearson.test(observed, n = n, return.distribution = TRUE)
+  obs.test <- pearson_test(observed, n = n, return.distribution = TRUE)
   col.bins <- obs.test$qdist(sort(level))
   rval <- shading_HCL(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         hue = hue, chroma = chroma, luminance = luminance,

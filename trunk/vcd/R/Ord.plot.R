@@ -1,4 +1,4 @@
-Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
+Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
                      type = NULL, ylim = NULL, xlab = "Number of occurrences",
 		     ylab = "Frequency ratio", main = "Ord plot", ...)
 {
@@ -32,7 +32,7 @@ Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
     legend.text <- c(paste("slope =", round(RVAL[2], digits = 3)),
                      paste("intercept =", round(RVAL[1], digits = 3)))
     if(estimate) {
-      ordfit <- Ord.estimate(RVAL, type = type, tol = tol)
+      ordfit <- Ord_estimate(RVAL, type = type, tol = tol)
       legend.text <- c(legend.text, "", paste("type:", ordfit$type),
         paste("estimate:", names(ordfit$estimate),"=", round(ordfit$estimate, digits = 3)))
     }
@@ -41,7 +41,7 @@ Ord.plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
   invisible(RVAL)
 }
 
-Ord.estimate <- function(x, type = NULL, tol = 0.1)
+Ord_estimate <- function(x, type = NULL, tol = 0.1)
 {
   a <- x[1]
   b <- x[2]

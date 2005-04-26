@@ -1,4 +1,4 @@
-woolf.test <- function(x) {
+woolf_test <- function(x) {
   DNAME <- deparse(substitute(x))
   if (any(x == 0))
     x <- x + 1 / 2

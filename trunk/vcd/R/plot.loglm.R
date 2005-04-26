@@ -1,15 +1,15 @@
 mosaic.loglm <- plot.loglm <- function(x,
                        panel = mosaic,
                        type = c("observed", "expected"),
-                       residuals.type = c("pearson", "deviance"),
+                       residuals_type = c("pearson", "deviance"),
                        ...)
 {
-  residuals.type <- match.arg(residuals.type)
+  residuals_type <- match.arg(residuals_type)
   if(is.null(x$fitted)) x <- update(x, fitted = TRUE)
   expected <- fitted(x)
   residuals <- residuals(x, type = "pearson")
   observed <- residuals * sqrt(expected) + expected
-  if(residuals.type == "deviance") residuals <- residuals(x, type = "deviance")
+  if(residuals_type == "deviance") residuals <- residuals(x, type = "deviance")
   panel(observed, residuals = residuals, expected = expected, df = x$df,
         type = type, ...)
 }

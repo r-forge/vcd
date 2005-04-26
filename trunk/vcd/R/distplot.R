@@ -1,6 +1,6 @@
 distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
                      size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-                     line.col = 2, conf.int = TRUE, conf.level = 0.95, main = NULL,
+                     line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
 		     xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 {
   if(is.vector(obj)) {
@@ -75,7 +75,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   if(!is.null(lambda)) yhat <- yhat + lambda - mycount * log(lambda)
 
   phat <- myfreq / sum(myfreq)
-  ci.width <- qnorm(1-(1 - conf.level)/2) *
+  ci.width <- qnorm(1-(1 - conf_level)/2) *
               sqrt(1-phat)/sqrt(myfreq - (0.25 * phat + 0.47)*sqrt(myfreq))
 
   RVAL <- cbind(count, freq, NA, NA, NA, NA, NA)
@@ -87,9 +87,9 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   if(is.null(ylim)) ylim <- range(RVAL[,c(3,6,7)], na.rm = TRUE)
   plot(Metameter ~ Counts, ylim = ylim, data = RVAL,
        xlab = xlab, ylab = ylab, main = main, ...)
-  abline(fm, col = line.col)
+  abline(fm, col = line_col)
 
-  if(conf.int) {
+  if(conf_int) {
     points(CI.center ~ Counts, data = RVAL, pch = 19, cex = 0.6)
     arrows(RVAL[,1], RVAL[,6], RVAL[,1], RVAL[,7], length = 0, lty = 3)
   }
