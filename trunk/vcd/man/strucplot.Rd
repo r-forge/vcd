@@ -56,20 +56,18 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     shall be split vertically, \code{FALSE} means
     horizontal splits.
     Ignored if \code{direction} is not \code{NULL}.}
-  \item{spacing}{either a spacing-generating function, or a spacing
-    function (see details and \code{\link{spacings}}.}
+  \item{spacing}{spacing object, spacing function, or a corresponding
+    generating function (see details and \code{\link{spacings}}.}
   \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified.}
-  \item{shading}{either a shading-generating function, or a shading
-    function (see details and \code{\link{shadings}}.}
+  \item{shading}{shading object, shading function or a corresponding generating function (see details and \code{\link{shadings}}.}
   \item{shading_args}{list of arguments for the
     shading-generating function, if specified.}
-  \item{labeling}{either a labeling-generating function, or a labeling
-    function (see details and \code{\link{labelings}}.}
+  \item{labeling}{either a labeling function, or a corresponding generating function (see details and \code{\link{labelings}}.}
   \item{labeling_args}{list of arguments for the
     labeling-generating function, if specified.}
-  \item{panel}{either a panel-generating function, or a panel
-    function (see details). Currently, panel-generating functions for
+  \item{panel}{either a panel function, or a corresponding gernerating
+    function (see details). Currently, generating functions for
     mosaic plots (\code{\link{panel_mosaic}}) and association plots
     (\code{\link{panel_assoc}}) are provided.}
   \item{panel_args}{list of arguments for the
@@ -121,16 +119,18 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   labeling, and the legend, are modularized in functions and specified as
   parameters. For each element \emph{foo}, \code{strucplot} takes two
   arguments: \var{foo} and \var{foo\_args}, which can be used to specify
-  the parameters as follows:
+  the parameters in the following alternative ways:
 
   \enumerate{
-    \item Passing a suitable function to \var{foo} which subsequently is
-    called from \code{strucplot} to compute shadings, labelings, etc.
-    \item Passing a corresponding \emph{generating function} to \var{foo},
+    \item Passing a suitable function to \var{foo} which subsequently
+    will be called from \code{strucplot} to compute shadings, labelings, etc.
+    \item Passing a corresponding \emph{generating} function to \var{foo},
     along with parameters passed to \var{foo\_args}, that generates such a
     function. Generating functions must inherit from class \code{"vcdPanel"}.
     \item Except for the shading-functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
+    \item For shadings and spacings, passing the final parameter object
+    itself; see the corresponding help page for more details on the data structure.
   }
   
   If legends are drawn, a \sQuote{cinemascope}-like layout is used for

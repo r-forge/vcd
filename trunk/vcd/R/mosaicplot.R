@@ -15,9 +15,7 @@ function(formula, data = NULL, ..., main = NULL)
     
     fstr <- strsplit(paste(deparse(formula), collapse = ""), "~")
     vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
-    dep <- gsub(" ", "", fstr[[1]][1])
     varnames <- vars[[1]]
-    if (dep != "") varnames <- c(varnames, dep)
     condnames <- if (length(vars) > 1) vars[[2]] else NULL
 
     if(inherits(edata, "ftable")
@@ -38,10 +36,7 @@ function(formula, data = NULL, ..., main = NULL)
           }
           dat <- margin.table(dat, ind)
         }
-        if (dep != "")
-          doubledecker(dat, main = main, ...)
-        else 
-          mosaic(dat, main = main, ...)
+        mosaic.default(dat, main = main, ...)
       } else {
         tab <- if ("Freq" %in% colnames(data))
           xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
@@ -50,10 +45,7 @@ function(formula, data = NULL, ..., main = NULL)
           xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
                 data = data)
 
-        if (dep != "")
-          doubledecker(tab, main = main, ...)
-        else
-          mosaic(tab, main = main, ...)
+        mosaic.default(tab, main = main, ...)
       }
   }
 

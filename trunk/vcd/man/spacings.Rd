@@ -48,9 +48,13 @@ spacing_doubledecker(start = unit(0.3, "lines"), rate = 1.8)
 }
 \value{
 A spacing function with arguments:
-  \item{d}{\code{"dimnames"} attribute of a contingency table.}
+  \item{d}{\code{"dim"} attribute of a contingency table.}
   \item{condvars}{index vector of conditioning dimensions (only used by
     \code{spacing_conditional} and \code{spacing_doubledecker}.}
+  This function computes a list of objects of class \code{"unit"}. Each
+  list element contains the spacing information for the corresponding
+  dimension of the table. The length of the \code{"unit"}-objects is
+  \eqn{k-1}, \eqn{k} number of levels of the corresponding factor.
 }
 \author{David Meyer (\email{David.Meyer@R-project.org})}
 
