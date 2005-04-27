@@ -60,7 +60,6 @@ export(
        "Ord_plot",
        "fourfoldplot",
        "strucplot",
-       "birthwt", 
        "ternaryplot",
        "vcdLegend",
        "pearson_test",
