@@ -24,8 +24,13 @@ spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
 class(spacing_increase) <- "vcdSpacing"
 
 spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
-  function(d, condvars)
-    spacing_conditional(sp = 0, start = start, rate = rate)(d, condvars)
+  function(d, condvars) {
+    if (length(d) < 3) {
+      start[2] <- 0
+      spacing_dimequal(start)(d, condvars)
+    } else
+      spacing_conditional(sp = 0, start = start, rate = rate)(d, condvars)
+  }
 class(spacing_doubledecker) <- "vcdSpacing"
 
 spacing_conditional <- function(sp = unit(0.5, "lines"),

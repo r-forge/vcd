@@ -104,7 +104,7 @@ strucplot <- function(## main parameters
   }
 
   ## shading (color, fill, lty, etc.) argument
-  if(shade) {
+  if (shade) {
     if(is.null(shading)) shading <- shading_HCL
     if(is.function(shading)) {
       
@@ -121,7 +121,7 @@ strucplot <- function(## main parameters
   }
   
   ## choose gray when no shading is used
-  if(is.null(shading)) shading <- gpar(fill = rep.int(grey(0.8), length(x)))
+  if (is.null(shading)) shading <- gpar(fill = rep.int(grey(0.8), length(x)))
   
   ## set up page
   if (newpage) grid.newpage()

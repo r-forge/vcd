@@ -12,6 +12,7 @@ export(
        "tabplot",
        "oddsratio",
        "structable",
+       "doubledecker",
 
        ## spacings
        "spacing_conditional",
@@ -58,7 +59,6 @@ export(
        "Ord_estimate",
        "Ord_plot",
        "fourfoldplot",
-       "doubledecker",
        "strucplot",
        "birthwt", 
        "ternaryplot",
@@ -71,6 +71,8 @@ import(MASS)
 import(stats)
 
 S3method("[[", "structable")
+S3method("doubledecker", "default")
+S3method("doubledecker", "formula")
 S3method("mosaic", "default")
 S3method("mosaic", "formula")
 S3method("assoc", "default")

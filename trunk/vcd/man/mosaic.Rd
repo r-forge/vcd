@@ -20,11 +20,8 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
   \item{formula}{a formula specifying the variables used to create a 
     contingency table from \code{data}. For convenience, 
     conditioning formulas can be specified; the conditioning variables
-    will then be used first for splitting. Formulas for classical
-    mosaic displays have no response variable (similar to
-    the \code{xtabs} interface), but if one
-    is specified, it will be used last for splitting, and a
-    \link{doubledecker} plot is produced.}
+    will then be used first for splitting. Formulas for
+    mosaic displays have no response variable.}
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
   \item{visZero}{if \code{TRUE}, zero entries are represented by
