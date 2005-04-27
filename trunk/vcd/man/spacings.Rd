@@ -56,7 +56,7 @@ A spacing function with arguments:
 
 \seealso{
   \code{\link{strucplot}},
-  \code{\link{doubledeckerplot}}
+  \code{\link{doubledecker}}
 }
 
 \examples{

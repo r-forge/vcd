@@ -116,7 +116,7 @@ Invisibly, an object of class \code{"structable"}
   \code{\link{strucplot}},
   \code{\link{mosaicplot}},
   \code{\link{structable}},
-  \code{\link{doubledeckerplot}}
+  \code{\link{doubledecker}}
 }
 \examples{
 data(Titanic)

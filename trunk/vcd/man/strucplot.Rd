@@ -119,15 +119,19 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   Most elements of the plot, such as the panel function,
   the spacing between the tiles, the shading of the tiles, the
   labeling, and the legend, are modularized in functions and specified as
-  parameters. For each element \emph{foo}, there are two parameters: \var{foo} and
-  \var{foo\_args}. Basically, there are two ways of specification:
-  either, a suitable function passed to \var{foo} which subsequently is
-  called from \code{strucplot} to compute shadings, labelings, etc., or a corresponding
-  \emph{generating function} passed to \var{foo}, along with parameters
-  passed to \var{foo\_args}, that generates such a function.
-  Except for the shading-functions (\var{shading\_bar}), there is a third way
-  of specifying the function by directly passing \var{foo(foo\_args)} to
-  the \var{foo} parameter.
+  parameters. For each element \emph{foo}, \code{strucplot} takes two
+  arguments: \var{foo} and \var{foo\_args}, which can be used to specify
+  the parameters as follows:
+
+  \enumerate{
+    \item Passing a suitable function to \var{foo} which subsequently is
+    called from \code{strucplot} to compute shadings, labelings, etc.
+    \item Passing a corresponding \emph{generating function} to \var{foo},
+    along with parameters passed to \var{foo\_args}, that generates such a
+    function. Generating functions must inherit from class \code{"vcdPanel"}.
+    \item Except for the shading-functions (\var{shading\_bar}),
+    passing \var{foo(foo\_args)} to the \var{foo} argument.
+  }
   
   If legends are drawn, a \sQuote{cinemascope}-like layout is used for
   the plot to preserve the 1:1 aspect ratio.
@@ -143,7 +147,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \code{\link{panel_assoc}},
   \code{\link{panel_mosaic}},
   \code{\link{structable}},
-  \code{\link{doubledeckerplot}}
+  \code{\link{doubledecker}}
   \code{\link{labelings}}
   \code{\link{shadings}}
   \code{\link{legends}}
