@@ -3,17 +3,27 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Pairs plot for contingency tables}
 \description{
-Priduces a matrix of association of mosaic plots.
+Produces a matrix of strucplots.
 }
 \usage{
-pairs.table(x, upper_panel = panel_mosaic(), lower_panel = panel_mosaic(), diag_panel = panel_barplot(), main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
+pairs.table(x, upper_panel = panel_mosaic, upper_panel_args = list(),
+lower_panel = panel_mosaic, lower_panel_args = list(),
+diag_panel = panel_barplot, diag_panel_args = list(),
+main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{A contingency table}
-  \item{upper_panel}{Panel function for the upper triangle of the matrix}
-  \item{lower_panel}{Panel function for the lower triangle of the matrix}
-  \item{diag_panel}{Panel function for the diagonal of the matrix}
+  \item{upper_panel}{Function for the upper triangle of the matrix (see
+    details)}
+  \item{upper_panel_args}{List of arguments for the panel-generating
+    function, if specified (see details)}
+  \item{lower_panel}{Function for the lower triangle of the matrix (see details)}
+  \item{lower_panel_args}{List of arguments for the panel-generating
+    function, if specified (see details)}
+  \item{diag_panel}{Function for the diagonal of the matrix (see details).}
+  \item{diag_panel_args}{List of arguments for the panel-generating
+    function, if specified (see details)}
   \item{main}{Main title}
   \item{title_gp}{Object of class \code{"gpar"} used for the title}
   \item{space}{double specifying the distance between the cells}
@@ -21,7 +31,7 @@ pairs.table(x, upper_panel = panel_mosaic(), lower_panel = panel_mosaic(), diag_
   \item{\dots}{currently not used}
 }
 \details{
-  \code{mosaicpairs()} plots a matrix of pairwise mosaic plots, four
+  \code{pairs.table} plots a matrix of pairwise mosaic plots. Four
   independence types are distinguished:
   \code{"pairwise"}, \code{"total"}, \code{"conditional"} and \code{"joint"}.
   The pairwise mosaic matrix shows bivariate marginal relations, collapsed over
@@ -29,13 +39,34 @@ pairs.table(x, upper_panel = panel_mosaic(), lower_panel = panel_mosaic(), diag_
   for mutual independence, i.e. for marginal and conditional independence
   among all pairs of variables. The conditional independence mosaic matrix shows
   mosaic plots for marginal independence given all other variables. The
-  joint independence mosaic matrix shows mosaic plots for joint independence of all pairs of
-  variables from the others.
+  joint independence mosaic matrix shows mosaic plots for joint
+  independence of all pairs of variables from the others.
+
+  \code{pairs.table} uses panel functions called for each cell of the
+  matrix which can be different for upper matrix, lower
+  matrix, and diagonal cells. Correspondingly, for each panel parameter
+  \var{foo} (\samp{upper}, \samp{lower}, or \samp{diag}),
+  \code{pairs.plot} takes two arguments:
+  \var{foo\_panel} and \var{foo\_panel\_args}, which can be used to specify
+  the parameters as follows:
+
+  \enumerate{
+    \item Passing a suitable panel function to \var{foo\_panel} which
+    subsequently is called
+    for each cell with the corresponding coordinates.
+    \item Passing a corresponding \emph{generating function} to \var{foo\_panel},
+    along with parameters passed to \var{foo\_panel\_args}, that generates such a
+    function. Generating functions must inherit from class \code{"vcdPanel"}.
+    \item Passing \var{foo\_panel(foo\_panel\_args)} to the \var{foo\_panel} argument.
+  }
+  
 }
 \seealso{
-  \code{\link{mosaic}},
-  \code{\link{strucplot}},
-  \code{\link{structable}},
+  \code{\link{panel_mosaic}},
+  \code{\link{panel_assoc}},
+  \code{\link{panel_text}},
+  \code{\link{panel_barplot}},
+  \code{\link{assoc}},
 }
 \references{
   Cohen, A. (1980),
@@ -57,7 +88,9 @@ data(PreSex)
 
 pairs(PreSex)
 pairs(UCBAdmissions)
-pairs(UCBAdmissions, lower_panel = panel_mosaic(type="conditional"))
-pairs(UCBAdmissions, upper_panel = panel_assoc())
+pairs(UCBAdmissions, upper_panel_args = list(shade = FALSE))
+pairs(UCBAdmissions, lower_panel = panel_mosaic(type = "conditional"))
+pairs(UCBAdmissions, diag_panel = panel_text)
+pairs(UCBAdmissions, upper_panel = panel_assoc)
 }
 \keyword{hplot}
