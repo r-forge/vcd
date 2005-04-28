@@ -44,7 +44,7 @@ separate colors for the levels.
 An object of class \code{"structable"} corresponding to the plot.
 }
 \references{
-  Hoffmann, Heike (2001)
+  Hoffmann, Heike (2001),
   Generalized Odds Ratios for Visual Modeling. \emph{Journal of
     Computational and Graphical Statistics}, \bold{10}, 4, 628--640.
 }
