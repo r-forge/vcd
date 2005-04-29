@@ -66,9 +66,9 @@ A spacing function with arguments:
 \examples{
   strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
   strucplot(Titanic, spacing = spacing_equal(1))
-  strucplot(Titanic, spacing = spacing_dimequal(1:4))
+  strucplot(Titanic, spacing = spacing_dimequal(1:4 / 4))
   data(PreSex)
-  strucplot(PreSex, spacing = spacing_conditional, condvars = 1:2)  
+  strucplot(aperm(PreSex, c(1,4,2,3)), spacing = spacing_conditional, condvars = 2)  
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
 

@@ -7,53 +7,56 @@ mosaic <- function(x, ...)
 mosaic.formula <-
 function(formula, data = NULL, ..., main = NULL)
 {
-    if (is.logical(main) && main)
-      main <- deparse(substitute(data))
-    
-    m <- match.call(expand.dots = FALSE)
-    edata <- eval(m$data, parent.frame())
-    
-    fstr <- strsplit(paste(deparse(formula), collapse = ""), "~")
-    vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
-    varnames <- vars[[1]]
-    condnames <- if (length(vars) > 1) vars[[2]] else NULL
+  if (is.logical(main) && main)
+    main <- deparse(substitute(data))
+  
+  m <- match.call(expand.dots = FALSE)
+  edata <- eval(m$data, parent.frame())
+  
+  fstr <- strsplit(paste(deparse(formula), collapse = ""), "~")
+  vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
+  varnames <- vars[[1]]
+  condnames <- if (length(vars) > 1) vars[[2]] else NULL
 
-    if(inherits(edata, "ftable")
-       || inherits(edata, "table")
-       || length(dim(edata)) > 2) {
-        dat <- as.table(data)
-        if(all(varnames != ".")) {
-          
-          ind <- match(varnames, names(dimnames(dat)))
-          if (any(is.na(ind)))
-            stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", deparse(substitute(data))))
-          
-          if (!is.null(condnames)) {
-            condind <- match(condnames, names(dimnames(dat)))
-            if (any(is.na(condind)))
-              stop(paste("Can't find", paste(condnames[is.na(condind)], collapse=" / "), "in", deparse(substitute(data))))
-            ind <- c(condind, ind)
-          }
-          dat <- margin.table(dat, ind)
-        }
-        mosaic.default(dat, main = main, ...)
-      } else {
-        tab <- if ("Freq" %in% colnames(data))
-          xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
-                data = data)
-        else
-          xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
-                data = data)
-
-        mosaic.default(tab, main = main, ...)
+  if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
+    dat <- as.table(data)
+    if(all(varnames != ".")) {
+      ind <- match(varnames, names(dimnames(dat)))
+      if (any(is.na(ind)))
+        stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", deparse(substitute(data))))
+      
+      if (!is.null(condnames)) {
+        condind <- match(condnames, names(dimnames(dat)))
+        if (any(is.na(condind)))
+          stop(paste("Can't find", paste(condnames[is.na(condind)], collapse=" / "), "in", deparse(substitute(data))))
+        ind <- c(condind, ind)
       }
+      dat <- margin.table(dat, ind)
+    }
+    mosaic.default(dat, main = main, ...)
+  } else {
+    tab <- if ("Freq" %in% colnames(data))
+      xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
+            data = data)
+    else
+      xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
+            data = data)
+    
+    mosaic.default(tab, main = main, ...)
   }
+}
 
-mosaic.default <- function(x,
+mosaic.default <- function(x, condvars = NULL,
                            split_vertical = FALSE, direction = NULL,
                            spacing = NULL, spacing_args = list(),
                            visZero = TRUE, zeroSize = 0.5, ...) {
   dl <- length(dim(x))
+  if (!is.null(condvars)) {
+    if (is.character(condvars))
+      condvars <- match(condvars, names(dimnames(x)))
+    x <- aperm(x, c(condvars, seq(dl)[-condvars]))
+    spacing <- spacing_conditional
+  }
   
   ## splitting argument
   if (!is.null(direction))
@@ -68,6 +71,7 @@ mosaic.default <- function(x,
     spacing <- if (dl < 3) spacing_equal else spacing_increase
 
   strucplot(x,
+            condvars = if (is.null(condvars)) NULL else length(condvars),
             panel = panel_mosaicplot(visZero = visZero, zeroSize = zeroSize),
             split_vertical = split_vertical,
             spacing = spacing,

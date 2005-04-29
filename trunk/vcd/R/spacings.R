@@ -34,7 +34,7 @@ spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
 class(spacing_doubledecker) <- "vcdSpacing"
 
 spacing_conditional <- function(sp = unit(0.5, "lines"),
-                               start = unit(2, "lines"), rate = 1.8) {
+                                start = unit(2, "lines"), rate = 1.8) {
   condfun <- spacing_increase(start, rate)
   equalfun <- spacing_equal(sp)
   equalfun2 <- spacing_equal(start)
@@ -42,11 +42,12 @@ spacing_conditional <- function(sp = unit(0.5, "lines"),
     if (length(d) < 3)
       return(spacing_equal(sp)(d, condvars))
     ret <- vector("list", length(d))
-    ret[condvars] <- if (length(condvars) < 3)
-      equalfun2(d[condvars])
+    condseq <- seq(condvars)
+    ret[condseq] <- if (condvars < 3)
+      equalfun2(d[condseq])
     else
-      condfun(d[condvars])
-    ret[-condvars] <- equalfun(d[-condvars])
+      condfun(d[condseq])
+    ret[-condseq] <- equalfun(d[-condseq])
     ret
   }
 }
