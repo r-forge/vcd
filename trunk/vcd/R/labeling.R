@@ -221,11 +221,11 @@ labeling_text <- function(labels = TRUE, varnames = labels,
     ## tl_varnames
     if (is.null(tl_varnames) && is.null(labbl_varnames))
       tl_varnames <- tl_labels
-    tl_varnames <- pexpand(tl_varnames, ld, tl_labels, ld)
+    tl_varnames <- pexpand(tl_varnames, ld, tl_labels, dn)
 
     ## labbl_varnames
     if (!is.null(labbl_varnames))
-      labbl_varnames <- pexpand(labbl_varnames, ld, TRUE, ld)
+      labbl_varnames <- pexpand(labbl_varnames, ld, TRUE, dn)
 
     ## boxes
     boxes <- pexpand(boxes, ld, FALSE, dn)
@@ -351,7 +351,7 @@ labeling_text <- function(labels = TRUE, varnames = labels,
         mlab <- paste(root, "", dn[vind], n[labind], sep = ".")
         if (labels[vind] && (rep[vind] || !printed[[vind]][labind])) {
           lab <- labs[[vind]][labind]
-          if (labels_varnames[i])
+          if (labels_varnames[vind])
             lab <- paste(dn[vind], lab, sep = sep)
           if (sp) {
             if (tl_labels[vind]) {
@@ -461,7 +461,8 @@ labeling_text <- function(labels = TRUE, varnames = labels,
   }
 class(labeling_text) <- "vcdLabeling"
 
-labeling_doubledecker <- function(labels = "bottom", ...)
+labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
+  lab_pos <- match.arg(lab_pos)
   function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
@@ -473,12 +474,14 @@ labeling_doubledecker <- function(labels = "bottom", ...)
                   just_labels = c("left", "left", "left", "center"),
                   varnames = c(c(rep.int(TRUE, length(d) - 1), FALSE)),
                   offset = c(0, -0.6, 0, 0),
-                  tl_labels = c(rep.int(labels == "top", length(d) - 1), FALSE))(d, split_vertical, condvars)
+                  tl_labels = c(rep.int(lab_pos== "top", length(d) - 1), FALSE)
+                  )(d, split_vertical, condvars)
     seekViewport("marginRight")
     grid.text(names(d)[length(d)],
               x = unit(0.5, "lines"), y = unit(1, "npc"), just = c("left","top"),
               gp = gpar(fontface = 2))
   }
+}
 class(labeling_doubledecker) <- "vcdLabeling"
 
 labeling_left <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
