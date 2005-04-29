@@ -17,15 +17,15 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{labels}{logical vector indicating, for each dimension, whether
+  \item{labels}{vector of logicals indicating, for each dimension, whether
     labels for the factor levels should be drawn. Values are recycled as needed.}
-  \item{varnames}{logical vector indicating, for each dimension, whether variable names
+  \item{varnames}{vector of logicals indicating, for each dimension, whether variable names
     should be drawn. Values are recycled as needed.}
-  \item{abbreviate_labels}{logical vector indicating, for each
+  \item{abbreviate_labels}{vector of integers or logicals indicating, for each
     dimension, the number of characters to which the labels should be
     abbreviated. \code{TRUE} means 1 character, \code{FALSE} causes no
     abbreviation. Values are recycled as needed.}
-  \item{abbreviate_varnames}{logical vector indicating, for each
+  \item{abbreviate_varnames}{vector of integers or logicals indicating, for each
     dimension, the number of characters to which the variable (=dimension) names should be
     abbreviated. \code{TRUE} means 1 character, \code{FALSE} causes no
     abbreviation. Values are recycled as needed.}
@@ -77,7 +77,7 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
   \item{d}{\code{"dimnames"} attribute from the visualized contingency
     table, or the visualized table itself from which the
     \code{"dimnames"} attributes will then be extracted.}
-  \item{split_vertical}{logical vector indicating the split directions.}
+  \item{split_vertical}{vector of logicals indicating the split directions.}
   \item{condvars}{integer vector of conditioning dimensions}
 }
 \author{David Meyer (\email{David.Meyer@R-project.org})}
