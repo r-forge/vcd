@@ -22,23 +22,22 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the 'dimnames(x)' attribute.}
-  \item{residuals}{Optionally, an array of residuals in the same shape
+  \item{residuals}{optionally, an array of residuals in the same shape
     than \code{x} (see details).}
-  \item{expected}{Optionally, an array of expected values in the same shape
+  \item{expected}{optionally, an array of expected values in the same shape
     than \code{x}, or alternatively a formula object to create such a table as used by
     \code{\link[stats]{loglin}} or \code{\link[MASS]{loglm}} (see details).}
   \item{df}{degrees of freedom of the independence model --- TO BE REMOVED ---}
-  \item{condvars}{vector of integers decribing the conditioning
-    variables for the visualization of conditional independence
-    models. This information is used for computing the expected values,
+  \item{condvars}{number of conditioning variables, if any; those are
+    expected to be ordered first in the table.
+    This information is used for computing the expected values,
     and is also passed to the spacing functions (see
-    \code{\link{spacings}}). Note that the user is responsible for
-    permuting \code{x} accordingly to have the conditioning
-    variables come first. Then usually, \code{condvars} will be
-    \code{1:k}, \code{k} number of conditioning variables. -- FIXME: so
-    just expect the numbers? --}
+    \code{\link{spacings}}).}
   \item{shade}{logical specifying whether shading should be used or not
-    (see \code{shading})}
+    (see \code{shading}). If \code{TRUE} and \code{expected} is
+    unspecified, a default model is fitted: if \code{condvars} is
+    specified, a corresponding conditional independece model, and else the
+    total independence model.}
   \item{residuals_type}{a character string indicating the type of residuals to be
     computed when none are supplied.
     Must be one of \code{"pearson"} (giving components
