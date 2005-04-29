@@ -38,10 +38,10 @@ strucplot <- function(## main parameters
                       keepAR = TRUE
                       ) {
   ## default behaviour of shade
-  if(is.null(shade)) shade <- !is.null(shading) || !is.null(expected)
+  if (is.null(shade)) shade <- !is.null(shading) || !is.null(expected)
 		      
   type <- match.arg(type)
-  residuals_type = match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
+  residuals_type <- match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
 
   ## table characteristics
   dl <- length(dim(x))
@@ -62,21 +62,22 @@ strucplot <- function(## main parameters
   ## For now, this is done here. A parameter df is added for inference
   ## (which is done in the shading (generating) functions).
   ## Finally, expected can also be the table of expected values.
-  if(is.null(expected) || !is.numeric(expected)) {
-    if(inherits(expected, "formula")) {
+  if (is.null(expected) || !is.numeric(expected))
+    if (inherits(expected, "formula")) {
       fm <- loglm(expected, x, fitted = TRUE)
       expected <- fitted(fm)
       df <- fm$df
     } else {
-      if(is.null(expected)) {
-        expected <- if(is.null(condvars)) as.list(1:dl)
-          else lapply((length(condvars) + 1):dl, c, seq(length(condvars)))
-      }
+      if (is.null(expected))
+        expected <- if (is.null(condvars))
+          as.list(1:dl)
+        else
+          lapply((condvars + 1):dl, c, seq(condvars))
+
       fm <- loglin(x, expected, fit = TRUE, print = FALSE)
       expected <- fm$fit
       df <- fm$df
     }
-  }
   
   ## compute residuals
   if (is.null(residuals))
@@ -105,11 +106,11 @@ strucplot <- function(## main parameters
 
   ## shading (color, fill, lty, etc.) argument
   if (shade) {
-    if(is.null(shading)) shading <- shading_HCL
-    if(is.function(shading)) {
+    if (is.null(shading)) shading <- shading_HCL
+    if (is.function(shading)) {
       
       shadingfun <- if(inherits(shading, "vcdShading"))
-                 do.call("shading", c(list(x, residuals, expected, df), as.list(shading_args))) else shading
+        do.call("shading", c(list(x, residuals, expected, df), as.list(shading_args))) else shading
       shading <- shadingfun(residuals)
     } else if (!is.null(legend))
       stop("shading argument must be a shading function for drawing a legend")
@@ -161,7 +162,7 @@ strucplot <- function(## main parameters
     panel <- do.call("panel", panel_args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
-        expected = expected,
+        expected = if (type == "observed") expected else x,
         spacing = spacing,
         shading = shading,
         split_vertical = split_vertical)

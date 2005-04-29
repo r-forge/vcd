@@ -123,7 +123,7 @@ mosaic(Titanic, labeling = labeling_lboxed)
 
 data(PreSex)
 mosaic(~ PremaritalSex + ExtramaritalSex | Gender + MaritalStatus, data = PreSex,
-       spacing = spacing_conditional, labeling = labeling_conditional, condvars = 1:2)
+       labeling = labeling_conditional)
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
 

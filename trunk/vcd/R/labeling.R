@@ -56,7 +56,7 @@ labeling_conditional <- function(...)
     if (is.table(d))
       d <- dimnames(d)
     v <- rep.int(TRUE, length(d))
-    v[condvars] <- FALSE
+    v[seq(condvars)] <- FALSE
     labeling_text(labels = !v, ...)(d, split_vertical, condvars)
     labeling_cells(labels = v, ...)(d, split_vertical, condvars)
   }

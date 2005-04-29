@@ -9,7 +9,10 @@ This function creates a doubledecker plot visualizing a classification rule.
 }
 \usage{
 \method{doubledecker}{formula}(formula, data = NULL, ..., main = NULL)
-\method{doubledecker}{default}(x, margin = c(1, 4, length(dim(x)) + 1, 1), col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70), labeling = labeling_doubledecker(), spacing = spacing_doubledecker(), main = NULL, keepAR = FALSE, ...)
+\method{doubledecker}{default}(x, depvar = length(dim(x)), margins = c(1,4, length(dim(x)) + 1, 1),
+                col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
+                labeling = labeling_doubledecker, spacing = spacing_doubledecker,
+                main = NULL, keepAR = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,8 +23,11 @@ This function creates a doubledecker plot visualizing a classification rule.
     or \code{"ftable"}.}
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.}
-  \item{margin}{margin of the plot. Note that all factor names (except
-    the last one) and their levels are visualized \emph{under} the plot.}
+  \item{depvar}{dimension index or character string specifying the
+    dependent variable. That will be sorted last in the table.}
+  \item{margins}{margins of the plot. Note that all factor names (except
+    the last one) and their levels are visualized \emph{as a block}
+    under or over the plot, depending on .}
   \item{col}{vector of colors used for the tiles of the last dimension.}
   \item{labeling}{labeling function or corresponding generating generating function (see
     \code{\link{strucplot}} for details)}
@@ -59,6 +65,7 @@ An object of class \code{"structable"} corresponding to the plot.
 }
 \examples{
 doubledecker(Titanic)
+doubledecker(Titanic, depvar = "Survived")
 doubledecker(Survived ~ ., data = Titanic)
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

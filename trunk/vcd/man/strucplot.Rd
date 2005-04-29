@@ -135,6 +135,10 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   
   If legends are drawn, a \sQuote{cinemascope}-like layout is used for
   the plot to preserve the 1:1 aspect ratio.
+
+  If \code{type = "expected"}, the expected values are passed to the
+  \code{observed} argument of the panel function, and the observed
+  values to the \code{expected} argument.
 }
 \value{
   Invisibly, an object of class "structable" corresponding to the plot.

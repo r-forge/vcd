@@ -8,7 +8,7 @@
   Plots (extended) mosaic displays.
 }
 \usage{
-\method{mosaic}{default}(x, 
+\method{mosaic}{default}(x, condvars = NULL,
 split_vertical = FALSE, direction = NULL, spacing = NULL,
 spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
 \method{mosaic}{formula}(formula, data, ..., main = NULL)
@@ -17,6 +17,9 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.}
+  \item{condvars}{vector of integers or character strings indicating
+    conditioning variables, if any. The table will be permuted to order
+    them first.}
   \item{formula}{a formula specifying the variables used to create a 
     contingency table from \code{data}. For convenience, 
     conditioning formulas can be specified; the conditioning variables
@@ -138,6 +141,10 @@ mosaic(HairEyeColor, shade = TRUE, expected = list(c(1,2), 3))
 ## of gears and carburettors in Motor Trend car data.
 data(mtcars)
 mosaic(~ gear + carb, data = mtcars, shade = TRUE)
+
+data(PreSex)
+mosaic(PreSex, condvars = c(1,4))
+mosaic(~ ExtramaritalSex + PremaritalSex | MaritalStatus + Gender, data = PreSex)
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
 
