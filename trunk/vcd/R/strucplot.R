@@ -18,6 +18,8 @@ strucplot <- function(## main parameters
                       spacing = spacing_equal,
                       spacing_args = list(),
                       shading = NULL,
+		      #Z# This argument should be called gp
+		      #Z# because it specifies gp and not shading
 		      shading_args = list(),   
                       labeling = labeling_text,
                       labeling_args = list(),

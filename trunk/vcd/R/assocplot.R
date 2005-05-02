@@ -24,8 +24,10 @@ assoc.default <- function(x,
   if (!inherits(x, "ftable")) {
     if (is.null(row_vars) && is.null(col_vars) && is.table(x))
       row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
-    x <- ftable(x, row_vars = row_vars, col_vars = col_vars)
+    x <- ftable(x, row.vars = row_vars, col.vars = col_vars)
+    #Z# ftable() does not have row_vars...
   }
+  #Z# default is not sensible, try assoc(UCBAdmissions)
 
   tab <- as.table(x)
   dl <- length(dim(tab))
@@ -38,9 +40,12 @@ assoc.default <- function(x,
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
+  #Z# this overwrites any splitting specification provided!
   split_vertical <- rep(FALSE, dl)
   names(split_vertical) <- names(dimnames(tab))
-  split_vertical[names(attr(x, "col_vars"))] <- TRUE
+  split_vertical[names(attr(x, "col.vars"))] <- TRUE
+  #Z# ftable() does not have col_vars...
+  
   
   strucplot(tab,
             spacing = spacing,
@@ -70,6 +75,7 @@ panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                      else
                        rep.int(rfunc(resid), nrow(resid)),
                      nrow = 2)
+    #Z# But this can't be the way the user is expected to specify ylim!
 
     attr(ylim, "split_vertical") <- rep(TRUE, sum(!split_vertical))
     attr(ylim, "dnames") <- dn[!split_vertical]
