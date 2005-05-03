@@ -15,16 +15,19 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "l
     rows (columns) are chosen such that the \emph{total} heights (widths) of
     the rows (colums) are all equal. If \code{TRUE}, the space between the
     rows (columns) is fixed and hence the plot is more "compressed".}
-  \item{xlim}{a \eqn{2 \times k}{2 times k} matrix of doubles, \eqn{k}
+  \item{xlim}{either a \eqn{2 \times k}{2 times k} matrix of doubles, \eqn{k}
     number of total columns
-    of the plot. The columns of \code{xlim} correspond to the columns of
+    of the plot, or a recycled vector from which such a matrix will be
+    constructed.
+    The columns of \code{xlim} correspond to the columns of
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{xlim} is
     \code{NULL}, the ranges are determined from the residuals according
     to \code{compress} (if \code{TRUE} widest range from each column,
     if \code{FALSE} from the whole association plot matrix).}
-  \item{ylim}{a 2 times k matrix of doubles, k number of total rows
-    of the plot. The columns of \code{xlim} correspond to the rows of
+  \item{ylim}{either a 2 times k matrix of doubles, k number of total rows
+    of the plot, or a recycled vector from which such a matrix will be
+    constructed. The columns of \code{xlim} correspond to the rows of
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{ylim} is
     \code{NULL}, the ranges are determined from the residuals according
