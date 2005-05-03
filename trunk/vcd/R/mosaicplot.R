@@ -80,7 +80,7 @@ mosaic.default <- function(x, condvars = NULL,
 }
 
 panel_mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
-  function(residuals, observed, expected = NULL, spacing, shading, split_vertical) {
+  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
     dn <- dimnames(observed)
     dnn <- names(dn)
     dx <- dim(observed)
@@ -129,14 +129,14 @@ panel_mosaicplot <- function(visZero = TRUE, zeroSize = 0.5)
 
     for (i in seq(along = mnames)) {
       seekViewport(paste("cell", mnames[i], sep = ".."))
-      gpobj <- structure(lapply(shading, function(x) x[i]), class = "gpar")
+      gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       if (!zeros[i]) {
         grid.rect(gp = gpobj, name = paste("rect", mnames[i], sep = ".."))
       } else if (visZero) {
         grid.lines(x = 0.5, gp = gpobj)
         grid.lines(y = 0.5, gp = gpobj)
         grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
-                    gp = gpar(col = shading$fill[i]),
+                    gp = gpar(col = gp$fill[i]),
                     name = paste("disc", mnames[i], sep = ".."))
         grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"),
                     name = paste("circle", mnames[i], sep = ".."))

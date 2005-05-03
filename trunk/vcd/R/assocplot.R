@@ -19,47 +19,45 @@ assoc.default <- function(x,
                           spacing = spacing_conditional(sp = 0),
                           spacing_args = list(),
                           split_vertical = NULL,
+                          keepAR = FALSE,
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
   if (!inherits(x, "ftable")) {
     if (is.null(row_vars) && is.null(col_vars) && is.table(x))
       row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
     x <- ftable(x, row.vars = row_vars, col.vars = col_vars)
-    #Z# ftable() does not have row_vars...
   }
-  #Z# default is not sensible, try assoc(UCBAdmissions)
 
   tab <- as.table(x)
   dl <- length(dim(tab))
   
   ## spacing
   cond <- rep(TRUE, dl)
-  cond[length(attr(x, "row_vars")) + c(0, length(attr(x, "col_vars")))] <- FALSE
+  cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
   if (inherits(spacing, "vcdSpacing"))
     spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
-  #Z# this overwrites any splitting specification provided!
-  split_vertical <- rep(FALSE, dl)
-  names(split_vertical) <- names(dimnames(tab))
-  split_vertical[names(attr(x, "col.vars"))] <- TRUE
-  #Z# ftable() does not have col_vars...
-  
+  if (is.null(split_vertical)) {
+    split_vertical <- rep(FALSE, dl)
+    names(split_vertical) <- names(dimnames(tab))
+    split_vertical[names(attr(x, "col.vars"))] <- TRUE
+  }
   
   strucplot(tab,
             spacing = spacing,
             split_vertical = split_vertical,
             panel = panel_assocplot(compress = compress, xlim = xlim, ylim = ylim,
               yspace = yspace, xscale = xscale),
-            keepAR = FALSE,
+            keepAR = keepAR,
             residuals_type = "Pearson",
             ...)
 }
 
 panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                             yspace = unit(0.5, "lines"), xscale = 0.9)
-  function(residuals, observed = NULL, expected, spacing, shading, split_vertical) {
+  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -69,24 +67,25 @@ panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     resid <- structable(residuals, split_vertical = split_vertical)
     sexpected <- structable(sqrt(expected), split_vertical = split_vertical)
     rfunc <- function(x) c(min(x, 0), max(x, 0))
-    if(is.null(ylim))
-      ylim <- matrix(if (compress)
-                       apply(resid, 1, rfunc)
-                     else
-                       rep.int(rfunc(resid), nrow(resid)),
-                     nrow = 2)
-    #Z# But this can't be the way the user is expected to specify ylim!
+    if (is.null(ylim))
+      ylim <- if (compress)
+        matrix(apply(resid, 1, rfunc), nrow = 2)
+      else
+        rfunc(resid)
+    if (!is.matrix(ylim))
+      ylim <- matrix(ylim, nrow = 2, ncol = nrow(resid))
 
     attr(ylim, "split_vertical") <- rep(TRUE, sum(!split_vertical))
     attr(ylim, "dnames") <- dn[!split_vertical]
     class(ylim) <- "structable"
 
     if(is.null(xlim))
-      xlim <- matrix(if (compress)
-                       c(-1,1) %o% apply(sexpected, 2, max)
-                     else
-                       rep.int(c(-1,1) * max(sexpected), ncol(resid)),
-                     nrow = 2) / 2
+      xlim <- if (compress)
+        matrix(c(-0.5, 0.5) %o% apply(sexpected, 2, max), nrow = 2)
+      else
+        c(-0.5, 0.5) * max(sexpected)
+    if (!is.matrix(xlim))
+      xlim <- matrix(xlim, nrow = 2, ncol = ncol(resid))
     attr(xlim, "split_vertical") <- rep(TRUE, sum(split_vertical))
     attr(xlim, "dnames") <- dn[split_vertical]
     class(xlim) <- "structable"
@@ -150,7 +149,7 @@ panel_assocplot <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                 height = residuals[i],
                 width = xscale * unit(sqrt(expected[i]), "native"),
                 default.units = "native",
-                gp = structure(lapply(shading, function(x) x[i]), class = "gpar"),
+                gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"),
                 name = paste("rect", mnames[i], sep = "..")
                 )

@@ -12,7 +12,8 @@ contingency table.
 \usage{
 \method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress =
 TRUE, xlim = NULL, ylim = NULL, spacing = spacing_conditional(sp = 0),
-spacing_args = list(), split_vertical = NULL, xscale = 0.9, yspace = unit(0.5, "lines"), ...)
+spacing_args = list(), split_vertical = NULL, keepAR = FALSE,
+xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, ..., main = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -58,6 +59,8 @@ spacing_args = list(), split_vertical = NULL, xscale = 0.9, yspace = unit(0.5, "
     A \code{TRUE} component indicates that the
     corresponding dimension is fold into the columns,
     \code{FALSE} folds the dimension into the rows.}
+  \item{keepAR}{logical indicating whether the aspect ratio should be
+    fixed or not.}
   \item{xscale}{scale factor resizing the tile's width, thus adding
     additional space between the tiles. }
   \item{yspace}{object of class \code{"unit"} specifying additional
@@ -158,5 +161,21 @@ assoc(x)
 (x <- margin.table(HairEyeColor, c(1, 3)))
 chisq.test(x)
 assoc(x, main = "Relation between hair color and sex", shade = TRUE)
+
+# Visualize multi-way table
+assoc(aperm(HairEyeColor), expected = ~ (Hair + Eye) * Sex,
+      labeling_args = list(just_labels = c(Eye = "left"),
+                           offset = c(right = -0.5),
+                           rot_labels = c(right = 0),
+                           tl_varnames = c(Eye = TRUE))
+)
+
+assoc(aperm(UCBAdmissions), expected = ~ (Admit + Gender) * Dept,
+      labeling_args = list(abbreviate = c(Gender = TRUE), rot_labels = 0)
+)
+
+
+
+
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

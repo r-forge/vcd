@@ -11,7 +11,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
   residuals_type = c("Pearson", "deviance", "FT"), split_vertical = TRUE, 
   spacing = spacing_equal, spacing_args = list(),
-  shading = NULL, shading_args = list(),
+  gp = NULL, gp_args = list(),
   labeling = labeling_text, labeling_args = list(),
   panel = panel_mosaicplot, panel_args = list(),
   legend = legend_resbased, legend_args = list(),
@@ -33,8 +33,8 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     This information is used for computing the expected values,
     and is also passed to the spacing functions (see
     \code{\link{spacings}}).}
-  \item{shade}{logical specifying whether shading should be used or not
-    (see \code{shading}). If \code{TRUE} and \code{expected} is
+  \item{shade}{logical specifying whether gp should be used or not
+    (see \code{gp}). If \code{TRUE} and \code{expected} is
     unspecified, a default model is fitted: if \code{condvars} is
     specified, a corresponding conditional independece model, and else the
     total independence model.}
@@ -59,8 +59,10 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     generating function (see details and \code{\link{spacings}}.}
   \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified.}
-  \item{shading}{shading object, shading function or a corresponding generating function (see details and \code{\link{shadings}}.}
-  \item{shading_args}{list of arguments for the
+  \item{gp}{object of class \code{"gpar"}, shading function or
+    a corresponding generating function (see details and
+    \code{\link{shadings}}. Ignored if \code{shade = FALSE}.}
+  \item{gp_args}{list of arguments for the
     shading-generating function, if specified.}
   \item{labeling}{either a labeling function, or a corresponding generating function (see details and \code{\link{labelings}}.}
   \item{labeling_args}{list of arguments for the
@@ -72,7 +74,8 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{panel_args}{list of arguments for the
     panel-generating function, if specified.}
   \item{legend}{either a legend-generating function, or a legend
-    function (see details and \code{\link{legends}}.}
+    function (see details and \code{\link{legends}}. \code{NULL} or
+    \code{FALSE} disables the legend.}
   \item{legend_args}{list of arguments for the
     legend-generating function, if specified.}
   \item{main}{either a logical, or a character string used for
@@ -98,7 +101,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   parameters used for the main and sub titles.}
   \item{newpage}{logical indicating whether a new page should be created
   for the plot or not.}
-  \item{keepAR}{logical indicating whether the aspect ration should be
+  \item{keepAR}{logical indicating whether the aspect ratio should be
     fixed or not.}
 }
 \details{
@@ -109,7 +112,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   computed as needed from observed and expected frequencies, where the
   expected frequencies are optionally computed for a specified
   independence model. Finally, the specified functions for spacing,
-  shading, main plot, legend, and labeling are called to produce the plot. The
+  gp, main plot, legend, and labeling are called to produce the plot. The
   function invisibly returns an object of class \code{"structable"}
   corresponding to the structure of the plot.
 
@@ -138,6 +141,10 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   If \code{type = "expected"}, the expected values are passed to the
   \code{observed} argument of the panel function, and the observed
   values to the \code{expected} argument.
+
+  Although the \code{gp} argument is typically used for shading, it can
+  be used for abritrary modifications of the tiles' graphics parameters
+  (e.g., for highlighting particular cells, etc.).
 }
 \value{
   Invisibly, an object of class "structable" corresponding to the plot.
