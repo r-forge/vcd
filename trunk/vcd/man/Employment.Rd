@@ -34,7 +34,6 @@ M. Friendly (2000),
 }
 
 \examples{
-\dontrun{
 data(Employment)
 
 ## Employment Status ##
@@ -47,12 +46,22 @@ mosaic(Employment,
            expected = ~ LayoffCause * EmploymentLength + LayoffCause * EmploymentStatus,
 	   main = "Layoff*EmployLength + Layoff*EmployStatus")
 
+## stratified view
+## see also: tplot()
+
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(ncol = 2)))
+pushViewport(viewport(layout.pos.col = 1))
+
 ## Closure ##
-mosaic(Employment[,,1], main = "Layoff: Closure")
+mosaic(Employment[,,1], main = "Layoff: Closure", newpage = FALSE)
+
+popViewport(1)
+pushViewport(viewport(layout.pos.col = 2))
 
 ## Replaced ##
-mosaic(Employment[,,2], main = "Layoff: Replaced")
-}
+mosaic(Employment[,,2], main = "Layoff: Replaced", newpage = FALSE)
+popViewport(2)
 }
 
 \keyword{datasets}

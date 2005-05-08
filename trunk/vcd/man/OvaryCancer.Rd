@@ -34,7 +34,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(OvaryCancer)
-ftable(xtabs(Freq ~ ., data = OvaryCancer))
+structable(~ ., data = OvaryCancer)
 }
 
 \keyword{datasets}

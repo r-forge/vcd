@@ -8,21 +8,22 @@
   populations (strata).
 }
 \usage{
-fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
-             conf_level = 0.95, std = c("margins", "ind.max", "all.max"),
+fourfoldplot(x,
+             color = c("#99CCFF","#6699CC","#FF5050","#6060A0","#FF0000","#000080"),
+             conf_level = 0.95, std = c("margins","ind.max","all.max"),
              margin = c(1, 2), space = 0.2, main = NULL,
              mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.15,
-             p_adjust_method = p.adjust.methods, panel = FALSE,
+             p_adjust_method = p.adjust.methods, newpage = TRUE,
              fontsize = 12)
 }
 \arguments{
-  \item{x}{a 2 by 2 by \eqn{k} contingency table in array form, or as a
+  \item{x}{a 2 by 2 by \eqn{k} contingency table in array form, or a
     2 by 2 matrix if \eqn{k} is 1.}
   \item{color}{a vector of length 6 specifying the colors to use for the
     smaller and larger diagonals of each 2 by 2 table. The first pair
     is used for the standard (non-extended) plots, the other two
     for the extended version: the second/third pair is used for tables with
-    non-significant/significant logoddsratios, respectively, the latter
+    non-significant/significant log-odds ratios, respectively, the latter
     being visualized in brighter colors.}
   \item{conf_level}{confidence level used for the confidence rings on
     the odds ratios.  Must be a single nonnegative number less than 1;
@@ -42,22 +43,19 @@ fourfoldplot(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#
     Only used if \code{std} equals \code{"margins"}.}
   \item{space}{the amount of space (as a fraction of the maximal radius
     of the quarter circles) used for the row and column lebals.}
-  \item{main}{character string for the fourfold title.}
-  \item{mfrow}{a numeric vector of the form \code{c(nr, nc)}, indicating
+  \item{main}{character string for the fourfold plot title.}
+  \item{mfrow, mfcol}{a numeric vector of the form \code{c(\var{nr}, \var{nc})}, indicating
     that the displays for the 2 by 2 tables should be arranged in an
-    \code{nr} by \code{nc} layout, filled by rows.}
-  \item{mfcol}{a numeric vector of the form \code{c(nr, nc)}, indicating
-    that the displays for the 2 by 2 tables should be arranged in an
-    \code{nr} by \code{nc} layout, filled by columns.}
-  \item{extended}{if \code{TRUE}, extended plots are plotted,
-    i.e. colors are brighter for significant logoddsratios, and ticks
-    are plotted for pies with positive logodds.}
+    \var{nr} by \var{nc} layout, filled by rows/columns.}
+  \item{extended}{logical; if \code{TRUE}, extended plots are plotted,
+    i.e., colors are brighter for significant log-odds ratios, and ticks
+    are plotted for pies with positive log-odds.}
   \item{ticks}{the length of the ticks. If set to 0, no ticks are
     plotted.}
   \item{p_adjust_method}{method to be used for p-value adjustments for
-    multistratum-plots. The p-values are used for the ``visual''
+    multistratum-plots. The p-values are used for the \sQuote{visual}
     significance tests of the oddsratios.}
-  \item{panel}{if \code{FALSE}, \code{grid.newpage()} is called before
+  \item{newpage}{logical; if \code{TRUE}, \code{grid.newpage()} is called before
     plotting.}
   \item{fontsize}{fontsize of main title.}
 }
@@ -92,7 +90,9 @@ M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \seealso{
-  \code{\link{mosaicplot}}
+  \code{\link{mosaic}},
+  \code{\link{assoc}},
+  \code{\link{tplot}}
 }
 \examples{
 data(UCBAdmissions)

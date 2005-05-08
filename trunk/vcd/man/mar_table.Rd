@@ -16,8 +16,7 @@ mar_table(x)
   A table with added total column and total row.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{david.meyer@ci.tuwien.ac.at}
 }
 \examples{
 data(SexualFun)

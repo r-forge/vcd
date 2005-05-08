@@ -31,7 +31,7 @@ Forlag, Copenhagen.
 
 \examples{
 data(JobSatisfaction)
-ftable(xtabs(Freq ~ ., data = JobSatisfaction))
+structable(~ ., data = JobSatisfaction)
 
 mantelhaen.test(xtabs(Freq ~ own + supervisor + management,
   data = JobSatisfaction))

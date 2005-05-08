@@ -1,4 +1,4 @@
-\name{panel.assocplot}
+\name{panel_assocplot}
 \alias{panel_assocplot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Panel-generating function for association plots}
@@ -7,14 +7,15 @@
   producing association plots.
 }
 \usage{
-panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "lines"), xscale = 0.9)
+panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
+                yspace = unit(0.5, "lines"), xscale = 0.9)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{compress}{logical; if \code{FALSE}, the space between the
     rows (columns) are chosen such that the \emph{total} heights (widths) of
     the rows (colums) are all equal. If \code{TRUE}, the space between the
-    rows (columns) is fixed and hence the plot is more "compressed".}
+    rows and columns is fixed and hence the plot is more \dQuote{compressed}.}
   \item{xlim}{either a \eqn{2 \times k}{2 times k} matrix of doubles, \eqn{k}
     number of total columns
     of the plot, or a recycled vector from which such a matrix will be
@@ -23,16 +24,16 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "l
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{xlim} is
     \code{NULL}, the ranges are determined from the residuals according
-    to \code{compress} (if \code{TRUE} widest range from each column,
-    if \code{FALSE} from the whole association plot matrix).}
-  \item{ylim}{either a 2 times k matrix of doubles, k number of total rows
+    to \code{compress} (if \code{TRUE}: widest range from each column,
+    if \code{FALSE}: from the whole association plot matrix).}
+  \item{ylim}{either a 2 times \eqn{k} matrix of doubles, \eqn{k} number of total rows
     of the plot, or a recycled vector from which such a matrix will be
     constructed. The columns of \code{xlim} correspond to the rows of
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{ylim} is
     \code{NULL}, the ranges are determined from the residuals according
-    to \code{compress} (if \code{TRUE} widest range from each row,
-    if \code{FALSE} from the whole association plot matrix)}
+    to \code{compress} (if \code{TRUE}: widest range from each row,
+    if \code{FALSE}: from the whole association plot matrix)}
   \item{xscale}{scale factor resizing the tile's width, thus adding
     additional space between the tiles. }
   \item{yspace}{object of class \code{"unit"} specifying additional
@@ -45,20 +46,20 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL, yspace = unit(0.5, "l
 }
 \value{
   A function with arguments:
-  \item{residuals}{table of residuals}
-  \item{observed}{not used by \code{panel_assocplot}}
-  \item{expected}{table of expected frequencies}
+  \item{residuals}{table of residuals.}
+  \item{observed}{not used by \code{panel_assocplot}.}
+  \item{expected}{table of expected frequencies.}
   \item{spacing}{object of class \code{"unit"} specifying the space
-    between the tiles}
-  \item{gp}{list of \code{gpar} objects used for the drawing the tiles}
+    between the tiles.}
+  \item{gp}{list of \code{gpar} objects used for the drawing the tiles.}
   \item{split_vertical}{vector of logicals indicating, for each
-    dimension of the table, the split direction}
+    dimension of the table, the split direction.}
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 \seealso{
   \code{\link{assoc}},
   \code{\link{strucplot}},
-  \code{\link{structable}},
+  \code{\link{structable}}.
 }
 \references{
   Cohen, A. (1980),

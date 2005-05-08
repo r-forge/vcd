@@ -45,14 +45,9 @@ ternaryplot(
             col = colors[as.numeric(Positions)],
             main = "Baseball Hitters Data"
             )
-legend(
-       0.7, 0.85,
-       legend = c("POSITION(S)", levels(Positions)),
-       pch = c("", pch),
-       col = c(NA, colors)
-       )
+vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
 
-  detach(Hitters)
+detach(Hitters)
 }
 
 \keyword{datasets}

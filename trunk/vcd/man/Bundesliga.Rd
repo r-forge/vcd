@@ -40,7 +40,7 @@ data(Bundesliga)
 ## independence of home and away goals
 tore95 <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
 tore95
-mosaicplot(tore95, shade = TRUE)
+mosaic(tore95, gp = shading_max)
 
 ## number of goals per game poisson distributed?
 ntore1 <- xtabs(~ HomeGoals, data = Bundesliga, subset = Year == 1995)

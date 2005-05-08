@@ -1,4 +1,4 @@
-\name{panel.mosaicplot}
+\name{panel_mosaicplot}
 \alias{panel_mosaicplot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Panel-generating function for mosaic plots}
@@ -22,20 +22,20 @@ panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
 }
 \value{
   A function with arguments:
-  \item{residuals}{table of residuals}
-  \item{observed}{table of observed residuals}
-  \item{expected}{not used by \code{panel.mosaicplot}}
+  \item{residuals}{table of residuals.}
+  \item{observed}{table of observed values.}
+  \item{expected}{not used by \code{panel_mosaicplot}.}
   \item{spacing}{object of class \code{"unit"} specifying the space
-    between the tiles}
-  \item{gp}{list of \code{gpar} objects used for the drawing the tiles}
+    between the tiles.}
+  \item{gp}{list of \code{gpar} objects used for the drawing the tiles.}
   \item{split_vertical}{vector of logicals indicating, for each
-    dimension of the table, the split direction}
+    dimension of the table, the split direction.}
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 \seealso{
   \code{\link{mosaic}},
   \code{\link{strucplot}},
-  \code{\link{structable}},
+  \code{\link{structable}}.
 }
 \references{
   Cohen, A. (1980),

@@ -45,12 +45,8 @@ ternaryplot(
   dimnames_position = "edge",
   main = "Lifeboats on the Titanic"
 )
-legend(
-  0.7, 0.8,
-  legend = c("SIDE", "Port", "Starboard"),
-  pch = c(NA, 1, 19),
-  col = c("black", "red", "blue"),
-)
+vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
+
 }
 
 \keyword{datasets}

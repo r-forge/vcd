@@ -24,14 +24,14 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
     contingency table from \code{data}. For convenience, 
     conditioning formulas can be specified; the conditioning variables
     will then be used first for splitting. Formulas for
-    mosaic displays have no response variable.}
+    mosaic displays (unlike those for doubledecker plots) have no response variable.}
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
   \item{visZero}{if \code{TRUE}, zero entries are represented by
     a bullet.}
-  \item{zeroSize}{size of the bullet used for zero entries (ignored if 
-    \code{visZero} is \code{FALSE}.}
-  \item{split_vertical}{logical vector of length \eqn{k},
+  \item{zeroSize}{size of the bullets used for zero entries (ignored if 
+    \code{visZero} is \code{FALSE}).}
+  \item{split_vertical}{vector of logicals of length \eqn{k},
     \eqn{k} dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     tile(s) of the corresponding dimension 
@@ -43,13 +43,13 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
     a value of \code{"h"} indicates that the tile(s) of the
     corresponding dimension shall be split horizontally,
     whereas \code{"v"} indicates vertical split(s).}
-  \item{spacing}{either a spacing-generating function, or a spacing function
+  \item{spacing}{spacing-object, spacing-function, or corresponding generating function
     (see \code{\link{strucplot}} for more information).
-    The default is \code{spacing.equal} if \code{x} has two
-    dimensions, and  \code{spacing.increase} for more 
+    The default is \code{spacing_equal} if \code{x} has two
+    dimensions, and  \code{spacing_increase} for more 
     dimensions.}
   \item{spacing_args}{list of arguments for the
-    spacing-generating function, if specified
+    generating function, if specified
     (see \code{\link{strucplot}} for more information).}
   \item{main}{either a logical, or a character string used for
     plotting the main title. If \code{main} is a logical and
@@ -87,7 +87,7 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
   direction by default to match the output of \code{\link{structable}}.
 }
 \value{
-Invisibly, an object of class \code{"structable"}
+Invisibly, an object of class \code{"structable"}.
 }
 \references{
     Hartigan, J.A., and Kleiner, B. (1984)
@@ -109,7 +109,7 @@ Invisibly, an object of class \code{"structable"}
   information on various aspects of graphical methods for analyzing
   categorical data, including mosaic plots.
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{david.meyer@R-project.org}}
 
 \seealso{
   \code{\link{assoc}},

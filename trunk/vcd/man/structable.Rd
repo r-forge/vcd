@@ -20,10 +20,10 @@ subset, na.action)
   \item{data}{a data frame, list or environment containing the variables to
           be cross-tabulated, or a contingency table.}
   \item{subset}{an optional vector specifying a subset of observations to be
-          used. Ignored if 'data' is a contingency table}
+          used. Ignored if \code{data} is a contingency table.}
   \item{na.action}{a function which indicates what should happen when the data
           contain \code{NA}s. Ignored if \code{data} is a contingency table}
-  \item{\dots}{R objects which can be interpreted as factors (including
+  \item{\dots}{\R objects which can be interpreted as factors (including
           character strings), or a list (or data frame) whose
           components can be so interpreted, or a contingency table
           object of class \code{"table"} or \code{"ftable"}.}
@@ -35,7 +35,7 @@ subset, na.action)
     splitting direction (\code{"h"} for horizontal and \code{"v"} for
     vertical splits). Values are recycled
     as needed. If the argument is of length 1, the value is alternated for all
-    dimensions.}
+    dimensions. (Ignored if \code{split_vertical} is provided.)}
 }
 \details{
   This function produces textual representations of mosaic displays, and
@@ -44,18 +44,21 @@ subset, na.action)
   \code{\link{mosaic}}-like formula interface (empty left-hand
   side). Note that even if the \code{\link{ftable}} interface is used,
   the \code{split_vertical} or \code{direction} argument is needed to
-  specify the \emph{order} of the splits.
+  specify the \emph{order} of the horizontal and veritcal splits.
+  If pretabulated data with a
+  \code{Freq}-column is used, than the left-hand side should be left
+  empty---the \code{Freq} column will be handled correctly.
 }
 \value{
 An object inheriting from class \code{"ftable"} with the
 splitting information (\code{"split_vertical"}) as additional attribute.
 }
-\author{David Meyer (\email{David.Meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 
 \seealso{
   \code{\link{strucplot}},
-  \code{\link{mosaic}}
-  \code{\link[stats]{ftable}}
+  \code{\link{mosaic}},
+  \code{\link[stats]{ftable}}.
 }
 
 \examples{

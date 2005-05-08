@@ -8,9 +8,9 @@ Rootograms of observed and fitted values.
 }
 \usage{
 \method{rootogram}{default}(x, fitted, names = NULL, scale = c("sqrt", "raw"),
-                            type = c("hanging", "standing", "deviation"),
-			    bar_col = grey(0.7), line_col = 2,
-			    xlab = NULL, ylab = NULL, ylim = NULL, ...)
+          type = c("hanging", "standing", "deviation"),
+	  bar_col = grey(0.7), line_col = 2,
+          xlab = NULL, ylab = NULL, ylim = NULL, ...)
 }
 \arguments{
   \item{x}{either a vector or a 1-way table of frequencies.}

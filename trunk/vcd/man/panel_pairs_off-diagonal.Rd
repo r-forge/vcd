@@ -7,20 +7,23 @@
 Off-diagonal panel functions for \code{\link{pairs.table}}.
 }
 \usage{
-panel_mosaic(type = c("pairwise", "total", "conditional", "joint"), legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL, shade = TRUE, ...)
-panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL, shade = TRUE, ...)
+panel_mosaic(type = c("pairwise", "total", "conditional", "joint"),
+             legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
+             shade = TRUE, ...)
+panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
+            shade = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{type}{String specifying the type of independence model
+  \item{type}{character string specifying the type of independence model
     visualized in the cells.}
-  \item{legend}{Logical specifying whether a legend shall be displayed
-    in the cells}
-  \item{margins}{Margins inside each cell.}
-  \item{labeling}{Labeling function or labeling-generating function (see
-  \code{\link{strucplot}}}
-  \item{shade}{Shading function or shading-generating function (see
-  \code{\link{strucplot}}}
+  \item{legend}{logical specifying whether a legend shall be displayed
+    in the cells or not.}
+  \item{margins}{margins inside each cell (see \code{\link{strucplot}}).}
+  \item{labeling}{labeling function or labeling-generating function (see
+  \code{\link{strucplot}}).}
+  \item{shade}{shading function or shading-generating function (see
+  \code{\link{strucplot}}).}
   \item{\dots}{other parameters passed to panel function.}
 }
 \details{
@@ -30,8 +33,8 @@ legend-drawing and setting the margins to 0.
 }
 \value{
   A function with arguments:
-  \item{x}{contingency table}
-  \item{i,j}{cell coordiantes}
+  \item{x}{contingency table.}
+  \item{i,j}{cell coordiantes.}
 }
 \seealso{
   \code{\link{pairs.table}},
@@ -53,7 +56,7 @@ legend-drawing and setting the margins to 0.
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{david.meyer@R-project.org}}
 \examples{
 data(UCBAdmissions)
 data(PreSex)

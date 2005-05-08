@@ -37,10 +37,10 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
 \details{\code{goodfit} essentially computes the fitted values of a
 discrete distribution (either poisson, binomial or negative binomial)
 to the count data given in \code{obj}. If the parameters are not specified
-they are estimated by either by ML or Minimum Chi-squared.
+they are estimated either by ML or Minimum Chi-squared.
 \code{par} should a named list specifying the parameters \code{lambda}
 for \code{"poisson"} and \code{prob} and \code{size} for \code{"binomial"}
-or \code{"nbinomial"} respectively. If for \code{"binomial"} \code{size} is
+or \code{"nbinomial"}, respectively. If for \code{"binomial"} \code{size} is
 not specified it is not estimated but taken as the maximum count.
 
 The corresponding Pearson Chi-squared or likelihood
@@ -51,14 +51,14 @@ observed and fitted values.
 }
 \value{
   A list of class \code{"goodfit"} with elements:
-  \item{observed}{observed frequencies,}
-  \item{count}{corresponding counts,}
-  \item{fitted}{expected frequencies (fitted by ML),}
-  \item{type}{a character string indicating the distribution fitted,}
+  \item{observed}{observed frequencies.}
+  \item{count}{corresponding counts.}
+  \item{fitted}{expected frequencies (fitted by ML).}
+  \item{type}{a character string indicating the distribution fitted.}
   \item{method}{a character string indicating the fitting method (can
     be either \code{"ML"}, \code{"MinChisq"} or \code{"fixed"} if the
-    parameters were specified),}
-  \item{df}{degrees of freedom,}
+    parameters were specified).}
+  \item{df}{degrees of freedom.}
   \item{par}{a named list of the (estimated) distribution parameters.}
 }
 \author{

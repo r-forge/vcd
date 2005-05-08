@@ -9,26 +9,30 @@ Produces a matrix of strucplots.
 pairs.table(x, upper_panel = panel_mosaic, upper_panel_args = list(),
 lower_panel = panel_mosaic, lower_panel_args = list(),
 diag_panel = panel_barplot, diag_panel_args = list(),
-main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
+main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
+newpage = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{A contingency table}
-  \item{upper_panel}{Function for the upper triangle of the matrix (see
-    details)}
-  \item{upper_panel_args}{List of arguments for the panel-generating
-    function, if specified (see details)}
-  \item{lower_panel}{Function for the lower triangle of the matrix (see details)}
-  \item{lower_panel_args}{List of arguments for the panel-generating
-    function, if specified (see details)}
-  \item{diag_panel}{Function for the diagonal of the matrix (see details).}
-  \item{diag_panel_args}{List of arguments for the panel-generating
-    function, if specified (see details)}
-  \item{main}{Main title}
-  \item{title_gp}{Object of class \code{"gpar"} used for the title}
-  \item{space}{double specifying the distance between the cells}
-  \item{newpage}{logical controlling whether a new grid page should be created}
-  \item{\dots}{currently not used}
+  \item{x}{a contingency table in array form, with optional category
+    labels specified in the \code{dimnames(x)} attribute.}
+  \item{upper_panel}{function for the upper triangle of the matrix, or
+    corresponding generating function.}
+  \item{upper_panel_args}{list of arguments for the generating
+    function, if specified.}
+  \item{lower_panel}{function for the lower triangle of the matrix, or
+    corresponding generating function.}
+  \item{lower_panel_args}{list of arguments for the panel-generating
+    function, if specified.}
+  \item{diag_panel}{function for the diagonal of the matrix, or
+    corresponding generating function.}
+  \item{diag_panel_args}{list of arguments for the generating
+    function, if specified.}
+  \item{main}{character string specifying the main title.}
+  \item{title_gp}{object of class \code{"gpar"} used for the title.}
+  \item{space}{double specifying the distance between the cells.}
+  \item{newpage}{logical controlling whether a new grid page should be created.}
+  \item{\dots}{currently not used.}
 }
 \details{
   \code{pairs.table} plots a matrix of pairwise mosaic plots. Four
@@ -66,7 +70,7 @@ main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
   \code{\link{panel_assoc}},
   \code{\link{panel_text}},
   \code{\link{panel_barplot}},
-  \code{\link{assoc}},
+  \code{\link{assoc}}.
 }
 \references{
   Cohen, A. (1980),
@@ -81,7 +85,7 @@ main = NULL, title_gp = gpar(fontsize = 20), space = 0.1, newpage = TRUE, ...)
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{david.meyer@R-project.org}}
 \examples{
 data(UCBAdmissions)
 data(PreSex)

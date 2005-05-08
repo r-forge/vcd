@@ -27,7 +27,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(NonResponse)
-ftable(xtabs(Freq ~ ., data = NonResponse))
+structable(~ ., data = NonResponse)
 }
 
 \keyword{datasets}

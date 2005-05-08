@@ -1,4 +1,4 @@
-\name{agreementplot.default}
+\name{agreementplot}
 \alias{agreementplot}
 \alias{agreementplot.default}
 \alias{agreementplot.formula}
@@ -14,7 +14,7 @@
 \usage{
 \method{agreementplot}{default}(x, reverse_y = TRUE, main = NULL,
               weights = c(1, 1 - 1/(ncol(x) - 1)^2), margins = par("mar"),
-              panel = FALSE, xlab = names(dimnames(x))[2],
+              newpage = TRUE, xlab = names(dimnames(x))[2],
               ylab = names(dimnames(x))[1], ...)
 \method{agreementplot}{formula}(formula, data = NULL, ..., subset)
 }
@@ -28,7 +28,7 @@
     in the agreement strength statistic, and also for the shading. The
     first element should be 1.}
   \item{margins}{vector of margins (see \code{\link[graphics]{par}}.}
-  \item{panel}{if \code{FALSE}, the plot is drawn on a new page.}
+  \item{newpage}{if \code{TRUE}, the plot is drawn on a new page.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}. For details, see \code{xtabs}.}
   \item{data}{a data.frame (or list), or a contingency table from which the
@@ -46,7 +46,7 @@
 \value{
   Invisibly returned, a list with components
   \item{Bangdiwala}{the unweighted agreement strength statistic}
-  \item{Bangdiwala.Weighted}{the weighted statistic}
+  \item{Bangdiwala_Weighted}{the weighted statistic}
   \item{weights}{the weigtht vector used.}
 }
 \references{
@@ -54,8 +54,7 @@ Michael Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 
 \examples{
@@ -63,11 +62,16 @@ data(SexualFun)
 agreementplot(t(SexualFun))
 
 data(MSPatients)
-## Enlarge plot manually or use sth. like: X11(width = 12)!
-par(mfrow = c(1,2))
-agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
-agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
-par(mfrow = c(1,1))
+X11(width = 12)
+pushViewport(viewport(layout = grid.layout(ncol = 2)))
+pushViewport(viewport(layout.pos.col = 1))
+agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients", newpage = FALSE)
+popViewport()
+pushViewport(viewport(layout.pos.col = 2))
+agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients",
+              newpage = FALSE)
+popViewport(2)
+dev.off()
 }
 \keyword{category}% at least one, from doc/KEYWORDS
 \keyword{hplot}% __ONLY ONE__ keyword per line

@@ -3,7 +3,7 @@
 \title{(Log) Odds Ratios Plots}
 \description{
 Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
-k-tables, along with confidence intervals.
+\eqn{k}-tables, along with confidence intervals.
 }
 \usage{
 \method{plot}{oddsratio}(x, conf_level = 0.95,
@@ -12,23 +12,22 @@ k-tables, along with confidence intervals.
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{x}{An object of class \code{logoddsratio}, computed for a 2 x 2
-    x k-table.}
+  \item{x}{an object of class \code{logoddsratio}, computed for a 2 x 2
+    x \eqn{k}-table.}
   \item{conf_level}{if not \code{NULL} or \code{FALSE},
     \code{conf_level}-\% confidence intervals are plotted for each data point.}
   \item{type}{plot type.}
   \item{ylab}{label for the y-axis.}
   \item{xlab}{label for the x-axis.}
-  \item{whiskers}{Width of the confidence interval whiskers.}
-  \item{\dots}{Other graphics parameters (see \code{par}).}
+  \item{whiskers}{width of the confidence interval whiskers.}
+  \item{\dots}{other graphics parameters (see \code{par}).}
 }
 \references{
 M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 
 \seealso{\code{\link{oddsratio}}}

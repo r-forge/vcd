@@ -30,7 +30,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(JointSports)
-ftable(xtabs(Freq ~ ., data = JointSports))
+structable(~ ., data = JointSports)
 }
 
 \keyword{datasets}

@@ -32,7 +32,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(Punishment)
-ftable(xtabs(Freq ~ ., data = Punishment))
+structable(~ ., data = Punishment)
 }
 
 \keyword{datasets}

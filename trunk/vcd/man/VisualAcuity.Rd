@@ -31,7 +31,7 @@ M. Friendly (2000),
 
 \examples{
 data(VisualAcuity)
-ftable(xtabs(Freq ~ gender + left + right, data = VisualAcuity))
+structable(~ gender + left + right, data = VisualAcuity)
 }
 
 \keyword{datasets}
