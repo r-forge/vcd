@@ -56,14 +56,14 @@ legend_resbased <- function(fontsize = 12,
 
     popViewport(1)
     grid.text(text, x = x, y = unit(1, "npc") - y + unit(1, "lines"),
-              gp = gpar(fontsize = fontsize, lineheight = 0.7),
+              gp = gpar(fontsize = fontsize, lineheight = 0.8),
               just = c("left", "bottom")
               )
     if(!is.null(p.value) && pvalue) {
       grid.text(paste("p-value =\n", format.pval(p.value), sep = ""),
                 x = x,
                 y = y - unit(1, "lines"),
-                gp = gpar(fontsize = fontsize, lineheight = 0.7),
+                gp = gpar(fontsize = fontsize, lineheight = 0.8),
                 just = c("left", "top"))
     }
   }
@@ -126,7 +126,7 @@ legend_fixed <- function(fontsize = 12,
 
     popViewport(1)
     grid.text(text, x = x + 0.5 * width, y = 0,
-              gp = gpar(fontsize = fontsize, lineheight = 0.7),
+              gp = gpar(fontsize = fontsize, lineheight = 0.8),
               just = c("left", "top"),
               rot = 90
               )

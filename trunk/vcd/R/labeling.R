@@ -234,6 +234,8 @@ labeling_text <- function(labels = TRUE, varnames = labels,
     if (is.null(fill_boxes))
       fill_boxes <- lapply(sapply(d, length),
                            function(i) gray(0.3 + 0.4 * rev(seq(i)) / i))
+    else
+      fill_boxes <- pexpand(fill_boxes, ld, "grey", dn)
 
     ## precompute spaces
     lsp <- tsp <- bsp <- rsp <- 0

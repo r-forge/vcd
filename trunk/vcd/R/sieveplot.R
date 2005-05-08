@@ -47,11 +47,11 @@ function (formula, data = NULL, ..., subset)
 "sieveplot.default" <-
   function(x,
            reverse_y = TRUE,
-           type = c("sieve","expected"),
+           type = c("observed", "expected"),
            main = deparse(substitute(x)),
            values = c("none", "cells", "margins", "both"),
            frequencies = c("absolute", "relative"),
-           sieve_colors = c("red","blue"),
+           sieve_colors = c("red", "blue"),
            sieve_lty = c("longdash", "solid"),
            exp_color = "gray",
            exp_lty = "dotted",
@@ -72,7 +72,7 @@ function (formula, data = NULL, ..., subset)
   values <- match.arg(values)
   frequencies <- match.arg(frequencies)
   if (is.null(main))
-      main <- if (type == "sieve") "Sieve diagram" else "Expected frequencies"
+      main <- if (type == "observed") "Sieve diagram" else "Expected frequencies"
 
   nc <- ncol(x)
   nr <- nrow(x)
@@ -93,7 +93,7 @@ function (formula, data = NULL, ..., subset)
   if(!is.null(main))
     margins[2] <- margins[2] + 2
   
-  if (values %in% c("margins","both")) {
+  if (values %in% c("margins", "both")) {
     margins[3] <- margins[3] + 1
     margins[4] <- margins[4] + 1
   }
@@ -152,11 +152,11 @@ function (formula, data = NULL, ..., subset)
       cc <- cc + 1
       
       dev <- sgn[i, j] + 1
-      line.color <- if (type == "sieve") sieve_colors[dev] else exp_color
-      line.type  <- if (type == "sieve") sieve_lty[dev] else exp_lty
+      line.color <- if (type == "observed") sieve_colors[dev] else exp_color
+      line.type  <- if (type == "observed") sieve_lty[dev] else exp_lty
       
       square.side <- sqrt(colFreqs[j] * rowFreqs[i] /
-                          ifelse (type == "sieve", x[i, j], ex[i, j]))
+                          ifelse (type == "observed", x[i, j], ex[i, j]))
       ii <- seq(0, rowFreqs[i], by = square.side)
       jj <- seq(0, colFreqs[j], by = square.side)
       
@@ -181,14 +181,14 @@ function (formula, data = NULL, ..., subset)
   is <- rep(1:nr, times = nc)
   js <- rep(1:nc, each  = nr)
   grid.rect(x1[js], y1[is], x2[js] - x1[js], y2[is] - y1[is],
-            just = c("left","bottom"), default = "native", ...)
+            just = c("left", "bottom"), default = "native", ...)
   
   ## optionally, write cell frequencies
   if (values %in% c("cells", "both"))
     grid.text(if (frequencies == "relative")
-                round((if (type == "sieve") x[is, js] else ex[is, js]) / n, 2)
+                round((if (type == "observed") x[is, js] else ex[is, js]) / n, 2)
               else
-                round((if (type == "sieve") x[is, js] else ex[is, js]), 1),
+                round((if (type == "observed") x[is, js] else ex[is, js]), 1),
               xmid[js], ymid[is], gp = gpar(fontsize = 12, fontface = 2),
               check.overlap = TRUE, ...
               )

@@ -19,9 +19,9 @@
   fourfoldplot(UCBAdmissions, extended = FALSE)
   fourfoldplot(UCBAdmissions) ## extended plots
 
-  tabplot(UCBAdmissions,
-          panel = function(x, ...) fourfoldplot(x, panel = TRUE, ...)
-          )
+  #tabplot(UCBAdmissions,
+  #        panel = function(x, ...) fourfoldplot(x, panel = TRUE, ...)
+  #        )
 
   ### Coal Miners Lung Data ###
   #############################

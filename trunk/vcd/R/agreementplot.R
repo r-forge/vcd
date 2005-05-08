@@ -50,12 +50,11 @@ function (formula, data = NULL, ..., subset)
            main = NULL,
            weights = c(1, 1 - 1 / (ncol(x) - 1)^2),
            margins = par("mar"),
-           panel = FALSE,
+           newpage = TRUE,
            xlab = names(dimnames(x))[2],
            ylab = names(dimnames(x))[1],
            ...)
 {
-  require(grid)
   if (length(dim(x)) > 2)
     stop("Function implemented for two-way tables only!")
   if (ncol(x) != nrow(x))
@@ -69,8 +68,7 @@ function (formula, data = NULL, ..., subset)
   rowFreqs <- rowSums(x) / n
 
   ## open viewport
-  if (!panel)
-    grid.newpage()
+  if (newpage) grid.newpage()
   pushViewport(plotViewport(margins))
   pushViewport(viewport(w = unit(1, "snpc"), h = unit(1, "snpc")))
   
@@ -152,7 +150,7 @@ function (formula, data = NULL, ..., subset)
   ar  <- n * n * crossprod(colFreqs, rowFreqs)
   invisible(list(
                  Bangdiwala = ads / ar,
-                 Bangdiwala.Weighted = (sum(weights * A)) /  ar,
+                 Bangdiwala_Weighted = (sum(weights * A)) /  ar,
                  weights = weights,
                  )
             )

@@ -138,7 +138,7 @@ pairs(UCBAdmissions)
 
 pairs(UCBAdmissions, type = "conditional")
 
-pairs(UCBAdmissions, type = "pairwise", shading = shading_max)
+pairs(UCBAdmissions, type = "pairwise", gp = shading_max)
 
 
 

@@ -9,7 +9,7 @@ export(
        "assoc",
        "mosaic",
        "sieveplot",
-       "tabplot",
+       "tplot",
        "oddsratio",
        "structable",
        "doubledecker",

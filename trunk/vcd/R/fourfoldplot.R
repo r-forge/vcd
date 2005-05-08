@@ -3,7 +3,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
          conf_level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
          space = 0.2, main = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
-         ticks = 0.15, p_adjust_method = p.adjust.methods, panel = FALSE,
+         ticks = 0.15, p_adjust_method = p.adjust.methods, newpage = TRUE,
          fontsize = 12)
 {
     ## Code for producing fourfold displays.
@@ -177,8 +177,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
         nr * (2 + (2 + gamma) * space) + (nr - 1) * space
     xlim <- c(0, totalWidth)
     ylim <- c(0, totalHeight)
-    if (!panel)
-      grid.newpage()
+    if (newpage) grid.newpage()
     if (!is.null(main))
       pushViewport(viewport(height = 0.9, width = 0.9, y = 0.45))
                   
