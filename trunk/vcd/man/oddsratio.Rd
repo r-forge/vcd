@@ -15,22 +15,22 @@ oddsratio(x, stratum = NULL, log = TRUE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{x}{a 2 x 2 x ... table.}
+  \item{x}{a 2 x 2 x \dots table.}
  \item{stratum}{vector of strata dimensions.}
  \item{log}{if \code{FALSE}, ordinary odds ratios are computed}
 }
 \value{
-  An object of class \code{logoddratio}, which is simply a
+  An object of class \code{logoddsratio}, which is simply a
   vector of (log) odds ratios with dimensionality depending on \code{stratum}, along with
   the following attributes:
-  \item{ASE}{a vector with the asymptotic standard errors}
-  \item{log}{logical value indicating if log odds ratios or common odds
+  \item{ASE}{a numeric vector with the asymptotic standard errors}
+  \item{log}{logical indicating whether log odds ratios or common odds
     ratios are computed.}
 }
-\note{The \code{summary} method prints the standard errors, and---for
+\note{The \code{summary} method prints the standard errors and---for
   log odds ratios---also computes and prints the standardized
-  log odds ratios, which follows an asymptotic normal distribution, and
-  the correpsonding P values. \code{confint.oddsratio} computes
+  log odds ratios (which follow an asymptotic normal distribution) and
+  the corresponding \eqn{p}-values. \code{confint.oddsratio} computes
   confidence intervals for the (log) odds ratios.
 }
 
@@ -39,8 +39,7 @@ M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{david.meyer@ci.tuwien.ac.at}
 }
 
 \seealso{\code{\link{plot.oddsratio}}, \code{\link{confint}}}

@@ -28,7 +28,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(BrokenMarriage)
-ftable(xtabs(Freq ~ ., data = BrokenMarriage))
+structable(~ ., data = BrokenMarriage)
 }
 
 \keyword{datasets}

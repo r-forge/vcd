@@ -1,10 +1,10 @@
 \name{independence_table}
 \alias{independence_table}
 %- Also NEED an `\alias' for EACH other topic documented here.
-\title{Indifference Table}
+\title{Independence Table}
 \description{
   Computes table of expected frequencies (under the null hypotheses of
-  independence) from a n-way table.
+  independence) from a \eqn{n}-way table.
 }
 \usage{
 independence_table(x, frequency = c("absolute", "relative"))
@@ -19,8 +19,7 @@ independence_table(x, frequency = c("absolute", "relative"))
   A table with either absolute or relative frequencies.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 \examples{
 data(MSPatients)

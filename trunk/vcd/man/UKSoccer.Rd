@@ -35,8 +35,7 @@ M. Friendly (2000),
 
 \examples{
 data(UKSoccer)
-
-mosaicplot(UKSoccer, shade = TRUE, main = "UK Soccer Scores")
+mosaic(UKSoccer, gp = shading_max, main = "UK Soccer Scores")
 }
 
 \keyword{datasets}

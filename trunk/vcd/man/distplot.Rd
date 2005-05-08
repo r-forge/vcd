@@ -23,10 +23,10 @@ distplot(obj, type = c("poisson", "binomial", "nbinomial"),
   \item{lambda}{parameter of the poisson distribution. If type is
     \code{"poisson"} and \code{lambda} is specified a leveled
     poissonness plot is produced.}
-  \item{legend}{logical. Should a legend be plotted?.}
+  \item{legend}{logical. Should a legend be plotted?}
   \item{ylim}{limits for the y axis.}
   \item{line_col}{color for fitted line.}
-  \item{conf_int}{logical. Should confidence intervals be plotted?.}
+  \item{conf_int}{logical. Should confidence intervals be plotted?}
   \item{conf_level}{confidence level for confidence intervals.}
   \item{main}{a title for the plot.}
   \item{xlab}{a label for the x axis.}

@@ -1,4 +1,4 @@
-\name{labeling_cells}
+\name{labeling_cells_list}
 \alias{labeling_list}
 \alias{labeling_cells}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -18,59 +18,58 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{labels}{vector of logicals indicating, for each dimension, whether
-    labels for the factor levels should be drawn. Values are recycled as needed.}
+    labels for the factor levels should be drawn or not. Values are recycled as needed.}
   \item{varnames}{vector of logicals indicating, for each dimension, whether variable names
     should be drawn. Values are recycled as needed.}
   \item{abbreviate_labels}{vector of integers or logicals indicating, for each
-    dimension, the number of characters to which the labels should be
-    abbreviated. \code{TRUE} means 1 character, \code{FALSE} causes no
+    dimension, the number of characters the labels should be
+    abbreviated to. \code{TRUE} means 1 character, \code{FALSE} causes no
     abbreviation. Values are recycled as needed.}
   \item{abbreviate_varnames}{vector of integers or logicals indicating, for each
-    dimension, the number of characters to which the variable (=dimension) names should be
-    abbreviated. \code{TRUE} means 1 character, \code{FALSE} causes no
+    dimension, the number of characters the variable (=dimension) names should be
+    abbreviated to. \code{TRUE} means 1 character, \code{FALSE} causes no
     abbreviation. Values are recycled as needed.}
-  \item{gp}{object of class \code{"gpar"} used for the drawn text.}
+  \item{gp}{object of class \code{"gpar"} used for the text drawn.}
   \item{lsep}{character that separates variable names from the factor levels.}
   \item{sep}{character that separates the factor levels (only used for \code{labeling_list}).}
   \item{offset}{object of class \code{"unit"} of length 2 specifying the
     offset in x- and y-direction of the text block drawn under the
     strucplot (only used for \code{labeling_list}).}
-  \item{cols}{Number of text columns (only used for \code{labeling_list}).}
+  \item{cols}{number of text columns (only used for \code{labeling_list}).}
   \item{lcollapse}{character that separates several variable name/factor
-  level-combinations, typically a line break (only used for \code{labeling_cells}).}
-  \item{just}{character vector of length 1 (\code{labeling_list}) or at
-    most 2 (\code{labeling_cells}) specifying the horizontal and
-    vertical justification of the text drawn.}
-  \item{pos}{character string of length 1 (\code{labeling_list}) or at
-    most 2 (\code{labeling_cells}) specifying the labels' horizontal position
-    (horizontal and vertical position for \code{labeling_cells}).}
+  level-combinations. Typically a line break. (Only used for \code{labeling_cells}.)}
+  \item{just, pos}{character string of length 1 (\code{labeling_list}) or at
+    most 2 (\code{labeling_cells}) specifying the labels' horizontal
+    position and justification (horizontal and vertical for \code{labeling_cells}).}
   \item{rot}{rotation angle in degrees, used for all labels (only used for \code{labeling_cells}).}
   \item{margin}{object of class \code{"unit"} (a numeric value is
     converted to \code{"lines"}) specifying an offset from
     the cell borders (only used for \code{labeling_cells}).}
   \item{clip_cells}{logical indicating whether text should be clipped at
   the cell borders (only used for \code{labeling_cells}).}
-  \item{text}{Optionally, a character table of the same dimension than
+  \item{text}{Optionally, a character table of the same dimensions than
     the contingency table whose entries will then be used instead of
     the labels. \code{NA} entries are not drawn.
-    This allows for custom cell annotations (see examples). Only used for \code{labeling_cells}.}
+    This allows custom cell annotations (see examples). Only used for \code{labeling_cells}.}
   \item{\dots}{Currently not used.}
 }
 \details{
-  These functions generate labeling functions called by
+  These functions, typically supplied to \code{\link{strucplot}},
+  generate labeling functions called by
   \code{\link{strucplot}} for their side-effect of adding labels to the
   plot. They suppose that a strucplot has been drawn and the
   corresponding viewport structure is pushed, since the positions of the
   viewports are used for the label positioning.
 
   This help page only documents \code{labeling_list} and
-  \code{labeling_cells}, (many) more functions are described on the help page
+  \code{labeling_cells}; more functions are described on the help page
   for \code{\link{labeling_text}}.
   
+  The functions can also be used \sQuote{stand-alone} as shown in the examples.
+}
+\note{
   Using \code{labeling_list} will typically necessitate a bottom margin
   adjustment.
-
-  The functions can also be used sQuote{stand-alone} as shown in the examples.
 }
 \value{
   A function with arguments:
@@ -80,7 +79,7 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
   \item{split_vertical}{vector of logicals indicating the split directions.}
   \item{condvars}{integer vector of conditioning dimensions}
 }
-\author{David Meyer (\email{David.Meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 
 \seealso{
   \code{\link{labeling_text}}, 

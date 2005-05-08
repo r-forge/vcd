@@ -33,7 +33,7 @@ M. Friendly (2000),
 
 \examples{
 data(Suicide)
-ftable(xtabs(Freq ~ sex + method2 + age.group, data = Suicide))
+structable(~ sex + method2 + age.group, data = Suicide)
 }
 
 \keyword{datasets}

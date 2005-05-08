@@ -22,17 +22,20 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 \details{
   Cohen's kappa is the diagonal sum of the (possibly weighted) relative frequencies,
   corrected for expected values and standardized by its maximum value.
-  The equal-spacing weights are defined by \eqn{1 - abs(i - j) / (r -
-    1)}, r number of colums/rows, and the Fleiss-Cohen weights by
-  \eqn{1 - abs(i - j)^2 / (r - 1)^2}. The latter ones attach greater
-  importance to near disagreements.
+  The equal-spacing weights are defined by \eqn{1 - \|i - j\| / (r -
+    1)}{1 - abs(i - j) / (r - 1)}, \eqn{r} number of colums/rows, and
+  the Fleiss-Cohen weights by \eqn{1 - \|i - j\|^2 / (r - 1)^2}{1 -
+    abs(i - j)^2 / (r - 1)^2}. The latter ones attach greater importance
+  to near disagreements.
+    
 }
 \value{
   An object of class \code{kappa} with three components:
-  \item{Kappa}{Kappa statistic, along with Approximate Standard Error
-    (ASE)}
-  \item{Kappa.Weighted}{idem for the weighted kappa.}
-  \item{Weights}{weight matrix used.}
+  \item{Unweighted}{numeric vector of length 2 with the Kappa statistic
+    (\code{value} component), along with Approximate Standard Error
+    (\code{ASE} component)}
+  \item{Weighted}{idem for the weighted kappa.}
+  \item{Weights}{numeric matrix with weights used.}
 }
 \note{The \code{summary} method also prints the
   weights. \code{confint.Kappa} computes approximate confidence intervals.}
@@ -43,7 +46,7 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
     kappa. The British Journal of Mathematical and Statistical Psychology.
 }
 \author{David Meyer\cr
-\email{david.meyer@ci.tuwien.ac.at}}
+\email{David.Meyer@R-project.org}}
 \seealso{\code{\link{agreementplot}}, \code{\link{confint}}}
 \examples{
 data(SexualFun)

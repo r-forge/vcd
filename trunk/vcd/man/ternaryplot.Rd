@@ -6,12 +6,14 @@
 Visualizes compositional, 3-dimensional data in an equilateral triangle.
 }
 \usage{
-ternaryplot(x, scale = 1, dimnames = NULL, dimnames_position = c("corner","edge","none"),
-            dimnames_color = "black", id = NULL, id_color = "black", coordinates = FALSE,
-	    grid = TRUE, grid_color = "gray", labels = c("inside", "outside", "none"),
-	    labels_color = "darkgray", border = "black", bg = "white", pch = 19, cex = 1,
-	    prop_size = FALSE, col = "red", main = "ternary plot",
-            newpage = TRUE, ...)
+ternaryplot(x, scale = 1, dimnames = NULL,
+            dimnames_position = c("corner","edge","none"),
+            dimnames_color = "black", id = NULL, id_color = "black",
+            coordinates = FALSE, grid = TRUE, grid_color = "gray",
+            labels = c("inside", "outside", "none"),
+            labels_color = "darkgray", border = "black", bg = "white",
+            pch = 19, cex = 1, prop_size = FALSE, col = "red",
+            main = "ternary plot", newpage = TRUE, ...)
 }
 \arguments{
   \item{x}{a matrix with three columns.}
@@ -45,15 +47,14 @@ ternaryplot(x, scale = 1, dimnames = NULL, dimnames_position = c("corner","edge"
 \details{
 A points' coordinates are found by computing the gravity center
 of mass points using the data entries as weights. Thus, the coordinates
-of a point P(a,b,c), \eqn{a + b + c = 1}, are: P(b + c/2, c * sqrt(3)/2).
+of a point \eqn{P(a,b,c)}, \eqn{a + b + c = 1}, are: \eqn{P(b + c/2, c * \sqrt(3)/2)}{P(b + c/2, c * sqrt(3)/2)}.
 }
 \references{
 M. Friendly (2000),
 \emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 
 \examples{

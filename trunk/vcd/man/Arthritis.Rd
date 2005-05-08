@@ -34,7 +34,7 @@ M. Friendly (2000),
 \examples{
 data(Arthritis)
 attach(Arthritis)
-ftable(table(Treatment, Sex, Improved))
+structable(Treatment, Sex, Improved)
 }
 
 \keyword{datasets}

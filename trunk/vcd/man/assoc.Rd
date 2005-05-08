@@ -10,8 +10,8 @@ from a specified independence model in a possibly high-dimensional
 contingency table.
 }
 \usage{
-\method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress =
-TRUE, xlim = NULL, ylim = NULL, spacing = spacing_conditional(sp = 0),
+\method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress = TRUE,
+xlim = NULL, ylim = NULL, spacing = spacing_conditional(sp = 0),
 spacing_args = list(), split_vertical = NULL, keepAR = FALSE,
 xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, ..., main = NULL)
@@ -21,40 +21,41 @@ xscale = 0.9, yspace = unit(0.5, "lines"), ...)
   \item{x}{a contingency table in array form with optional category
     labels specified in the \code{dimnames(x)} attribute, or an
     object inheriting from the \code{"ftable"} class (such as
-    \code{"structable"} objects)}
-  \item{row_vars}{a vector of integers giving the numbers of the variables, or
+    \code{"structable"} objects).}
+  \item{row_vars}{a vector of integers giving the indices, or
     a character vector giving the names of the variables to be
     used for the rows of the association plot.}
-  \item{col_vars}{a vector of integers giving the numbers of the variables, or
+  \item{col_vars}{a vector of integers giving the indices, or
     a character vector giving the names of the variables to be
     used for the columns of the association plot.}
   \item{compress}{logical; if \code{FALSE}, the space between the
     rows (columns) are chosen such that the \emph{total} heights (widths) of
-    the rows (colums) are all equal. If \code{TRUE}, the space between the
-    rows (columns) is fixed and hence the plot is more "compressed".}
+    the rows (colums) are all equal. If \code{TRUE}, the space between 
+    rows and columns is fixed and hence the plot is more \dQuote{compressed}.}
   \item{xlim}{a \eqn{2 \times k}{2 times k} matrix of doubles, \eqn{k}
     number of total columns
     of the plot. The columns of \code{xlim} correspond to the columns of
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{xlim} is
     \code{NULL}, the ranges are determined from the residuals according
-    to \code{compress} (if \code{TRUE} widest range from each column,
-    if \code{FALSE} from the whole association plot matrix).}
-  \item{ylim}{a 2 times k matrix of doubles, k number of total rows
-    of the plot. The columns of \code{xlim} correspond to the rows of
+    to \code{compress} (if \code{TRUE}: widest range from each column,
+    if \code{FALSE}: from the whole association plot matrix).}
+  \item{ylim}{a \eqn{2 \times k}{2 times k} matrix of doubles, \eqn{k}
+    number of total rows of the plot. The columns of \code{xlim} correspond to the rows of
     the association plot, the rows describe the column ranges (minimums
     in the first row, maximums in the second row). If \code{ylim} is
     \code{NULL}, the ranges are determined from the residuals according
-    to \code{compress} (if \code{TRUE} widest range from each row,
-    if \code{FALSE} from the whole association plot matrix)}
-  \item{spacing}{either a spacing-generating function, or a spacing function
-    (see \code{\link{strucplot}} for more information). The
+    to \code{compress} (if \code{TRUE}: widest range from each row,
+    if \code{FALSE}: from the whole association plot matrix).}
+  \item{spacing}{a spacing object, a spacing function,
+    or a corresponding generating function (see \code{\link{strucplot}}
+    for more information). The
     default is \code{\link{spacing_conditional}} (see
-    \code{spacings} for more information).}
+    \code{spacings} for more details).}
   \item{spacing_args}{list of arguments for the
-    spacing-generating function, if specified
+    generating function, if specified
     (see \code{\link{strucplot}} for more information).}
-  \item{split_vertical}{logical vector of length k, k 
+  \item{split_vertical}{vector of logicals of length \eqn{k}, \eqn{k} 
     dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     corresponding dimension is fold into the columns,
@@ -72,7 +73,7 @@ xscale = 0.9, yspace = unit(0.5, "lines"), ...)
   \item{subset}{an optional vector specifying a subset of observations to be
     used. Ignored if \code{data} is a contingency table }
   \item{na.action}{a function which indicates what should happen when the data
-    contain \code{NA}'s. Ignored if \code{data} is a contingency table.}
+    contain \code{NA}s. Ignored if \code{data} is a contingency table.}
   \item{main}{either a logical, or a character string used for
     plotting the main title. If \code{main} is a logical and
     \code{TRUE}, the name of the \code{data} object is used.}
@@ -114,12 +115,12 @@ xscale = 0.9, yspace = unit(0.5, "lines"), ...)
  shadings (see the shadings help page). Some of them allow, e.g., the
  visualization of test statistics.
 
- In contrast to the \code{\link[graphics]{assocplot}} function in
+ Unlike the \code{\link[graphics]{assocplot}} function in
  the \pkg{graphics} package, this function allows the visualization
  of contingency tables with \emph{more} than two dimensions. The
  dimensions are folded into rows and columns in a similar way \sQuote{flat}
  tables (like objects of class \code{"ftable"} or \code{"structable"})
- are represented.
+ are constructed.
  
  The layout is very flexible: the specification of shading,
  labeling, spacing, and legend is modularized (see \code{\link{strucplot}} for
@@ -132,7 +133,7 @@ An object of class \code{"structable"}
 \seealso{
   \code{\link{mosaic}},
   \code{\link{strucplot}},
-  \code{\link{structable}},
+  \code{\link{structable}}.
 }
 \references{
   Cohen, A. (1980),
@@ -147,7 +148,7 @@ An object of class \code{"structable"}
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer (\email{david.meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 \examples{
 data(HairEyeColor)
 ## Aggregate over sex:

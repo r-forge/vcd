@@ -1,4 +1,4 @@
-\name{legend_resbased}
+\name{legends}
 \alias{legends}
 \alias{legend_resbased}
 \alias{legend_fixed}
@@ -20,15 +20,14 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
 \arguments{
   \item{fontsize}{fontsize of title and p-value text.}
   \item{x, y}{objects of class \code{"unit"} indicating the coordinates of the title.}
-  \item{height}{object of class \code{"unit"} indicating the height of the legend.}
-  \item{width}{objects of class \code{"unit"} indicating the width of the legend.}
+  \item{height, width}{object of class \code{"unit"} indicating the height/width of the legend.}
   \item{digits}{number of digits for the scale labels.}
   \item{check_overlap}{logical indicating whether overlap of scale
     labels should be inhibited or not.}
   \item{text}{character string indicating the title of the legend.}
   \item{steps}{granularity of the color gradient.}
   \item{ticks}{number of scale ticks.}
-  \item{pvalue}{logical indicating whether the p-value should be
+  \item{pvalue}{logical indicating whether the \eqn{p}-value should be
     visualized under the scale or not.}
 }
 \value{
@@ -37,11 +36,11 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
   \item{shading}{shading-function computing colors from residuals (see details).}
   \item{autotext}{character vector indicating the title to be used when
     no \code{text} argument is specified. Allows strucplot to generate
-    sensible defaults depending on the residual type.}
+    sensible defaults depending on the residuals type.}
 }
 \details{
-  These generating functions yield legend functions for residual-based
-  shadings only, visualizing deviations from an hypothesized
+  These functions generate legend functions for residual-based
+  shadings only, visualizing deviations from expected values of an hypothesized
   independence model. The legend, therefore, uses a supplied shading
   function to visualize the color gradient for the residuals range. For
   more details on the shading functions and their return values, see \code{\link{shadings}}.
@@ -54,7 +53,7 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
   Vienna, Austria.
 }
 
-\author{David Meyer (\email{David.Meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 
 \seealso{
   \code{\link{structable}},

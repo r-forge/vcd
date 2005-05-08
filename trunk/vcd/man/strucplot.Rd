@@ -15,16 +15,17 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   labeling = labeling_text, labeling_args = list(),
   panel = panel_mosaicplot, panel_args = list(),
   legend = legend_resbased, legend_args = list(),
-  main = NULL, sub = NULL, margins = rep.int(2.5, 4), legend_width = unit(0.15, "npc"),
-  pop = FALSE, title_gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
+  main = NULL, sub = NULL, margins = rep.int(2.5, 4),
+  legend_width = unit(0.15, "npc"), pop = FALSE,
+  title_gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a contingency table in array form, with optional category
-    labels specified in the 'dimnames(x)' attribute.}
-  \item{residuals}{optionally, an array of residuals in the same shape
+    labels specified in the \code{dimnames} attribute.}
+  \item{residuals}{optionally, an array of residuals equally shaped
     than \code{x} (see details).}
-  \item{expected}{optionally, an array of expected values in the same shape
+  \item{expected}{optionally, an array of expected values equally shaped
     than \code{x}, or alternatively a formula object to create such a table as used by
     \code{\link[stats]{loglin}} or \code{\link[MASS]{loglm}} (see details).}
   \item{df}{degrees of freedom of the independence model --- TO BE REMOVED ---}
@@ -48,46 +49,45 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{type}{a character string indicating whether the
     \code{"observed"} or the \code{"expected"} values of the table shall be
     visualized.}
-  \item{split_vertical}{logical vector of length \eqn{k},
+  \item{split_vertical}{vector of logicals of length \eqn{k},
     \eqn{k} dimensionality of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the
     tile(s) of the corresponding dimension 
     shall be split vertically, \code{FALSE} means
-    horizontal splits.
-    Ignored if \code{direction} is not \code{NULL}.}
+    horizontal splits.}
   \item{spacing}{spacing object, spacing function, or a corresponding
-    generating function (see details and \code{\link{spacings}}.}
+    generating function (see details and \code{\link{spacings}}).}
   \item{spacing_args}{list of arguments for the
     spacing-generating function, if specified.}
   \item{gp}{object of class \code{"gpar"}, shading function or
     a corresponding generating function (see details and
-    \code{\link{shadings}}. Ignored if \code{shade = FALSE}.}
+    \code{\link{shadings}}). Ignored if \code{shade = FALSE}.}
   \item{gp_args}{list of arguments for the
     shading-generating function, if specified.}
   \item{labeling}{either a labeling function, or a corresponding generating function (see details and \code{\link{labelings}}.}
   \item{labeling_args}{list of arguments for the
     labeling-generating function, if specified.}
-  \item{panel}{either a panel function, or a corresponding gernerating
+  \item{panel}{either a panel function, or a corresponding generating
     function (see details). Currently, generating functions for
     mosaic plots (\code{\link{panel_mosaic}}) and association plots
     (\code{\link{panel_assoc}}) are provided.}
   \item{panel_args}{list of arguments for the
     panel-generating function, if specified.}
   \item{legend}{either a legend-generating function, or a legend
-    function (see details and \code{\link{legends}}. \code{NULL} or
+    function (see details and \code{\link{legends}}). \code{NULL} or
     \code{FALSE} disables the legend.}
   \item{legend_args}{list of arguments for the
     legend-generating function, if specified.}
   \item{main}{either a logical, or a character string used for
     plotting the main title. If \code{main} is a logical and
     \code{TRUE}, the name of the object supplied as \code{x} is used.}
-  \item{sub}{either a logical, or a character string used for
-    plotting the subtitle. If \code{sub} is a logical and
-    \code{TRUE}, the name of the object supplied as \code{x} is used.}
+  \item{sub}{a character string used for
+    plotting the subtitle.}
   \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as
-    needed. The four components specify the top, right, bottom, and left
-    margin of the plot, respectively. When a numeric vector is supplied,
+    needed. The four components specify the \code{top}, \code{right},
+    \code{bottom}, and \code{left} margin of the plot, respectively.
+    When a numeric vector is supplied,
     the numbers are interpreted as \code{"lines"} units. In addition,
     it may have named arguments ("top", "right", "bottom", and "left"),
     in which case the non-named arguments specify the default values
@@ -132,7 +132,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     \item Except for the shading-functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
     \item For shadings and spacings, passing the final parameter object
-    itself; see the corresponding help page for more details on the data structure.
+    itself; see the corresponding help pages for more details on the data structures.
   }
   
   If legends are drawn, a \sQuote{cinemascope}-like layout is used for
@@ -145,11 +145,17 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   Although the \code{gp} argument is typically used for shading, it can
   be used for abritrary modifications of the tiles' graphics parameters
   (e.g., for highlighting particular cells, etc.).
+
+}
+\note{
+The created viewports, as well as the tiles and bullets, are named and
+thus can conveniently modified after a plot has been drawn (and
+\code{pop = FALSE}).
 }
 \value{
   Invisibly, an object of class "structable" corresponding to the plot.
 }
-\author{David Meyer (\email{David.Meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 
 \seealso{
   \code{\link{assoc}},
@@ -171,6 +177,10 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
                      spacing_args = list(start = 0.5, rate = 1.5))
   strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
 
+  ## modify a tile's color
+  strucplot(Titanic, pop = FALSE)
+  grid.edit("rect..Class.1st..Sex.Male..Age.Adult..Survived.Yes",
+            gp = gpar(fill = "red"))
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
 

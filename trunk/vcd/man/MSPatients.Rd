@@ -37,11 +37,16 @@ M. Friendly (2000),
 
 \examples{
 data(MSPatients)
-
-par(mfrow = c(1,2))
-agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients")
-agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
-par(mfrow = c(1,1))
+X11(width = 12)
+pushViewport(viewport(layout = grid.layout(ncol = 2)))
+pushViewport(viewport(layout.pos.col = 1))
+agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients", newpage = FALSE)
+popViewport()
+pushViewport(viewport(layout.pos.col = 2))
+agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients",
+              newpage = FALSE)
+popViewport(2)
+dev.off()
 }
 
 \keyword{datasets}

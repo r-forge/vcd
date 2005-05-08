@@ -4,7 +4,7 @@
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Summary of a 2-d - table}
 \description{
-Prints a 2-d - contingency table along with percentages, marginal and conditional distributions.
+Prints a two-way contingency table along with percentages, marginal, and conditional distributions.
 }
 \usage{
 table2d_summary(object, margins = TRUE, percentages = FALSE,
@@ -12,7 +12,7 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{object}{a m x n-contingency table}
+  \item{object}{a \eqn{m \times n}{m times n}-contingency table}
   \item{margins}{if \code{TRUE}, marginal distributions are computed.}
   \item{percentages}{if \code{TRUE}, relative frequencies are computed.}
   \item{conditionals}{if not \code{"none"}, the conditioinal
@@ -20,12 +20,11 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
   \item{\dots}{currently not used.}
 }
 \value{
-Returns invisibly a m x n x o - table, o depending on the amount of
-choices (max 3).
+Returns invisibly a \eqn{m x n x o}{m times n times o} table, \eqn{o}
+depending on the amount of choices (max 3).
 }
 \author{
-  David Meyer\cr
-  \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 \seealso{\code{\link{mar_table}}, \code{\link{prop.table}}, \code{\link{independence_table}}}
 

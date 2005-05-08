@@ -34,7 +34,7 @@ E. B. Andersen (1991), \emph{The Statistical Analysis of Categorical Data}.
 
 \examples{
 data(Trucks)
-ftable(xtabs(Freq ~ ., data = Trucks))
+structable(~ ., data = Trucks, direction = 'v')
 }
 
 \keyword{datasets}

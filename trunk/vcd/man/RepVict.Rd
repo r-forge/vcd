@@ -42,7 +42,7 @@ M. Friendly (2000),
 \examples{
 data(RepVict)
 
-mosaicplot(RepVict[-c(4,7),-c(4,7)], shade = TRUE, main = "Repeat Victimization Data")
+mosaic(RepVict[-c(4,7),-c(4,7)], gp = shading_max, main = "Repeat Victimization Data")
 }
 
 \keyword{datasets}
