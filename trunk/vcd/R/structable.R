@@ -4,14 +4,17 @@
 structable <- function(x, ...)
   UseMethod("structable")
 
-structable.formula <- function(formula, data = NULL, direction = "h",
-                               ..., subset, na.action) {
+structable.formula <- function(formula, data = NULL, direction = NULL,
+                               split_vertical = FALSE, ..., subset, na.action) {
     if (missing(formula) || !inherits(formula, "formula")) 
         stop("formula is incorrect or missing")
 
     m <- match.call(expand.dots = FALSE)
     edata <- eval(m$data, parent.frame())
 
+    if (!is.null(direction))
+      split_vertical <- direction == "v"
+        
     ## only rhs present without `.' in lhs => xtabs-interface
     if (length(formula) != 3) {
       if (formula[[1]] == "~") {
@@ -25,15 +28,15 @@ structable.formula <- function(formula, data = NULL, direction = "h",
             stop("incorrect variable names in formula")
           if (all(varnames != ".")) 
             data <- margin.table(data, di)
-          return(structable(data, direction = direction, ...))
+          return(structable(data, split_vertical = split_vertical, ...))
         }
         else if (is.data.frame(data)) {
           if ("Freq" %in% colnames(data))
             return(structable(xtabs(formula(paste("Freq", deparse(formula))),
                                     data),
-                              direction = direction, ...))
+                              split_vertical = split_vertical, ...))
           else
-            return(structable(xtabs(formula, data),  direction = direction, ...))
+            return(structable(xtabs(formula, data),  split_vertical = split_vertical, ...))
             
         } else {
           if (is.matrix(edata)) 
@@ -41,7 +44,7 @@ structable.formula <- function(formula, data = NULL, direction = "h",
           m$... <- NULL
           m[[1]] <- as.name("model.frame")
           mf <- eval(m, parent.frame())
-          return(structable(table(mf), direction = direction, ...))
+          return(structable(table(mf), split_vertical = split_vertical, ...))
         }
 
      } else
@@ -73,8 +76,8 @@ structable.formula <- function(formula, data = NULL, direction = "h",
             cvars <- seq(along = dnames)[-rvars]
         else if (any(is.na(cvars))) 
           stop("incorrect variable names in lhs of formula")
-        direction <- c(rep(FALSE, length(rvars)), rep(TRUE, length(cvars)))
-        structable(margin.table(data, c(rvars, cvars)), direction = direction, ...)
+        split_vertical <- c(rep(FALSE, length(rvars)), rep(TRUE, length(cvars)))
+        structable(margin.table(data, c(rvars, cvars)), split_vertical = split_vertical, ...)
     } else {
         if (is.matrix(edata)) 
             m$data <- as.data.frame(data)
@@ -96,13 +99,13 @@ structable.formula <- function(formula, data = NULL, direction = "h",
           m$formula <- formula(paste("~", paste(c(rvars, cvars), collapse = "+")))
         m[[1]] <- as.name("xtabs")
         mf <- eval(m, parent.frame())
-        direction <- c(rep(FALSE, length(rvars)), rep(TRUE, length(cvars)))
-        structable(mf, direction = direction, ...)
+        split_vertical <- c(rep(FALSE, length(rvars)), rep(TRUE, length(cvars)))
+        structable(mf, split_vertical = split_vertical, ...)
     }
 }
   
 
-structable.default <- function(..., split_vertical = FALSE, direction = NULL) {
+structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   ## several checks & transformations for arguments
   args <- list(...)
   

@@ -9,9 +9,9 @@ This function produces a \sQuote{flat} representation of a high-dimensional
 contingency table constructed in a similar way than mosaic displays.
 }
 \usage{
-\method{structable}{formula}(formula, data, direction = 'h', ...,
-subset, na.action)
-\method{structable}{default}(..., split_vertical = FALSE, direction = NULL)
+\method{structable}{formula}(formula, data,
+direction = NULL, split_vertical = FALSE, ..., subset, na.action)
+\method{structable}{default}(..., direction = NULL, split_vertical = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,12 +30,12 @@ subset, na.action)
   \item{split_vertical}{logical vector indicating, for each dimension,
     whether it should be splitted vertically or not. Values are recycled
     as needed. If the argument is of length 1, the value is alternated for all
-    dimensions.}
+    dimensions. (Ignored if \code{direction} is provided.)}
   \item{direction}{character vector alternatively specifying the
     splitting direction (\code{"h"} for horizontal and \code{"v"} for
     vertical splits). Values are recycled
     as needed. If the argument is of length 1, the value is alternated for all
-    dimensions. (Ignored if \code{split_vertical} is provided.)}
+    dimensions.}
 }
 \details{
   This function produces textual representations of mosaic displays, and
