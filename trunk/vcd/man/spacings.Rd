@@ -56,7 +56,7 @@ A spacing function with arguments:
   dimension of the table. The length of the \code{"unit"}-objects is
   \eqn{k-1}, \eqn{k} number of levels of the corresponding factor.
 }
-\author{David Meyer (\email{David.Meyer@R-project.org})}
+\author{David Meyer \email{David.Meyer@R-project.org}}
 
 \seealso{
   \code{\link{strucplot}},

@@ -47,7 +47,7 @@ ternaryplot(x, scale = 1, dimnames = NULL,
 \details{
 A points' coordinates are found by computing the gravity center
 of mass points using the data entries as weights. Thus, the coordinates
-of a point \eqn{P(a,b,c)}, \eqn{a + b + c = 1}, are: \eqn{P(b + c/2, c * \sqrt(3)/2)}{P(b + c/2, c * sqrt(3)/2)}.
+of a point \eqn{P(a,b,c)}, \eqn{a + b + c = 1}, are: \eqn{P(b + c/2, c \sqrt{3}/2)}{P(b + c/2, c * sqrt(3)/2)}.
 }
 \references{
 M. Friendly (2000),

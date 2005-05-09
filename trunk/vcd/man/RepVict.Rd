@@ -17,9 +17,11 @@ National Crime Survey.
   \tabular{rll}{
     No \tab Name \tab Levels \cr
     1 \tab First Victimization \tab Rape, Assault, Robbery, Pickpocket,
-       Personal Larcency, Burglary, Household Larcency, Auto Theft \cr
+    Personal Larcency, \cr
+    \tab \tab Burglary, Household Larcency, Auto Theft \cr
     2 \tab Second Victimization \tab Rape, Assault, Robbery, Pickpocket,
-       Personal Larcency, Burglary, Household Larcency, Auto Theft
+    Personal Larcency,\cr
+    \tab \tab Burglary, Household Larcency, Auto Theft
   }
 }
 

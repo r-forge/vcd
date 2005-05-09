@@ -12,9 +12,9 @@ the Prussian army.
 \usage{data(VonBort)}
 \format{A data frame with 280 observations and 4 variables.
   \describe{
-    \item{deaths}{number of deaths,}
-    \item{year}{year of the deaths,}
-    \item{corps}{factor indicating the corps,}
+    \item{deaths}{number of deaths.}
+    \item{year}{year of the deaths.}
+    \item{corps}{factor indicating the corps.}
     \item{fisher}{factor indicating whether the corresponding
       corps was considered by Fisher (1925) or not.}
   }

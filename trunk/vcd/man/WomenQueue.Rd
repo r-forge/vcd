@@ -14,7 +14,7 @@ length 10 in a London Underground station.
         in 100 queues of length 10. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab nWomen \tab 0, 1, ..., 10 \cr
+    1 \tab nWomen \tab 0, 1, \dots, 10 \cr
   }
 }
 

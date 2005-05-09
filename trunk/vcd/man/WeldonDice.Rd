@@ -11,11 +11,11 @@ results in a letter to Francis Galton on 1894-02-02.
 \usage{data(WeldonDice)}
 
 \format{A 1-way table giving the frequency of a 5 or a 6 in
-        26,306 throws of 12 dice where 10 indicates `10 or more' 5s or 6s.
+        26,306 throws of 12 dice where 10 indicates \sQuote{10 or more} 5s or 6s.
         The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab n56 \tab 0, 1, ..., 10 \cr
+    1 \tab n56 \tab 0, 1, \dots, 10 \cr
   }
 }
 

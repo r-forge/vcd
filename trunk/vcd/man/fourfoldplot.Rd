@@ -44,7 +44,8 @@ fourfoldplot(x,
   \item{space}{the amount of space (as a fraction of the maximal radius
     of the quarter circles) used for the row and column lebals.}
   \item{main}{character string for the fourfold plot title.}
-  \item{mfrow, mfcol}{a numeric vector of the form \code{c(\var{nr}, \var{nc})}, indicating
+  \item{mfrow, mfcol}{a numeric vector with two components:
+    \var{nr} and \var{nc}, indicating
     that the displays for the 2 by 2 tables should be arranged in an
     \var{nr} by \var{nc} layout, filled by rows/columns.}
   \item{extended}{logical; if \code{TRUE}, extended plots are plotted,

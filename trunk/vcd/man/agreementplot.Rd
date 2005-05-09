@@ -5,7 +5,7 @@
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Bangdiwala's Observer Agreement Chart}
 \description{
-  Representation of a k x k confusion matrix, where the
+  Representation of a \eqn{k \times k}{k times k} confusion matrix, where the
   observed and expected diagonal elements are represented by superposed
   black and white rectangles, respectively. The function also computes
   a statistic measuring the strength of agreement (relation of respective
@@ -27,7 +27,7 @@
   \item{weights}{vector of weights for successive larger observed areas, used
     in the agreement strength statistic, and also for the shading. The
     first element should be 1.}
-  \item{margins}{vector of margins (see \code{\link[graphics]{par}}.}
+  \item{margins}{vector of margins (see \code{\link[graphics]{par}}).}
   \item{newpage}{if \code{TRUE}, the plot is drawn on a new page.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}. For details, see \code{xtabs}.}
@@ -45,8 +45,8 @@
 }
 \value{
   Invisibly returned, a list with components
-  \item{Bangdiwala}{the unweighted agreement strength statistic}
-  \item{Bangdiwala_Weighted}{the weighted statistic}
+  \item{Bangdiwala}{the unweighted agreement strength statistic.}
+  \item{Bangdiwala_Weighted}{the weighted statistic.}
   \item{weights}{the weigtht vector used.}
 }
 \references{

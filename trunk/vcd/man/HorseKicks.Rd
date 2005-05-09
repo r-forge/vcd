@@ -16,7 +16,7 @@ Fisher (1925) as they had a different organization.
         in 200 corps-years. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab nDeaths \tab 0, 1, ..., 4 \cr
+    1 \tab nDeaths \tab 0, 1, \dots, 4 \cr
   }
 }
 

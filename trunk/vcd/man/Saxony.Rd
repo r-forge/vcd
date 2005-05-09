@@ -13,7 +13,7 @@ on sex distributions in families in Saxony in the 19th century.
         of size 12. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab nMales \tab 0, 1, ..., 12 \cr
+    1 \tab nMales \tab 0, 1, \dots, 12 \cr
   }
 }
 

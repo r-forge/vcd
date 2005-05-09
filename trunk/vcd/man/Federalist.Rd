@@ -15,7 +15,7 @@ Hamilton, John Jay and James Madison.
         of `may' in 262 blocks of text. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab nMay \tab 0, 1, ..., 6 \cr
+    1 \tab nMay \tab 0, 1, \dots, 6 \cr
   }
 }
 

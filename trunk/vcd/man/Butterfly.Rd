@@ -13,7 +13,7 @@ for each of 501 species of butterflies collected in Malaya.
         501 species of butterflies. The variable and its levels are
   \tabular{rll}{
     No \tab Name \tab Levels \cr
-    1 \tab nTokens \tab 0, 1, ..., 24 \cr
+    1 \tab nTokens \tab 0, 1, \dots, 24 \cr
   }
 }
 
