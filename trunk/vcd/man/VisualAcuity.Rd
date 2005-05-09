@@ -11,9 +11,9 @@ Ordnance factories 1943-1946.
 \usage{data(VisualAcuity)}
 \format{A data frame with 32 observations and 4 variables.
   \describe{
-    \item{Freq}{frequency of visual acuity measurements,}
-    \item{right}{visual acuity on right eye,}
-    \item{left}{visual acuity on left eye,}
+    \item{Freq}{frequency of visual acuity measurements.}
+    \item{right}{visual acuity on right eye.}
+    \item{left}{visual acuity on left eye.}
     \item{gender}{factor indicating gender of patient.}
   }
 }

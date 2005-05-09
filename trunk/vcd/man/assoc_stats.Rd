@@ -14,11 +14,11 @@ assocstats(x)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{x}{a r x c-table.}
+  \item{x}{a \eqn{r \times c}{r times c} table.}
 }
 \value{
   A list with components:
-  \item{chisq.tests}{a 2x3 table with the chisquare statistics.}
+  \item{chisq.tests}{a \eqn{2 \times 3}{2 x 3} table with the chisquare statistics.}
   \item{phi}{The phi-coefficient.}
   \item{cont}{The  contingency coefficient.}
   \item{cramer}{Cramer's V.}
