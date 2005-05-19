@@ -4,7 +4,6 @@
 \alias{summary.oddsratio}
 \alias{confint.oddsratio}
 \alias{print.summary.oddsratio}
-%- Also NEED an `\alias' for EACH other topic documented here.
 \title{Odds Ratios}
 \description{
   Computes (log) odds ratios and their asymtotic standard errors
@@ -13,7 +12,6 @@
 \usage{
 oddsratio(x, stratum = NULL, log = TRUE)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a 2 x 2 x \dots table.}
  \item{stratum}{vector of strata dimensions.}
@@ -35,17 +33,20 @@ oddsratio(x, stratum = NULL, log = TRUE)
 }
 
 \references{
-M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  M. Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \author{
-  David Meyer \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 
-\seealso{\code{\link{plot.oddsratio}}, \code{\link{confint}}}
-
+\seealso{
+  \code{\link{plot.oddsratio}},
+  \code{\link{confint}}
+}
 \examples{
 data(CoalMiners)
 summary(oddsratio(CoalMiners))
 }
-\keyword{category}% __ONLY ONE__ keyword per line
+\keyword{category}

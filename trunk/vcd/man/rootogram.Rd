@@ -4,7 +4,7 @@
 \alias{rootogram.goodfit}
 \title{Rootograms}
 \description{
-Rootograms of observed and fitted values.
+  Rootograms of observed and fitted values.
 }
 \usage{
 \method{rootogram}{default}(x, fitted, names = NULL, scale = c("sqrt", "raw"),

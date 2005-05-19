@@ -2,15 +2,14 @@
 \alias{plot.oddsratio}
 \title{(Log) Odds Ratios Plots}
 \description{
-Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
-\eqn{k}-tables, along with confidence intervals.
+  Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
+  \eqn{k}-tables, along with confidence intervals.
 }
 \usage{
 \method{plot}{oddsratio}(x, conf_level = 0.95,
                   type ="o", ylab = NULL, xlab = "Strata",
                   whiskers = 0.1, ...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{an object of class \code{logoddsratio}, computed for a 2 x 2
     x \eqn{k}-table.}
@@ -23,15 +22,16 @@ Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
   \item{\dots}{other graphics parameters (see \code{par}).}
 }
 \references{
-M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  M. Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}
 }
-
-\seealso{\code{\link{oddsratio}}}
-
+\seealso{
+  \code{\link{oddsratio}}
+}
 \examples{
 data(CoalMiners)
 l <- oddsratio(CoalMiners)
@@ -43,4 +43,4 @@ m <- lm(l ~ g + I(g^2))
 lines(fitted(m), col = "red")
 }
 
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}

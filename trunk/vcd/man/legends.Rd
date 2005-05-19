@@ -2,10 +2,9 @@
 \alias{legends}
 \alias{legend_resbased}
 \alias{legend_fixed}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Legend functions for strucplots}
+\title{Legend Functions for Strucplots}
 \description{
-These functions generate legend functions for residual-based shadings.
+  These functions generate legend functions for residual-based shadings.
 }
 \usage{
 legend_resbased(fontsize = 12, x = unit(1, "lines"), y = unit(0.1,"npc"),
@@ -16,7 +15,6 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
              height = unit(0.8, "npc"), width = unit(1.5, "lines"), digits = 3, 
              check_overlap = TRUE, text = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{fontsize}{fontsize of title and p-value text.}
   \item{x, y}{objects of class \code{"unit"} indicating the coordinates of the title.}
@@ -53,8 +51,9 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
   Vienna, Austria.
 }
 
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{structable}},
   \code{\link{shadings}}
@@ -64,5 +63,5 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
 mosaic(Titanic, legend = legend_resbased)
 mosaic(Titanic, legend = legend_fixed)
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}
 

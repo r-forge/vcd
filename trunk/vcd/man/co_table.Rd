@@ -1,6 +1,6 @@
 \name{co_table}
 \alias{co_table}
-\title{Compute conditional tables}
+\title{Compute Conditional Tables}
 \description{
   For a contingency table in array form, compute a list of conditional
   tables given some margins.
@@ -15,8 +15,8 @@ co_table(x, margin, collapse = ".")
     (only if more than 1 margin is given)}
 }
 \details{
-  This is essentially an interface to \code{\link[base]{"Extract"}} which is more 
-  convenient for arrays of arbitrary dimension.   
+  This is essentially an interface to \code{\link[base]{"Extract"}}
+  which is more convenient for arrays of arbitrary dimension.   
 }
 \value{
   A list of the resulting conditional tables.

@@ -1,17 +1,16 @@
 \name{pearson_test}
 \alias{pearson_test}
-
-\title{Conditional independence test}
+\title{Conditional Independence Test}
 \description{
   Performs a test of independence on a 2d-contigency table by simulating
   the Pearson residuals under the hypotheses of independence,
   conditional the marginals of the input table.
 }
 \usage{
-pearson_test(x, n = 1000, FUN = function(x) max(abs(x)), alternative =
-c("greater","less"), conf_level = 0.95, return_distribution = TRUE)
+pearson_test(x, n = 1000, FUN = function(x) max(abs(x)),
+             alternative = c("greater","less"), conf_level = 0.95,
+             return_distribution = TRUE)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a two-way contingency table.}
   \item{n}{number of independence tables to be drawn.}
@@ -49,12 +48,12 @@ under the null.}
 }
 \references{(strasser)}
 \author{
-  David Meyer \email{david.meyer@ci.tuwien.ac.at}
+  David Meyer \email{David.Meyer@R-project.org}
 }
 \seealso{
   \code{\link{chisq.test}},
   \code{\link{fisher.test}},
-  \code{\link{r2dtable}}.
+  \code{\link{r2dtable}}
 }
 
 \examples{
@@ -66,4 +65,4 @@ pearson_test(TeaTasting)
 pearson_test(TeaTasting, FUN = function(x) sum(x * x))
 chisq.test(TeaTasting)
 }
-\keyword{htest}% at least one, from doc/KEYWORDS
+\keyword{htest}

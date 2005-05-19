@@ -2,7 +2,6 @@
 \alias{agreementplot}
 \alias{agreementplot.default}
 \alias{agreementplot.formula}
-%- Also NEED an `\alias' for EACH other topic documented here.
 \title{Bangdiwala's Observer Agreement Chart}
 \description{
   Representation of a \eqn{k \times k}{k times k} confusion matrix, where the
@@ -18,7 +17,6 @@
               ylab = names(dimnames(x))[1], ...)
 \method{agreementplot}{formula}(formula, data = NULL, ..., subset)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a confusion matrix, i.e. a table with equal-sized dimensions.}
   \item{reverse_y}{if \code{TRUE}, the y axis is reversed (i.e., the
@@ -73,5 +71,5 @@ agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients",
 popViewport(2)
 dev.off()
 }
-\keyword{category}% at least one, from doc/KEYWORDS
-\keyword{hplot}% __ONLY ONE__ keyword per line
+\keyword{category}
+\keyword{hplot}

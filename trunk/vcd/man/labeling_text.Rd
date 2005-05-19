@@ -6,10 +6,9 @@
 \alias{labeling_lboxed}
 \alias{labeling_doubledecker}
 \alias{labelings}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Labeling functions for strucplot labeling}
+\title{Labeling Functions for Strucplot Labeling}
 \description{
-These functions generate labeling functions used for strucplots.
+  These functions generate labeling functions used for strucplots.
 }
 \usage{
 labeling_text(labels = TRUE, varnames = labels, tl_labels = NULL,
@@ -31,7 +30,6 @@ labeling_lboxed(tl_labels = FALSE, boxes = TRUE, clip = TRUE,
                 labbl_varnames = FALSE, ...)
 labeling_doubledecker(lab_pos = c("bottom", "top"), ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{labels}{vector of logicals indicating whether labels should be
     drawn for a particular dimension.}
@@ -115,15 +113,15 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), ...)
   \item{split_vertical}{vector of logicals indicating the split directions.}
   \item{condvars}{integer vector of conditioning dimensions.}
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{labeling_cells}}, 
   \code{\link{labeling_list}}, 
   \code{\link{structable}}, 
   \code{\link[grid]{grid.text}}
 }
-
 \examples{
 mosaic(Titanic)
 mosaic(Titanic, labeling = labeling_left)
@@ -148,5 +146,5 @@ mosaic(Titanic, labeling_args = list(clip = TRUE, boxes = TRUE,
 )
 
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}
 

@@ -1,16 +1,14 @@
 \name{vcdLegend}
 \alias{vcdLegend}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Legend function for grid-graphics}
+\title{Legend Function for grid Graphics}
 \description{
-This function can be used to add legends to \emph{grid-based} plots.
+  This function can be used to add legends to \emph{grid-based} plots.
 }
 \usage{
 vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
           vgap = unit(0.3, "lines"), default_units = "lines", gp = gpar(),
           draw = TRUE, title = "Legend:")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x, y}{coordinates of the legend}
   \item{pch}{integer vector of plotting symbols}
@@ -28,12 +26,13 @@ vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
   \item{title}{character string indicating the plot's title}
 }
 \value{
-Invisibly, the legend as a \code{"grob"}-object.
+  Invisibly, the legend as a \code{"grob"}-object.
 }
-\author{David Meyer \email{David.Meyer@R-project.org}.}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
-  \code{\link[graphics]{legend}}.
+  \code{\link[graphics]{legend}}
 }
 \examples{
 data(Lifeboats)
@@ -47,7 +46,7 @@ ternaryplot(
   dimnames_position = "edge",
   main = "Lifeboats on Titanic"
 )
-vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
+vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"),
+          c("Port", "Starboard"), title = "SIDE")
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
+\keyword{hplot}

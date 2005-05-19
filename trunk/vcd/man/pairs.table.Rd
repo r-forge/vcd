@@ -1,9 +1,8 @@
 \name{pairs.table}
 \alias{pairs.table}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Pairs plot for contingency tables}
+\title{Pairs Plot for Contingency Tables}
 \description{
-Produces a matrix of strucplots.
+  Produces a matrix of strucplots.
 }
 \usage{
 pairs.table(x, upper_panel = panel_mosaic, upper_panel_args = list(),
@@ -12,7 +11,6 @@ diag_panel = panel_barplot, diag_panel_args = list(),
 main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
 newpage = TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.}
@@ -70,7 +68,7 @@ newpage = TRUE, ...)
   \code{\link{panel_assoc}},
   \code{\link{panel_text}},
   \code{\link{panel_barplot}},
-  \code{\link{assoc}}.
+  \code{\link{assoc}}
 }
 \references{
   Cohen, A. (1980),
@@ -85,7 +83,9 @@ newpage = TRUE, ...)
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer \email{david.meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \examples{
 data(UCBAdmissions)
 data(PreSex)

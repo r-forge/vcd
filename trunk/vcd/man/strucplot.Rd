@@ -1,10 +1,9 @@
 \name{strucplot}
 \alias{strucplot}
-\title{Produces a strucplot visualizing a contingency table.}
-
+\title{Produces a strucplot Visualizing a Contingency Table}
 \description{
-  This modular function visualizes certain
-  aspects of high-dimensional contingency tables in a hierarchical way. 
+  This modular function visualizes certain aspects of high-dimensional
+  contingency tables in a hierarchical way.
 }
 \usage{
 strucplot(x, residuals = NULL, expected = NULL, df = NULL,
@@ -19,7 +18,6 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   legend_width = unit(0.15, "npc"), pop = FALSE,
   title_gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames} attribute.}
@@ -155,32 +153,31 @@ thus can conveniently modified after a plot has been drawn (and
 \value{
   Invisibly, an object of class "structable" corresponding to the plot.
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{assoc}},
   \code{\link{mosaic}},
   \code{\link{panel_assoc}},
   \code{\link{panel_mosaic}},
   \code{\link{structable}},
-  \code{\link{doubledecker}}
-  \code{\link{labelings}}
-  \code{\link{shadings}}
-  \code{\link{legends}}
+  \code{\link{doubledecker}},
+  \code{\link{labelings}},
+  \code{\link{shadings}},
+  \code{\link{legends}},
   \code{\link{spacings}}
 }
-
 \examples{
-  strucplot(Titanic)
-  strucplot(Titanic, panel = panel_assocplot)
-  strucplot(Titanic, spacing = spacing_increase,
-                     spacing_args = list(start = 0.5, rate = 1.5))
-  strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
+strucplot(Titanic)
+strucplot(Titanic, panel = panel_assocplot)
+strucplot(Titanic, spacing = spacing_increase,
+                   spacing_args = list(start = 0.5, rate = 1.5))
+strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
 
-  ## modify a tile's color
-  strucplot(Titanic, pop = FALSE)
-  grid.edit("rect..Class.1st..Sex.Male..Age.Adult..Survived.Yes",
-            gp = gpar(fill = "red"))
+## modify a tile's color
+strucplot(Titanic, pop = FALSE)
+grid.edit("rect..Class.1st..Sex.Male..Age.Adult..Survived.Yes",
+          gp = gpar(fill = "red"))
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
+\keyword{hplot}

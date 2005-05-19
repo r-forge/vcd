@@ -1,7 +1,7 @@
 \name{Rochdale}
 \alias{Rochdale}
 \docType{data}
-\title{The Rochdale data}
+\title{The Rochdale Data}
 \description{
 Information on 665 households of Rochdale, Lancashire, UK. The study was
 conducted to identify influence factors on economical activity of

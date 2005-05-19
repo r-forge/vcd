@@ -1,6 +1,5 @@
 \name{independence_table}
 \alias{independence_table}
-%- Also NEED an `\alias' for EACH other topic documented here.
 \title{Independence Table}
 \description{
   Computes table of expected frequencies (under the null hypotheses of
@@ -9,7 +8,6 @@
 \usage{
 independence_table(x, frequency = c("absolute", "relative"))
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a table.}
   \item{frequency}{indicates, if absolute or relative frequencies should
@@ -26,5 +24,5 @@ data(MSPatients)
 independence_table(MSPatients)
 independence_table(MSPatients, frequency = "relative")
 }
-\keyword{category}% at least one, from doc/KEYWORDS
-\keyword{array}% __ONLY ONE__ keyword per line
+\keyword{category}
+\keyword{array}

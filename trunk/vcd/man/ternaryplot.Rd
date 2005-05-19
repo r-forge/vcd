@@ -1,9 +1,9 @@
 \name{ternaryplot}
 \alias{ternaryplot}
-%- Also NEED an `\alias' for EACH other topic documented here.
-\title{Ternary diagram}
+\title{Ternary Diagram}
 \description{
-Visualizes compositional, 3-dimensional data in an equilateral triangle.
+  Visualizes compositional, 3-dimensional data in an equilateral
+  triangle.
 }
 \usage{
 ternaryplot(x, scale = 1, dimnames = NULL,
@@ -111,8 +111,3 @@ vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
 
 }
 \keyword{hplot}
-
-
-
-
-

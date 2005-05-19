@@ -1,16 +1,15 @@
 \name{table2d_summary}
 \alias{table2d_summary}
 \alias{print.table2d_summary}
-%- Also NEED an `\alias' for EACH other topic documented here.
-\title{Summary of a 2-d - table}
+\title{Summary of a 2-d Table}
 \description{
-Prints a two-way contingency table along with percentages, marginal, and conditional distributions.
+  Prints a two-way contingency table along with percentages, marginal,
+  and conditional distributions.
 }
 \usage{
 table2d_summary(object, margins = TRUE, percentages = FALSE,
                 conditionals = c("none", "row", "column"), ...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{a \eqn{m \times n}{m times n}-contingency table}
   \item{margins}{if \code{TRUE}, marginal distributions are computed.}
@@ -20,16 +19,19 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
   \item{\dots}{currently not used.}
 }
 \value{
-Returns invisibly a \eqn{m x n x o}{m times n times o} table, \eqn{o}
-depending on the amount of choices (max 3).
+  Returns invisibly a \eqn{m x n x o}{m times n times o} table, \eqn{o}
+  depending on the amount of choices (max 3).
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}
 }
-\seealso{\code{\link{mar_table}}, \code{\link{prop.table}}, \code{\link{independence_table}}}
-
+\seealso{
+  \code{\link{mar_table}},
+  \code{\link{prop.table}},
+  \code{\link{independence_table}}
+}
 \examples{
 data(UCBAdmissions)
 table2d_summary(margin.table(UCBAdmissions, 1:2))
 }
-\keyword{category}% at least one, from doc/KEYWORDS
+\keyword{category}

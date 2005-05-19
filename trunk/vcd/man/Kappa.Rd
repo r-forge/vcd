@@ -4,8 +4,7 @@
 \alias{confint.Kappa}
 \alias{summary.Kappa}
 \alias{print.summary.Kappa}
-%- Also NEED an `\alias' for EACH other topic documented here.
-\title{Cohen's Kappa and weighted Kappa}
+\title{Cohen's Kappa and Weighted Kappa}
 \description{
   Computes two agreement rates: Cohen's kappa and weighted kappa, and
   confidence bands.
@@ -13,7 +12,6 @@
 \usage{
 Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{a confusion matrix.}
   \item{weights}{either one of the two options or a user-specified
@@ -45,11 +43,15 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
     \item Everitt, B.S. (1968): Moments of statistics kappa and weighted
     kappa. The British Journal of Mathematical and Statistical Psychology.
 }
-\author{David Meyer\cr
-\email{David.Meyer@R-project.org}}
-\seealso{\code{\link{agreementplot}}, \code{\link{confint}}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
+\seealso{
+  \code{\link{agreementplot}},
+  \code{\link{confint}}
+}
 \examples{
 data(SexualFun)
 Kappa(SexualFun)
 }
-\keyword{category}% at least one, from doc/KEYWORDS
+\keyword{category}

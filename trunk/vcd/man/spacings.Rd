@@ -5,11 +5,10 @@
 \alias{spacing_dimequal}
 \alias{spacing_increase}
 \alias{spacing_conditional}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Spacing-generating functions}
+\title{Spacing-generating Functions}
 \description{
   These functions generate spacing-functions to be used with
-  \code{\link{strucplot}} to obtain custiomized spaces between the
+  \code{\link{strucplot}} to obtain customized spaces between the
   elements of a strucplot.
 }
 \usage{
@@ -19,7 +18,6 @@ spacing_increase(start = unit(0.3, "lines"), rate = 1.5)
 spacing_conditional(sp = unit(0.5, "lines"), start = unit(2, "lines"), rate = 1.8)
 spacing_doubledecker(start = unit(0.3, "lines"), rate = 1.8)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{start}{object of class \code{"unit"} indicating the
     start value for increasing spacings.}
@@ -56,19 +54,19 @@ A spacing function with arguments:
   dimension of the table. The length of the \code{"unit"}-objects is
   \eqn{k-1}, \eqn{k} number of levels of the corresponding factor.
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{strucplot}},
   \code{\link{doubledecker}}
 }
-
 \examples{
-  strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
-  strucplot(Titanic, spacing = spacing_equal(1))
-  strucplot(Titanic, spacing = spacing_dimequal(1:4 / 4))
-  data(PreSex)
-  strucplot(aperm(PreSex, c(1,4,2,3)), spacing = spacing_conditional, condvars = 2)  
+strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
+strucplot(Titanic, spacing = spacing_equal(1))
+strucplot(Titanic, spacing = spacing_dimequal(1:4 / 4))
+data(PreSex)
+strucplot(aperm(PreSex, c(1,4,2,3)), spacing = spacing_conditional,
+          condvars = 2)  
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
+\keyword{hplot}
