@@ -1,9 +1,9 @@
 \name{Ord_plot}
 \alias{Ord_plot}
 \alias{Ord_estimate}
-\title{Ord plots}
+\title{Ord Plots}
 \description{
-Ord plots for diagnosing discrete distributions.
+  Ord plots for diagnosing discrete distributions.
 }
 \usage{
 Ord_plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,

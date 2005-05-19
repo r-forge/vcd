@@ -2,7 +2,6 @@
 \alias{assoc}
 \alias{assoc.default}
 \alias{assoc.formula}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Extended Association Plots}
 \description{
 Produce a Cohen-Friendly association plot indicating deviations
@@ -16,7 +15,6 @@ spacing_args = list(), split_vertical = NULL, keepAR = FALSE,
 xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, ..., main = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a contingency table in array form with optional category
     labels specified in the \code{dimnames(x)} attribute, or an
@@ -128,12 +126,12 @@ xscale = 0.9, yspace = unit(0.5, "lines"), ...)
 
 }
 \value{
-An object of class \code{"structable"}
+  An object of class \code{"structable"}
 }
 \seealso{
   \code{\link{mosaic}},
   \code{\link{strucplot}},
-  \code{\link{structable}}.
+  \code{\link{structable}}
 }
 \references{
   Cohen, A. (1980),
@@ -148,7 +146,9 @@ An object of class \code{"structable"}
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \examples{
 data(HairEyeColor)
 ## Aggregate over sex:
@@ -174,9 +174,5 @@ assoc(aperm(HairEyeColor), expected = ~ (Hair + Eye) * Sex,
 assoc(aperm(UCBAdmissions), expected = ~ (Admit + Gender) * Dept,
       labeling_args = list(abbreviate = c(Gender = TRUE), rot_labels = 0)
 )
-
-
-
-
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}

@@ -1,7 +1,6 @@
 \name{panel_assocplot}
 \alias{panel_assocplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Panel-generating function for association plots}
+\title{Panel-generating Function for Association Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing association plots.
@@ -10,7 +9,6 @@
 panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
                 yspace = unit(0.5, "lines"), xscale = 0.9)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{compress}{logical; if \code{FALSE}, the space between the
     rows (columns) are chosen such that the \emph{total} heights (widths) of
@@ -55,11 +53,13 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
   \item{split_vertical}{vector of logicals indicating, for each
     dimension of the table, the split direction.}
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{assoc}},
   \code{\link{strucplot}},
-  \code{\link{structable}}.
+  \code{\link{structable}}
 }
 \references{
   Cohen, A. (1980),
@@ -74,4 +74,4 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}

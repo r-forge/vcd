@@ -1,10 +1,10 @@
 \name{labeling_cells_list}
 \alias{labeling_list}
 \alias{labeling_cells}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Labeling functions for cells and simple label lists}
+\title{Labeling Functions for Cells and Simple Label Lists}
 \description{
-These functions generate labeling functions that produce labels for strucplots.
+  These functions generate labeling functions that produce labels for
+  strucplots.
 }
 \usage{
 labeling_cells(labels = TRUE, varnames = TRUE, abbreviate_labels = FALSE,
@@ -15,7 +15,6 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
               sep = " ", offset = unit(c(2, 2), "lines"),
               varnames = TRUE, cols = 2, ...) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{labels}{vector of logicals indicating, for each dimension, whether
     labels for the factor levels should be drawn or not. Values are recycled as needed.}
@@ -79,14 +78,14 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
   \item{split_vertical}{vector of logicals indicating the split directions.}
   \item{condvars}{integer vector of conditioning dimensions}
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{labeling_text}}, 
   \code{\link{structable}}, 
   \code{\link[grid]{grid.text}}
 }
-
 \examples{
 mosaic(Titanic, labeling = labeling_cells)
 mosaic(Titanic, labeling = labeling_list)
@@ -96,5 +95,5 @@ tab <- ifelse(Titanic < 6, NA, Titanic)
 mosaic(Titanic)
 labeling_cells(text = tab, margin = 0)(Titanic)
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}
 

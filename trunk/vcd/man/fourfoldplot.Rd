@@ -2,10 +2,10 @@
 \alias{fourfoldplot}
 \title{Fourfold Plots}
 \description{
-  Creates an (extended) fourfold display of a 2 by 2 by \eqn{k} contingency table on
-  the current graphics device, allowing for the visual inspection of the
-  association between two dichotomous variables in one or several
-  populations (strata).
+  Creates an (extended) fourfold display of a 2 by 2 by \eqn{k}
+  contingency table on the current graphics device, allowing for the
+  visual inspection of the association between two dichotomous variables
+  in one or several populations (strata).
 }
 \usage{
 fourfoldplot(x,

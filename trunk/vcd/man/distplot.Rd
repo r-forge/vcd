@@ -1,9 +1,9 @@
 \name{distplot}
 \alias{distplot}
-\title{Diagnostic distribution plots}
+\title{Diagnostic Distribution Plots}
 \description{
-Diagnostic distribution plots: poissonness, binomialness and
-negative bionomialness plots.
+  Diagnostic distribution plots: poissonness, binomialness and
+  negative bionomialness plots.
 }
 \usage{
 distplot(obj, type = c("poisson", "binomial", "nbinomial"),

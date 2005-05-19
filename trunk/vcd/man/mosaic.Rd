@@ -2,7 +2,6 @@
 \alias{mosaic}
 \alias{mosaic.default}
 \alias{mosaic.formula}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Extended Mosaic Plots}
 \description{
   Plots (extended) mosaic displays.
@@ -13,7 +12,6 @@ split_vertical = FALSE, direction = NULL, spacing = NULL,
 spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
 \method{mosaic}{formula}(formula, data, ..., main = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.}
@@ -87,7 +85,7 @@ spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
   direction by default to match the output of \code{\link{structable}}.
 }
 \value{
-Invisibly, an object of class \code{"structable"}.
+  Invisibly, an object of class \code{"structable"}.
 }
 \references{
     Hartigan, J.A., and Kleiner, B. (1984)
@@ -109,8 +107,9 @@ Invisibly, an object of class \code{"structable"}.
   information on various aspects of graphical methods for analyzing
   categorical data, including mosaic plots.
 }
-\author{David Meyer \email{david.meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{assoc}},
   \code{\link{strucplot}},
@@ -146,5 +145,4 @@ data(PreSex)
 mosaic(PreSex, condvars = c(1,4))
 mosaic(~ ExtramaritalSex + PremaritalSex | MaritalStatus + Gender, data = PreSex)
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
+\keyword{hplot}

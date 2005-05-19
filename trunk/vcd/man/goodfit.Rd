@@ -5,9 +5,9 @@
 \alias{predict.goodfit}
 \alias{fitted.goodfit}
 \alias{print.goodfit}
-\title{Goodness-of-fit tests for discrete data}
+\title{Goodness-of-fit Tests for Discrete Data}
 \description{
-Fits a discrete (count data) distribution for goodness-of-fit tests.
+  Fits a discrete (count data) distribution for goodness-of-fit tests.
 }
 \usage{
 goodfit(obj, type = c("poisson", "binomial", "nbinomial"),

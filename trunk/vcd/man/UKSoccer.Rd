@@ -31,8 +31,9 @@ M. Friendly (2000),
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 27.
 }
 
-\seealso{\code{\link{Bundesliga}}}
-
+\seealso{
+  \code{\link{Bundesliga}}
+}
 \examples{
 data(UKSoccer)
 mosaic(UKSoccer, gp = shading_max, main = "UK Soccer Scores")

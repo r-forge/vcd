@@ -37,8 +37,9 @@ M. Friendly (2000),
 
 \source{Michael Friendly (2000), Visualizing Categorical Data, p. 18.}
 
-\seealso{\code{\link{VonBort}}}
-
+\seealso{
+  \code{\link{VonBort}}
+}
 \examples{
 data(HorseKicks)
 gf <- goodfit(HorseKicks)

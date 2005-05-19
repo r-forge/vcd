@@ -1,10 +1,9 @@
 \name{Pairsplot panel functions for off-diagonal cells}
 \alias{panel_mosaic}
 \alias{panel_assoc}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Off-diagonal panel functions for pairs.table}
+\title{Off-diagonal Panel Functions for pairs.table}
 \description{
-Off-diagonal panel functions for \code{\link{pairs.table}}.
+  Off-diagonal panel functions for \code{\link{pairs.table}}.
 }
 \usage{
 panel_mosaic(type = c("pairwise", "total", "conditional", "joint"),
@@ -13,7 +12,6 @@ panel_mosaic(type = c("pairwise", "total", "conditional", "joint"),
 panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
             shade = TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{type}{character string specifying the type of independence model
     visualized in the cells.}
@@ -56,7 +54,9 @@ legend-drawing and setting the margins to 0.
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\author{David Meyer \email{david.meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \examples{
 data(UCBAdmissions)
 data(PreSex)

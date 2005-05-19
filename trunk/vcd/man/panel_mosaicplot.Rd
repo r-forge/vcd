@@ -1,7 +1,6 @@
 \name{panel_mosaicplot}
 \alias{panel_mosaicplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Panel-generating function for mosaic plots}
+\title{Panel-generating Function for Mosaic Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing mosaic plots.
@@ -9,7 +8,6 @@
 \usage{
 panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{visZero}{logical; shall zero entries in the contingency table be
   visualized using a bullet?}
@@ -31,11 +29,13 @@ panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
   \item{split_vertical}{vector of logicals indicating, for each
     dimension of the table, the split direction.}
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{mosaic}},
   \code{\link{strucplot}},
-  \code{\link{structable}}.
+  \code{\link{structable}}
 }
 \references{
   Cohen, A. (1980),
@@ -50,4 +50,4 @@ panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{hplot}

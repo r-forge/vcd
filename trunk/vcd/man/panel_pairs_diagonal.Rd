@@ -1,10 +1,9 @@
 \name{Pairsplot panel functions for diagonal cells}
 \alias{panel_barplot}
 \alias{panel_text}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Diagonal panel functions for pairs.table}
+\title{Diagonal Panel Functions for pairs.table}
 \description{
-Diagonal panel functions for \code{\link{pairs.table}}.
+  Diagonal panel functions for \code{\link{pairs.table}}.
 }
 \usage{
 panel_barplot(gp_bars = gpar(fill = "gray"),
@@ -12,7 +11,6 @@ panel_barplot(gp_bars = gpar(fill = "gray"),
 panel_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
     gp_leveltext = gpar(), gp_border = gpar(), ...) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dimnames}{vector of logicals indicating whether the factor levels shall be
     displayed (only used for \code{panel_text}).}
@@ -32,14 +30,17 @@ panel_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17),
   of the corresponding factor, along with the factor's name.
 }
 \value{
-A function with one argument: the marginal table for the corresponding dimension.
+  A function with one argument: the marginal table for the corresponding
+  dimension.
 }
 \seealso{
   \code{\link{pairs.table}},
   \code{\link{panel_assoc}},
-  \code{\link{panel_mosaic}},
+  \code{\link{panel_mosaic}}
 }
-\author{David Meyer \email{david.meyer@R-project.org}}
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \examples{
 data(UCBAdmissions)
 

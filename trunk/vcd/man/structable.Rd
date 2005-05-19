@@ -2,18 +2,17 @@
 \alias{structable.default}
 \alias{structable.formula}
 \alias{structable}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{structable}
+\title{Structable}
 \description{
-This function produces a \sQuote{flat} representation of a high-dimensional
-contingency table constructed in a similar way than mosaic displays.
+  This function produces a \sQuote{flat} representation of a
+  high-dimensional contingency table constructed in a similar way than
+  mosaic displays.
 }
 \usage{
 \method{structable}{formula}(formula, data,
 direction = NULL, split_vertical = FALSE, ..., subset, na.action)
 \method{structable}{default}(..., direction = NULL, split_vertical = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{a formula object with possibly both left and right hand sides
           specifying the column and row variables of the flat table.}
@@ -50,22 +49,22 @@ direction = NULL, split_vertical = FALSE, ..., subset, na.action)
   empty---the \code{Freq} column will be handled correctly.
 }
 \value{
-An object inheriting from class \code{"ftable"} with the
-splitting information (\code{"split_vertical"}) as additional attribute.
+  An object inheriting from class \code{"ftable"} with the splitting
+  information (\code{"split_vertical"}) as additional attribute.
 }
-\author{David Meyer \email{David.Meyer@R-project.org}}
-
+\author{
+  David Meyer \email{David.Meyer@R-project.org}
+}
 \seealso{
   \code{\link{strucplot}},
   \code{\link{mosaic}},
-  \code{\link[stats]{ftable}}.
+  \code{\link[stats]{ftable}}
 }
 
 \examples{
-  structable(Titanic)
-  structable(Titanic, split_vertical = c(TRUE, TRUE, FALSE, FALSE))
-  structable(Titanic, direction = c("h","h","v","v"))
-  structable(Sex + Class ~ Survived + Age, data = Titanic)
+structable(Titanic)
+structable(Titanic, split_vertical = c(TRUE, TRUE, FALSE, FALSE))
+structable(Titanic, direction = c("h","h","v","v"))
+structable(Sex + Class ~ Survived + Age, data = Titanic)
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
+\keyword{hplot}
