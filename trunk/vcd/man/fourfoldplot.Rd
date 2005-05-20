@@ -9,7 +9,8 @@
 }
 \usage{
 fourfoldplot(x,
-             color = c("#99CCFF","#6699CC","#FF5050","#6060A0","#FF0000","#000080"),
+             color = c("#99CCFF", "#6699CC", "#FF5050",
+                       "#6060A0", "#FF0000", "#000080"),
              conf_level = 0.95, std = c("margins","ind.max","all.max"),
              margin = c(1, 2), space = 0.2, main = NULL,
              mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.15,
@@ -42,22 +43,22 @@ fourfoldplot(x,
     each 2 by 2 table.
     Only used if \code{std} equals \code{"margins"}.}
   \item{space}{the amount of space (as a fraction of the maximal radius
-    of the quarter circles) used for the row and column lebals.}
+    of the quarter circles) used for the row and column labels.}
   \item{main}{character string for the fourfold plot title.}
   \item{mfrow, mfcol}{a numeric vector with two components:
-    \var{nr} and \var{nc}, indicating
-    that the displays for the 2 by 2 tables should be arranged in an
-    \var{nr} by \var{nc} layout, filled by rows/columns.}
+    \var{nr} and \var{nc}, indicating that the displays for the 2 by 2
+    tables should be arranged in an \var{nr} by \var{nc} layout, filled
+    by rows/columns.}
   \item{extended}{logical; if \code{TRUE}, extended plots are plotted,
     i.e., colors are brighter for significant log-odds ratios, and ticks
     are plotted for pies with positive log-odds.}
   \item{ticks}{the length of the ticks. If set to 0, no ticks are
     plotted.}
   \item{p_adjust_method}{method to be used for p-value adjustments for
-    multistratum-plots. The p-values are used for the \sQuote{visual}
-    significance tests of the oddsratios.}
-  \item{newpage}{logical; if \code{TRUE}, \code{grid.newpage()} is called before
-    plotting.}
+    multi-stratum plots.  The p-values are used for the \sQuote{visual}
+    significance tests of the odds ratios.}
+  \item{newpage}{logical; if \code{TRUE}, \code{grid.newpage()} is
+    called before plotting.}
   \item{fontsize}{fontsize of main title.}
 }
 \details{
@@ -83,12 +84,14 @@ fourfoldplot(x,
   for the individual odds ratios are not adjusted for multiple testing.
 }
 \references{
-M. Friendly (1994), A fourfold display for 2 by 2 by \eqn{k} tables.
-Technical Report 217, York University, Psychology Department,
-\url{http://www.math.yorku.ca/SCS/Papers/4fold/4fold.ps.gz}.
+  M. Friendly (1994),
+  \emph{A fourfold display for 2 by 2 by \eqn{k} tables}.
+  Technical Report 217, York University, Psychology Department,
+  \url{http://www.math.yorku.ca/SCS/Papers/4fold/4fold.ps.gz}.
 
-M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  M. Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \seealso{
   \code{\link{mosaic}},

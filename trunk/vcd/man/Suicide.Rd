@@ -6,7 +6,9 @@
   Data from Heuer (1979) on suicide rates in West Germany classified by
   age, sex, and method of suicide.
 }
-\usage{data(Suicide)}
+\usage{
+data(Suicide)
+}
 \format{
   A data frame with 306 observations and 6 variables.
   \describe{

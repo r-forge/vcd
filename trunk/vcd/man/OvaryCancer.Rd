@@ -7,7 +7,9 @@
   carried out in 1973.  Information was obtained from 299 women, who
   were operated for ovary cancer 10 years before.
 }
-\usage{data(OvaryCancer)}
+\usage{
+data(OvaryCancer)
+}
 \format{
   A data frame with 16 observations and 5 variables.
   \describe{

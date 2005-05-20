@@ -7,7 +7,9 @@
   attitude of a random sample of 783 persons towards corporal punishment
   of children.
 }
-\usage{data(Punishment)}
+\usage{
+data(Punishment)
+}
 \format{
   A data frame with 36 observations and 5 variables.
   \describe{

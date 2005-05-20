@@ -12,21 +12,20 @@ distplot(obj, type = c("poisson", "binomial", "nbinomial"),
 	 xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 }
 \arguments{
-  \item{obj}{either a vector of counts, a 1-way table of frequencies
-    of counts or a data frame or matrix with frequencies
-    in the first column and the corresponding counts in the
-    second column.}
+  \item{obj}{either a vector of counts, a 1-way table of frequencies of
+    counts or a data frame or matrix with frequencies in the first
+    column and the corresponding counts in the second column.}
   \item{type}{a character string indicating the distribution.}
   \item{size}{the size argument for the binomial distribution, only
-    required if \code{type} is \code{"binomial"}. If set to \code{NULL},
-    \code{size} is taken to be the maximum count.}
-  \item{lambda}{parameter of the poisson distribution. If type is
-    \code{"poisson"} and \code{lambda} is specified a leveled
+    required if \code{type} is \code{"binomial"}.
+    If set to \code{NULL}, \code{size} is taken to be the maximum count.}
+  \item{lambda}{parameter of the poisson distribution.
+    If type is \code{"poisson"} and \code{lambda} is specified a leveled
     poissonness plot is produced.}
-  \item{legend}{logical. Should a legend be plotted?}
+  \item{legend}{logical.  Should a legend be plotted?}
   \item{ylim}{limits for the y axis.}
   \item{line_col}{color for fitted line.}
-  \item{conf_int}{logical. Should confidence intervals be plotted?}
+  \item{conf_int}{logical.  Should confidence intervals be plotted?}
   \item{conf_level}{confidence level for confidence intervals.}
   \item{main}{a title for the plot.}
   \item{xlab}{a label for the x axis.}
@@ -34,25 +33,28 @@ distplot(obj, type = c("poisson", "binomial", "nbinomial"),
   \item{...}{further arguments passed to \code{\link{plot}}.}
 }
 \details{
-\code{distplot} plots the number of occurrences (counts) against the
-distribution metameter of the specified distribution. If
-the distribution fits the data, the plot should show a
-straight line. See Friendly (2000) for details.
+  \code{distplot} plots the number of occurrences (counts) against the
+  distribution metameter of the specified distribution.  If the
+  distribution fits the data, the plot should show a straight line.
+  See Friendly (2000) for details.
 }
 \author{
   Achim Zeileis
 }
 \references{
-D. C. Hoaglin (1980), A poissonness plot, \emph{The American
-Statistican}, \bold{34}, 146-149.
+  D. C. Hoaglin (1980),
+  A poissonness plot,
+  \emph{The American Statistican}, \bold{34}, 146--149.
 
-D. C. Hoaglin & J. W. Tukey (1985), Checking the shape of discrete
-distributions. In D. C. Hoaglin, F. Mosteller, J. W. Tukey (eds.),
-\emph{Exploring Data Tables, Trends and Shapes}, chapter 9. John
-Wiley & Sons, New York.
+  D. C. Hoaglin \& J. W. Tukey (1985),
+  Checking the shape of discrete distributions.
+  In D. C. Hoaglin, F. Mosteller, J. W. Tukey (eds.),
+  \emph{Exploring Data Tables, Trends and Shapes}, chapter 9.
+  John Wiley \& Sons, New York.
 
-Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  M. Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

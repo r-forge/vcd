@@ -20,12 +20,14 @@ ternaryplot(x, scale = 1, dimnames = NULL,
   \item{scale}{row sums scale to be used.}
   \item{dimnames}{dimension labels (defaults to the column names of
     \code{x}).}
-  \item{dimnames_position, dimnames_color}{position and color of dimension labels.}
+  \item{dimnames_position, dimnames_color}{position and color of
+    dimension labels.}
   \item{id}{optional labels to be plotted below the plot
     symbols. \code{coordinates} and \code{id} are mutual exclusive.}
   \item{id_color}{color of these labels.}
   \item{coordinates}{if \code{TRUE}, the coordinates of the points are
-    plotted below them. \code{coordinates} and \code{id} are mutual exclusive.}
+    plotted below them. \code{coordinates} and \code{id} are mutual
+    exclusive.}
   \item{grid}{if \code{TRUE}, a grid is plotted. May optionally
     be a string indicating the line type (default: \code{"dotted"}).}
   \item{grid_color}{grid color.}
@@ -34,24 +36,27 @@ ternaryplot(x, scale = 1, dimnames = NULL,
   \item{bg}{triangle background.}
   \item{pch}{plotting character. Defaults to filled dots.}
   \item{cex}{a numerical value giving the amount by which plotting text
-    and symbols should be scaled relative to the default. Ignored for
+    and symbols should be scaled relative to the default.  Ignored for
     the symbol size if \code{prop_size} is not \code{FALSE}.}
   \item{prop_size}{if \code{TRUE}, the symbol size is plotted
-    proportional to the row sum of the three variables, i.e. represents
+    proportional to the row sum of the three variables, i.e., represents
     the weight of the observation.}
   \item{col}{plotting color.}
   \item{main}{main title.}
-  \item{newpage}{if \code{TRUE}, the plot will apear on a new graphics page.}
+  \item{newpage}{if \code{TRUE}, the plot will appear on a new graphics
+    page.} 
   \item{\dots}{additional graphics parameters (see \code{par})}
 }
 \details{
-A points' coordinates are found by computing the gravity center
-of mass points using the data entries as weights. Thus, the coordinates
-of a point \eqn{P(a,b,c)}, \eqn{a + b + c = 1}, are: \eqn{P(b + c/2, c \sqrt{3}/2)}{P(b + c/2, c * sqrt(3)/2)}.
+  A points' coordinates are found by computing the gravity center of
+  mass points using the data entries as weights.  Thus, the coordinates
+  of a point \eqn{P(a,b,c)}, \eqn{a + b + c = 1}, are: \eqn{P(b + c/2, c
+    \sqrt{3}/2)}{P(b + c/2, c * sqrt(3)/2)}.
 }
 \references{
-M. Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  M. Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}
@@ -76,7 +81,7 @@ ternaryplot(
             bg = "lightgray",
             grid_color = "white",
             labels_color = "white",
-            main = "Arthritits Treatment Data"
+            main = "Arthritis Treatment Data"
            )
 ## legend
 vcdLegend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
@@ -93,7 +98,9 @@ ternaryplot(
   dimnames_position = "edge",
   main = "Lifeboats on Titanic"
 )
-vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
+vcdLegend(0.8, 0.9, c(1, 19),
+          c("red", "blue"), c("Port", "Starboard"),
+          title = "SIDE")
 
 
 ## Hitters
@@ -107,7 +114,8 @@ ternaryplot(
   col = colors[as.numeric(Positions)],
   main = "Baseball Hitters Data"
 )
-vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
+vcdLegend(0.8, 0.9, pch, colors, levels(Positions),
+          title = "POSITION(S)")
 
 }
 \keyword{hplot}

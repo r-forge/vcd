@@ -19,7 +19,7 @@
     \item{Positions}{factor indicating the field position (1B=first
       baseman, 2B=second baseman, 3B=third baseman, C=catcher,
       OF=outfielder, SS=Short Stop, UT=Utility Players).}
-    \item{Putouts}{occur when a fielder causes an oppsing player to be
+    \item{Putouts}{occur when a fielder causes an opposing player to be
       tagged or forced out.}
     \item{Assists}{are credited to other fielders involved in making
       that putout.}
@@ -48,7 +48,8 @@ ternaryplot(
             col = colors[as.numeric(Positions)],
             main = "Baseball Hitters Data"
             )
-vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
+vcdLegend(0.8, 0.9, pch, colors, levels(Positions),
+          title = "POSITION(S)")
 
 detach(Hitters)
 }

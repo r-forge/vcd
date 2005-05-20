@@ -6,7 +6,9 @@
   Results from the first German soccer league in the years 1995/6 and
   2001/2.
 }
-\usage{data(Bundesliga)}
+\usage{
+data(Bundesliga)
+}
 \format{A data frame with 612 observations and 6 variables.
   \describe{
     \item{HomeTeam}{character. Name of the home team.}

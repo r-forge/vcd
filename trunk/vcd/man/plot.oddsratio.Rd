@@ -2,19 +2,21 @@
 \alias{plot.oddsratio}
 \title{(Log) Odds Ratios Plots}
 \description{
-  Plots (log) odds ratios, computed by \code{oddsratio} for 2 x 2 x
-  \eqn{k}-tables, along with confidence intervals.
+  Plots (log) odds ratios, computed by \code{oddsratio} for \eqn{2
+    \times 2 \times k}{2 by 2 by k} tables, along with confidence
+  intervals.
 }
 \usage{
 \method{plot}{oddsratio}(x, conf_level = 0.95,
-                  type ="o", ylab = NULL, xlab = "Strata",
-                  whiskers = 0.1, ...)
+     type ="o", ylab = NULL, xlab = "Strata",
+     whiskers = 0.1, ...)
 }
 \arguments{
-  \item{x}{an object of class \code{logoddsratio}, computed for a 2 x 2
-    x \eqn{k}-table.}
+  \item{x}{an object of class \code{"logoddsratio"}, computed for a
+    \eqn{2 \times 2 \times k}{2 by 2 by k} table.}
   \item{conf_level}{if not \code{NULL} or \code{FALSE},
-    \code{conf_level}-\% confidence intervals are plotted for each data point.}
+    \code{conf_level}-\% confidence intervals are plotted for each data
+    point.}
   \item{type}{plot type.}
   \item{ylab}{label for the y-axis.}
   \item{xlab}{label for the x-axis.}

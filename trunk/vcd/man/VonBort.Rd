@@ -7,7 +7,9 @@
   on number of deaths by horse or mule kicks in 14 corps of the Prussian
   army.
 }
-\usage{data(VonBort)}
+\usage{
+data(VonBort)
+}
 \format{
   A data frame with 280 observations and 4 variables.
   \describe{

@@ -3,15 +3,15 @@
 \title{Independence Table}
 \description{
   Computes table of expected frequencies (under the null hypotheses of
-  independence) from a \eqn{n}-way table.
+  independence) from an \eqn{n}-way table.
 }
 \usage{
 independence_table(x, frequency = c("absolute", "relative"))
 }
 \arguments{
   \item{x}{a table.}
-  \item{frequency}{indicates, if absolute or relative frequencies should
-  be computed.}
+  \item{frequency}{indicates whether absolute or relative frequencies
+    should be computed.}
 }
 \value{
   A table with either absolute or relative frequencies.

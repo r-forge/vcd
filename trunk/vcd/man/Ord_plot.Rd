@@ -34,31 +34,36 @@ Ord_estimate(x, type = NULL, tol = 0.1)
 
 }
 \details{
-The Ord plot plots the number of occurrences against a certain
-frequency ratio (see Friendly (2000) for details) and
-should give a straight line if the data comes from
-a poisson, binomial, negative binomial or log-series distribution. The
-intercept and slope of this straight line conveys information about
-the underlying distribution.
+  The Ord plot plots the number of occurrences against a certain
+  frequency ratio (see Friendly (2000) for details) and should give a
+  straight line if the data comes from a poisson, binomial, negative
+  binomial or log-series distribution.  The intercept and slope of this
+  straight line conveys information about the underlying distribution.
 
-\code{Ord_plot} fits a usual OLS line (black) and a weighted OLS line
-(red). From the coefficients of the latter the distribution is
-estimated by \code{Ord_estimate} as described in Table 2.10 in Friendly
-(2000). To judge whether a coefficient is positive or negative a
-tolerance given by \code{tol} is used. If none of the distributions
-fits well, no parameters are estimated. Be careful with the conclusions
-from \code{Ord_estimate} as it implements just some simple heuristics!
+  \code{Ord_plot} fits a usual OLS line (black) and a weighted OLS line
+  (red).  From the coefficients of the latter the distribution is
+  estimated by \code{Ord_estimate} as described in Table 2.10 in
+  Friendly (2000).  To judge whether a coefficient is positive or
+  negative a tolerance given by \code{tol} is used.  If none of the
+  distributions fits well, no parameters are estimated.  Be careful with
+  the conclusions from \code{Ord_estimate} as it implements just some
+  simple heuristics!
 }
-\value{a vector giving the intercept and slope of the weighted OLS line.}
+\value{
+  a vector giving the intercept and slope of the weighted OLS line.
+}
 \author{
   Achim Zeileis
 }
 \references{
-J. K. Ord (1967), Graphical methods for a class of discrete distributions,
-\emph{Journal of the Royal Statistical Society}, \bold{A 130}, 232-238.
+  J. K. Ord (1967),
+  Graphical methods for a class of discrete distributions,
+  \emph{Journal of the Royal Statistical Society}, \bold{A 130},
+  232--238.
 
-Michael Friendly (2000),
-\emph{Visualizing Categorical Data}. SAS Institute, Cary, NC.
+  Michael Friendly (2000),
+  \emph{Visualizing Categorical Data}.
+  SAS Institute, Cary, NC.
 }
 \examples{
 ## Simulated data examples:

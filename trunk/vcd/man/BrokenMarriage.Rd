@@ -6,7 +6,9 @@
   Data from the Danish Welfare Study about broken marriages or permanent
   relationships depending on gender and social rank.
 }
-\usage{data(BrokenMarriage)}
+\usage{
+data(BrokenMarriage)
+}
 \format{
   A data frame with 20 observations and 4 variables.
   \describe{
@@ -24,7 +26,7 @@
   Springer-Verlag, Berlin.
 }
 \source{
-  E. Andersen (1991),
+  E. B. Andersen (1991),
   The Statistical Analysis of Categorical Data, page 177.
 }
 \examples{

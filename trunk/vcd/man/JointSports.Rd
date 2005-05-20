@@ -7,7 +7,9 @@
   the opinion about joint sports with the other gender among 16--19 year
   old high school students.
 }
-\usage{data(JointSports)}
+\usage{
+data(JointSports)
+}
 \format{
   A data frame with 40 observations and 5 variables.
   \describe{

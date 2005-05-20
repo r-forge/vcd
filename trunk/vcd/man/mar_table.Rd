@@ -11,7 +11,7 @@ mar_table(x)
   \item{x}{a two-way table.}
 }
 \value{
-  A table with added total column and total row.
+  A table with row and column totals added.
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}

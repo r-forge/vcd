@@ -9,10 +9,12 @@
 }
 \usage{
 \method{doubledecker}{formula}(formula, data = NULL, ..., main = NULL)
-\method{doubledecker}{default}(x, depvar = length(dim(x)), margins = c(1,4, length(dim(x)) + 1, 1),
-                col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
-                labeling = labeling_doubledecker, spacing = spacing_doubledecker,
-                main = NULL, keepAR = FALSE, ...)
+\method{doubledecker}{default}(x, depvar = length(dim(x)),
+             margins = c(1,4, length(dim(x)) + 1, 1),
+             col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
+             labeling = labeling_doubledecker,
+             spacing = spacing_doubledecker,
+             main = NULL, keepAR = FALSE, ...)
 }
 \arguments{
   \item{formula}{a formula specifying the variables used to create a 
@@ -50,8 +52,8 @@
   An object of class \code{"structable"} corresponding to the plot.
 }
 \references{
-  Hoffmann, Heike (2001),
-  Generalized Odds Ratios for Visual Modeling.
+  Heike Hoffmann (2001),
+  Generalized odds ratios for visual modeling.
   \emph{Journal of Computational and Graphical Statistics},
   \bold{10}, 4, 628--640.
 }
