@@ -25,9 +25,9 @@ panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
   \item{\dots}{other parameters passed to panel function.}
 }
 \details{
-These functions really just wrap \code{\link{assoc}} and
-\code{\link{mosaic}} by basically inhibiting labeling and
-legend-drawing and setting the margins to 0.
+  These functions really just wrap \code{\link{assoc}} and
+  \code{\link{mosaic}} by basically inhibiting labeling and
+  legend-drawing and setting the margins to 0.
 }
 \value{
   A function with arguments:

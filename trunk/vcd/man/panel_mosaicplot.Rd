@@ -10,13 +10,14 @@ panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
 }
 \arguments{
   \item{visZero}{logical; shall zero entries in the contingency table be
-  visualized using a bullet?}
-  \item{zeroSize}{size of the zero-entries bullet (ignored if \code{visZero} is \code{TRUE})}
+    visualized using a bullet?}
+  \item{zeroSize}{size of the zero-entries bullet (ignored if
+    \code{visZero} is \code{TRUE}).} 
 }
 \details{
-  This function is usually called by \code{strucplot} (typically when called
-  by \code{mosaic}) and returns a function used by \code{strucplot} to
-  produce mosaic plots. 
+  This function is usually called by \code{\link{strucplot}} (typically
+  when called by \code{\link{mosaic}}) and returns a function used by
+  \code{\link{strucplot}} to produce mosaic plots. 
 }
 \value{
   A function with arguments:

@@ -29,37 +29,41 @@ newpage = TRUE, ...)
   \item{main}{character string specifying the main title.}
   \item{title_gp}{object of class \code{"gpar"} used for the title.}
   \item{space}{double specifying the distance between the cells.}
-  \item{newpage}{logical controlling whether a new grid page should be created.}
+  \item{newpage}{logical controlling whether a new grid page should be
+    created.}
   \item{\dots}{currently not used.}
 }
 \details{
-  \code{pairs.table} plots a matrix of pairwise mosaic plots. Four
-  independence types are distinguished:
-  \code{"pairwise"}, \code{"total"}, \code{"conditional"} and \code{"joint"}.
-  The pairwise mosaic matrix shows bivariate marginal relations, collapsed over
-  all other variables. The total independence mosaic matrix shows mosaic plots
-  for mutual independence, i.e. for marginal and conditional independence
-  among all pairs of variables. The conditional independence mosaic matrix shows
-  mosaic plots for marginal independence given all other variables. The
-  joint independence mosaic matrix shows mosaic plots for joint
+  \code{pairs.table} plots a matrix of pairwise mosaic plots.
+  Four independence types are distinguished: \code{"pairwise"},
+  \code{"total"}, \code{"conditional"} and \code{"joint"}.
+  The pairwise mosaic matrix shows bivariate marginal relations,
+  collapsed over all other variables.
+  The total independence mosaic matrix shows mosaic plots for mutual
+  independence, i.e., for marginal and conditional independence among
+  all pairs of variables.
+  The conditional independence mosaic matrix shows mosaic plots for
+  marginal independence given all other variables.
+  The joint independence mosaic matrix shows mosaic plots for joint
   independence of all pairs of variables from the others.
 
   \code{pairs.table} uses panel functions called for each cell of the
-  matrix which can be different for upper matrix, lower
-  matrix, and diagonal cells. Correspondingly, for each panel parameter
-  \var{foo} (\samp{upper}, \samp{lower}, or \samp{diag}),
-  \code{pairs.plot} takes two arguments:
-  \var{foo\_panel} and \var{foo\_panel\_args}, which can be used to specify
-  the parameters as follows:
+  matrix which can be different for upper matrix, lower matrix, and
+  diagonal cells.  Correspondingly, for each panel parameter \var{foo}
+  (\samp{upper}, \samp{lower}, or \samp{diag}), \code{pairs.plot} takes
+  two arguments: \var{foo\_panel} and \var{foo\_panel\_args}, which can
+  be used to specify the parameters as follows:
 
   \enumerate{
     \item Passing a suitable panel function to \var{foo\_panel} which
-    subsequently is called
-    for each cell with the corresponding coordinates.
-    \item Passing a corresponding \emph{generating function} to \var{foo\_panel},
-    along with parameters passed to \var{foo\_panel\_args}, that generates such a
-    function. Generating functions must inherit from class \code{"vcdPanel"}.
-    \item Passing \var{foo\_panel(foo\_panel\_args)} to the \var{foo\_panel} argument.
+    subsequently is called for each cell with the corresponding
+    coordinates.
+    \item Passing a corresponding \emph{generating function} to
+    \var{foo\_panel}, along with parameters passed to
+    \var{foo\_panel\_args}, that generates such a function.  Generating
+    functions must inherit from class \code{"vcdPanel"}.
+    \item Passing \var{foo\_panel(foo\_panel\_args)} to the
+    \var{foo\_panel} argument.
   }
   
 }

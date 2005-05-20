@@ -10,7 +10,7 @@
 \format{
   A data frame with 18 observations and 8 variables.
   \describe{
-    \item{launch}{launch time in \code{"POSIXt"} format.}
+    \item{launch}{launch time in \code{"\link{POSIXt}"} format.}
     \item{side}{factor.  Side of the boat.}
     \item{boat}{factor indicating the boat.}
     \item{crew}{number of male crew members on board.}
@@ -22,7 +22,7 @@
 }
 \references{
   L. Mersey (1912),
-  Report on the loss of the ``Titanic'' (S. S.).
+  Report on the loss of the \dQuote{Titanic} (S. S.).
   Parliamentary command paper 6452.
 
   M. Friendly (2000),
@@ -31,7 +31,7 @@
 }
 
 \source{
-  Michael Friendly (2000),
+  M. Friendly (2000),
   Visualizing Categorical Data:
   \url{http://hotspur.psych.yorku.ca/ftp/sas/vcd/catdata/lifeboat.sas}
 }
@@ -41,9 +41,9 @@ data(Lifeboats)
 attach(Lifeboats)
 ternaryplot(
   Lifeboats[,4:6],
-  pch = ifelse(side=="Port", 1, 19),
-  col = ifelse(side=="Port", "red", "blue"),
-  id  = ifelse(men/total > 0.1, as.character(boat), NA),
+  pch = ifelse(side == "Port", 1, 19),
+  col = ifelse(side == "Port", "red", "blue"),
+  id  = ifelse(men / total > 0.1, as.character(boat), NA),
   prop_size = 2,
   dimnames_position = "edge",
   main = "Lifeboats on the Titanic"

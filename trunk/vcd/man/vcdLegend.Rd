@@ -26,7 +26,7 @@ vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
   \item{title}{character string indicating the plot's title}
 }
 \value{
-  Invisibly, the legend as a \code{"grob"}-object.
+  Invisibly, the legend as a \code{"grob"} object.
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}

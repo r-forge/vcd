@@ -7,20 +7,24 @@
 }
 \usage{
 panel_barplot(gp_bars = gpar(fill = "gray"),
-    gp_vartext = gpar(fontsize = 17), gp_leveltext = gpar(), ...)
+              gp_vartext = gpar(fontsize = 17),
+              gp_leveltext = gpar(), ...)
 panel_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
-    gp_leveltext = gpar(), gp_border = gpar(), ...) 
+           gp_leveltext = gpar(), gp_border = gpar(), ...) 
 }
 \arguments{
-  \item{dimnames}{vector of logicals indicating whether the factor levels shall be
-    displayed (only used for \code{panel_text}).}
+  \item{dimnames}{vector of logicals indicating whether the factor
+    levels shall be displayed (only used for \code{panel_text}).}
   \item{gp_bars}{object of class \code{"gpar"} used for bars (only used
     for \code{panel_barplot}).}
-  \item{gp_vartext}{object of class \code{"gpar"} used for the factor names.}
-  \item{gp_leveltext}{object of class \code{"gpar"} used for the factor levels.}
+  \item{gp_vartext}{object of class \code{"gpar"} used for the factor
+    names.}
+  \item{gp_leveltext}{object of class \code{"gpar"} used for the factor
+    levels.}
   \item{gp_border}{object of class \code{"gpar"} used for the border
     (only used for \code{panel_text}).}
-  \item{\dots}{other parameters passed to the underlying graphics functions.}
+  \item{\dots}{other parameters passed to the underlying graphics
+    functions.}
 }
 \details{
   In the diagonal cells, the pairsplot visualizes statistics or

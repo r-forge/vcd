@@ -9,7 +9,9 @@
   the question is whether the safety measure had an effect on the number
   of accidents and on the point of collision on the truck.
 }
-\usage{data(Trucks)}
+\usage{
+data(Trucks)
+}
 \format{
   A data frame with 24 observations on 5 variables.
   \describe{

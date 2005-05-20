@@ -5,7 +5,9 @@
 \description{
   Data about non-response for a Danish survey in 1965.
 }
-\usage{data(NonResponse)}
+\usage{
+data(NonResponse)
+}
 \format{
   A data frame with 12 observations and 4 variables.
   \describe{

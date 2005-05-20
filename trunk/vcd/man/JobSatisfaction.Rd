@@ -6,8 +6,9 @@
   Data from Petersen (1968) about the job satisfaction of 715 blue
   collar workers, selected from Danish Industry in 1968.
 }
-
-\usage{data(JobSatisfaction)}
+\usage{
+data(JobSatisfaction)
+}
 \format{
   A data frame with 8 observations and 4 variables.
   \describe{
@@ -43,7 +44,7 @@ data(JobSatisfaction)
 structable(~ ., data = JobSatisfaction)
 
 mantelhaen.test(xtabs(Freq ~ own + supervisor + management,
-  data = JobSatisfaction))
+                      data = JobSatisfaction))
 
 }
 
