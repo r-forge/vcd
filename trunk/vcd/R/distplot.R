@@ -1,20 +1,21 @@
-distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
-                     size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-                     line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
-		     xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
+distplot <-
+function(x, type = c("poisson", "binomial", "nbinomial"),
+         size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
+         line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
+         xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 {
-  if(is.vector(obj)) {
-  obj <- table(obj)
+  if(is.vector(x)) {
+      x <- table(x)
   }
-  if(is.table(obj)) {
-    if(length(dim(obj)) > 1) stop ("obj must be a 1-way table")
-    freq <- as.vector(obj)
-    count <- as.numeric(names(obj))
+  if(is.table(x)) {
+      if(length(dim(x)) > 1) stop ("x must be a 1-way table")
+      freq <- as.vector(x)
+      count <- as.numeric(names(x))
   } else {
-    if(!(!is.null(ncol(obj)) && ncol(obj) == 2))
-      stop("obj must be a 2-column matrix or data.frame")
-    freq <- as.vector(obj[,1])
-    count <- as.vector(obj[,2])
+      if(!(!is.null(ncol(x)) && ncol(x) == 2))
+          stop("x must be a 2-column matrix or data.frame")
+      freq <- as.vector(x[,1])
+      count <- as.vector(x[,2])
   }
 
   myindex <- (1:length(freq))[freq > 0]
@@ -24,7 +25,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   switch(match.arg(type),
 
   "poisson" = {
-    par.ml <- goodfit(obj, type = type)$par$lambda
+    par.ml <- goodfit(x, type = type)$par$lambda
 
     phi <- function(nk, k, N, size = NULL)
       ifelse(nk > 0, lgamma(k + 1) + log(nk/N), NA)
@@ -43,7 +44,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
       size <- max(count)
       warning("size was not given, taken as maximum count")
     }
-    par.ml <- goodfit(obj, type = type, par = list(size = size))$par$prob
+    par.ml <- goodfit(x, type = type, par = list(size = size))$par$prob
 
     phi <- function(nk, k, N, size)
       log(nk) - log(N * choose(size, k))
@@ -57,7 +58,7 @@ distplot <- function(obj, type = c("poisson", "binomial", "nbinomial"),
   },
 
   "nbinomial" = {
-    par.ml <- goodfit(obj, type = type)$par
+    par.ml <- goodfit(x, type = type)$par
     size <- par.ml$size
     par.ml <- par.ml$prob
     phi <- function(nk, k, N, size)

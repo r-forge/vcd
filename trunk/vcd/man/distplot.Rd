@@ -6,13 +6,13 @@
   negative bionomialness plots.
 }
 \usage{
-distplot(obj, type = c("poisson", "binomial", "nbinomial"),
+distplot(x, type = c("poisson", "binomial", "nbinomial"),
          size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
          line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
 	 xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
 }
 \arguments{
-  \item{obj}{either a vector of counts, a 1-way table of frequencies of
+  \item{x}{either a vector of counts, a 1-way table of frequencies of
     counts or a data frame or matrix with frequencies in the first
     column and the corresponding counts in the second column.}
   \item{type}{a character string indicating the distribution.}
