@@ -10,12 +10,12 @@
   Fits a discrete (count data) distribution for goodness-of-fit tests.
 }
 \usage{
-goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
+goodfit(x, type = c("poisson", "binomial", "nbinomial"),
         method = c("ML", "MinChisq"), par = NULL)
 \method{predict}{goodfit}(object, newcount = NULL, type = c("response", "prob"), \dots)
 }
 \arguments{
-  \item{obj}{either a vector of counts, a 1-way table of frequencies of
+  \item{x}{either a vector of counts, a 1-way table of frequencies of
     counts or a data frame or matrix with frequencies in the first
     column and the corresponding counts in the second column.}
   \item{type}{a character string indicating which distribution should be
@@ -37,7 +37,7 @@ goodfit(obj, type = c("poisson", "binomial", "nbinomial"),
 \details{
   \code{goodfit} essentially computes the fitted values of a discrete
   distribution (either poisson, binomial or negative binomial) to the
-  count data given in \code{obj}.  If the parameters are not specified
+  count data given in \code{x}.  If the parameters are not specified
   they are estimated either by ML or Minimum Chi-squared. 
 
   \code{par} should a named list specifying the parameters \code{lambda}
