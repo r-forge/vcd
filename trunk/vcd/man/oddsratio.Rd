@@ -30,9 +30,9 @@ oddsratio(x, stratum = NULL, log = TRUE)
   odds ratios---also computes and prints the standardized log odds
   ratios (which follow an asymptotic normal distribution) and the
   corresponding \eqn{p}-values.
-  FIXME
-  \code{confint.oddsratio} computes confidence intervals for the (log)
-  odds ratios.
+
+  There is a \code{confint} method for computing confidence intervals
+  for the (log) odds ratios.
 }
 
 \references{
