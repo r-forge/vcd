@@ -1,7 +1,7 @@
 \name{Pairsplot panel functions for off-diagonal cells}
 \alias{panel_mosaic}
 \alias{panel_assoc}
-\title{Off-diagonal Panel Functions for pairs.table}
+\title{Off-diagonal Panel Functions for Strucplot Matrices}
 \description{
   Off-diagonal panel functions for \code{\link{pairs.table}}.
 }

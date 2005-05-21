@@ -39,20 +39,19 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
 }
 \note{
   The \code{summary} method also prints the weights.
-  FIXME
-  \code{confint.Kappa} computes approximate confidence intervals.
+
+  There is a \code{confint} method for computing approximate confidence
+  intervals.
 }
 \references{
-  FIXME
-  
   Jacob Cohen (1960),
   A coefficient of agreement for nominal scales.
-  \emph{Educational and Psychological Measurement}.
+  \emph{Educational and Psychological Measurement}, \bold{20}, 37--46.
 
-  
   B. S. Everitt, (1968),
   Moments of statistics kappa and weighted kappa.
-  \emph{The British Journal of Mathematical and Statistical Psychology}.
+  \emph{The British Journal of Mathematical and Statistical Psychology},
+  \bold{21}, 97--103.
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}

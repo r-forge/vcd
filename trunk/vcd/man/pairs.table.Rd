@@ -5,11 +5,11 @@
   Produces a matrix of strucplots.
 }
 \usage{
-pairs.table(x, upper_panel = panel_mosaic, upper_panel_args = list(),
-lower_panel = panel_mosaic, lower_panel_args = list(),
-diag_panel = panel_barplot, diag_panel_args = list(),
-main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
-newpage = TRUE, ...)
+\method{pairs}{table}(x, upper_panel = panel_mosaic, upper_panel_args = list(),
+      lower_panel = panel_mosaic, lower_panel_args = list(),
+      diag_panel = panel_barplot, diag_panel_args = list(),
+      main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
+      newpage = TRUE, ...)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -34,7 +34,10 @@ newpage = TRUE, ...)
   \item{\dots}{currently not used.}
 }
 \details{
-  \code{pairs.table} plots a matrix of pairwise mosaic plots.
+  This is a \code{\link[graphics]{pairs}} method for objects inheriting
+  from class \code{"table"}.  It plots a matrix of pairwise mosaic
+  plots.
+  
   Four independence types are distinguished: \code{"pairwise"},
   \code{"total"}, \code{"conditional"} and \code{"joint"}.
   The pairwise mosaic matrix shows bivariate marginal relations,
@@ -47,7 +50,7 @@ newpage = TRUE, ...)
   The joint independence mosaic matrix shows mosaic plots for joint
   independence of all pairs of variables from the others.
 
-  \code{pairs.table} uses panel functions called for each cell of the
+  This method uses panel functions called for each cell of the
   matrix which can be different for upper matrix, lower matrix, and
   diagonal cells.  Correspondingly, for each panel parameter \var{foo}
   (\samp{upper}, \samp{lower}, or \samp{diag}), \code{pairs.plot} takes
