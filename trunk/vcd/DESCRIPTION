@@ -3,7 +3,7 @@ Version: 0.9-0
 Date: 2005-05-01
 Title: Visualizing Categorical Data
 Author: David Meyer, Achim Zeileis, Kurt Hornik
-Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
+Maintainer: David Meyer <David.Meyer@R-project.org>
 Description: Functions and data sets based on the book "Visualizing
              Categorical Data" by Michael Friendly.
 License: GPL
