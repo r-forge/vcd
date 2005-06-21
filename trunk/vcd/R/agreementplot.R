@@ -53,6 +53,8 @@ function (formula, data = NULL, ..., subset)
            newpage = TRUE,
            xlab = names(dimnames(x))[2],
            ylab = names(dimnames(x))[1],
+           xlab_rot = 0, xlab_just = "center",
+           ylab_rot = 90, ylab_just = "center",
            ...)
 {
   if (length(dim(x)) > 2)
@@ -104,12 +106,12 @@ function (formula, data = NULL, ..., subset)
     ## x - axis
     grid.text(dimnames(x)[[2]][i],
               x = xc[i] + (xc[i + 1] - xc[i]) / 2,
-              y = - 0.04, check.overlap = TRUE, ...)
+              y = - 0.04, check.overlap = TRUE, rot = xlab_rot, just = xlab_just, ...)
 
     ## y - axis
     my.text(dimnames(x)[[1]][i],
             y = yc[i] + (yc[i + 1] - yc[i]) / 2,
-            x = - 0.03, check.overlap = TRUE, rot = 90, ...)
+            x = - 0.03, check.overlap = TRUE, rot = ylab_rot, just = ylab_just, ...)
     
     ## expected rectangle
     my.rect(xc[i], yc[i], xc[i + 1], yc[i + 1])
