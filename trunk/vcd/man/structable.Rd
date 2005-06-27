@@ -10,8 +10,8 @@
 }
 \usage{
 \method{structable}{formula}(formula, data,
-direction = NULL, split_vertical = FALSE, ..., subset, na.action)
-\method{structable}{default}(..., direction = NULL, split_vertical = FALSE)
+direction = NULL, split_vertical = FALSE, \dots, subset, na.action)
+\method{structable}{default}(\dots, direction = NULL, split_vertical = FALSE)
 }
 \arguments{
   \item{formula}{a formula object with possibly both left and right hand

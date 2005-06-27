@@ -8,8 +8,8 @@
 }
 \usage{
 pearson_test(x, n = 1000, FUN = function(x) max(abs(x)),
-             alternative = c("greater","less"), conf_level = 0.95,
-             return_distribution = TRUE)
+  alternative = c("greater","less"), conf_level = 0.95,
+  return_distribution = TRUE)
 }
 \arguments{
   \item{x}{a two-way contingency table.}

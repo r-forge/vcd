@@ -37,8 +37,18 @@
 }
 \examples{
 data(Arthritis)
+
+## construct a table of interest using xtabs() or structable()
+## via formula
+structable(Sex ~ Treatment + Improved, data = Arthritis)
+
+## via default interface
 attach(Arthritis)
 structable(Treatment, Sex, Improved)
+detach(Arthritis)
+
+## via xtabs and ftable
+ftable(xtabs(~Treatment + Improved + Sex, data = Arthritis))
 }
 
 \keyword{datasets}

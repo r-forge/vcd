@@ -1,7 +1,7 @@
 \name{Rochdale}
 \alias{Rochdale}
 \docType{data}
-\title{The Rochdale Data}
+\title{Rochdale Data}
 \description{
   Information on 665 households of Rochdale, Lancashire, UK.
   The study was conducted to identify influence factors on economical
@@ -32,15 +32,17 @@ data(Rochdale)
   contain information.
 }
 \source{
-  J. Whittaker (1990),
-  \emph{Graphical Models on Applied Multivariate Statistics},
-  Wiley, New York.
+  Whittaker (1990).
 }
 \references{
   H. Hofmann (2003).
   Constructing and reading mosaicplots.
   \emph{Computational Statistics \& Data Analysis},
   \bold(43), 4, 565--580.
+
+  J. Whittaker (1990),
+  \emph{Graphical Models on Applied Multivariate Statistics},
+  Wiley, New York.
 }
 \examples{
 data(Rochdale)

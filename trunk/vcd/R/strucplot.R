@@ -21,7 +21,7 @@ strucplot <- function(## main parameters
 		      gp_args = list(),   
                       labeling = labeling_text,
                       labeling_args = list(),
-                      panel = panel_mosaicplot,
+                      panel = panel_mosaic,
                       panel_args = list(),
                       legend = legend_resbased,
                       legend_args = list(),

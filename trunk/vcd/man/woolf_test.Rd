@@ -2,7 +2,7 @@
 \alias{woolf_test}
 \title{Woolf Test}
 \description{
-  Test for homogeneity on \eqn{2 \times 2 \times k}{2 by 2 by k} tables
+  Test for homogeneity on \eqn{2 \times 2 \times k}{2 x 2 x k} tables
   over strata (i.e., whether the log odds ratios are the same in all
   strata).
 }
@@ -10,7 +10,7 @@
 woolf_test(x)
 }
 \arguments{
-  \item{x}{A \eqn{2 \times 2 \times k}{2 by 2 by k} table.}
+  \item{x}{A \eqn{2 \times 2 \times k}{2 x 2 x k} table.}
 }
 \value{
   A list of class \code{"htest"} containing the following

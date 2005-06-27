@@ -8,13 +8,13 @@
   rule.
 }
 \usage{
-\method{doubledecker}{formula}(formula, data = NULL, ..., main = NULL)
+\method{doubledecker}{formula}(formula, data = NULL, \dots, main = NULL)
 \method{doubledecker}{default}(x, depvar = length(dim(x)),
-             margins = c(1,4, length(dim(x)) + 1, 1),
-             col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
-             labeling = labeling_doubledecker,
-             spacing = spacing_doubledecker,
-             main = NULL, keepAR = FALSE, ...)
+  margins = c(1,4, length(dim(x)) + 1, 1),
+  col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
+  labeling = labeling_doubledecker,
+  spacing = spacing_doubledecker,
+  main = NULL, keepAR = FALSE, \dots)
 }
 \arguments{
   \item{formula}{a formula specifying the variables used to create a 
@@ -29,30 +29,32 @@
   \item{margins}{margins of the plot.  Note that by default, all factor
     names (except the last one) and their levels are visualized \emph{as
       a block} under the plot.}
-  \item{col}{vector of colors used for the tiles of the last dimension.}
+  \item{col}{vector of colors used for the tiles of the last variable.}
   \item{labeling}{labeling function or corresponding generating
     generating function (see \code{\link{strucplot}} for details).}
   \item{spacing}{spacing object, spacing function or corresponding
     generating function (see \code{\link{strucplot}} for details).}
-  \item{main}{character vector specifying the main title.}
+  \item{main}{either a logical, or a character string used for plotting
+    the main title.  If \code{main} is \code{TRUE}, the
+    name of the \code{data} object is used.}
   \item{keepAR}{logical indicating whether the aspect ratio should be
     maintained or not.}
   \item{\dots}{Further parameters passed to \code{mosaic}.}
 }
 \details{
-  Doubledecker plots visualize the causal relationship between one
-  categorical (typically binary) variable and other categorical
+  Doubledecker plots visualize the the dependence of one
+  categorical (typically binary) variable on further categorical
   variables.  Formally, they are mosaic plots with vertical splits for
-  all dimensions except the last one (antecedents), which represents the
+  all dimensions (antecedents) except the last one, which represents the
   dependent variable (consequent).  The last variable is visualized by
   horizontal splits, no space between the tiles, and separate colors for
   the levels.
 }
 \value{
-  An object of class \code{"structable"} corresponding to the plot.
+  The \code{"structable"} visualized is returned invisibly.
 }
 \references{
-  Heike Hoffmann (2001),
+  H. Hoffmann (2001),
   Generalized odds ratios for visual modeling.
   \emph{Journal of Computational and Graphical Statistics},
   \bold{10}, 4, 628--640.

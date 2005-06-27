@@ -5,11 +5,11 @@
   Produces a matrix of strucplots.
 }
 \usage{
-\method{pairs}{table}(x, upper_panel = panel_mosaic, upper_panel_args = list(),
-      lower_panel = panel_mosaic, lower_panel_args = list(),
-      diag_panel = panel_barplot, diag_panel_args = list(),
-      main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
-      newpage = TRUE, ...)
+\method{pairs}{table}(x, upper_panel = pairs_mosaic, upper_panel_args = list(),
+  lower_panel = pairs_mosaic, lower_panel_args = list(),
+  diag_panel = pairs_barplot, diag_panel_args = list(),
+  main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
+  newpage = TRUE, \dots)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -71,10 +71,10 @@
   
 }
 \seealso{
-  \code{\link{panel_mosaic}},
-  \code{\link{panel_assoc}},
-  \code{\link{panel_text}},
-  \code{\link{panel_barplot}},
+  \code{\link{pairs_mosaic}},
+  \code{\link{pairs_assoc}},
+  \code{\link{pairs_text}},
+  \code{\link{pairs_barplot}},
   \code{\link{assoc}}
 }
 \references{
@@ -100,8 +100,8 @@ data(PreSex)
 pairs(PreSex)
 pairs(UCBAdmissions)
 pairs(UCBAdmissions, upper_panel_args = list(shade = FALSE))
-pairs(UCBAdmissions, lower_panel = panel_mosaic(type = "conditional"))
-pairs(UCBAdmissions, diag_panel = panel_text)
-pairs(UCBAdmissions, upper_panel = panel_assoc)
+pairs(UCBAdmissions, lower_panel = pairs_mosaic(type = "conditional"))
+pairs(UCBAdmissions, diag_panel = pairs_text)
+pairs(UCBAdmissions, upper_panel = pairs_assoc)
 }
 \keyword{hplot}

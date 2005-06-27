@@ -1,7 +1,7 @@
 export(
 ## generic functions
        "distplot",	    
-       "fourfoldplot",
+       "fourfold",
        "goodfit",
        "sieveplot",
        "rootogram", 
@@ -41,12 +41,12 @@ export(
        "shading_Friendly",
        
 ## panel functions
-       "panel_barplot",
-       "panel_text",
+       "pairs_barplot",
+       "pairs_text",
+       "pairs_mosaic",
+       "pairs_assoc",
        "panel_mosaic",
        "panel_assoc",
-       "panel_mosaicplot",
-       "panel_assocplot",
 
 ## ``normal'' functions
        "Kappa",
@@ -58,7 +58,6 @@ export(
        "mar_table", 
        "Ord_estimate",
        "Ord_plot",
-       "fourfoldplot",
        "strucplot",
        "ternaryplot",
        "vcdLegend",

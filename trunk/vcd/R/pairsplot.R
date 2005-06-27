@@ -2,13 +2,13 @@
 ### pairsplot
 
 pairs.table <- function(x,
-                  upper_panel = panel_mosaic,
+                  upper_panel = pairs_mosaic,
                   upper_panel_args = list(),
                         
-                  lower_panel = panel_mosaic,
+                  lower_panel = pairs_mosaic,
                   lower_panel_args = list(),
                         
-                  diag_panel = panel_barplot,
+                  diag_panel = pairs_barplot,
                   diag_panel_args = list(),
                   
                   main = NULL,
@@ -18,7 +18,6 @@ pairs.table <- function(x,
                   newpage = TRUE,
                   ...)
 {
-  require(grid)
   if (newpage) grid.newpage()
 
   if (inherits(upper_panel, "vcdPanel"))
@@ -60,7 +59,7 @@ pairs.table <- function(x,
 
 ## upper/lower panels
 
-panel_assoc <- function(legend = FALSE, margins = c(0, 0, 0, 0),
+pairs_assoc <- function(legend = FALSE, margins = c(0, 0, 0, 0),
                         labeling = NULL, shade = TRUE, ...)
   function(x, i, j) assoc(x = margin.table(x, c(i, j)),
                           
@@ -72,10 +71,10 @@ panel_assoc <- function(legend = FALSE, margins = c(0, 0, 0, 0),
                           newpage = FALSE,
                           pop = TRUE,
                           ...)
-class(panel_assoc) <- "vcdPanel"
+class(pairs_assoc) <- "vcdPanel"
 
 
-panel_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
+pairs_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
                          legend = FALSE, margins = c(0, 0, 0, 0),
                          labeling = NULL, shade = TRUE, ...) {
   type = match.arg(type)
@@ -100,11 +99,11 @@ panel_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
            ...)
   }
 }
-class(panel_mosaic) <- "vcdPanel"
+class(pairs_mosaic) <- "vcdPanel"
   
 ## diagonal panels
 
-panel_text <- function(dimnames = TRUE,
+pairs_text <- function(dimnames = TRUE,
                        gp_vartext = gpar(fontsize = 17),
                        gp_leveltext = gpar(),
                        gp_border = gpar(),
@@ -117,9 +116,9 @@ panel_text <- function(dimnames = TRUE,
       grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
                 y = 0.4, gp = gp_leveltext)
   }
-class(panel_text) <- "vcdPanel"
+class(pairs_text) <- "vcdPanel"
 
-panel_barplot <- function(gp_bars = gpar(fill = "gray"),
+pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
                           gp_vartext = gpar(fontsize = 17),
                           gp_leveltext = gpar(),
                           ...)
@@ -139,6 +138,6 @@ panel_barplot <- function(gp_bars = gpar(fill = "gray"),
     grid.text(names(dimnames(x)), y = 1, just = c("center", "top"), gp = gp_vartext)
 
   }
-class(panel_barplot) <- "vcdPanel"
+class(pairs_barplot) <- "vcdPanel"
 
 

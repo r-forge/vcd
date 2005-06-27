@@ -7,13 +7,13 @@
 }
 \usage{
 ternaryplot(x, scale = 1, dimnames = NULL,
-            dimnames_position = c("corner","edge","none"),
-            dimnames_color = "black", id = NULL, id_color = "black",
-            coordinates = FALSE, grid = TRUE, grid_color = "gray",
-            labels = c("inside", "outside", "none"),
-            labels_color = "darkgray", border = "black", bg = "white",
-            pch = 19, cex = 1, prop_size = FALSE, col = "red",
-            main = "ternary plot", newpage = TRUE, ...)
+  dimnames_position = c("corner","edge","none"),
+  dimnames_color = "black", id = NULL, id_color = "black",
+  coordinates = FALSE, grid = TRUE, grid_color = "gray",
+  labels = c("inside", "outside", "none"),
+  labels_color = "darkgray", border = "black", bg = "white",
+  pch = 19, cex = 1, prop_size = FALSE, col = "red",
+  main = "ternary plot", newpage = TRUE, \dots)
 }
 \arguments{
   \item{x}{a matrix with three columns.}

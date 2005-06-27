@@ -6,29 +6,29 @@
 \alias{labeling_lboxed}
 \alias{labeling_doubledecker}
 \alias{labelings}
-\title{Labeling Functions for Strucplot Labeling}
+\title{Labeling Functions for Strucplots}
 \description{
   These functions generate labeling functions used for strucplots.
 }
 \usage{
 labeling_text(labels = TRUE, varnames = labels, tl_labels = NULL,
-              tl_varnames = NULL, gp_labels = gpar(fontsize = 12),
-              gp_varnames = gpar(fontsize = 12, fontface = 2),
-              rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
-              pos_labels = "center", pos_varnames = "center",
-              just_labels = "center", just_varnames = pos_varnames,
-              boxes = FALSE, fill_boxes = NULL, offset = c(0, 0, 0, 0),
-              labbl_varnames = NULL, labels_varnames = FALSE, sep = ": ",
-              abbreviate = FALSE, rep = TRUE, clip = FALSE, ...)
-labeling_conditional(...)
+  tl_varnames = NULL, gp_labels = gpar(fontsize = 12),
+  gp_varnames = gpar(fontsize = 12, fontface = 2),
+  rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
+  pos_labels = "center", pos_varnames = "center",
+  just_labels = "center", just_varnames = pos_varnames,
+  boxes = FALSE, fill_boxes = NULL, offset = c(0, 0, 0, 0),
+  labbl_varnames = NULL, labels_varnames = FALSE, sep = ": ",
+  abbreviate = FALSE, rep = TRUE, clip = FALSE, \dots)
+labeling_conditional(\dots)
 labeling_left(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
-              pos_labels = "left", just_labels = "left", ...)
+  pos_labels = "left", just_labels = "left", \dots)
 labeling_cboxed(tl_labels = TRUE, boxes = TRUE, clip = TRUE,
-                pos_labels = "center", ...)
+  pos_labels = "center", \dots)
 labeling_lboxed(tl_labels = FALSE, boxes = TRUE, clip = TRUE,
-                pos_labels = "left", just_labels = "left",
-                labbl_varnames = FALSE, ...)
-labeling_doubledecker(lab_pos = c("bottom", "top"), ...)
+  pos_labels = "left", just_labels = "left",
+  labbl_varnames = FALSE, \dots)
+labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
 }
 \arguments{
   \item{labels}{vector of logicals indicating whether labels should be
@@ -153,7 +153,6 @@ mosaic(Titanic,
 mosaic(Titanic,
        labeling_args = list(clip = TRUE, boxes = TRUE,
                             fill_boxes = c(Survived = "blue","red"))
-
 )
 
 }

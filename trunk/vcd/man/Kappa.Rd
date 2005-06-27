@@ -30,8 +30,8 @@ Kappa(x, weights = c("Equal-Spacing", "Fleiss-Cohen"))
     
 }
 \value{
-  An object of class \code{"kappa"} with three components:
-  \item{Unweighted}{numeric vector of length 2 with the Kappa statistic
+  An object of class \code{"Kappa"} with three components:
+  \item{Unweighted}{numeric vector of length 2 with the kappa statistic
     (\code{value} component), along with Approximate Standard Error
     (\code{ASE} component)}
   \item{Weighted}{idem for the weighted kappa.}

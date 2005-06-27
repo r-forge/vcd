@@ -1,4 +1,4 @@
-"fourfoldplot" <-
+"fourfold" <-
 function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
          conf_level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
@@ -34,8 +34,6 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     ##   the mfrow or mfcol arguments.  The world coordinates are reset
     ##   in each step by shifting the origin so that we can always plot
     ##   as detailed above.
-
-    require(grid)
 
     if(!is.array(x))
         stop("x must be an array")

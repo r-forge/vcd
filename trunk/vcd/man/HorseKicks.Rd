@@ -19,6 +19,7 @@ data(HorseKicks)
     1 \tab nDeaths \tab 0, 1, \dots, 4 \cr
   }
 }
+
 \references{
   D. F. Andrews & A. M. Herzberg (1985),
   \emph{Data: A Collection of Problems from Many Fields for the Student

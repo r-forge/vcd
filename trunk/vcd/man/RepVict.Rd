@@ -1,7 +1,7 @@
 \name{RepVict}
 \alias{RepVict}
 \docType{data}
-\title{Repeat Victimization}
+\title{Repeat Victimization Data}
 \description{
   Data from Reiss (1980) given by Fienberg (1980) about instances of
   repeat victimization for households in the U.S. National Crime

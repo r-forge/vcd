@@ -1,12 +1,12 @@
-\name{panel_mosaicplot}
-\alias{panel_mosaicplot}
+\name{panel_mosaic}
+\alias{panel_mosaic}
 \title{Panel-generating Function for Mosaic Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing mosaic plots.
 }
 \usage{
-panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
+panel_mosaic(visZero = TRUE, zeroSize = 0.5)
 }
 \arguments{
   \item{visZero}{logical; shall zero entries in the contingency table be
@@ -23,7 +23,7 @@ panel_mosaicplot(visZero = TRUE, zeroSize = 0.5)
   A function with arguments:
   \item{residuals}{table of residuals.}
   \item{observed}{table of observed values.}
-  \item{expected}{not used by \code{panel_mosaicplot}.}
+  \item{expected}{not used by \code{panel_mosaic}.}
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles.}
   \item{gp}{list of \code{gpar} objects used for the drawing the tiles.}

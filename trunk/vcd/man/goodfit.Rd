@@ -11,7 +11,7 @@
 }
 \usage{
 goodfit(x, type = c("poisson", "binomial", "nbinomial"),
-        method = c("ML", "MinChisq"), par = NULL)
+  method = c("ML", "MinChisq"), par = NULL)
 \method{predict}{goodfit}(object, newcount = NULL, type = c("response", "prob"), \dots)
 }
 \arguments{
@@ -40,7 +40,7 @@ goodfit(x, type = c("poisson", "binomial", "nbinomial"),
   count data given in \code{x}.  If the parameters are not specified
   they are estimated either by ML or Minimum Chi-squared. 
 
-  \code{par} should a named list specifying the parameters \code{lambda}
+  \code{par} should be a named list specifying the parameters \code{lambda}
   for \code{"poisson"} and \code{prob} and \code{size} for
   \code{"binomial"} or \code{"nbinomial"}, respectively.
   If for \code{"binomial"} \code{size} is not specified it is not
@@ -64,7 +64,7 @@ goodfit(x, type = c("poisson", "binomial", "nbinomial"),
   \item{par}{a named list of the (estimated) distribution parameters.}
 }
 \author{
-  Achim Zeileis
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \references{
   M. Friendly (2000),

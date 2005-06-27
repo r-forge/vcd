@@ -8,14 +8,14 @@
 }
 \usage{
 legend_resbased(fontsize = 12,
-                x = unit(1, "lines"), y = unit(0.1,"npc"),
-                height = unit(0.8, "npc"),
-                width = unit(0.7, "lines"),
-                digits = 3, check_overlap = TRUE, text = NULL,
-                steps = 200, ticks = 10, pvalue = TRUE)
+  x = unit(1, "lines"), y = unit(0.1,"npc"),
+  height = unit(0.8, "npc"),
+  width = unit(0.7, "lines"),
+  digits = 3, check_overlap = TRUE, text = NULL,
+  steps = 200, ticks = 10, pvalue = TRUE)
 legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
-             height = unit(0.8, "npc"), width = unit(1.5, "lines"),
-             digits = 3, check_overlap = TRUE, text = NULL)
+  height = unit(0.8, "npc"), width = unit(1.5, "lines"),
+  digits = 3, check_overlap = TRUE, text = NULL)
 }
 \arguments{
   \item{fontsize}{fontsize of title and p-value text.}
@@ -43,21 +43,19 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.2, "npc"),
     sensible defaults depending on the residuals type.}
 }
 \details{
-  These functions generate legend functions for residual-based shadings
-  only, visualizing deviations from expected values of an hypothesized
-  independence model.  The legend, therefore, uses a supplied shading
+  These functions generate legend functions for residual-based shadings,
+  visualizing deviations from expected values of an hypothesized
+  independence model.  Therefore, the legend uses a supplied shading
   function to visualize the color gradient for the residuals range.  For
   more details on the shading functions and their return values, see
   \code{\link{shadings}}.
 }
 \references{
-  FIXME
-  David Meyer, Achim Zeileis, and Kurt Hornik.
-  Visualizing independence using extended association plots.
-  In: Kurt Hornik, Friedrich Leisch, Achim Zeileis, editors,
-  \emph{Proceedings of the 3rd International Workshop on Distributed
-    Statistical Computing},
-  Vienna, Austria.
+  D. Meyer, A. Zeileis, K. Hornik (2003), Visualizing independence using
+  extended association plots. \emph{Proceedings of the 3rd International
+  Workshop on Distributed Statistical Computing}, K. Hornik, F. Leisch,
+  A. Zeileis (eds.), ISSN 1609-395X.
+  \url{http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/}
 }
 
 \author{

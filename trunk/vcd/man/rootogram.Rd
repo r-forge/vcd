@@ -8,9 +8,9 @@
 }
 \usage{
 \method{rootogram}{default}(x, fitted, names = NULL, scale = c("sqrt", "raw"),
-          type = c("hanging", "standing", "deviation"),
-	  bar_col = grey(0.7), line_col = 2,
-          xlab = NULL, ylab = NULL, ylim = NULL, ...)
+  type = c("hanging", "standing", "deviation"),
+  bar_col = grey(0.7), line_col = 2,
+  xlab = NULL, ylab = NULL, ylim = NULL, \dots)
 }
 \arguments{
   \item{x}{either a vector or a 1-way table of frequencies.}
@@ -27,7 +27,7 @@
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
   \item{ylim}{limits for the y axis.}
-  \item{...}{further arguments passed to \code{\link{barplot}}.}
+  \item{\dots}{further arguments passed to \code{\link{barplot}}.}
 }
 \details{
   The observed frequencies are displayed as bars and the fitted
@@ -35,7 +35,7 @@
   smaller frequencies more visible.
 }
 \author{
-  Achim Zeileis
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \references{
   J. W. Tukey (1977),

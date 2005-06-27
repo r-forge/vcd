@@ -62,11 +62,10 @@ function (formula, data = NULL, ..., subset)
            ylab = names(dimnames(x))[1],
            ...)
 {
-  require(grid)
   ## parameter handling
   if (length(dim(x)) > 2)
     stop ("Function only implemented for two-way tables")
-  main
+  ## main
   
   type <- match.arg(type)
   values <- match.arg(values)

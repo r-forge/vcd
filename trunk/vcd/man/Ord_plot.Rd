@@ -53,7 +53,7 @@ Ord_estimate(x, type = NULL, tol = 0.1)
   a vector giving the intercept and slope of the weighted OLS line.
 }
 \author{
-  Achim Zeileis
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \references{
   J. K. Ord (1967),
