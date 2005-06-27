@@ -1,13 +1,13 @@
-\name{panel_assocplot}
-\alias{panel_assocplot}
+\name{panel_assoc}
+\alias{panel_assoc}
 \title{Panel-generating Function for Association Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing association plots.
 }
 \usage{
-panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
-                yspace = unit(0.5, "lines"), xscale = 0.9)
+panel_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
+  yspace = unit(0.5, "lines"), xscale = 0.9)
 }
 \arguments{
   \item{compress}{logical; if \code{FALSE}, the space between the rows
@@ -15,7 +15,7 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
     the rows (column) are all equal.  If \code{TRUE}, the space between
     the rows and columns is fixed and hence the plot is more
     \dQuote{compressed}.} 
-  \item{xlim}{either a \eqn{2 \times k}{2 by k} matrix of doubles,
+  \item{xlim}{either a \eqn{2 \times k}{2 x k} matrix of doubles,
     \eqn{k} the number of total columns of the plot, or a recycled
     vector from which such a matrix will be constructed.
     The columns of \code{xlim} correspond to the columns of the
@@ -25,11 +25,11 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
     residuals according to \code{compress} (if \code{TRUE}: widest range
     from each column, if \code{FALSE}: from the whole association plot
     matrix).}
-  \item{ylim}{either a \eqn{2 \times k}{2 by k} matrix of doubles,
+  \item{ylim}{either a \eqn{2 \times k}{2 x k} matrix of doubles,
     \eqn{k} the number of total rows of the plot, or a recycled vector
     from which such a matrix will be constructed.
     FIXME
-    The columns of \code{xlim} correspond to the rows of the association
+    The columns of \code{ylim} correspond to the rows of the association
     plot, the rows describe the column ranges (minimums in the first
     row, maximums in the second row).
     If \code{ylim} is \code{NULL}, the ranges are determined from the
@@ -49,7 +49,7 @@ panel_assocplot(compress = TRUE, xlim = NULL, ylim = NULL,
 \value{
   A function with arguments:
   \item{residuals}{table of residuals.}
-  \item{observed}{not used by \code{panel_assocplot}.}
+  \item{observed}{not used by \code{panel_assoc}.}
   \item{expected}{table of expected frequencies.}
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles.}

@@ -1,7 +1,7 @@
 \name{Baseball}
 \alias{Baseball}
 \docType{data}
-\title{Baseball}
+\title{Baseball Data}
 \description{
   Baseball data.
 }
@@ -57,9 +57,13 @@ data(Baseball)
   \emph{Visualizing Categorical Data}.
   SAS Institute, Cary, NC.
 }
+
 \source{
   SAS System for Statistical Graphics, First Edition, page A2.3
 }
+
+\seealso{\code{\link{Hitters}}}
+
 \examples{
 data(Baseball)
 }

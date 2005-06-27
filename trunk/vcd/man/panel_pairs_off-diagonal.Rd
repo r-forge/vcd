@@ -1,16 +1,16 @@
 \name{Pairsplot panel functions for off-diagonal cells}
-\alias{panel_mosaic}
-\alias{panel_assoc}
+\alias{pairs_mosaic}
+\alias{pairs_assoc}
 \title{Off-diagonal Panel Functions for Strucplot Matrices}
 \description{
   Off-diagonal panel functions for \code{\link{pairs.table}}.
 }
 \usage{
-panel_mosaic(type = c("pairwise", "total", "conditional", "joint"),
-             legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
-             shade = TRUE, ...)
-panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
-            shade = TRUE, ...)
+pairs_mosaic(type = c("pairwise", "total", "conditional", "joint"),
+  legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
+  shade = TRUE, \dots)
+pairs_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
+  shade = TRUE, \dots)
 }
 \arguments{
   \item{type}{character string specifying the type of independence model
@@ -36,8 +36,8 @@ panel_assoc(legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
 }
 \seealso{
   \code{\link{pairs.table}},
-  \code{\link{panel_text}},
-  \code{\link{panel_barplot}},
+  \code{\link{pairs_text}},
+  \code{\link{pairs_barplot}},
   \code{\link{assoc}},
   \code{\link{mosaic}}
 }
@@ -64,7 +64,7 @@ data(PreSex)
 pairs(PreSex)
 pairs(UCBAdmissions)
 pairs(UCBAdmissions, upper_panel_args = list(shade = FALSE))
-pairs(UCBAdmissions, lower_panel = panel_mosaic(type = "conditional"))
-pairs(UCBAdmissions, upper_panel = panel_assoc)
+pairs(UCBAdmissions, lower_panel = pairs_mosaic(type = "conditional"))
+pairs(UCBAdmissions, upper_panel = pairs_assoc)
 }
 \keyword{hplot}

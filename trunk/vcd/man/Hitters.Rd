@@ -1,7 +1,7 @@
 \name{Hitters}
 \alias{Hitters}
 \docType{data}
-\title{Hitters}
+\title{Hitters Data}
 \description{
   This data set is deduced from the \code{\link{Baseball}} fielding data
   set: fielding performance basically includes the numbers of Errors,

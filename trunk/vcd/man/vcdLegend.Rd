@@ -6,8 +6,8 @@
 }
 \usage{
 vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
-          vgap = unit(0.3, "lines"), default_units = "lines", gp = gpar(),
-          draw = TRUE, title = "Legend:")
+  vgap = unit(0.3, "lines"), default_units = "lines", gp = gpar(),
+  draw = TRUE, title = "Legend:")
 }
 \arguments{
   \item{x, y}{coordinates of the legend}

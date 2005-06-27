@@ -9,18 +9,18 @@
   ## unstratified
   ### no margin is standardized
   x <- margin.table(UCBAdmissions, 2:1)
-  fourfoldplot(x, std = "i", extended = FALSE)
+  fourfold(x, std = "i", extended = FALSE)
   ### std. for gender
-  fourfoldplot(x, margin = 1, extended = FALSE)
+  fourfold(x, margin = 1, extended = FALSE)
   ### std. for both
-  fourfoldplot(x, extended = FALSE)
+  fourfold(x, extended = FALSE)
   
   ## stratified
-  fourfoldplot(UCBAdmissions, extended = FALSE)
-  fourfoldplot(UCBAdmissions) ## extended plots
+  fourfold(UCBAdmissions, extended = FALSE)
+  fourfold(UCBAdmissions) ## extended plots
 
   #tabplot(UCBAdmissions,
-  #        panel = function(x, ...) fourfoldplot(x, panel = TRUE, ...)
+  #        panel = function(x, ...) fourfold(x, panel = TRUE, ...)
   #        )
 
   ### Coal Miners Lung Data ###
@@ -28,7 +28,7 @@
   data(CoalMiners)
   
   ## Fourfold display, both margins equated
-  fourfoldplot(CoalMiners, mfcol = c(2,4))
+  fourfold(CoalMiners, mfcol = c(2,4))
 
   ## Log Odds Ratio Plot
   summary(l <- oddsratio(CoalMiners))
@@ -40,7 +40,7 @@
   lines(fitted(m), col = "red")
   
   ## Fourfold display, strata equated
-  fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
+  fourfold(CoalMiners, std = "ind.max", mfcol = c(2,4))
   
   ####################
   ## Sieve Diagrams ##

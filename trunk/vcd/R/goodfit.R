@@ -97,8 +97,6 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
       }
       else if(method == "ML") {
         df <- df - 2
-
-	require(package = MASS)
         par <- fitdistr(rep(count, freq), "negative binomial")$estimate
         par <- par[1]/c(1, sum(par))
      }

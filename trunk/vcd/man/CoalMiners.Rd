@@ -45,7 +45,7 @@ data(CoalMiners)
 data(CoalMiners)
 
 ## Fourfold display, both margins equated
-fourfoldplot(CoalMiners, mfcol = c(2,4))
+fourfold(CoalMiners, mfcol = c(2,4))
 
 ## Log Odds Ratio Plot
 summary(l <- oddsratio(CoalMiners))
@@ -57,7 +57,7 @@ m <- lm(l ~ g + I(g^2))
 lines(fitted(m), col = "red")
 
 ## Fourfold display, strata equated
-fourfoldplot(CoalMiners, std = "ind.max", mfcol = c(2,4))
+fourfold(CoalMiners, std = "ind.max", mfcol = c(2,4))
 }
 
 \keyword{datasets}

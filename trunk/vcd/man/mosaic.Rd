@@ -8,9 +8,9 @@
 }
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
-       split_vertical = FALSE, direction = NULL, spacing = NULL,
-       spacing_args = list(), visZero = TRUE, zeroSize = 0.5, ...)
-\method{mosaic}{formula}(formula, data, ..., main = NULL)
+  split_vertical = FALSE, direction = NULL, spacing = NULL,
+  spacing_args = list(), visZero = TRUE, zeroSize = 0.5, \dots)
+\method{mosaic}{formula}(formula, data, \dots, main = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -53,7 +53,13 @@
   \item{\dots}{Other arguments passed to \code{\link{strucplot}}}
 }
 \details{
-  This is a generic function.  It currently has a default method and a
+  Mosaic displays have been suggested in the statistical literature
+  by Hartigan and Kleiner (1984) and have been extended by Friendly
+  (1994). \code{\link[graphics]{mosaicplot}} is a base graphics
+  implementation and \code{mosaic} is a much more flexible and extensible
+  grid implementation.
+
+  \code{mosaic} is a generic function which currently has a default method and a
   formula interface.  Both are high-level interfaces to the
   \code{\link{strucplot}} function, and produce (extended) mosaic
   displays.  Most of the functionality is described there, such as
@@ -67,23 +73,21 @@
   to the corresponding cell entry, \emph{given} the dimensions of
   previous splits.
 
-  An \emph{extended} mosaic plot, in addition, visualizes the residuals
-  of a log-linear model fit to the table by the color and outline of the
-  tiles. This package offers a range of \emph{residual-based} shadings
-  (see the \link{shadings} help page). Some of them allow, e.g., the
-  visualization of test statistics.
-
+  An \emph{extended} mosaic plot, in addition, visualizes the fit of a
+  particular log-linear model. Typically, this is done by residual-based
+  shadings where color and/or outline of the tiles visualize sign, size
+  and possibly significance of the corresponding residual.
+  
   The layout is very flexible: the specification of shading, labeling,
   spacing, and legend is modularized (see \code{\link{strucplot}} for
   details).
-}
-\note{
+
   In contrast to the \code{\link[graphics]{mosaicplot}} function in
   \pkg{graphics}, the splits start with the \emph{horizontal} direction
-  by default to match the output of \code{\link{structable}}.
+  by default to match the printed output of \code{\link{structable}}.
 }
 \value{
-  Invisibly, an object of class \code{"structable"}.
+  The \code{"structable"} visualized is returned invisibly.
 }
 \references{
   Hartigan, J.A., and Kleiner, B. (1984)
@@ -92,7 +96,7 @@
   \bold{38}, 32--35.
 
   Emerson, J. W. (1998)
-  Mosaic displays in S-PLUS: a general implementation and a case study.
+  Mosaic displays in S-PLUS: A general implementation and a case study.
   \emph{Statistical Computing and Graphics Newsletter (ASA)},
   \bold{9}, 1, 17--23.
 
@@ -118,10 +122,11 @@
 }
 \examples{
 data(Titanic)
-mosaic(Titanic, main = "Survival on the Titanic", shade = TRUE,
-legend = TRUE)
-## Formula interface for tabulated data:
-mosaic(~ Sex + Age + Survived, data = Titanic, shade = TRUE)
+mosaic(Titanic)
+
+## Formula interface for tabulated data plus shading and legend:
+mosaic(~ Sex + Age + Survived, data = Titanic,
+  main = "Survival on the Titanic", shade = TRUE, legend = TRUE)
 
 data(HairEyeColor)
 mosaic(HairEyeColor, shade = TRUE)

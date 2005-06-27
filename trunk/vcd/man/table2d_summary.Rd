@@ -8,10 +8,10 @@
 }
 \usage{
 table2d_summary(object, margins = TRUE, percentages = FALSE,
-                conditionals = c("none", "row", "column"), ...)
+  conditionals = c("none", "row", "column"), \dots)
 }
 \arguments{
-  \item{object}{a \eqn{m \times n}{m by n}-contingency table}
+  \item{object}{a \eqn{m \times n}{m x n}-contingency table}
   \item{margins}{if \code{TRUE}, marginal distributions are computed.}
   \item{percentages}{if \code{TRUE}, relative frequencies are computed.}
   \item{conditionals}{if not \code{"none"}, the conditional
@@ -19,7 +19,7 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
   \item{\dots}{currently not used.}
 }
 \value{
-  Returns invisibly a \eqn{m \times n \times o}{m by n by o}
+  Returns invisibly a \eqn{m \times n \times o}{m x n x o}
   table, \eqn{o} depending on the amount of choices (at most 3).
 }
 \author{

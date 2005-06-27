@@ -1,7 +1,7 @@
 \name{SexualFun}
 \alias{SexualFun}
 \docType{data}
-\title{Sex Is Fun}
+\title{Sex is Fun}
 \description{
   Data from Hout et al. (1987) given by Agresti (1990) summarizing the
   responses of married couples to the questionnaire item: Sex is fun for

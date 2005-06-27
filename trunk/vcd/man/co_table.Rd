@@ -9,17 +9,21 @@
 co_table(x, margin, collapse = ".")
 }
 \arguments{
-  \item{x}{array}
-  \item{margin}{margin index(es) or name(s)}
+  \item{x}{a contingency table in array form.}
+  \item{margin}{margin index(es) or corresponding name(s) of the
+    conditioning variables.}
   \item{collapse}{character used when collapsing level names
-    (only if more than 1 margin is given)}
+    (if more than 1 \code{margin} is specified).}
 }
 \details{
-  This is essentially an interface to \code{\link[base]{"Extract"}}
+  This is essentially an interface to \code{\link[base]{"["}}
   which is more convenient for arrays of arbitrary dimension.   
 }
 \value{
   A list of the resulting conditional tables.
+}
+\author{
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \examples{
 data(HairEyeColor)

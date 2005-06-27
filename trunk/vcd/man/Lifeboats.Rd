@@ -50,7 +50,7 @@ ternaryplot(
 )
 vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"),
           c("Port", "Starboard"), title = "SIDE")
-
+detach(Lifeboats)
 }
 
 \keyword{datasets}

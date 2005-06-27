@@ -1,21 +1,21 @@
 \name{labeling_cells_list}
 \alias{labeling_list}
 \alias{labeling_cells}
-\title{Labeling Functions for Cells and Simple Label Lists}
+\title{Labeling Functions for Strucplots}
 \description{
   These functions generate labeling functions that produce labels for
   strucplots.
 }
 \usage{
 labeling_cells(labels = TRUE, varnames = TRUE,
-               abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
-               gp = gpar(), lsep = ": ", lcollapse = "\n",
-               just = "center", pos = "center", rot = 0,
-               margin = unit(0.5, "lines"), clip_cells = TRUE,
-               text = NULL, ...)
+  abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
+  gp = gpar(), lsep = ": ", lcollapse = "\n",
+  just = "center", pos = "center", rot = 0,
+  margin = unit(0.5, "lines"), clip_cells = TRUE,
+  text = NULL, \dots)
 labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
-              sep = " ", offset = unit(c(2, 2), "lines"),
-              varnames = TRUE, cols = 2, ...) 
+  sep = " ", offset = unit(c(2, 2), "lines"),
+  varnames = TRUE, cols = 2, \dots) 
 }
 \arguments{
   \item{labels}{vector of logicals indicating, for each dimension,
@@ -66,21 +66,21 @@ labeling_list(gp = gpar(), just = "left", pos = "left", lsep = ": ",
   \item{\dots}{Currently not used.}
 }
 \details{
-  These functions, typically supplied to \code{\link{strucplot}},
-  generate labeling functions called by \code{\link{strucplot}} for
-  their side-effect of adding labels to the plot.  They suppose that a
-  strucplot has been drawn and the corresponding viewport structure is
-  pushed, since the positions of the viewports are used for the label
-  positioning.
-
+  These functions generate labeling functions that can add different
+  kinds of labels to an existing plot. Typically they are 
+  supplied to \code{\link{strucplot}} which then generates and calls
+  the labeling function. They assume that a strucplot has been drawn
+  and the corresponding viewport structure is pushed, so that by 
+  navigating through the viewport tree the labels can be positioned
+  appropriately.
+  
   This help page only documents \code{labeling_list} and
   \code{labeling_cells}; more functions are described on the help page
   for \code{\link{labeling_text}}.
   
   The functions can also be used \sQuote{stand-alone} as shown in the
   examples.
-}
-\note{
+
   Using \code{labeling_list} will typically necessitate a bottom margin
   adjustment.
 }

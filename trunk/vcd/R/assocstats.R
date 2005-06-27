@@ -1,7 +1,6 @@
 assocstats <- function(x) {
   if(!is.matrix(x))
     stop("Function only defined for 2-d - tables.")
-##  require(MASS)
   
   tab    <- summary(loglm(~1+2, x))$tests
   phi    <- sqrt(tab[2,1] / sum(x))

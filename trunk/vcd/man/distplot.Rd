@@ -3,13 +3,13 @@
 \title{Diagnostic Distribution Plots}
 \description{
   Diagnostic distribution plots: poissonness, binomialness and
-  negative bionomialness plots.
+  negative binomialness plots.
 }
 \usage{
 distplot(x, type = c("poisson", "binomial", "nbinomial"),
-         size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-         line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
-	 xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
+  size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
+  line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
+  xlab = "Number of occurrences", ylab = "Distribution metameter", \dots)
 }
 \arguments{
   \item{x}{either a vector of counts, a 1-way table of frequencies of
@@ -30,7 +30,7 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
   \item{main}{a title for the plot.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
-  \item{...}{further arguments passed to \code{\link{plot}}.}
+  \item{\dots}{further arguments passed to \code{\link{plot}}.}
 }
 \details{
   \code{distplot} plots the number of occurrences (counts) against the
@@ -39,7 +39,7 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
   See Friendly (2000) for details.
 }
 \author{
-  Achim Zeileis
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \references{
   D. C. Hoaglin (1980),
