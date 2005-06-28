@@ -1,7 +1,7 @@
-\name{Pairsplot panel functions for diagonal cells}
+\name{Pairs plot panel functions for diagonal cells}
 \alias{pairs_barplot}
 \alias{pairs_text}
-\title{Diagonal Panel Functions for Strucplot Matrices}
+\title{Diagonal Panel Functions for Table Pairs Plot}
 \description{
   Diagonal panel functions for \code{\link{pairs.table}}.
 }

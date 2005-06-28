@@ -45,8 +45,8 @@ export(
        "pairs_text",
        "pairs_mosaic",
        "pairs_assoc",
-       "panel_mosaic",
-       "panel_assoc",
+       "struc_mosaic",
+       "struc_assoc",
 
 ## ``normal'' functions
        "Kappa",

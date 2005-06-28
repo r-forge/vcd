@@ -1,12 +1,12 @@
-\name{panel_assoc}
-\alias{panel_assoc}
+\name{struc_assoc}
+\alias{struc_assoc}
 \title{Panel-generating Function for Association Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing association plots.
 }
 \usage{
-panel_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
+struc_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
   yspace = unit(0.5, "lines"), xscale = 0.9)
 }
 \arguments{
@@ -49,7 +49,7 @@ panel_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
 \value{
   A function with arguments:
   \item{residuals}{table of residuals.}
-  \item{observed}{not used by \code{panel_assoc}.}
+  \item{observed}{not used by \code{struc_assoc}.}
   \item{expected}{table of expected frequencies.}
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles.}
@@ -77,5 +77,14 @@ panel_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
   \emph{SAS User Group International Conference Proceedings}, \bold{17},
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
+}
+\example{
+## UCB Admissions
+data(UCBAdmissions)
+ucb <- aperm(UCBAdmissions)
+
+## association plot for conditional independence
+strucplot(ucb, expected = ~ Dept * (Admit + Gender),
+  panel = struc_assoc(ylim = c(-4, 4)), labeling_args = list(abbreviate = c(Admit = 3)))
 }
 \keyword{hplot}

@@ -72,14 +72,14 @@ mosaic.default <- function(x, condvars = NULL,
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            panel = panel_mosaic(visZero = visZero, zeroSize = zeroSize),
+            panel = struc_mosaic(visZero = visZero, zeroSize = zeroSize),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
             ...)
 }
 
-panel_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
+struc_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
   function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
     dn <- dimnames(observed)
     dnn <- names(dn)
@@ -144,4 +144,4 @@ panel_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
     }
 
   }
-class(panel_mosaic) <- "vcdPanel"
+class(struc_mosaic) <- "vcdPanel"

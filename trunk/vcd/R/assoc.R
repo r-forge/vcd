@@ -48,14 +48,14 @@ assoc.default <- function(x,
   strucplot(tab,
             spacing = spacing,
             split_vertical = split_vertical,
-            panel = panel_assoc(compress = compress, xlim = xlim, ylim = ylim,
+            panel = struc_assoc(compress = compress, xlim = xlim, ylim = ylim,
               yspace = yspace, xscale = xscale),
             keepAR = keepAR,
             residuals_type = "Pearson",
             ...)
 }
 
-panel_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
+struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                         yspace = unit(0.5, "lines"), xscale = 0.9)
   function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
@@ -156,4 +156,4 @@ panel_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(panel_assoc) <- "vcdPanel"
+class(struc_assoc) <- "vcdPanel"
