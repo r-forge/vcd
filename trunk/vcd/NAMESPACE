@@ -43,6 +43,7 @@ export(
 ## panel functions
        "pairs_barplot",
        "pairs_text",
+       "pairs_strucplot",
        "pairs_mosaic",
        "pairs_assoc",
        "struc_mosaic",

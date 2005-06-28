@@ -52,10 +52,10 @@ function(object, ...) {
     ASE <- attr(object, "ASE")
     Z <- object / ASE
     
-    ret <- cbind(object,
-                 ASE = if (LOG) ASE,
-                 Z   = if (LOG) Z,
-                 P   = if (LOG) 1 - pnorm(abs(Z))
+    ret <- cbind("Estimate"   = object,
+                 "Std. Error" = if (LOG) ASE,
+                 "z value"    = if (LOG) Z,
+                 "Pr(>|z|)"   = if (LOG) 1 - pnorm(abs(Z))
                  )
     colnames(ret)[1] <- if (LOG) "Log Odds Ratio" else "Odds Ratio"
   }
@@ -70,11 +70,11 @@ function(x, ...) {
   if(!is.null(attr(x, "log"))) {
     cat("\n")
     cat(if(attr(x, "log")) "Log Odds Ratio(s):" else "Odds Ratio(s):", "\n\n")
-    print.oddsratio(x, ...)
+    print(as.data.frame(unclass(x)), ...)
     cat("\nAsymptotic Standard Error(s):\n\n")
     print(attr(x, "ASE"), ...)
     cat("\n")
-  } else print(unclass(x), ...)
+  } else printCoefmat(unclass(x), ...)
   invisible(x)
 }
 

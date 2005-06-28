@@ -14,7 +14,7 @@
   col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
   labeling = labeling_doubledecker,
   spacing = spacing_doubledecker,
-  main = NULL, keepAR = FALSE, \dots)
+  main = NULL, keep_aspect_ratio = FALSE, \dots)
 }
 \arguments{
   \item{formula}{a formula specifying the variables used to create a 
@@ -37,7 +37,7 @@
   \item{main}{either a logical, or a character string used for plotting
     the main title.  If \code{main} is \code{TRUE}, the
     name of the \code{data} object is used.}
-  \item{keepAR}{logical indicating whether the aspect ratio should be
+  \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     maintained or not.}
   \item{\dots}{Further parameters passed to \code{mosaic}.}
 }

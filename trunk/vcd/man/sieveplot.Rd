@@ -18,7 +18,7 @@
   frequencies = c("absolute", "relative"),
   sieve_colors = c("red","blue"),
   sieve_lty = c("longdash", "solid"), exp_color = "gray",
-  exp_lty = "dotted", margin = 0.01, panel = FALSE,
+  exp_lty = "dotted", margin = 0.01, newpage = TRUE, pop = FALSE,
   margins = c(4,3,4,4), xlab = names(dimnames(x))[2],
   ylab = names(dimnames(x))[1], \dots)
 \method{sieveplot}{formula}(formula, data = NULL, \dots, subset)
@@ -43,7 +43,8 @@
     values grid.}
   \item{margin}{lines of margin between the cell rectangles.}
   \item{margins}{vector of margins (see \code{\link[graphics]{par}}).}
-  \item{panel}{if \code{FALSE}, the plot is drawn on a new page.}
+  \item{newpage}{logical; if \code{TRUE}, the plot is drawn on a new page.}
+  \item{pop}{logical; if \code{TRUE}, all viewports are removed after plotting.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}.
     For details, see \code{\link{xtabs}}.}

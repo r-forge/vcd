@@ -13,7 +13,7 @@
 \usage{
 \method{agreementplot}{default}(x, reverse_y = TRUE, main = NULL,
               weights = c(1, 1 - 1/(ncol(x) - 1)^2), margins = par("mar"),
-              newpage = TRUE, xlab = names(dimnames(x))[2],
+              newpage = TRUE, pop = FALSE, xlab = names(dimnames(x))[2],
               ylab = names(dimnames(x))[1],
               xlab_rot = 0, xlab_just = "center",
               ylab_rot = 90, ylab_just = "center", ...)
@@ -28,7 +28,8 @@
     used in the agreement strength statistic, and also for the
     shading.  The first element should be 1.}
   \item{margins}{vector of margins (see \code{\link[graphics]{par}}).}
-  \item{newpage}{if \code{TRUE}, the plot is drawn on a new page.}
+  \item{newpage}{logical; if \code{TRUE}, the plot is drawn on a new page.}
+  \item{pop}{logical; if \code{TRUE}, all viewports are removed after plotting.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{xlab_rot, ylab_rot}{rotation angle for the category labels.}
   \item{xlab_just, ylab_just}{justification for the category labels.}

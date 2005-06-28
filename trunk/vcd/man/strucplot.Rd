@@ -16,7 +16,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   legend = legend_resbased, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
   legend_width = unit(0.15, "npc"), pop = FALSE,
-  title_gp = gpar(fontsize = 20), newpage = TRUE, keepAR = TRUE)
+  title_gp = gpar(fontsize = 20), newpage = TRUE, keep_aspect_ratio = TRUE)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -98,7 +98,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     parameters used for the main and sub titles.}
   \item{newpage}{logical indicating whether a new page should be created
     for the plot or not.}
-  \item{keepAR}{logical indicating whether the aspect ratio should be
+  \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not.}
 }
 \details{
@@ -126,7 +126,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     etc.
     \item Passing a corresponding \emph{generating} function to \var{foo},
     along with parameters passed to \var{foo\_args}, that generates such a
-    function. Generating functions must inherit from class \code{"vcdPanel"}.
+    function. Generating functions must inherit from class \code{"genfun"}.
     \item Except for the shading functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
     \item For shadings and spacings, passing the final parameter object

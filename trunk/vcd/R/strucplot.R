@@ -35,7 +35,7 @@ strucplot <- function(## main parameters
                       pop = FALSE,
                       title_gp = gpar(fontsize = 20),
                       newpage = TRUE,
-                      keepAR = TRUE
+                      keep_aspect_ratio = TRUE
                       ) {
   ## default behaviour of shade
   if (is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
@@ -99,7 +99,7 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing)) {
-    if (inherits(spacing, "vcdSpacing"))
+    if (inherits(spacing, "genfun"))
       spacing <- do.call("spacing", spacing_args)
     spacing <- spacing(dim(x), condvars)
   }
@@ -110,7 +110,7 @@ strucplot <- function(## main parameters
   if (shade) {
     if (is.null(gp)) gp <- shading_HCL
     if (is.function(gp)) {
-      gpfun <- if(inherits(gp, "vcdShading"))
+      gpfun <- if(inherits(gp, "genfun"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend))
@@ -129,13 +129,13 @@ strucplot <- function(## main parameters
   if (newpage) grid.newpage()
   pushViewport(vcdViewport(mar = margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
-                           main = !is.null(main), sub = !is.null(sub), keepAR = keepAR,
+                           main = !is.null(main), sub = !is.null(sub), keep_aspect_ratio = keep_aspect_ratio,
                            legend_width = legend_width))
 
   ## legend
   if (is.logical(legend))
     legend <- if (legend) legend_resbased else NULL
-  if (inherits(legend, "vcdLegend"))
+  if (inherits(legend, "genfun"))
     legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend)) {
     seekViewport("legend")
@@ -159,7 +159,7 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  if (inherits(panel, "vcdPanel"))
+  if (inherits(panel, "genfun"))
     panel <- do.call("panel", panel_args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
@@ -172,7 +172,7 @@ strucplot <- function(## main parameters
 
   ## labels
   if (!is.null(labeling)) {
-    if (inherits(labeling, "vcdLabeling"))
+    if (inherits(labeling, "genfun"))
       labeling <- do.call("labeling", labeling_args)
     labeling(dn, split_vertical, condvars)
   }
@@ -192,7 +192,7 @@ strucplot <- function(## main parameters
 vcdViewport <- function(mar = rep.int(2.5, 4),
                         legend_width = unit(0.15, "npc"),
                         legend = FALSE, main = FALSE, sub = FALSE,
-                        keepAR = TRUE)
+                        keep_aspect_ratio = TRUE)
 {
   mar <- if (!is.unit(mar))
     unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
@@ -216,10 +216,11 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
     vpBase <- viewport(layout.pos.row = 1 + (legend || main),
                        layout = grid.layout(3, 4,
                          widths = unit.c(mar[4],
-                           unit(1, if (keepAR) "snpc" else "npc") -
-                           (mar[2] + mar[4] + (1 * !keepAR) * legend_width),
+                           unit(1, if (keep_aspect_ratio) "snpc" else "npc") -
+                           (mar[2] + mar[4] + (1 * !keep_aspect_ratio) * legend_width),
                            mar[2], legend_width),
-                         heights = unit.c(mar[1], unit(1, if (keepAR) "snpc" else "npc") -
+                         heights = unit.c(mar[1], unit(1,
+                           if (keep_aspect_ratio) "snpc" else "npc") -
                            (mar[1] + mar[3]), mar[3])),
                        name = "base")
     vpPlotregion <- vpTree(vpBase, vpList(vpMarginBottom, vpMarginLeft, vpMarginTop,
@@ -229,9 +230,11 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   } else {
     vpBase <- viewport(layout.pos.row = 1 + (legend || main),
                        layout = grid.layout(3, 3,
-                         widths = unit.c(mar[4], unit(1, if (keepAR) "snpc" else "npc") -
+                         widths = unit.c(mar[4], unit(1,
+                           if (keep_aspect_ratio) "snpc" else "npc") -
                            mar[2] - mar[4], mar[2]),
-                         heights = unit.c(mar[1], unit(1, if (keepAR) "snpc" else "npc") -
+                         heights = unit.c(mar[1], unit(1,
+                           if (keep_aspect_ratio) "snpc" else "npc") -
                            mar[1] - mar[3], mar[3])
                          ),
                        name = "base")

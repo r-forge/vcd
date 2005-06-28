@@ -12,7 +12,7 @@
 \method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress = TRUE,
   xlim = NULL, ylim = NULL,
   spacing = spacing_conditional(sp = 0), spacing_args = list(),
-  split_vertical = NULL, keepAR = FALSE,
+  split_vertical = NULL, keep_aspect_ratio = FALSE,
   xscale = 0.9, yspace = unit(0.5, "lines"), \dots)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots, main = NULL)
 }
@@ -60,7 +60,7 @@
     A \code{TRUE} component indicates that the corresponding dimension
     is folded into the columns, \code{FALSE} folds the dimension into the
     rows.}
-  \item{keepAR}{logical indicating whether the aspect ratio should be
+  \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not.}
   \item{xscale}{scale factor resizing the tile's width, thus adding
     additional space between the tiles. }
