@@ -1,12 +1,12 @@
-\name{panel_mosaic}
-\alias{panel_mosaic}
+\name{struc_mosaic}
+\alias{struc_mosaic}
 \title{Panel-generating Function for Mosaic Plots}
 \description{
   Panel-generating function for \code{strucplot} returning a function
   producing mosaic plots.
 }
 \usage{
-panel_mosaic(visZero = TRUE, zeroSize = 0.5)
+struc_mosaic(visZero = TRUE, zeroSize = 0.5)
 }
 \arguments{
   \item{visZero}{logical; shall zero entries in the contingency table be
@@ -23,7 +23,7 @@ panel_mosaic(visZero = TRUE, zeroSize = 0.5)
   A function with arguments:
   \item{residuals}{table of residuals.}
   \item{observed}{table of observed values.}
-  \item{expected}{not used by \code{panel_mosaic}.}
+  \item{expected}{not used by \code{struc_mosaic}.}
   \item{spacing}{object of class \code{"unit"} specifying the space
     between the tiles.}
   \item{gp}{list of \code{gpar} objects used for the drawing the tiles.}
@@ -50,5 +50,11 @@ panel_mosaic(visZero = TRUE, zeroSize = 0.5)
   \emph{SAS User Group International Conference Proceedings}, \bold{17},
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
+}
+\example{
+## Titanic data
+data(Titanic)
+## mosaic plot with large zeros
+strucplot(Titanic, panel = struc_mosaic(zeroSize = 1))
 }
 \keyword{hplot}

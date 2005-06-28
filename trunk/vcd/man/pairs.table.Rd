@@ -53,7 +53,7 @@
   This method uses panel functions called for each cell of the
   matrix which can be different for upper matrix, lower matrix, and
   diagonal cells.  Correspondingly, for each panel parameter \var{foo}
-  (\samp{upper}, \samp{lower}, or \samp{diag}), \code{pairs.plot} takes
+  (= \samp{upper}, \samp{lower}, or \samp{diag}), \code{pairs.table} takes
   two arguments: \var{foo\_panel} and \var{foo\_panel\_args}, which can
   be used to specify the parameters as follows:
 
@@ -61,13 +61,14 @@
     \item Passing a suitable panel function to \var{foo\_panel} which
     subsequently is called for each cell with the corresponding
     coordinates.
-    \item Passing a corresponding \emph{generating function} to
-    \var{foo\_panel}, along with parameters passed to
-    \var{foo\_panel\_args}, that generates such a function.  Generating
-    functions must inherit from class \code{"vcdPanel"}.
-    \item Passing \var{foo\_panel(foo\_panel\_args)} to the
-    \var{foo\_panel} argument.
+    \item Passing a corresponding \emph{generating function} (of class
+    \code{"vcdPanel"}) to \var{foo\_panel}, along with parameters passed to
+    \var{foo\_panel\_args}, that generates such a function. 
   }
+Hence, the second approach is equivalent to the first if
+\var{foo\_panel(foo\_panel\_args)} is passed to
+\var{foo\_panel}.
+
   
 }
 \seealso{
