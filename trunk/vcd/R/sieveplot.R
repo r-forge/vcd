@@ -56,7 +56,8 @@ function (formula, data = NULL, ..., subset)
            exp_color = "gray",
            exp_lty = "dotted",
            margin = 0.01,
-           panel = FALSE,
+           newpage = TRUE,
+           pop = FALSE,
            margins = c(4,3,4,4),
            xlab = names(dimnames(x))[2],
            ylab = names(dimnames(x))[1],
@@ -88,7 +89,7 @@ function (formula, data = NULL, ..., subset)
   ## signs of deviations
   sgn <- ex - x < 0
 
-  if (!panel) grid.newpage()
+  if (newpage) grid.newpage()
   if(!is.null(main))
     margins[2] <- margins[2] + 2
   
@@ -191,7 +192,7 @@ function (formula, data = NULL, ..., subset)
               xmid[js], ymid[is], gp = gpar(fontsize = 12, fontface = 2),
               check.overlap = TRUE, ...
               )
-  popViewport(2)
+  if (pop) popViewport(2)
   invisible(x)
 }
 

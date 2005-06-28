@@ -68,7 +68,7 @@ legend_resbased <- function(fontsize = 12,
     }
   }
 }
-class(legend_resbased) <- "vcdLegend"
+class(legend_resbased) <- "genfun"
 
 legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
@@ -132,4 +132,4 @@ legend_fixed <- function(fontsize = 12,
               )
   }
 }
-class(legend_fixed) <- "vcdLegend"
+class(legend_fixed) <- "genfun"

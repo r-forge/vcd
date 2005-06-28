@@ -20,11 +20,11 @@ pairs.table <- function(x,
 {
   if (newpage) grid.newpage()
 
-  if (inherits(upper_panel, "vcdPanel"))
+  if (inherits(upper_panel, "genfun"))
     upper_panel <- do.call("upper_panel", upper_panel_args)
-  if (inherits(lower_panel, "vcdPanel"))
+  if (inherits(lower_panel, "genfun"))
     lower_panel <- do.call("lower_panel", lower_panel_args)
-  if (inherits(diag_panel, "vcdPanel"))
+  if (inherits(diag_panel, "genfun"))
     diag_panel <- do.call("diag_panel", diag_panel_args)
   
   d <- length(dim(x))
@@ -49,7 +49,7 @@ pairs.table <- function(x,
       else if (i < j)
         lower_panel(x, j, i)
       else
-        diag_panel(margin.table(x, i))
+        diag_panel(x, i)
 
       popViewport(2)
     }
@@ -59,33 +59,25 @@ pairs.table <- function(x,
 
 ## upper/lower panels
 
-pairs_assoc <- function(legend = FALSE, margins = c(0, 0, 0, 0),
-                        labeling = NULL, shade = TRUE, ...)
-  function(x, i, j) assoc(x = margin.table(x, c(i, j)),
-                          
-                          labeling = labeling,
-                          margins = margins,
-                          legend = legend,
-                          shade = shade,
-                          
-                          newpage = FALSE,
-                          pop = TRUE,
-                          ...)
-class(pairs_assoc) <- "vcdPanel"
+pairs_assoc <- function(...) pairs_strucplot(panel = assoc, ...)
+class(pairs_assoc) <- "genfun"
 
+pairs_mosaic <- function(...) pairs_strucplot(panel = mosaic, ...)
+class(pairs_mosaic) <- "genfun"
 
-pairs_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
-                         legend = FALSE, margins = c(0, 0, 0, 0),
-                         labeling = NULL, shade = TRUE, ...) {
+pairs_strucplot <- function(panel = mosaic,
+                            type = c("pairwise", "total", "conditional", "joint"),
+                            legend = FALSE, margins = c(0, 0, 0, 0),
+                            labeling = NULL, shade = FALSE, ...) {
   type = match.arg(type)
   function(x, i, j) {
     index <- 1:length(dim(x))
     rest <- index[!index %in% c(i, j)]
-    mosaic(x = margin.table(x, if (type == "pairwise") c(i, j) else c(i, j, rest)),
+    panel(x = margin.table(x, if (type == "pairwise") c(j, i) else c(j, i, rest)),
            expected = switch(type,
              pairwise =, total = NULL,
-             conditional = list(c(i, rest), c(j, rest)),
-             joint = list(c(i, j), rest)
+             conditional = list(c(j, rest), c(i, rest)),
+             joint = list(c(j, i), rest)
              ),
            condvars = if (type == "conditional") rest else NULL,
            
@@ -93,13 +85,15 @@ pairs_mosaic <- function(type = c("pairwise", "total", "conditional", "joint"),
            margins = margins,
            legend = legend,
            shade = shade,
+
+           split_vertical = TRUE,
            
            newpage = FALSE,
            pop = TRUE,
            ...)
   }
 }
-class(pairs_mosaic) <- "vcdPanel"
+class(pairs_strucplot) <- "genfun"
   
 ## diagonal panels
 
@@ -109,20 +103,22 @@ pairs_text <- function(dimnames = TRUE,
                        gp_border = gpar(),
                        ...)
 
-  function(x) {
+  function(x, i) {
+    x <- margin.table(x, i)
     grid.rect(gp = gp_border)
     grid.text(names(dimnames(x)), gp = gp_vartext,  y = 0.5 + dimnames * 0.05, ...)
     if (dimnames)
       grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
                 y = 0.4, gp = gp_leveltext)
   }
-class(pairs_text) <- "vcdPanel"
+class(pairs_text) <- "genfun"
 
 pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
                           gp_vartext = gpar(fontsize = 17),
                           gp_leveltext = gpar(),
                           ...)
-  function(x) {
+  function(x, i) {
+    x <- margin.table(x, i)
     pushViewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
                           yscale = c(0,max(x)), just = c("left", "bottom"))
                  )
@@ -138,6 +134,6 @@ pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
     grid.text(names(dimnames(x)), y = 1, just = c("center", "top"), gp = gp_vartext)
 
   }
-class(pairs_barplot) <- "vcdPanel"
+class(pairs_barplot) <- "genfun"
 
 

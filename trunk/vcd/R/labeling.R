@@ -49,7 +49,7 @@ labeling_list <- function(gp = gpar(),
                 gp = gp
                 )
   }
-class(labeling_list) <- "vcdLabeling"
+class(labeling_list) <- "genfun"
 
 labeling_conditional <- function(...)
   function (d, split_vertical, condvars) {
@@ -60,7 +60,7 @@ labeling_conditional <- function(...)
     labeling_text(labels = !v, ...)(d, split_vertical, condvars)
     labeling_cells(labels = v, ...)(d, split_vertical, condvars)
   }
-class(labeling_conditional) <- "vcdLabeling"
+class(labeling_conditional) <- "genfun"
 
 labeling_cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
@@ -130,7 +130,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
     split()
     
 }
-class(labeling_cells) <- "vcdLabeling"
+class(labeling_cells) <- "genfun"
 
 labeling_text <- function(labels = TRUE, varnames = labels,
                           tl_labels = NULL, tl_varnames = NULL, 
@@ -461,7 +461,7 @@ labeling_text <- function(labels = TRUE, varnames = labels,
     split()
     
   }
-class(labeling_text) <- "vcdLabeling"
+class(labeling_text) <- "genfun"
 
 labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
   lab_pos <- match.arg(lab_pos)
@@ -484,18 +484,18 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
               gp = gpar(fontface = 2))
   }
 }
-class(labeling_doubledecker) <- "vcdLabeling"
+class(labeling_doubledecker) <- "genfun"
 
 labeling_left <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
   labeling_text(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
-class(labeling_left) <- "vcdLabeling"
+class(labeling_left) <- "genfun"
 
 labeling_cboxed <- function(tl_labels = TRUE, boxes = TRUE, clip = TRUE, pos_labels = "center", ...)
   labeling_text(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
-class(labeling_cboxed) <- "vcdLabeling"
+class(labeling_cboxed) <- "genfun"
 
 labeling_lboxed <- function(tl_labels = FALSE, boxes = TRUE, clip = TRUE, pos_labels = "left", just_labels = "left", labbl_varnames = FALSE, ...)
   labeling_text(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, labbl_varnames = labbl_varnames, just_labels = just_labels, ...)
-class(labeling_lboxed) <- "vcdLabeling"
+class(labeling_lboxed) <- "genfun"

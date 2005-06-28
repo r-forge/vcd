@@ -5,14 +5,14 @@ spacing_equal <- function(sp = unit(0.5, "lines")) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL) lapply(d, function(x) unit.rep(sp, x - 1))
 }
-class(spacing_equal) <- "vcdSpacing"
+class(spacing_equal) <- "genfun"
 
 spacing_dimequal <- function(sp) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL)
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
 }
-class(spacing_dimequal) <- "vcdSpacing"
+class(spacing_dimequal) <- "genfun"
 
 spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
   if (!is.unit(start)) start <- unit(start, "lines")
@@ -21,7 +21,7 @@ spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
   }
 }
-class(spacing_increase) <- "vcdSpacing"
+class(spacing_increase) <- "genfun"
 
 spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
   function(d, condvars) {
@@ -31,7 +31,7 @@ spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
     } else
       spacing_conditional(sp = 0, start = start, rate = rate)(d, condvars)
   }
-class(spacing_doubledecker) <- "vcdSpacing"
+class(spacing_doubledecker) <- "genfun"
 
 spacing_conditional <- function(sp = unit(0.5, "lines"),
                                 start = unit(2, "lines"), rate = 1.8) {
@@ -42,13 +42,12 @@ spacing_conditional <- function(sp = unit(0.5, "lines"),
     if (length(d) < 3)
       return(spacing_equal(sp)(d, condvars))
     ret <- vector("list", length(d))
-    condseq <- seq(condvars)
-    ret[condseq] <- if (condvars < 3)
-      equalfun2(d[condseq])
+    ret[condvars] <- if (length(condvars) < 3)
+      equalfun2(d[condvars])
     else
-      condfun(d[condseq])
-    ret[-condseq] <- equalfun(d[-condseq])
+      condfun(d[condvars])
+    ret[-condvars] <- equalfun(d[-condvars])
     ret
   }
 }
-class(spacing_conditional) <- "vcdSpacing"
+class(spacing_conditional) <- "genfun"

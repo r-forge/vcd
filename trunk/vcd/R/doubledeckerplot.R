@@ -56,7 +56,7 @@ doubledecker.default <- function(x,
                          labeling = labeling_doubledecker,
                          spacing = spacing_doubledecker,
                          main = NULL, 
-                         keepAR = FALSE,
+                         keep_aspect_ratio = FALSE,
                          ...) {
   d <- dim(x)
   l <- length(d)
@@ -75,7 +75,7 @@ doubledecker.default <- function(x,
          main = main,
          margins = margins,
          legend = NULL,
-         keepAR = keepAR,
+         keep_aspect_ratio = keep_aspect_ratio,
          ...
          )
 }
