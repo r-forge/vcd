@@ -62,7 +62,7 @@
     subsequently is called for each cell with the corresponding
     coordinates.
     \item Passing a corresponding \emph{generating function} (of class
-    \code{"vcdPanel"}) to \var{foo\_panel}, along with parameters passed to
+    \code{"genfun"}) to \var{foo\_panel}, along with parameters passed to
     \var{foo\_panel\_args}, that generates such a function. 
   }
 Hence, the second approach is equivalent to the first if
