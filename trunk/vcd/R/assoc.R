@@ -34,7 +34,7 @@ assoc.default <- function(x,
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
-  if (inherits(spacing, "vcdSpacing"))
+  if (inherits(spacing, "genfun"))
     spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
@@ -156,4 +156,4 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(struc_assoc) <- "vcdPanel"
+class(struc_assoc) <- "genfun"

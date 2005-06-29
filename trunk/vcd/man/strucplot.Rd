@@ -12,7 +12,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   spacing = spacing_equal, spacing_args = list(),
   gp = NULL, gp_args = list(),
   labeling = labeling_text, labeling_args = list(),
-  panel = panel_mosaic, panel_args = list(),
+  panel = struc_mosaic, panel_args = list(),
   legend = legend_resbased, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
   legend_width = unit(0.15, "npc"), pop = FALSE,
@@ -67,8 +67,8 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     function, if specified.}
   \item{panel}{either a panel function, or a corresponding generating
     function (see details).  Currently, generating functions for
-    mosaic plots (\code{\link{panel_mosaic}}) and association plots
-    (\code{\link{panel_assoc}}) are provided.}
+    mosaic plots (\code{\link{struc_mosaic}}) and association plots
+    (\code{\link{struc_assoc}}) are provided.}
   \item{panel_args}{list of arguments for the panel-generating function,
     if specified.}
   \item{legend}{either a legend-generating function, or a legend
@@ -161,8 +161,8 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
 \seealso{
   \code{\link{assoc}},
   \code{\link{mosaic}},
-  \code{\link{panel_assoc}},
-  \code{\link{panel_mosaic}},
+  \code{\link{struc_assoc}},
+  \code{\link{struc_mosaic}},
   \code{\link{structable}},
   \code{\link{doubledecker}},
   \code{\link{labelings}},
@@ -172,7 +172,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
 }
 \examples{
 strucplot(Titanic)
-strucplot(Titanic, panel = panel_assoc)
+strucplot(Titanic, panel = struc_assoc)
 strucplot(Titanic, spacing = spacing_increase,
                    spacing_args = list(start = 0.5, rate = 1.5))
 strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
