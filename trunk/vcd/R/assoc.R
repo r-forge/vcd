@@ -19,7 +19,7 @@ assoc.default <- function(x,
                           spacing = spacing_conditional(sp = 0),
                           spacing_args = list(),
                           split_vertical = NULL,
-                          keepAR = FALSE,
+                          keep_aspect_ratio = FALSE,
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
   if (!inherits(x, "ftable")) {
@@ -50,7 +50,7 @@ assoc.default <- function(x,
             split_vertical = split_vertical,
             panel = struc_assoc(compress = compress, xlim = xlim, ylim = ylim,
               yspace = yspace, xscale = xscale),
-            keepAR = keepAR,
+            keep_aspect_ratio = keep_aspect_ratio,
             residuals_type = "Pearson",
             ...)
 }
