@@ -144,4 +144,4 @@ struc_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
     }
 
   }
-class(struc_mosaic) <- "vcdPanel"
+class(struc_mosaic) <- "genfun"
