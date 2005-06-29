@@ -9,7 +9,7 @@
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
   split_vertical = FALSE, direction = NULL, spacing = NULL,
-  spacing_args = list(), visZero = TRUE, zeroSize = 0.5, \dots)
+  spacing_args = list(), zero_size = 0.5, \dots)
 \method{mosaic}{formula}(formula, data, \dots, main = NULL)
 }
 \arguments{
@@ -25,10 +25,8 @@
     those for doubledecker plots) have no response variable.}
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
-  \item{visZero}{if \code{TRUE}, zero entries are represented by
-    a bullet.}
-  \item{zeroSize}{size of the bullets used for zero entries (ignored if 
-    \code{visZero} is \code{FALSE}).}
+  \item{zero_size}{size of the bullets used for zero entries (if 0, no
+    bullets are drawn).}
   \item{split_vertical}{vector of logicals of length \eqn{k}, \eqn{k}
     the dimensionality of \code{x} (values are recycled as needed). 
     A \code{TRUE} component indicates that the tile(s) of the
