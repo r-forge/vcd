@@ -49,7 +49,7 @@ function(formula, data = NULL, ..., main = NULL)
 mosaic.default <- function(x, condvars = NULL,
                            split_vertical = FALSE, direction = NULL,
                            spacing = NULL, spacing_args = list(),
-                           visZero = TRUE, zeroSize = 0.5, ...) {
+                           zeroSize = 0.5, ...) {
   dl <- length(dim(x))
   if (!is.null(condvars)) {
     if (is.character(condvars))
@@ -79,7 +79,7 @@ mosaic.default <- function(x, condvars = NULL,
             ...)
 }
 
-struc_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
+struc_mosaic <- function(zeroSize = 0.5)
   function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
     dn <- dimnames(observed)
     dnn <- names(dn)
@@ -132,14 +132,16 @@ struc_mosaic <- function(visZero = TRUE, zeroSize = 0.5)
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       if (!zeros[i]) {
         grid.rect(gp = gpobj, name = paste("rect", mnames[i], sep = ".."))
-      } else if (visZero) {
+      } else { 
         grid.lines(x = 0.5, gp = gpobj)
         grid.lines(y = 0.5, gp = gpobj)
-        grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
-                    gp = gpar(col = gp$fill[i]),
-                    name = paste("disc", mnames[i], sep = ".."))
-        grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"),
-                    name = paste("circle", mnames[i], sep = ".."))
+        if (zeroSize > 0) {
+          grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
+                      gp = gpar(col = gp$fill[i]),
+                      name = paste("disc", mnames[i], sep = ".."))
+          grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"),
+                      name = paste("circle", mnames[i], sep = ".."))
+        }
       }
     }
 
