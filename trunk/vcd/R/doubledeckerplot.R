@@ -52,7 +52,7 @@ function(formula, data = NULL, ..., main = NULL)
 doubledecker.default <- function(x,
                          depvar = length(dim(x)), 
                          margins = c(1, 4, length(dim(x)) + 1, 1),
-                         col = hcl(seq(0, 260, length = tail(dim(x), 1)), 50, 70),
+                         col = rainbow_hcl(tail(dim(x), 1), end = 260),
                          labeling = labeling_doubledecker,
                          spacing = spacing_doubledecker,
                          main = NULL, 
@@ -64,7 +64,7 @@ doubledecker.default <- function(x,
     depvar <- match(depvar, names(dimnames(x)))
   condvars <- (1:l)[-depvar]
   x <- aperm(x, c(condvars, depvar))
-  col <- rep(col, length = tail(d, 1))
+  col <- rep(col, length.out = tail(d, 1))
   colind = array(rep(1:d[l], each = prod(d[-l])), dim = d)
   strucplot(x,
          condvars = l - 1,

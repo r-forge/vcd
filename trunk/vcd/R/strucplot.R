@@ -108,7 +108,7 @@ strucplot <- function(## main parameters
   if (is.logical(legend) && !legend)
     legend <- NULL
   if (shade) {
-    if (is.null(gp)) gp <- shading_HCL
+    if (is.null(gp)) gp <- shading_hcl
     if (is.function(gp)) {
       gpfun <- if(inherits(gp, "panel_generator"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp

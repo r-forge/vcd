@@ -37,10 +37,15 @@ export(
 
 # shadings
        "shading_binary",
-       "shading_HCL",
-       "shading_HSV",
+       "shading_hcl",
+       "shading_hsv",
        "shading_max",
        "shading_Friendly",
+
+## palettes
+       "rainbow_hcl",
+       "diverge_hcl",
+       "diverge_hsv",
        
 ## panel functions
        "pairs_barplot",
