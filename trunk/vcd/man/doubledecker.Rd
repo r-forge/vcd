@@ -11,7 +11,7 @@
 \method{doubledecker}{formula}(formula, data = NULL, \dots, main = NULL)
 \method{doubledecker}{default}(x, depvar = length(dim(x)),
   margins = c(1,4, length(dim(x)) + 1, 1),
-  col = hcl(seq(0, 260, length = dim(x)[length(dim(x))]), 50, 70),
+  col = rainbow_hcl(tail(dim(x), 1), end = 260),
   labeling = labeling_doubledecker,
   spacing = spacing_doubledecker,
   main = NULL, keep_aspect_ratio = FALSE, \dots)
