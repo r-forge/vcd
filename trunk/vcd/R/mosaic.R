@@ -72,7 +72,7 @@ mosaic.default <- function(x, condvars = NULL,
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            panel = struc_mosaic(visZero = visZero, zeroSize = zeroSize),
+            panel = struc_mosaic(zero_size = zero_size),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
@@ -136,10 +136,10 @@ struc_mosaic <- function(zero_size = 0.5)
         grid.lines(x = 0.5, gp = gpobj)
         grid.lines(y = 0.5, gp = gpobj)
         if (zero_size > 0) {
-          grid.points(0.5, 0.5, pch = 19, size = unit(zeroSize, "char"),
+          grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                       gp = gpar(col = gp$fill[i]),
                       name = paste("disc", mnames[i], sep = ".."))
-          grid.points(0.5, 0.5, pch = 1, size = unit(zeroSize, "char"),
+          grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
                       name = paste("circle", mnames[i], sep = ".."))
         }
       }

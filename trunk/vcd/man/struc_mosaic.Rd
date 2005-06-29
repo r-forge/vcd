@@ -6,13 +6,11 @@
   producing mosaic plots.
 }
 \usage{
-struc_mosaic(visZero = TRUE, zeroSize = 0.5)
+struc_mosaic(zero_size = 0.5)
 }
 \arguments{
-  \item{visZero}{logical; shall zero entries in the contingency table be
-    visualized using a bullet?}
-  \item{zeroSize}{size of the zero-entries bullet (ignored if
-    \code{visZero} is \code{TRUE}).} 
+  \item{zero_size}{size of the bullets used for zero-entries in the
+    contingency table (if 0, no bullets are drawn).} 
 }
 \details{
   This function is usually called by \code{\link{strucplot}} (typically
@@ -55,6 +53,6 @@ struc_mosaic(visZero = TRUE, zeroSize = 0.5)
 ## Titanic data
 data(Titanic)
 ## mosaic plot with large zeros
-strucplot(Titanic, panel = struc_mosaic(zeroSize = 1))
+strucplot(Titanic, panel = struc_mosaic(zero_size = 1))
 }
 \keyword{hplot}
