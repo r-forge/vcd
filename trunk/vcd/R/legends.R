@@ -68,7 +68,7 @@ legend_resbased <- function(fontsize = 12,
     }
   }
 }
-class(legend_resbased) <- "genfun"
+class(legend_resbased) <- "panel_generator"
 
 legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
@@ -132,4 +132,4 @@ legend_fixed <- function(fontsize = 12,
               )
   }
 }
-class(legend_fixed) <- "genfun"
+class(legend_fixed) <- "panel_generator"

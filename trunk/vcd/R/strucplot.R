@@ -32,9 +32,9 @@ strucplot <- function(## main parameters
                       legend_width = unit(0.15, "npc"),
                       
                       ## control parameters
-                      pop = FALSE,
                       title_gp = gpar(fontsize = 20),
                       newpage = TRUE,
+                      pop = TRUE,
                       keep_aspect_ratio = TRUE
                       ) {
   ## default behaviour of shade
@@ -99,7 +99,7 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing)) {
-    if (inherits(spacing, "genfun"))
+    if (inherits(spacing, "panel_generator"))
       spacing <- do.call("spacing", spacing_args)
     spacing <- spacing(dim(x), condvars)
   }
@@ -110,7 +110,7 @@ strucplot <- function(## main parameters
   if (shade) {
     if (is.null(gp)) gp <- shading_HCL
     if (is.function(gp)) {
-      gpfun <- if(inherits(gp, "genfun"))
+      gpfun <- if(inherits(gp, "panel_generator"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend))
@@ -135,7 +135,7 @@ strucplot <- function(## main parameters
   ## legend
   if (is.logical(legend))
     legend <- if (legend) legend_resbased else NULL
-  if (inherits(legend, "genfun"))
+  if (inherits(legend, "panel_generator"))
     legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend)) {
     seekViewport("legend")
@@ -159,7 +159,7 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  if (inherits(panel, "genfun"))
+  if (inherits(panel, "panel_generator"))
     panel <- do.call("panel", panel_args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
@@ -172,7 +172,7 @@ strucplot <- function(## main parameters
 
   ## labels
   if (!is.null(labeling)) {
-    if (inherits(labeling, "genfun"))
+    if (inherits(labeling, "panel_generator"))
       labeling <- do.call("labeling", labeling_args)
     labeling(dn, split_vertical, condvars)
   }

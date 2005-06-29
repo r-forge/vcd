@@ -48,8 +48,8 @@ ternaryplot(
   dimnames_position = "edge",
   main = "Lifeboats on the Titanic"
 )
-vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"),
-          c("Port", "Starboard"), title = "SIDE")
+grid_legend(0.8, 0.9, c(1, 19), c("red", "blue"),
+  c("Port", "Starboard"), title = "SIDE")
 detach(Lifeboats)
 }
 

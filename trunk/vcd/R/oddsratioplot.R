@@ -82,8 +82,9 @@ function(x, ...) {
 function(x,
          conf_level = 0.95,
          type = "o",
-         ylab = NULL,
          xlab = "Strata",
+         ylab = NULL,
+	 ylim = NULL,
          whiskers = 0.1,
          ...)
 {
@@ -106,7 +107,7 @@ function(x,
        ylab = if(!is.null(ylab)) ylab else if(attr(x, "log")) "Log Odds Ratio" else "Odds Ratio",
        type = type,
        xaxt = "n",
-       ylim = yrange,
+       ylim = if(is.null(ylim)) yrange else ylim,
        ...)
   axis (1, at = 1:length(x), names(x))
 

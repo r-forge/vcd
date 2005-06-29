@@ -14,7 +14,7 @@ pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17),
 }
 \arguments{
   \item{dimnames}{vector of logicals indicating whether the factor
-    levels shall be displayed (only used for \code{pairs_text}).}
+    levels should be displayed (only used for \code{pairs_text}).}
   \item{gp_bars}{object of class \code{"gpar"} used for bars (only used
     for \code{pairs_barplot}).}
   \item{gp_vartext}{object of class \code{"gpar"} used for the factor

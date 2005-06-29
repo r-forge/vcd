@@ -1,9 +1,9 @@
 \name{table2d_summary}
 \alias{table2d_summary}
 \alias{print.table2d_summary}
-\title{Summary of a 2-Dimensional Table}
+\title{Summary of a 2-way Table}
 \description{
-  Prints a two-way contingency table along with percentages, marginal,
+  Prints a 2-way contingency table along with percentages, marginal,
   and conditional distributions.
 }
 \usage{
@@ -11,7 +11,7 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
   conditionals = c("none", "row", "column"), \dots)
 }
 \arguments{
-  \item{object}{a \eqn{m \times n}{m x n}-contingency table}
+  \item{object}{a \eqn{r \times c}{r x c}-contingency table}
   \item{margins}{if \code{TRUE}, marginal distributions are computed.}
   \item{percentages}{if \code{TRUE}, relative frequencies are computed.}
   \item{conditionals}{if not \code{"none"}, the conditional
@@ -19,8 +19,8 @@ table2d_summary(object, margins = TRUE, percentages = FALSE,
   \item{\dots}{currently not used.}
 }
 \value{
-  Returns invisibly a \eqn{m \times n \times o}{m x n x o}
-  table, \eqn{o} depending on the amount of choices (at most 3).
+  Returns invisibly a \eqn{r \times c \times k}{r x c x k}
+  table, \eqn{k} depending on the amount of choices (at most 3).
 }
 \author{
   David Meyer \email{David.Meyer@R-project.org}

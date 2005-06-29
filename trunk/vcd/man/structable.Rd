@@ -2,11 +2,11 @@
 \alias{structable.default}
 \alias{structable.formula}
 \alias{structable}
-\title{Structable}
+\title{Structured Contingency Tables}
 \description{
   This function produces a \sQuote{flat} representation of a
-  high-dimensional contingency table constructed in a similar way than
-  mosaic displays.
+  high-dimensional contingency table constructed by recursive
+  splits (similar to the construction of mosaic displays).
 }
 \usage{
 \method{structable}{formula}(formula, data,

@@ -5,14 +5,14 @@ spacing_equal <- function(sp = unit(0.5, "lines")) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL) lapply(d, function(x) unit.rep(sp, x - 1))
 }
-class(spacing_equal) <- "genfun"
+class(spacing_equal) <- "panel_generator"
 
 spacing_dimequal <- function(sp) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL)
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
 }
-class(spacing_dimequal) <- "genfun"
+class(spacing_dimequal) <- "panel_generator"
 
 spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
   if (!is.unit(start)) start <- unit(start, "lines")
@@ -21,7 +21,7 @@ spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
   }
 }
-class(spacing_increase) <- "genfun"
+class(spacing_increase) <- "panel_generator"
 
 spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
   function(d, condvars) {
@@ -31,7 +31,7 @@ spacing_doubledecker <- function(start = unit(0.3, "lines"), rate = 1.8)
     } else
       spacing_conditional(sp = 0, start = start, rate = rate)(d, condvars)
   }
-class(spacing_doubledecker) <- "genfun"
+class(spacing_doubledecker) <- "panel_generator"
 
 spacing_conditional <- function(sp = unit(0.5, "lines"),
                                 start = unit(2, "lines"), rate = 1.8) {
@@ -50,4 +50,4 @@ spacing_conditional <- function(sp = unit(0.5, "lines"),
     ret
   }
 }
-class(spacing_conditional) <- "genfun"
+class(spacing_conditional) <- "panel_generator"

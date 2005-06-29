@@ -78,7 +78,7 @@ shading_HSV <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(shading_HSV) <- "genfun"
+class(shading_HSV) <- "panel_generator"
 
 
 shading_HCL <- function(observed, residuals = NULL, expected = NULL, df = NULL,
@@ -159,7 +159,7 @@ shading_HCL <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(shading_HCL) <- "genfun"
+class(shading_HCL) <- "panel_generator"
 
 
 shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
@@ -167,7 +167,7 @@ shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL,
   shading_HSV(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                 hue = hue, value = 1,
                 lty = lty, interpolate = interpolate, p.value = NA)
-class(shading_Friendly) <- "genfun"
+class(shading_Friendly) <- "panel_generator"
 
 shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                    hue = c(260, 0), chroma = c(100, 20), luminance = c(90, 50), 
@@ -182,7 +182,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
 			p.value = obs.test$p.value)
   return(rval)
 }
-class(shading_max) <- "genfun"
+class(shading_max) <- "panel_generator"
 
 shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                       col = hcl(c(260, 0), 100, 50))
@@ -206,7 +206,7 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
   attr(rval, "p.value") <- NULL
   return(rval)
 }
-class(shading_HCL) <- "genfun"
+class(shading_HCL) <- "panel_generator"
 
 ## shading_Z <- shading_HCL(hue = c(130, 30), chroma = c(80, 20), luminance = c(95, 70), lty = 1)
 

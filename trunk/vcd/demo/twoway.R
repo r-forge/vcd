@@ -162,7 +162,7 @@
               main = "Arthritits Treatment Data"
               )
   ## legend
-  vcdLegend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
+  grid_legend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
 
   ### Baseball Hitters Data ###
   #############################
@@ -177,7 +177,7 @@
               col = colors[as.numeric(Positions)],
               main = "Baseball Hitters Data"
               )
-  vcdLegend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
+  grid_legend(0.8, 0.9, pch, colors, levels(Positions), title = "POSITION(S)")
 
   detach(Hitters)
 
@@ -195,7 +195,7 @@
               dimnames = c("Men of Crew", "Men passengers", "Women and Children"),
               main = "Lifeboats on the Titanic"
               )
-  vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
+  grid_legend(0.8, 0.9, c(1, 19), c("red", "blue"), c("Port", "Starboard"), title = "SIDE")
 
   ## Load against time for Port/Starboard boats
   plot(launch, total,

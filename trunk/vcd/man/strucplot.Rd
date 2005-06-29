@@ -1,6 +1,6 @@
 \name{strucplot}
 \alias{strucplot}
-\title{Produces a strucplot Visualizing a Contingency Table}
+\title{Structured Displays of Contingency Tables}
 \description{
   This modular function visualizes certain aspects of high-dimensional
   contingency tables in a hierarchical way.
@@ -15,20 +15,18 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   panel = struc_mosaic, panel_args = list(),
   legend = legend_resbased, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
-  legend_width = unit(0.15, "npc"), pop = FALSE,
-  title_gp = gpar(fontsize = 20), newpage = TRUE, keep_aspect_ratio = TRUE)
+  legend_width = unit(0.15, "npc"), title_gp = gpar(fontsize = 20),
+  newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames} attribute.}
-  \item{residuals}{optionally, an array of residuals equally shaped
-    than \code{x} (see details).}
-  \item{expected}{optionally, an array of expected values equally shaped
-    than \code{x}, or alternatively a formula object to create such a
-    table as used by \code{\link[stats]{loglin}} or
-    \code{\link[MASS]{loglm}} (see details).}
-  \item{df}{FIXME
-    degrees of freedom of the independence model --- TO BE REMOVED ---}
+  \item{residuals}{optionally, an array of residuals of the same dimension
+    as \code{x} (see details).}
+  \item{expected}{optionally, an array of expected values of the same dimension
+    as \code{x}, or alternatively the corresponding independence model specification
+    as used by \code{\link[stats]{loglin}} or \code{\link[MASS]{loglm}} (see details).}
+  \item{df}{FIXME degrees of freedom of the independence model}
   \item{condvars}{number of conditioning variables, if any; those are
     expected to be ordered first in the table.
     This information is used for computing the expected values, and is
@@ -45,11 +43,11 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     ratio chi-squared), or \code{"FT"} for the Freeman-Tukey residuals.
     The value of this argument can be abbreviated.}
   \item{type}{a character string indicating whether the observed or the
-    expected values of the table shall be visualized.}
-  \item{split_vertical}{vector of logicals of length \eqn{k},
-    \eqn{k} dimensionality of \code{x} (values are recycled as needed).
+    expected values of the table should be visualized.}
+  \item{split_vertical}{vector of logicals of length \eqn{k}, where
+    \eqn{k} is the number of margins of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the tile(s) of the
-    corresponding dimension shall be split vertically, \code{FALSE}
+    corresponding dimension should be split vertically, \code{FALSE}
     means horizontal splits.}
   \item{spacing}{spacing object, spacing function, or a corresponding
     generating function (see details and \code{\link{spacings}}).}
@@ -93,7 +91,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     1, or a numeric value interpreted as proportion of the available
     horizontal space, specifying the width of the legend (if any).}
   \item{pop}{logical indicating whether the generated viewport tree
-    shall be removed at the end of the drawing or not.}
+    should be removed at the end of the drawing or not.}
   \item{title_gp}{object of class \code{"gpar"} containing the graphical
     parameters used for the main and sub titles.}
   \item{newpage}{logical indicating whether a new page should be created
@@ -110,13 +108,14 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   frequencies, where the expected frequencies are optionally computed
   for a specified independence model.  Finally, the specified functions
   for spacing, gp, main plot, legend, and labeling are called to produce
-  the plot.  The function invisibly returns an object of class
-  \code{"structable"} corresponding to the structure of the plot.
+  the plot.  The function invisibly returns the \code{"structable"} object
+  visualized.
 
   Most elements of the plot, such as the panel function, the spacing
   between the tiles, the shading of the tiles, the labeling, and the
   legend, are modularized in functions and specified as parameters.  For
-  each element \emph{foo}, \code{strucplot} takes two arguments:
+  each element \emph{foo} (= \code{spacing}, \code{labeling}, \code{panel},
+  or \code{legend}), \code{strucplot} takes two arguments:
   \var{foo} and \var{foo\_args}, which can be used to specify the
   parameters in the following alternative ways:
 
@@ -126,7 +125,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
     etc.
     \item Passing a corresponding \emph{generating} function to \var{foo},
     along with parameters passed to \var{foo\_args}, that generates such a
-    function. Generating functions must inherit from class \code{"genfun"}.
+    function. Generating functions must inherit from class \code{"panel_generator"}.
     \item Except for the shading functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
     \item For shadings and spacings, passing the final parameter object

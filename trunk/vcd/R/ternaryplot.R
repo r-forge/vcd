@@ -19,6 +19,7 @@ function (x,
           col = "red",
           main = "ternary plot",
           newpage = TRUE,
+	  pop = TRUE,
           ...)
 {
   ## parameter handling
@@ -125,7 +126,7 @@ function (x,
               gp = gpar(col = id_color))
 
   ## clenup
-  popViewport(2)
+  if(pop) popViewport(2) else upViewport(2)
   
 }
 

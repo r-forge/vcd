@@ -146,4 +146,4 @@ struc_mosaic <- function(zero_size = 0.5)
     }
 
   }
-class(struc_mosaic) <- "genfun"
+class(struc_mosaic) <- "panel_generator"

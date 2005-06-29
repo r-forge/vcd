@@ -27,16 +27,16 @@
     or \code{"ftable"}.}
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
-  \item{split_vertical}{vector of logicals of length \eqn{k}, \eqn{k}
-    the dimensionality of \code{x} (values are recycled as needed). 
+  \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
+    is the number of margins of \code{x} (values are recycled as needed). 
     A \code{TRUE} component indicates that the tile(s) of the
-    corresponding dimension shall be split vertically, \code{FALSE}
+    corresponding dimension should be split vertically, \code{FALSE}
     means horizontal splits.
     Ignored if \code{direction} is not \code{NULL}.}
-  \item{direction}{character vector of length \eqn{k}, \eqn{k} the
-    dimensionality of \code{x} (values are recycled as needed).
+  \item{direction}{character vector of length \eqn{k}, where \eqn{k} is the
+    number of margins of \code{x} (values are recycled as needed).
     For each component, a value of \code{"h"} indicates that the tile(s)
-    of the corresponding dimension shall be split horizontally, whereas
+    of the corresponding dimension should be split horizontally, whereas
     \code{"v"} indicates vertical split(s).}
   \item{spacing}{spacing object, spacing function, or corresponding
     generating function (see \code{\link{strucplot}} for more

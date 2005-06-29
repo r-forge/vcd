@@ -19,7 +19,7 @@ pairs_mosaic(\dots)
     cell---currently, \code{\link{assoc}} and \code{\link{mosaic}} are available.}
   \item{type}{character string specifying the type of independence model
     visualized in the cells.}
-  \item{legend}{logical specifying whether a legend shall be displayed
+  \item{legend}{logical specifying whether a legend should be displayed
     in the cells or not.}
   \item{margins}{margins inside each cell (see \code{\link{strucplot}}).}
   \item{labeling}{labeling function or labeling-generating function (see
