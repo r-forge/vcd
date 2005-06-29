@@ -1,11 +1,11 @@
-\name{vcdLegend}
-\alias{vcdLegend}
+\name{grid_legend}
+\alias{grid_legend}
 \title{Legend Function for grid Graphics}
 \description{
   This function can be used to add legends to \emph{grid-based} plots.
 }
 \usage{
-vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
+grid_legend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
   vgap = unit(0.3, "lines"), default_units = "lines", gp = gpar(),
   draw = TRUE, title = "Legend:")
 }
@@ -37,16 +37,14 @@ vcdLegend(x, y, pch, col, labels, frame = TRUE, hgap = unit(0.5, "lines"),
 \examples{
 data(Lifeboats)
 attach(Lifeboats)
-ternaryplot(
-  Lifeboats[,4:6],
+ternaryplot(Lifeboats[,4:6],
   pch = ifelse(side == "Port", 1, 19),
   col = ifelse(side == "Port", "red", "blue"),
   id  = ifelse(men / total > 0.1, as.character(boat), NA),
   prop_size = 2,
   dimnames_position = "edge",
-  main = "Lifeboats on Titanic"
-)
-vcdLegend(0.8, 0.9, c(1, 19), c("red", "blue"),
-          c("Port", "Starboard"), title = "SIDE")
+  main = "Lifeboats on Titanic")
+grid_legend(0.8, 0.9, c(1, 19), c("red", "blue"),
+  c("Port", "Starboard"), title = "SIDE")
 }
 \keyword{hplot}

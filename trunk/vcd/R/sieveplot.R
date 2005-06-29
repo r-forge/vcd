@@ -57,7 +57,7 @@ function (formula, data = NULL, ..., subset)
            exp_lty = "dotted",
            margin = 0.01,
            newpage = TRUE,
-           pop = FALSE,
+           pop = TRUE,
            margins = c(4,3,4,4),
            xlab = names(dimnames(x))[2],
            ylab = names(dimnames(x))[1],
@@ -192,7 +192,7 @@ function (formula, data = NULL, ..., subset)
               xmid[js], ymid[is], gp = gpar(fontsize = 12, fontface = 2),
               check.overlap = TRUE, ...
               )
-  if (pop) popViewport(2)
+  if (pop) popViewport(2) else upViewport(2)
   invisible(x)
 }
 

@@ -18,7 +18,7 @@
   frequencies = c("absolute", "relative"),
   sieve_colors = c("red","blue"),
   sieve_lty = c("longdash", "solid"), exp_color = "gray",
-  exp_lty = "dotted", margin = 0.01, newpage = TRUE, pop = FALSE,
+  exp_lty = "dotted", margin = 0.01, newpage = TRUE, pop = TRUE,
   margins = c(4,3,4,4), xlab = names(dimnames(x))[2],
   ylab = names(dimnames(x))[1], \dots)
 \method{sieveplot}{formula}(formula, data = NULL, \dots, subset)
@@ -44,7 +44,7 @@
   \item{margin}{lines of margin between the cell rectangles.}
   \item{margins}{vector of margins (see \code{\link[graphics]{par}}).}
   \item{newpage}{logical; if \code{TRUE}, the plot is drawn on a new page.}
-  \item{pop}{logical; if \code{TRUE}, all viewports are removed after plotting.}
+  \item{pop}{logical; if \code{TRUE}, all newly generated viewports are popped after plotting.}
   \item{xlab, ylab}{labels of x- and y-axis.}
   \item{formula}{a formula, such as \code{y ~ x}.
     For details, see \code{\link{xtabs}}.}
@@ -52,7 +52,7 @@
     the variables in \code{formula} should be taken.}
   \item{subset}{an optional vector specifying a subset of the rows in
     the data frame to be used for plotting.}
-  \item{\dots}{further graphics parameters (see \code{\link{par}}).}
+  \item{\dots}{further graphics parameters (see \code{\link{gpar}}).}
 }
 \references{
   H. Riedwyl & M. Schüpbach (1994),
@@ -69,7 +69,7 @@
   David Meyer \email{David.Meyer@R-project.org}
 }
 \seealso{
-  \code{\link{mosaicplot}}
+  \code{\link{mosaic}}
 }
 \examples{
 data(HairEyeColor)

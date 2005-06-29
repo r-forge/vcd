@@ -13,7 +13,7 @@ ternaryplot(x, scale = 1, dimnames = NULL,
   labels = c("inside", "outside", "none"),
   labels_color = "darkgray", border = "black", bg = "white",
   pch = 19, cex = 1, prop_size = FALSE, col = "red",
-  main = "ternary plot", newpage = TRUE, \dots)
+  main = "ternary plot", newpage = TRUE, pop = TRUE, \dots)
 }
 \arguments{
   \item{x}{a matrix with three columns.}
@@ -45,6 +45,7 @@ ternaryplot(x, scale = 1, dimnames = NULL,
   \item{main}{main title.}
   \item{newpage}{if \code{TRUE}, the plot will appear on a new graphics
     page.} 
+  \item{pop}{logical; if \code{TRUE}, all newly generated viewports are popped after plotting.}
   \item{\dots}{additional graphics parameters (see \code{par})}
 }
 \details{
@@ -84,7 +85,7 @@ ternaryplot(
             main = "Arthritis Treatment Data"
            )
 ## legend
-vcdLegend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
+grid_legend(0.8, 0.7, pch, col, rownames(tab), title = "GROUP")
 
 ## Titanic
 data(Lifeboats)
@@ -98,9 +99,9 @@ ternaryplot(
   dimnames_position = "edge",
   main = "Lifeboats on Titanic"
 )
-vcdLegend(0.8, 0.9, c(1, 19),
-          c("red", "blue"), c("Port", "Starboard"),
-          title = "SIDE")
+grid_legend(0.8, 0.9, c(1, 19),
+  c("red", "blue"), c("Port", "Starboard"),
+  title = "SIDE")
 
 
 ## Hitters
@@ -114,8 +115,8 @@ ternaryplot(
   col = colors[as.numeric(Positions)],
   main = "Baseball Hitters Data"
 )
-vcdLegend(0.8, 0.9, pch, colors, levels(Positions),
-          title = "POSITION(S)")
+grid_legend(0.8, 0.9, pch, colors, levels(Positions),
+  title = "POSITION(S)")
 
 }
 \keyword{hplot}

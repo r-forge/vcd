@@ -26,7 +26,7 @@ spacing_doubledecker(start = unit(0.3, "lines"), rate = 1.8)
 }
 \details{
   These generating functions return a function used by
-  \code{\link{strucplot}} to generate appropriate space between tiles of
+  \code{\link{strucplot}} to generate appropriate spaces between tiles of
   a strucplot, using the \code{dimnames} information of the visualized
   table.
 
@@ -43,8 +43,8 @@ spacing_doubledecker(start = unit(0.3, "lines"), rate = 1.8)
   \code{spacing_increase} to create fixed spaces for conditioned
   dimensions, and increasing spaces for conditioning dimensions.
 
-  \code{spacing_doubledecker} is \code{spacing_conditional} by setting
-  the space of the last dimension to 0 as needed by
+  \code{spacing_doubledecker} is essentially \code{spacing_conditional} but with
+  the space of the last dimension to 0 as needed for
   \code{\link{doubledecker}}.
 }
 \value{

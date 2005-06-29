@@ -14,13 +14,14 @@ export(
        "structable",
        "doubledecker",
 
-       ## spacings
+## spacings
        "spacing_conditional",
        "spacing_equal",
        "spacing_dimequal",
        "spacing_increase",
        "spacing_doubledecker",
 
+## labelings
        "labeling_lboxed",
        "labeling_text",
        "labeling_cboxed",
@@ -30,10 +31,11 @@ export(
        "labeling_list",
        "labeling_doubledecker",
 
+## legends
        "legend_resbased",
        "legend_fixed",
 
-       # shadings
+# shadings
        "shading_binary",
        "shading_HCL",
        "shading_HSV",
@@ -49,7 +51,7 @@ export(
        "struc_mosaic",
        "struc_assoc",
 
-## ``normal'' functions
+## `normal' functions
        "Kappa",
        "assocstats",
        "table2d_summary",
@@ -61,7 +63,7 @@ export(
        "Ord_plot",
        "strucplot",
        "ternaryplot",
-       "vcdLegend",
+       "grid_legend",
        "pearson_test",
        "coindep_test",
        "woolf_test")

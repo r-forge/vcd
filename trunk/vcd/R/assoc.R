@@ -34,7 +34,7 @@ assoc.default <- function(x,
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
-  if (inherits(spacing, "genfun"))
+  if (inherits(spacing, "panel_generator"))
     spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
@@ -156,4 +156,4 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(struc_assoc) <- "genfun"
+class(struc_assoc) <- "panel_generator"

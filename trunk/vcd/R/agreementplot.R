@@ -51,7 +51,7 @@ function (formula, data = NULL, ..., subset)
            weights = c(1, 1 - 1 / (ncol(x) - 1)^2),
            margins = par("mar"),
            newpage = TRUE,
-           pop = FALSE,
+           pop = TRUE,
            xlab = names(dimnames(x))[2],
            ylab = names(dimnames(x))[1],
            xlab_rot = 0, xlab_just = "center",
@@ -146,7 +146,7 @@ function (formula, data = NULL, ..., subset)
   else
     grid.lines(c(0, 1), c(1, 0), gp = gpar(col = "red", linetype = "longdash"))
 
-  if (pop) popViewport(2)
+  if (pop) popViewport(2) else upViewport(2)
   
   ## Statistics - Returned invisibly
   ads <- crossprod(diag(x)) 
