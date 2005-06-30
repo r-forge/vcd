@@ -50,7 +50,7 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
   Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \seealso{
-  \code{\link[colorspace{hcl}},
+  \code{\link[colorspace]{hcl}},
   \code{\link{hsv}},
   \code{\link{shadings}}}
 }

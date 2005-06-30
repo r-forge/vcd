@@ -66,7 +66,7 @@ shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \seealso{
-  \code{\link[colorspace{hcl}},
+  \code{\link[colorspace]{hcl}},
   \code{\link{hsv}},
   \code{\link{mosaic}},
   \code{\link{assoc}},

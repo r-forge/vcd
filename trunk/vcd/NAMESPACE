@@ -1,18 +1,18 @@
 export(
 ## generic functions
-       "distplot",	    
-       "fourfold",
-       "goodfit",
-       "sieveplot",
-       "rootogram", 
        "agreementplot",
        "assoc",
-       "mosaic",
-       "sieveplot",
-       "tplot",
-       "oddsratio",
-       "structable",
+       "distplot",	    
        "doubledecker",
+       "fourfold",
+       "goodfit",
+       "mosaic",
+       "oddsratio",
+       "rootogram", 
+       "sieveplot",
+       "spineplot",
+       "structable",
+       "tplot",
 
 ## spacings
        "spacing_conditional",
@@ -61,6 +61,7 @@ export(
        "assocstats",
        "table2d_summary",
        "co_table",
+       "grid_barplot",
        "hls",
        "independence_table",
        "mar_table", 
@@ -77,20 +78,22 @@ import(MASS)
 import(stats)
 
 S3method("[[", "structable")
+S3method("agreementplot", "default")
+S3method("agreementplot", "formula")
+S3method("assoc", "default")
+S3method("assoc", "formula")
 S3method("doubledecker", "default")
 S3method("doubledecker", "formula")
 S3method("mosaic", "default")
 S3method("mosaic", "formula")
-S3method("assoc", "default")
-S3method("assoc", "formula")
-S3method("structable", "default")
-S3method("structable", "formula")
-S3method("agreementplot", "default")
-S3method("agreementplot", "formula")
-S3method("sieveplot", "default")
-S3method("sieveplot", "formula")
 S3method("rootogram", "default")
 S3method("rootogram", "goodfit")
+S3method("sieveplot", "default")
+S3method("sieveplot", "formula")
+S3method("structable", "default")
+S3method("structable", "formula")
+S3method("spineplot", "default")
+S3method("spineplot", "formula")
 S3method("tabplot", "default")
 S3method("tabplot", "formula")
 

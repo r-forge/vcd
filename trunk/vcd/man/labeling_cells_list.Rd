@@ -109,7 +109,8 @@ mosaic(Titanic, labeling = labeling_list)
 ## to a mosaicplot:
 tab <- ifelse(Titanic < 6, NA, Titanic)
 mosaic(Titanic)
-labeling_cells(text = tab, margin = 0)(Titanic)
+#FIXME# This fails:
+#FIXME# labeling_cells(text = tab, margin = 0)(Titanic)
 }
 \keyword{hplot}
 

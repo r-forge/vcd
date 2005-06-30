@@ -7,9 +7,10 @@
 }
 \usage{
 distplot(x, type = c("poisson", "binomial", "nbinomial"),
-  size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-  line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
-  xlab = "Number of occurrences", ylab = "Distribution metameter", \dots)
+  size = NULL, lambda = NULL, legend = TRUE, xlim = NULL, ylim = NULL,
+  conf_int = TRUE, conf_level = 0.95, main = NULL,
+  xlab = "Number of occurrences", ylab = "Distribution metameter",
+  gp = gpar(cex = 0.5), name = "distplot", newpage = TRUE, pop = TRUE, \dots)
 }
 \arguments{
   \item{x}{either a vector of counts, a 1-way table of frequencies of
@@ -23,14 +24,20 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
     If type is \code{"poisson"} and \code{lambda} is specified a leveled
     poissonness plot is produced.}
   \item{legend}{logical.  Should a legend be plotted?}
+  \item{xlim}{limits for the x axis.}
   \item{ylim}{limits for the y axis.}
-  \item{line_col}{color for fitted line.}
   \item{conf_int}{logical.  Should confidence intervals be plotted?}
   \item{conf_level}{confidence level for confidence intervals.}
   \item{main}{a title for the plot.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
-  \item{\dots}{further arguments passed to \code{\link{plot}}.}
+  \item{gp}{a \code{"gpar"} object controlling the grid graphical
+    parameters of the points.}  
+  \item{name}{name of the plotting viewport.}
+  \item{newpage}{logical. Should \code{\link{grid.newpage}} be called 
+    before plotting?}
+  \item{pop}{logical. Should the viewport created be popped?}
+  \item{...}{further arguments passed to \code{\link{grid.points}}.}
 }
 \details{
   \code{distplot} plots the number of occurrences (counts) against the
