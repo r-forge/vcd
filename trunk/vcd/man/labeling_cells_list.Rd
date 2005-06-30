@@ -108,9 +108,8 @@ mosaic(Titanic, labeling = labeling_list)
 ## A more complex example, adding the observed frequencies
 ## to a mosaicplot:
 tab <- ifelse(Titanic < 6, NA, Titanic)
-mosaic(Titanic)
-#FIXME# This fails:
-#FIXME# labeling_cells(text = tab, margin = 0)(Titanic)
+mosaic(Titanic, pop = FALSE)
+labeling_cells(text = tab, margin = 0)(Titanic)
 }
 \keyword{hplot}
 
