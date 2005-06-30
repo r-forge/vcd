@@ -28,7 +28,6 @@ struc_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
   \item{ylim}{either a \eqn{2 \times k}{2 x k} matrix of doubles,
     \eqn{k} the number of total rows of the plot, or a recycled vector
     from which such a matrix will be constructed.
-    FIXME
     The columns of \code{ylim} correspond to the rows of the association
     plot, the rows describe the column ranges (minimums in the first
     row, maximums in the second row).
