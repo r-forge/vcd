@@ -23,7 +23,7 @@ strucplot <- function(## main parameters
                       labeling_args = list(),
                       panel = struc_mosaic,
                       panel_args = list(),
-                      legend = legend_resbased,
+                      legend = NULL,
                       legend_args = list(),
                       
                       main = NULL,
@@ -105,15 +105,15 @@ strucplot <- function(## main parameters
   }
 
   ## gp (color, fill, lty, etc.) argument
-  if (is.logical(legend) && !legend)
-    legend <- NULL
   if (shade) {
     if (is.null(gp)) gp <- shading_hcl
     if (is.function(gp)) {
+      if (is.null(legend) || (is.logical(legend) && legend))
+        legend <- legend_resbased
       gpfun <- if(inherits(gp, "panel_generator"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
-    } else if (!is.null(legend))
+    } else if (!is.null(legend) && !(is.logical(legend) && !legend))
       stop("gp argument must be a shading function for drawing a legend")
   } else {
     if(!is.null(gp)) {
@@ -133,11 +133,9 @@ strucplot <- function(## main parameters
                            legend_width = legend_width))
 
   ## legend
-  if (is.logical(legend))
-    legend <- if (legend) legend_resbased else NULL
   if (inherits(legend, "panel_generator"))
     legend <- do.call("legend", legend_args)
-  if (shade && !is.null(legend)) {
+  if (shade && !is.null(legend) && !(is.logical(legend) && !legend)) {
     seekViewport("legend")
     residuals_type = switch(residuals_type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
     legend(residuals, gpfun, paste(residuals_type, "residuals:", sep = "\n"))

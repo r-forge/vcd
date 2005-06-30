@@ -13,7 +13,7 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   gp = NULL, gp_args = list(),
   labeling = labeling_text, labeling_args = list(),
   panel = struc_mosaic, panel_args = list(),
-  legend = legend_resbased, legend_args = list(),
+  legend = NULL, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
   legend_width = unit(0.15, "npc"), title_gp = gpar(fontsize = 20),
   newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE)
@@ -70,8 +70,9 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{panel_args}{list of arguments for the panel-generating function,
     if specified.}
   \item{legend}{either a legend-generating function, or a legend
-    function (see details and \code{\link{legends}}).
-    \code{NULL} or \code{FALSE} disables the legend.}
+    function (see details and \code{\link{legends}}), or a logical.
+    If \code{legend} is \code{NULL} or \code{TRUE} and \code{gp} is a
+    function, legend defaults to \code{\link{legend_resbased}}.}
   \item{legend_args}{list of arguments for the legend-generating
     function, if specified.}
   \item{main}{either a logical, or a character string used for plotting
