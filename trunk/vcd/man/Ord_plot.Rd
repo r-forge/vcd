@@ -7,8 +7,9 @@
 }
 \usage{
 Ord_plot(obj, legend = TRUE, estimate = TRUE, tol = 0.1, type = NULL,
-         ylim = NULL, xlab = "Number of occurrences",
-	 ylab = "Frequency ratio", main = "Ord plot", ...)
+  xlim = NULL, ylim = NULL, xlab = "Number of occurrences",
+  ylab = "Frequency ratio", main = "Ord plot", gp = gpar(cex = 0.5),
+  name = "Ord_plot", newpage = TRUE, pop = TRUE, ...)
 Ord_estimate(x, type = NULL, tol = 0.1)
 }
 \arguments{
@@ -24,11 +25,18 @@ Ord_estimate(x, type = NULL, tol = 0.1)
     one of \code{"poisson"}, \code{"binomial"}, \code{"nbinomial"}
     or \code{"log-series"} or \code{NULL}. In the latter case the
     distribution is estimated from the data. See details.}
+  \item{xlim}{limits for the x axis.}
   \item{ylim}{limits for the y axis.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
   \item{main}{a title for the plot.}
-  \item{...}{further arguments passed to \code{\link{plot}}.}
+  \item{gp}{a \code{"gpar"} object controlling the grid graphical
+    parameters of the points.}  
+  \item{name}{name of the plotting viewport.}
+  \item{newpage}{logical. Should \code{\link{grid.newpage}} be called 
+    before plotting?}
+  \item{pop}{logical. Should the viewport created be popped?}
+  \item{...}{further arguments passed to \code{\link{grid.points}}.}
   \item{x}{a vector giving intercept and slope for the (fitted)
     line in the Ord plot.}
 
@@ -50,7 +58,7 @@ Ord_estimate(x, type = NULL, tol = 0.1)
   simple heuristics!
 }
 \value{
-  a vector giving the intercept and slope of the weighted OLS line.
+  A vector giving the intercept and slope of the weighted OLS line.
 }
 \author{
   Achim Zeileis \email{Achim.Zeileis@R-project.org}
@@ -75,11 +83,24 @@ data(HorseKicks)
 data(Federalist)
 data(Butterfly)
 data(WomenQueue)
-par(mfrow = c(2,2))
-Ord_plot(HorseKicks, main = "Death by horse kicks")
-Ord_plot(Federalist, main = "Instances of 'may' in Federalist papers")
-Ord_plot(Butterfly, main = "Butterfly species collected in Malaya")
-Ord_plot(WomenQueue, main = "Women in queues of length 10")
-par(mfrow = c(1,1))
+
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(2, 2)))
+
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
+Ord_plot(HorseKicks, main = "Death by horse kicks", newpage = FALSE)
+popViewport()
+
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=2))
+Ord_plot(Federalist, main = "Instances of 'may' in Federalist papers", newpage = FALSE)
+popViewport()
+
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
+Ord_plot(Butterfly, main = "Butterfly species collected in Malaya", newpage = FALSE)
+popViewport()
+
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=2))
+Ord_plot(WomenQueue, main = "Women in queues of length 10", newpage = FALSE)
+popViewport(2)
 }
 \keyword{category}

@@ -1,8 +1,9 @@
 distplot <-
 function(x, type = c("poisson", "binomial", "nbinomial"),
-         size = NULL, lambda = NULL, legend = TRUE, ylim = NULL,
-         line_col = 2, conf_int = TRUE, conf_level = 0.95, main = NULL,
-         xlab = "Number of occurrences", ylab = "Distribution metameter", ...)
+         size = NULL, lambda = NULL, legend = TRUE, xlim = NULL, ylim = NULL,
+         conf_int = TRUE, conf_level = 0.95, main = NULL,
+         xlab = "Number of occurrences", ylab = "Distribution metameter",
+	 gp = gpar(cex = 0.5), name = "distplot", newpage = TRUE, pop = TRUE, ...)
 {
   if(is.vector(x)) {
       x <- table(x)
@@ -85,14 +86,26 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
   names(RVAL) <- c("Counts", "Freq", "Metameter", "CI.center",
                    "CI.width", "CI.lower", "CI.upper")
 
+  if(is.null(xlim)) xlim <- range(RVAL[,1])
   if(is.null(ylim)) ylim <- range(RVAL[,c(3,6,7)], na.rm = TRUE)
-  plot(Metameter ~ Counts, ylim = ylim, data = RVAL,
-       xlab = xlab, ylab = ylab, main = main, ...)
-  abline(fm, col = line_col)
+  xlim <- xlim + c(-1, 1) * diff(xlim) * 0.04
+  ylim <- ylim + c(-1, 1) * diff(ylim) * 0.04
+  
+  if(newpage) grid.newpage()
+  pushViewport(plotViewport(xscale = xlim, yscale = ylim, default.unit = "native", name = name))
+  grid.points(x = RVAL[,1], y = RVAL[,3], default.units = "native", gp = gp, ...)
+  grid.lines(x = xlim, y = predict(fm, newdata = data.frame(mycount = xlim)),
+    default.units = "native", gp = gpar(col = 2))
+  grid.rect()
+  grid.xaxis()
+  grid.yaxis()
+  grid.text(xlab, y = unit(-3.5, "lines"))
+  grid.text(ylab, x = unit(-3, "lines"), rot = 90)
+  grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
 
-  if(conf_int) {
-    points(CI.center ~ Counts, data = RVAL, pch = 19, cex = 0.6)
-    arrows(RVAL[,1], RVAL[,6], RVAL[,1], RVAL[,7], length = 0, lty = 3)
+  if(conf_int) {  
+    grid.points(x = RVAL[,1], y = RVAL[,4], pch = 19, gp = gpar(cex = 0.3))
+    grid.segments(RVAL[,1], RVAL[,6], RVAL[,1], RVAL[,7], default.units = "native", gp = gpar(lty = 3))
   }
 
   if(legend) {
@@ -106,7 +119,10 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
                      paste("intercept =", round(coef(fm)[1], digits = 3)),
 		     "", paste(names(par.estim),": ML =", round(par.ml, digits=3)),
 		     legend.text)
-    legend(leg.x, leg.y, legend.text, bty = "n")
+    legend.text <- paste(legend.text, collapse = "\n")
+    grid.text(legend.text, leg.x, leg.y * 0.95, default.units = "native", just = c("left", "top"))
   }
+  
+  if(pop) popViewport() else upViewport()
   invisible(RVAL)
 }

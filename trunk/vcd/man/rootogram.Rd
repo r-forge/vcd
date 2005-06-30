@@ -9,29 +9,40 @@
 \usage{
 \method{rootogram}{default}(x, fitted, names = NULL, scale = c("sqrt", "raw"),
   type = c("hanging", "standing", "deviation"),
-  bar_col = grey(0.7), line_col = 2,
-  xlab = NULL, ylab = NULL, ylim = NULL, \dots)
+  rect_gp = gpar(fill = "lightgray"), lines_gp = gpar(col = "red"),
+  points_gp = gpar(col = "red"), pch = 19,
+  xlab = NULL, ylab = NULL, ylim = NULL,
+  name = "rootogram", newpage = TRUE, pop = TRUE, \dots)
 }
 \arguments{
   \item{x}{either a vector or a 1-way table of frequencies.}
   \item{fitted}{a vector of fitted frequencies.}
-  \item{names}{a vector of names passed to \code{\link{barplot}}, if set
+  \item{names}{a vector of names passed to \code{\link{grid_barplot}}, if set
     to \code{NULL} the names of \code{x} are used.}
   \item{scale}{a character string indicating whether the values should be
     plotted on the raw or square root scale.}
   \item{type}{a character string indicating if the bars for the observed
     frequencies should be hanging or standing or indicate the deviation
     between observed and fitted frequencies.}
-  \item{bar_col}{bar color (observed frequencies).}
-  \item{line_col}{line color (fitted frequencies).}
+  \item{rect_gp}{a \code{"gpar"} object controlling the grid graphical
+    parameters of the rectangles.}
+  \item{lines_gp}{a \code{"gpar"} object controlling the grid graphical
+    parameters of the lines.}
+  \item{points_gp}{a \code{"gpar"} object controlling the grid graphical
+    parameters of the points.}
+  \item{pch}{plotting character for the points.}
   \item{xlab}{a label for the x axis.}
   \item{ylab}{a label for the y axis.}
   \item{ylim}{limits for the y axis.}
-  \item{\dots}{further arguments passed to \code{\link{barplot}}.}
+  \item{name}{name of the plotting viewport.}
+  \item{newpage}{logical. Should \code{\link{grid.newpage}} be called 
+    before plotting?}
+  \item{pop}{logical. Should the viewport created be popped?}
+  \item{\dots}{further arguments passed to \code{\link{grid_barplot}}.}
 }
 \details{
   The observed frequencies are displayed as bars and the fitted
-  frequencies as a line.  By default a log scale is used to make the
+  frequencies as a line.  By default a sqrt scale is used to make the
   smaller frequencies more visible.
 }
 \author{
@@ -46,6 +57,7 @@
   \emph{Visualizing Categorical Data}.
   SAS Institute, Cary, NC.
 }
+\seealso{\code{\link{grid_barplot}}}
 \examples{
 ## Simulated data examples:
 dummy <- rnbinom(200, size = 1.5, prob = 0.8)

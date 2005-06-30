@@ -1,6 +1,7 @@
 Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
-                     type = NULL, ylim = NULL, xlab = "Number of occurrences",
-		     ylab = "Frequency ratio", main = "Ord plot", ...)
+                     type = NULL, xlim = NULL, ylim = NULL, xlab = "Number of occurrences",
+		     ylab = "Frequency ratio", main = "Ord plot", gp = gpar(cex = 0.5),
+		     name = "Ord_plot", newpage = TRUE, pop = TRUE, ...)
 {
   if(is.vector(obj)) {
     obj <- table(obj)
@@ -21,10 +22,23 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
   fmw <- lm(y ~ count, weights = sqrt(x - 1))
   fit1 <- predict(fm, data.frame(count))
   fit2 <- predict(fmw, data.frame(count))
+  if(is.null(xlim)) xlim <- range(count)  
   if(is.null(ylim)) ylim <- range(c(y, fit1, fit2), na.rm = TRUE)
-  plot(y ~ count, ylim = ylim, xlab = xlab, ylab = ylab, main = main, ...)
-  lines(count, fit1)
-  lines(count, fit2, col = 2)
+  xlim <- xlim + c(-1, 1) * diff(xlim) * 0.04
+  ylim <- ylim + c(-1, 1) * diff(ylim) * 0.04
+
+  if(newpage) grid.newpage()
+  pushViewport(plotViewport(xscale = xlim, yscale = ylim, default.unit = "native", name = name))
+  grid.points(x = count, y = y, default.units = "native", gp = gp, ...)
+  grid.lines(x = count, y = fit1, default.units = "native")
+  grid.lines(x = count, y = fit2, default.units = "native", gp = gpar(col = 2))
+  grid.rect()
+  grid.xaxis()
+  grid.yaxis()
+  grid.text(xlab, y = unit(-3.5, "lines"))
+  grid.text(ylab, x = unit(-3, "lines"), rot = 90)
+  grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
+
   RVAL <- coef(fmw)
   names(RVAL) <- c("Intercept", "Slope")
   if(legend)
@@ -35,9 +49,12 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
       ordfit <- Ord_estimate(RVAL, type = type, tol = tol)
       legend.text <- c(legend.text, "", paste("type:", ordfit$type),
         paste("estimate:", names(ordfit$estimate),"=", round(ordfit$estimate, digits = 3)))
+      legend.text <- paste(legend.text, collapse = "\n")
     }
-    legend(min(count), ylim[2], legend.text, bty = "n")
+    grid.text(legend.text, min(count), ylim[2] * 0.95, default.units = "native", just = c("left", "top"))
   }
+
+  if(pop) popViewport() else upViewport()
   invisible(RVAL)
 }
 
