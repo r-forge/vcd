@@ -12,7 +12,7 @@
 \method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress = TRUE,
   xlim = NULL, ylim = NULL,
   spacing = spacing_conditional(sp = 0), spacing_args = list(),
-  split_vertical = NULL, keep_aspect_ratio = FALSE,
+  split_vertical = NULL, keep_aspect_ratio = FALSE, residuals_type = "Pearson",
   xscale = 0.9, yspace = unit(0.5, "lines"), \dots)
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots, main = NULL)
 }
@@ -62,6 +62,9 @@
     rows.}
   \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not.}
+  \item{residuals_type}{a character string indicating the type of
+    residuals to be computed. Currently, only Pearson residuals are
+    supported.}
   \item{xscale}{scale factor resizing the tile's width, thus adding
     additional space between the tiles. }
   \item{yspace}{object of class \code{"unit"} specifying additional

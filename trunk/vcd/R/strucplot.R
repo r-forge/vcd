@@ -7,7 +7,6 @@ strucplot <- function(## main parameters
                       x,
                       residuals = NULL,
                       expected = NULL,
-		      df = NULL,
 		      condvars = NULL,
                       shade = NULL,
                       type = c("observed", "expected"),
@@ -56,12 +55,9 @@ strucplot <- function(## main parameters
   if (any(nas <- is.na(x))) x[nas] <- 0
 
   ## model fitting
-  ## maybe, after all, this should be done in the shading generating
-  ## function because strucplot() really does not need to know anything
-  ## about model fitting
-  ## For now, this is done here. A parameter df is added for inference
+  ## A parameter df is added for inference
   ## (which is done in the shading (generating) functions).
-  ## Finally, expected can also be the table of expected values.
+  df <- NULL
   if (is.null(expected) || !is.numeric(expected))
     if (inherits(expected, "formula")) {
       fm <- loglm(expected, x, fitted = TRUE)

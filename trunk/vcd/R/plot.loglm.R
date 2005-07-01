@@ -1,29 +1,31 @@
-mosaic.loglm <- plot.loglm <- function(x,
+plot.loglm <- function(x,
                        panel = mosaic,
                        type = c("observed", "expected"),
                        residuals_type = c("pearson", "deviance"),
+		       gp = shading_hcl,
+		       gp_args = list(),
                        ...)
 {
-  residuals_type <- match.arg(residuals_type)
+  residuals_type <- match.arg(tolower(residuals_type), c("pearson", "deviance"))
   if(is.null(x$fitted)) x <- update(x, fitted = TRUE)
   expected <- fitted(x)
   residuals <- residuals(x, type = "pearson")
   observed <- residuals * sqrt(expected) + expected
   if(residuals_type == "deviance") residuals <- residuals(x, type = "deviance")
-  panel(observed, residuals = residuals, expected = expected, df = x$df,
-        type = type, ...)
+  
+  gp <- if(inherits(gp, "panel_generator"))
+    do.call("gp", c(list(observed, residuals, expected, x$df), as.list(gp_args))) else gp
+  
+  panel(observed, residuals = residuals, expected = expected, type = type,
+    residuals_type = residuals_type, gp = gp, ...)
 }
 
-#Z# example:
-#Z# 
-#Z# data(PreSex)
-#Z# tab <- xtabs(Freq ~ PremaritalSex + ExtramaritalSex + Gender + MaritalStatus,
-#Z#   data = as.data.frame(PreSex))
-#Z# mosaic(tab)
-#Z# fm <- loglm(~ PremaritalSex * ExtramaritalSex * (Gender + MaritalStatus),
-#Z#   data = tab)
-#Z# fm
-#Z# plot(fm)
-#Z# plot(fm, split = TRUE)
-#Z# plot(fm, split = TRUE, type = "expected")
-#Z# plot(fm, residuals = "deviance")
+mosaic.loglm <- function(x, ...)
+{
+  plot(x, panel = mosaic, ...)
+}
+
+assoc.loglm <- function(x, ...)
+{
+  plot(x, panel = assoc, ...)
+}

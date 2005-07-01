@@ -6,7 +6,8 @@ Author: David Meyer, Achim Zeileis, Kurt Hornik
 Maintainer: David Meyer <David.Meyer@R-project.org>
 Description: Visualization techniques, data sets, summary
   and inference procedures aimed particularly at categorical
-  data. The package was inspired by the book "Visualizing
+  data. Special emphasis is given to highly extensible grid
+  graphics. The package was inspired by the book "Visualizing
   Categorical Data" by Michael Friendly.
 LazyLoad: yes
 LazyData: yes

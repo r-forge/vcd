@@ -51,7 +51,6 @@ mosaic(Employment,
        main = "Layoff*EmployLength + Layoff*EmployStatus")
 
 ## Stratified view
-## See also: tplot()
 
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(ncol = 2)))

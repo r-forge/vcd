@@ -6,7 +6,7 @@
   contingency tables in a hierarchical way.
 }
 \usage{
-strucplot(x, residuals = NULL, expected = NULL, df = NULL,
+strucplot(x, residuals = NULL, expected = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
   residuals_type = c("Pearson", "deviance", "FT"), split_vertical = TRUE, 
   spacing = spacing_equal, spacing_args = list(),
@@ -26,7 +26,6 @@ strucplot(x, residuals = NULL, expected = NULL, df = NULL,
   \item{expected}{optionally, an array of expected values of the same dimension
     as \code{x}, or alternatively the corresponding independence model specification
     as used by \code{\link[stats]{loglin}} or \code{\link[MASS]{loglm}} (see details).}
-  \item{df}{FIXME degrees of freedom of the independence model}
   \item{condvars}{number of conditioning variables, if any; those are
     expected to be ordered first in the table.
     This information is used for computing the expected values, and is

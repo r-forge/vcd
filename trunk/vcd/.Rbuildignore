@@ -1,3 +1,6 @@
 paper
 R/hcl.R
 R/aaa.R
+R/cotabplot.R
+R/pearson_test.R
+man/pearson_test.Rd

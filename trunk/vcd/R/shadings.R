@@ -182,7 +182,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
   if(is.null(c)) c <- c(100, 20)
   if(is.null(l)) l <- c(90, 50)  
   
-  obs.test <- pearson_test(observed, n = n, return_distribution = TRUE)
+  obs.test <- coindep_test(observed, n = n, return_distribution = TRUE)
   col.bins <- obs.test$qdist(sort(level))
   rval <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         h = h, c = c, l = l, interpolate = col.bins, lty = lty,
