@@ -25,7 +25,7 @@ hls(h = 1, l = 0.5, s = 1)
   \code{\link[colorspace]{hcl}}
 }
 \examples{
-an HLS color wheel
+## an HLS color wheel
 pie(rep(1, 12), col = sapply(1:12/12, function(x) hls(x)))
 }
 \keyword{hplot}

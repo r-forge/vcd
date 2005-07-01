@@ -1,7 +1,7 @@
-########################################################################
+################################################################
 ### strucplot - generic plot framework for mosaic-like layouts
-### 2 panel functions are provided: panel.mosaicplot and panel.assocplot
-########################################################################
+### 2 panel functions are provided: struc_mosaic and struc_assoc
+################################################################
 
 strucplot <- function(## main parameters
                       x,
