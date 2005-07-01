@@ -20,6 +20,7 @@ assoc.default <- function(x,
                           spacing_args = list(),
                           split_vertical = NULL,
                           keep_aspect_ratio = FALSE,
+			  residuals_type = "Pearson",
                           xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
 
   if (!inherits(x, "ftable")) {
@@ -44,6 +45,9 @@ assoc.default <- function(x,
     names(split_vertical) <- names(dimnames(tab))
     split_vertical[names(attr(x, "col.vars"))] <- TRUE
   }
+
+  if(match.arg(tolower(residuals_type), "pearson") != "pearson")
+    warning("Only Pearson residuals can be visualized with association plots.")
   
   strucplot(tab,
             spacing = spacing,

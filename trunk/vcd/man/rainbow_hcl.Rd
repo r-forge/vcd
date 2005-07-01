@@ -21,7 +21,7 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
   \item{h}{hue value in the HCL or HSV color description, has to be
     in [0, 360] for HCL and in [0, 1] for HSV colors.}
   \item{s}{saturation value in the HSV color description.}
-  \item{v}{saturation value in the HSV color description.}
+  \item{v}{value value in the HSV color description.}
   \item{\dots}{Other arguments passed to \code{\link[colorspace]{hcl}}
     or \code{\link{hsv}}, respectively.}
 }

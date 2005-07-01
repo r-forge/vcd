@@ -1,4 +1,4 @@
-hls <- function(H, L, S) {
+hls <- function(h = 1, l = 0.5, s = 1) {
   
   RGB <- function(q1, q2, hue) {
     if (hue > 360) hue <- hue - 360
@@ -12,20 +12,19 @@ hls <- function(H, L, S) {
     else q1
   }
 
-  H <- H * 360
+  h <- h * 360
   
-  p2 <- if (L <= 0.5)
-    L * (1 + S)
+  p2 <- if (l <= 0.5)
+    l * (1 + s)
   else
-    L + S - (L * S)
-  p1 <- 2 * L - p2;
-  if (S == 0)
-    R <- G <- B <- L
+    l + s - (l * s)
+  p1 <- 2 * l - p2;
+  if (s == 0)
+    R <- G <- B <- l
   else {
-    R <- RGB(p1, p2, H + 120)
-    G <- RGB(p1, p2, H)
-    B <- RGB(p1, p2, H - 120)
+    R <- RGB(p1, p2, h + 120)
+    G <- RGB(p1, p2, h)
+    B <- RGB(p1, p2, h - 120)
   }
   rgb(R, G, B)
 }
-  

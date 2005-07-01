@@ -93,8 +93,7 @@ fourfold(x,
 }
 \seealso{
   \code{\link{mosaic}},
-  \code{\link{assoc}},
-  \code{\link{tplot}}
+  \code{\link{assoc}}
 }
 \examples{
 data(UCBAdmissions)
