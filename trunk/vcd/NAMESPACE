@@ -96,8 +96,6 @@ S3method("structable", "default")
 S3method("structable", "formula")
 S3method("spineplot", "default")
 S3method("spineplot", "formula")
-S3method("tabplot", "default")
-S3method("tabplot", "formula")
 
 S3method("pairs", "table")
 
