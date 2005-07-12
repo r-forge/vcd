@@ -88,20 +88,20 @@ set.seed(12345)
 library(vcd)
 
 data(Arthritis)
-art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
+art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
 data(Employment)
-emp <- Employment
-emp1 <- co.table(Employment, "LayoffCause")[["Replaced"]]
+emp <- aperm(Employment)
+emp1 <- co_table(Employment, "LayoffCause")[["Replaced"]]
 @
 
 <<auxfunctions,echo=FALSE,results=hide>>=
-pmos.Friendly <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
-  labels = FALSE, space = 0.02, gp = gp.Friendly, ...)
-pmos.max <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
-  labels = FALSE, space = 0.02, gp = gp.max, ...)
+## pmos.Friendly <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
+##   labels = FALSE, space = 0.02, gp = gp.Friendly, ...)
+## pmos.max <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
+##   labels = FALSE, space = 0.02, gp = gp.max, ...)
 
-hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, correct = FALSE)
+hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
 {
   type <- match.arg(type)
   if(type == "HCL") {
@@ -109,7 +109,7 @@ hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, co
     luminance = seq(0, 100, length = grid.n)
     nc <- length(chroma)
     nl <- length(luminance)
-    color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, verbose = FALSE, correct = correct))
+    color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
     xlab <- "chroma"
     ylab <- "luminance"
     main <- paste("hue =", round(hue, digits = 0))
@@ -166,58 +166,31 @@ plot.slice <- function(color.slice)
 
 
 \begin{abstract}
-Story starts out not from exploratory analysis with \proglang{R}
-but from the problem of visualizing independence. Several
-exploratory approaches but not combined with significance
-testing.
 
-Paper could be structured in the following way
-\begin{itemize}
-  \item Introduction
-  \item Tests
-  \item Data sets
-  \item Visualization Techniques
-    \begin{itemize}
-      \item Mosaic displays
-      \item Association plots
-      \item Residuals-based shading
-    \end{itemize}
-  \item Extensions
-    \begin{itemize}
-      \item max-shading
-      \item HCL colors
-      \item conditional independence (coplots)
-      \item \textit{not the implementation, just mention in summary}
-    \end{itemize}
-  \item Summary
-\end{itemize}
+Visualizing independence by association and mosaic plots.
 
-The \proglang{R} side then has to be described in another paper,
-probably for the Journal of Statistical Software.\\[0.3cm]
+Enhancements: diverging color palette based on HCL color space
+combined with visualization of the result of a significance test.
+
+Extensions to visualizing conditional independence.\\[0.3cm]
+
 \textbf{Key Words:} Association plots; Conditional inference; 
   Contingency tables; HCL colors; HSV colors; Mosaic plots; Permutation tests.
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
 
-Statistical models built for the analysis of multivariate data
-quickly become complex with increasing dimensionality.
-One idea of visualization techniques is to
-use the human visual system to detect structures in the data that
-possibly are not obvious from solely numeric output (e.g., test
-statistics).
-The \textsf{R} package \texttt{vcd}---inspired by the Book ``Visualizing Categorical
-Data'' \citep{vcd:Friendly:2000}---includes methods for the (mostly
-graphical) exploration of categorical data, such as:
-\begin{itemize}
- \item fitting and graphing of discrete distributions,
- \item plots and tests for independence and symmetry problems,
- \item visualization techniques for log-linear models.
-\end{itemize}
-Here, we focus on the visualization of independence,
-in particular in 2-way tables.
+independence in 2-way tables
 
-\section{Tests for Independence in 2-way Tables} \label{sec:tests}
+association and mosaic displays
+
+colors and color spaces
+
+\section{Independence in 2-way Tables}
+\label{sec:2way}
+
+\subsection{Tests}
+\label{sec:tests}
 
 We consider a 2-way contingency table with cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$ and row and column sums
@@ -280,7 +253,9 @@ asymptotic tests of the odds ratio (for $2\times2$ tables) and the Mantel-Haenze
 test.
 
 
-\section{Visualization Techniques for 2-way Tables} \label{sec:visualization}
+\section{Visualizations} \label{sec:visualization}
+
+ONLY SHAPE! not color
 
 The two best known visualization techniques for independence in 2-way tables are
 association plots and mosaic plots. Both are suitable to bring out
@@ -289,9 +264,8 @@ The former focuses on the visualization of the Pearson residuals $r_{ij}$ (under
 independence) while the latter primarily displays the observed frequencies
 $n_{ij}$.
 
-\subsection{Association Plots}
-
-Association plots \citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
+\textbf{Association Plots}
+\citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
 each cell is represented by a rectangle that has (signed) height
 proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
 square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
@@ -306,8 +280,7 @@ fewer games ending 1--0 and more ending 1--1 than would be expected under indepe
 But this does not yet imply the significance of some test statistic.
 
 \subsection{Mosaic Plots}
-
-Mosaic plots can be seen as an extension of grouped
+\citep{vcd:Hartigan+Kleiner:1981} can be seen as an extension of grouped
 bar charts where width and height of the bars show the relative
 frequencies of the two variables: a mosaic plot simply
 consists of a collection of tiles whose
@@ -335,39 +308,14 @@ this shading does not provide a visualization of the maximum test (\ref{eq:MaxAb
 as in general it is unknown to which significance level $\alpha$ the
 values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
 
-Figure \ref{fig:goals-mosaic-classic} shows the Friendly mosaic plot for
-the same Bundesliga data as in Figure \ref{fig:goals-assoc-classic}.
-In this plot, the residuals
-are visualized by the color shading of the cells. Again, the cells for
-the 1--0 and 1--1 results are highlighted and furthermore, there seem to be
-too many 6--3 results than would be plausible under independence. Whereas
-the association plot in Figure \ref{fig:goals-assoc-classic} contains
-no information about the result of a test for independence, the shading
-in this plot conveys the impression that there might be
-significant dependence (which would indicate that there
-is not only {\em no} home field advantage in the German Bundesliga in 1995/6 but even
-an advantage for the away team). However, it is unclear whether there
-is evidence for this or not.
 
-\section{Extensions} \label{sec:extensions}
+\section{Residual-based Shadings} \label{sec:shadings}
 
-In this section, we suggest some improvements and extensions which can be
-applied to both visualization techniques introduced in Section
-\ref{sec:visualization}. First, the visual enhancements
-\begin{itemize}
-\item combining visualization of and testing for independence
-\item improved color schemes
-\end{itemize}
-are addressed. Second, the implementation enhancements
-\begin{itemize}
-\item more modular implementation using \texttt{grid}
-\item more flexible plotting parameter specification
-\end{itemize}
-are described. None of these should be thought of as finished work
-but rather as a collection of ideas which still need thorough
-refinement and proper implementation.
+remarks: Friendly 1994
 
-\subsection{Visualization Enhancements}
+\subsection{Colors}
+
+\subsection{Significance}
 
 The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
 substantial improvement of the original mosaic plots and enhanced them
@@ -438,44 +386,17 @@ evidence against independence for the Bundesliga data, but that the
 null hypothesis has to be rejected for the Hair-Eye-Color data.
 
 
-\subsection{Implementation Enhancements}
 
-The current implementation of association and mosaic plots in \textsf{R} suffers
-from two main disadvantages: First, it is not easy to recycle the
-plots in conditioning plots or pairs plots (like mosaic matrices) as
-they have been implemented using \textsf{R}'s base graphics engine where in
-general plotting to relative coordinates is not supported.
-The new implementation was written from scratch in \texttt{grid} offering
-much more versatility amongst some minor advantages and convenient
-improvements. Second, the graphics parameters of the rectangles in
-association and mosaic plots (like in almost all standard \textsf{R}
-plots), such as color and line type, cannot be specified for each cell
-by the user. To overcome this the current implementation in \texttt{vcd}
-allows the user to specify either arrays of graphics parameters
-of the same dimensionality as the object being plotted or a function
-which computes these graphics parameters based on the original table
-and its Pearson residuals. Functions are provided for the shading schemes
-described in the previous section. Without this feature we would not be
-able to specify the shading schemes described in the previous section
-in such a flexible way.
-
-
-\section{Multi-way Tables}
+\section{Extensions to Conditional Independence}
 
 Independence problems do not only occur in 2-way tables, although that
 is an important special case, but they are also important in tables of
 higher dimensionality and can follow much more complex patterns.
 These are again defined based on the underlying table of theoretical cell probabilities
 $(\pi_{ij\dots})$ with more than two dimensions. Models of interest include the
-null hypotheses of:
-\begin{itemize}
- \item total independence:
-  $\pi_{ijk\dots} = \pi_{i++\dots}\pi_{+j+\dots}\pi_{++k\dots}\dots$
- \item conditional independence:
-  $\pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots}$
- \item joint independence:
-  $\pi_{ijk\dots} = \pi_{ij+\dots}\pi_{++k\dots}$
-\end{itemize}
+null hypotheses of conditional independence:
+  \[ \pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots} \]
+
 Classical non-graphical methods for these problems include the $\chi^2$
 test, Fisher's exact test, the Cochran-Mantel-Haenzel test (for $2 \times 2 \times
 K$-tables), and the analysis of log-linear models for more
@@ -503,24 +424,16 @@ a conditional independence model is fitted in each plot (see Figure
 
 
 \section{Conclusions}
-We suggest a set of enhancements for visualizing the independence
-problem in 2-way tables with some outlook to multi-way tables. The
-extensions aim at improving the visualization by displaying both
-the size of the residuals and the significance of a test for
-independence and by using better color schemes. Furthermore, a new
-implementation is outlined based on the graphics package \texttt{grid}
-which provides more modular design and more flexible specification
-of graphical parameters.
 
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[htbp]
 \begin{center}
 <<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.assocplot(emp1, gp = gp.binary)
+assoc(emp1)
 @
 <<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaicplot(t(emp1), shade = TRUE, main = "")
+mosaic(emp1, split_vertical = TRUE)
 @
 \caption{Classic association and mosaic plot for the ``Replaced'' subset of the Employment data.}
 \label{fig:classic}
@@ -530,120 +443,17 @@ mosaicplot(t(emp1), shade = TRUE, main = "")
 
 \begin{figure}[htbp]
 \begin{center}
-<<emp1-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(emp1, gp = gp.Friendly)
-@
-<<emp1-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(emp1, gp = gp.max)
-@
-\caption{Mosaic plots for the ``Replaced'' subset of the Employment data.}
-\label{fig:emp1}
-\end{center}
-\end{figure}
-
-\begin{figure}[htbp]
-\begin{center}
 <<art-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(art, gp = gp.Friendly)
+mosaic(art, gp = shading_Friendly)
 @
 <<art-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-grid.mosaicplot(art, gp = gp.max)
+mosaic(art, gp = shading_max)
 @
 \caption{Mosaic plots for the Arthritis data.}
 \label{fig:art}
 \end{center}
 \end{figure}
 
-
-\setkeys{Gin}{width=0.8\textwidth}
-\begin{figure}[htbp]
-\begin{center}
-<<Friendly-hue,fig=TRUE,echo=FALSE,height=4.8,width=8>>=
-plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
-dummy <- 0:100/100
-dummy.col <- hsv(dummy[-101] + 1/200, 1, 1)
-rect(dummy[-101], 0.6, dummy[-1], 1, border = dummy.col, col = dummy.col)
-rect(0, 0.6, 1, 1)
-axis(3)
-mtext("hue", line = 2, cex = 1.5)
-text(1, 0.45, "saturation = 1\nvalue = 1", pos = 2, cex = 1.2)
-lines(c(0.1, 0), c(0.3, 0.6), lty = 2)
-lines(c(2/3, 2/3), c(0.3, 0.6), lty = 2)
-rect(0, 0.1, 0.2, 0.3, col = hsv(0, 1, 1))
-rect(2/3 - 0.1, 0.1, 2/3 + 0.1, 0.3, col = hsv(2/3, 1, 1))
-text(0.1, 0.1, expression(r[ij] < 0), pos = 1, cex = 1.5)
-text(2/3, 0.1, expression(r[ij] > 0), pos = 1, cex = 1.5)
-@
-
-<<Friendly-sat,fig=TRUE,echo=FALSE,height=4.8,width=8>>=
-plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
-dummy <- 0:100/100
-dummy.col <- hsv(2/3, dummy[-101] + 1/200, 1)
-rect(dummy[-101], 0.8, dummy[-1], 1, border = dummy.col, col = dummy.col)
-dummy.col <- hsv(0, dummy[-101] + 1/200, 1)
-rect(dummy[-101], 0.6, dummy[-1], 0.8, border = dummy.col, col = dummy.col)
-rect(0, 0.8, 1, 1)
-rect(0, 0.6, 1, 0.8)
-axis(3)
-mtext("saturation", line = 2, cex = 1.5)
-mtext(c("h = 0", "h = 2/3"), side = 2, at = c(0.7, 0.9), las = 1, cex = 1.2)
-text(0.8, 0.5, "value = 1", pos = 2, cex = 1.2)
-lines(c(0.1, 0), c(0.3, 0.6), lty = 2)
-lines(c(0.5, 0.5), c(0.3, 0.6), lty = 2)
-lines(c(0.9, 1), c(0.3, 0.6), lty = 2)
-rect(0, 0.2, 0.2, 0.3, col = hsv(2/3, 0, 1))
-rect(0, 0.1, 0.2, 0.2, col = hsv(0, 0, 1))
-rect(0.4, 0.2, 0.6, 0.3, col = hsv(2/3, 0.5, 1))
-rect(0.4, 0.1, 0.6, 0.2, col = hsv(0, 0.5, 1))
-rect(0.8, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
-rect(0.8, 0.1, 1, 0.2, col = hsv(0, 1, 1))
-text(0.1, 0.1, expression(abs(r[ij]) < 2), pos = 1, cex = 1.5)
-text(0.5, 0.1, expression(2 < abs(r[ij]) < 4), pos = 1, cex = 1.5)
-text(0.9, 0.1, expression(abs(r[ij]) > 4), pos = 1, cex = 1.5)
-@
-
-<<Friendly-val,fig=TRUE,echo=FALSE,height=4.8,width=8>>=
-plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
-dummy <- 0:100/100
-dummy.col <- hsv(2/3, 1, dummy[-101] + 1/200)
-rect(dummy[-101], 0.8, dummy[-1], 1, border = dummy.col, col = dummy.col)
-dummy.col <- hsv(0, 1, dummy[-101] + 1/200)
-rect(dummy[-101], 0.6, dummy[-1], 0.8, border = dummy.col, col = dummy.col)
-rect(0, 0.8, 1, 1)
-rect(0, 0.6, 1, 0.8)
-axis(3)
-mtext("value", line = 2, cex = 1.5)
-mtext(c("h = 0", "h = 2/3"), side = 2, at = c(0.7, 0.9), las = 1, cex = 1.2)
-text(0, 0.5, paste("saturation =", 1), pos = 4, cex = 1.2)
-lines(c(0.85, 1), c(0.3, 0.6), lty = 2)
-rect(0.7, 0.2, 0.8, 0.3, col = hsv(2/3, 0, 1))
-rect(0.8, 0.2, 0.9, 0.3, col = hsv(2/3, 0.5, 1))
-rect(0.9, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
-rect(0.7, 0.1, 0.8, 0.2, col = hsv(0, 0, 1))
-rect(0.8, 0.1, 0.9, 0.2, col = hsv(0, 0.5, 1))
-rect(0.9, 0.1, 1, 0.2, col = hsv(0, 1, 1))
-lines(c(0.5, 0.5), c(0.3, 0.6), lty = 2)
-lines(c(0.85, 1), c(0.3, 0.6), lty = 2)
-rect(0.35, 0.2, 0.45, 0.3, col = hsv(2/3, 0, 0.5))
-rect(0.45, 0.2, 0.55, 0.3, col = hsv(2/3, 0.5, 0.5))
-rect(0.55, 0.2, 0.65, 0.3, col = hsv(2/3, 1, 0.5))
-rect(0.35, 0.1, 0.45, 0.2, col = hsv(0, 0, 0.5))
-rect(0.45, 0.1, 0.55, 0.2, col = hsv(0, 0.5, 0.5))
-rect(0.55, 0.1, 0.65, 0.2, col = hsv(0, 1, 0.5))
-rect(0.7, 0.2, 0.8, 0.3, col = hsv(2/3, 0, 1))
-rect(0.8, 0.2, 0.9, 0.3, col = hsv(2/3, 0.5, 1))
-rect(0.9, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
-rect(0.7, 0.1, 0.8, 0.2, col = hsv(0, 0, 1))
-rect(0.8, 0.1, 0.9, 0.2, col = hsv(0, 0.5, 1))
-rect(0.9, 0.1, 1, 0.2, col = hsv(0, 1, 1))
-text(0.5, 0.1, "non-significant", pos = 1, cex = 1.5)
-text(0.85, 0.1, "significant", pos = 1, cex = 1.5)
-@
-
-\caption{Extended Friendly shading in HSV space.}
-\label{fig:Friendly-HSV}
-\end{center}
-\end{figure}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -805,21 +615,136 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 \begin{figure}[htbp]
 \begin{center}
 <<UCB-mosaic1,fig=TRUE,echo=FALSE,height=6,width=8>>=
-fm <- loglm(~(EmploymentStatus+EmploymentLength)*LayoffCause, data = emp, fitted = TRUE)
-my.gp <- gp.HCLshading(emp, residuals(fm, type = "pearson"))
-my.gp$p.value <- summary(fm)$tests[2,3]
-my.gp$lty <- c(1,1)
-grid.mosaicplot(emp, gp = my.gp, margin = ~(EmploymentStatus+EmploymentLength)*LayoffCause,
-  space = c(0.1, 0.01, 0), dir = "v")
+## fm <- loglm(~(EmploymentStatus+EmploymentLength)*LayoffCause, data = emp, fitted = TRUE)
+## my.gp <- gp.HCLshading(emp, residuals(fm, type = "pearson"))
+## my.gp$p.value <- summary(fm)$tests[2,3]
+## my.gp$lty <- c(1,1)
+## grid.mosaicplot(emp, gp = my.gp, margin = ~(EmploymentStatus+EmploymentLength)*LayoffCause,
+##   space = c(0.1, 0.01, 0), dir = "v")
+mosaic(emp, expected = ~(EmploymentStatus+EmploymentLength)*LayoffCause)
 @
 \caption{Employment data with mosaic display.}
 \label{fig:emp-mosaic1}
 \end{center}
 \end{figure}
 
+
+\nocite{*}
+\bibliography{vcd}
+
+\end{document}
+
+
+
+\setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-mosaic2,fig=TRUE,echo=FALSE,height=4,width=8>>=
+<<Friendly-hue,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
+dummy <- 0:100/100
+dummy.col <- hsv(dummy[-101] + 1/200, 1, 1)
+rect(dummy[-101], 0.6, dummy[-1], 1, border = dummy.col, col = dummy.col)
+rect(0, 0.6, 1, 1)
+axis(3)
+mtext("hue", line = 2, cex = 1.5)
+text(1, 0.45, "saturation = 1\nvalue = 1", pos = 2, cex = 1.2)
+lines(c(0.1, 0), c(0.3, 0.6), lty = 2)
+lines(c(2/3, 2/3), c(0.3, 0.6), lty = 2)
+rect(0, 0.1, 0.2, 0.3, col = hsv(0, 1, 1))
+rect(2/3 - 0.1, 0.1, 2/3 + 0.1, 0.3, col = hsv(2/3, 1, 1))
+text(0.1, 0.1, expression(r[ij] < 0), pos = 1, cex = 1.5)
+text(2/3, 0.1, expression(r[ij] > 0), pos = 1, cex = 1.5)
+@
+
+<<Friendly-sat,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
+dummy <- 0:100/100
+dummy.col <- hsv(2/3, dummy[-101] + 1/200, 1)
+rect(dummy[-101], 0.8, dummy[-1], 1, border = dummy.col, col = dummy.col)
+dummy.col <- hsv(0, dummy[-101] + 1/200, 1)
+rect(dummy[-101], 0.6, dummy[-1], 0.8, border = dummy.col, col = dummy.col)
+rect(0, 0.8, 1, 1)
+rect(0, 0.6, 1, 0.8)
+axis(3)
+mtext("saturation", line = 2, cex = 1.5)
+mtext(c("h = 0", "h = 2/3"), side = 2, at = c(0.7, 0.9), las = 1, cex = 1.2)
+text(0.8, 0.5, "value = 1", pos = 2, cex = 1.2)
+lines(c(0.1, 0), c(0.3, 0.6), lty = 2)
+lines(c(0.5, 0.5), c(0.3, 0.6), lty = 2)
+lines(c(0.9, 1), c(0.3, 0.6), lty = 2)
+rect(0, 0.2, 0.2, 0.3, col = hsv(2/3, 0, 1))
+rect(0, 0.1, 0.2, 0.2, col = hsv(0, 0, 1))
+rect(0.4, 0.2, 0.6, 0.3, col = hsv(2/3, 0.5, 1))
+rect(0.4, 0.1, 0.6, 0.2, col = hsv(0, 0.5, 1))
+rect(0.8, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
+rect(0.8, 0.1, 1, 0.2, col = hsv(0, 1, 1))
+text(0.1, 0.1, expression(abs(r[ij]) < 2), pos = 1, cex = 1.5)
+text(0.5, 0.1, expression((2 < abs(r[ij])) < 4), pos = 1, cex = 1.5)
+text(0.9, 0.1, expression(abs(r[ij]) > 4), pos = 1, cex = 1.5)
+@
+
+<<Friendly-val,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
+dummy <- 0:100/100
+dummy.col <- hsv(2/3, 1, dummy[-101] + 1/200)
+rect(dummy[-101], 0.8, dummy[-1], 1, border = dummy.col, col = dummy.col)
+dummy.col <- hsv(0, 1, dummy[-101] + 1/200)
+rect(dummy[-101], 0.6, dummy[-1], 0.8, border = dummy.col, col = dummy.col)
+rect(0, 0.8, 1, 1)
+rect(0, 0.6, 1, 0.8)
+axis(3)
+mtext("value", line = 2, cex = 1.5)
+mtext(c("h = 0", "h = 2/3"), side = 2, at = c(0.7, 0.9), las = 1, cex = 1.2)
+text(0, 0.5, paste("saturation =", 1), pos = 4, cex = 1.2)
+lines(c(0.85, 1), c(0.3, 0.6), lty = 2)
+rect(0.7, 0.2, 0.8, 0.3, col = hsv(2/3, 0, 1))
+rect(0.8, 0.2, 0.9, 0.3, col = hsv(2/3, 0.5, 1))
+rect(0.9, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
+rect(0.7, 0.1, 0.8, 0.2, col = hsv(0, 0, 1))
+rect(0.8, 0.1, 0.9, 0.2, col = hsv(0, 0.5, 1))
+rect(0.9, 0.1, 1, 0.2, col = hsv(0, 1, 1))
+lines(c(0.5, 0.5), c(0.3, 0.6), lty = 2)
+lines(c(0.85, 1), c(0.3, 0.6), lty = 2)
+rect(0.35, 0.2, 0.45, 0.3, col = hsv(2/3, 0, 0.5))
+rect(0.45, 0.2, 0.55, 0.3, col = hsv(2/3, 0.5, 0.5))
+rect(0.55, 0.2, 0.65, 0.3, col = hsv(2/3, 1, 0.5))
+rect(0.35, 0.1, 0.45, 0.2, col = hsv(0, 0, 0.5))
+rect(0.45, 0.1, 0.55, 0.2, col = hsv(0, 0.5, 0.5))
+rect(0.55, 0.1, 0.65, 0.2, col = hsv(0, 1, 0.5))
+rect(0.7, 0.2, 0.8, 0.3, col = hsv(2/3, 0, 1))
+rect(0.8, 0.2, 0.9, 0.3, col = hsv(2/3, 0.5, 1))
+rect(0.9, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
+rect(0.7, 0.1, 0.8, 0.2, col = hsv(0, 0, 1))
+rect(0.8, 0.1, 0.9, 0.2, col = hsv(0, 0.5, 1))
+rect(0.9, 0.1, 1, 0.2, col = hsv(0, 1, 1))
+text(0.5, 0.1, "non-significant", pos = 1, cex = 1.5)
+text(0.85, 0.1, "significant", pos = 1, cex = 1.5)
+@
+
+\caption{Extended Friendly shading in HSV space.}
+\label{fig:Friendly-HSV}
+\end{center}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+\begin{center}
+<<emp1-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>
+mosaic(emp1, gp = shading_Friendly)
+@
+<<emp1-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>
+mosaic(emp1, gp = shading_max)
+@
+\caption{Mosaic plots for the ``Replaced'' subset of the Employment data.}
+\label{fig:emp1}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\begin{center}
+<<UCB-mosaic2,fig=TRUE,echo=FALSE,height=4,width=8>>
 tabplot(emp, panel = pmos.max)
 @
 \caption{Employment data with conditioned mosaic display.}
@@ -829,7 +754,7 @@ tabplot(emp, panel = pmos.max)
 
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-assoc,fig=TRUE,echo=FALSE,height=4,width=8>>=
+<<UCB-assoc,fig=TRUE,echo=FALSE,height=4,width=8>>
 tabplot(emp)
 @
 \caption{Employment data with conditioned association plot.}
@@ -837,10 +762,4 @@ tabplot(emp)
 \end{center}
 \end{figure}
 
-
-
-\nocite{*}
-\bibliography{vcd}
-
-\end{document}
 
