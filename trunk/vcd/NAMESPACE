@@ -2,6 +2,7 @@ export(
 ## generic functions
        "agreementplot",
        "assoc",
+       "cotabplot",
        "distplot",	    
        "doubledecker",
        "fourfold",
@@ -54,6 +55,9 @@ export(
        "pairs_assoc",
        "struc_mosaic",
        "struc_assoc",
+       "cotab_mosaic",
+       "cotab_assoc",
+       "cotab_coindep",
 
 ## `normal' functions
        "Kappa",
@@ -78,28 +82,41 @@ import(MASS)
 import(stats)
 
 S3method("[[", "structable")
+
 S3method("agreementplot", "default")
 S3method("agreementplot", "formula")
+
 S3method("assoc", "default")
 S3method("assoc", "formula")
 S3method("assoc", "loglm")
+
+S3method("cotabplot", "default")
+S3method("cotabplot", "formula")
+
 S3method("doubledecker", "default")
 S3method("doubledecker", "formula")
+
 S3method("mosaic", "default")
 S3method("mosaic", "formula")
 S3method("mosaic", "loglm")
+
 S3method("rootogram", "default")
 S3method("rootogram", "goodfit")
+
 S3method("sieveplot", "default")
 S3method("sieveplot", "formula")
+
 S3method("structable", "default")
 S3method("structable", "formula")
+
 S3method("spineplot", "default")
 S3method("spineplot", "formula")
 
 S3method("pairs", "table")
 
 S3method("fitted", "goodfit")
+S3method("fitted", "coindep_test")
+
 S3method("predict", "goodfit")
 
 S3method("confint", "Kappa")
