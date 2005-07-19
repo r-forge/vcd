@@ -1,143 +1,103 @@
-tabplot <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, ...),
-                    margins = rep(1,4), ...)
+cotabplot <- function(x, ...)
 {
-  UseMethod("tabplot")
+  UseMethod("cotabplot")
 }
 
-tabplot.formula <- function(formula, panel = function(x, ...) assoc(x, newpage = FALSE, ...),
-                    margins = rep(1,4), data, ...)
+cotabplot.formula <- function(formula, data = NULL, ...)
 {
-  formula <- as.character(formula)
-  formula <- paste(paste(c("Freq", formula[1:2]), collapse = " "), formula[3], sep = " + ")
-  formula <- gsub("\\|", "+", formula)
-  formula <- gsub("\\*", "+", formula)
-  x <- xtabs(as.formula(formula), data = as.data.frame(data))
-  tabplot(x, panel = panel, margins = margins, ...)
-}
-
-
-tabplot.default <- function(x, panel = function(x, ...) assoc(x, newpage = FALSE, labeling = NULL, ...), margins = rep(1, 4), fontsize = 12, ...)
-{
-  grid.newpage()
-
-  if(length(dim(x)) <= 2) panel(x, ...) ## no conditioning variables
-  else {
-
-  axis.names <- names(dimnames(x))[1:2]
-  condition <- dimnames(x)[-(1:2)]
-  condvars <- names(condition)
-  ncond <- length(condvars)
-  nlevels <- sapply(condition, length)
-  nplots <- prod(nlevels)
-  condition <- as.matrix(sapply(expand.grid(condition), as.character))
-
-  ## compute layout
-  layout <- c(1,1,1) ## rows, cols, pages
-  if(ncond == 1) {
-    layout[2] <- ceiling(sqrt(floor(nlevels)))
-    layout[1] <- ceiling(nlevels/layout[2])
-    layout <- expand.grid(lapply(layout, function(x) 1:x))[1:nplots,]
-  }
-  else {
-    layout[1] <- nlevels[1]
-    layout[2] <- nlevels[2]
-    if(ncond > 3) layout[3] <- nplots/prod(nlevels[1:2])
-    if(layout[3] > 1) stop("multiple pages not supported yet")
-    layout <- expand.grid(lapply(layout, function(x) 1:x))
-  }
-
-  nr <- max(layout[,1])
-  nc <- max(layout[,2])
-  if(!is.null(axis.names[2])) margins[1] <- margins[1] + 1
-  if(!is.null(axis.names[1])) margins[2] <- margins[2] + 1
-  pushViewport(plotViewport(margins))
-
-  grid.text(axis.names[1], x = unit(0, "native") - unit(1, "lines"), rot = 90,
-            gp = gpar(fontsize = fontsize))
-  grid.text(axis.names[2], y = unit(0, "native") - unit(1, "lines"),
-            gp = gpar(fontsize = fontsize))
-
-  pushViewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
-
-  strUnit <- unit(2 * ncol(condition), "strheight", "A")
-  cellport <- viewport(layout = grid.layout(2, 1,
-        heights = unit.c(strUnit, unit(1, "npc") - strUnit)))
-
-  for(i in 1:nrow(condition)) {
-    condi <- paste(condvars, " = \"", condition[i,], "\"", sep = "", collapse = ", ")
-    condistr <- paste(condvars, condition[i,], sep = " = ")
-
-    tabi <- eval(parse(text = paste("x[,,", condi, "]", sep = "")))
-
-    pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
-    pushViewport(cellport)
-    pushViewport(viewport(layout.pos.row = 1))
-    grid.rect(gp = gpar(fill = grey(0.9)))
-    grid.text(condistr, y = ncond:1/ncond - 1/(2*ncond)) #Z# , gp = gpar(fontsize = fontsize))
-    grid.segments(0, 0:ncond/ncond, 1, 0:ncond/ncond)
-    popViewport()
-
-    pushViewport(viewport(layout.pos.row = 2))
-    panel(tabi, ...)
-    popViewport(2)
-    grid.rect()
-    popViewport()
-  }
-  popViewport(2)
-  }
-
-  invisible(x)
-}
-
-tplot <- function(x,
-                  indep = NULL,
-		  cond = NULL,
-                  panel = function(x, ...) mosaic(x, newpage = FALSE, legend = NULL,
-		    shading = NULL, pop = TRUE, split_vertical = TRUE, ...),
-		  margins = rep(1, 4),
-		  text.gp = gpar(fontsize = 12),
-		  pop = TRUE,
-		  ...)
-{
-  grid.newpage()
-
-  ldx <- length(dim(x))
-  if(is.null(indep)) { indep <- if(ldx > 1) 1:2 else 1 }
-  if(is.null(cond) && ldx > 2) cond <- (max(indep) + 1):ldx
-
-  if(is.character(indep)) indep <- match(indep, names(dimnames(x)))
-  if(is.character(cond)) cond <- match(cond, names(dimnames(x)))
+  m <- match.call()
+  edata <- eval(m$data, parent.frame())
   
+  fstr <- deparse(formula)
+  fstr <- gsub("*", "+", fstr, extended = FALSE, fixed = TRUE)
+  fstr <- gsub("/", "+", fstr, extended = FALSE, fixed = TRUE)
+  fstr <- gsub("(", "", fstr, extended = FALSE, fixed = TRUE)
+  fstr <- gsub(")", "", fstr, extended = FALSE, fixed = TRUE)  
+  
+  fstr <- strsplit(paste(fstr, collapse = ""), "~")
+  vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
+  varnames <- vars[[1]]
+  condnames <- if(length(vars) > 1) vars[[2]] else NULL
+
+  if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
+    tab <- as.table(data)
+    if(all(varnames != ".")) {
+      ind <- match(varnames, names(dimnames(tab)))
+      if (any(is.na(ind)))
+        stop(paste("Can't find", paste(varnames[is.na(ind)], collapse=" / "), "in", deparse(substitute(data))))
+      
+      if (!is.null(condnames)) {
+        condind <- match(condnames, names(dimnames(tab)))
+        if (any(is.na(condind)))
+          stop(paste("Can't find", paste(condnames[is.na(condind)], collapse=" / "), "in", deparse(substitute(data))))
+        ind <- c(condind, ind)
+      }
+      tab <- margin.table(tab, ind)
+    }
+  } else {
+    tab <- if ("Freq" %in% colnames(data))
+      xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = " + "))),
+            data = data)
+    else
+      xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = " + "))),
+            data = data)
+  }
+  tab <- margin.table(tab, match(c(varnames, condnames), names(dimnames(tab))))
+  cotabplot(tab, cond = condnames, ...)
+}
+
+
+cotabplot.default <- function(x, cond = NULL,
+  panel = cotab_mosaic, panel_args = list(),
+  margins = rep(1, 4),
+  text_gp = gpar(fontsize = 12), rect_gp = gpar(fill = grey(0.9)),
+  pop = TRUE, newpage = TRUE,
+  ...)
+{
+  ## coerce to table
+  x <- as.table(x)
+  
+  ## initialize newpage
+  if(newpage) grid.newpage()
+
+  ## process default option
+  ldx <- length(dim(x))
+  if(is.null(cond)) {
+    indep <- if(ldx > 1) 1:2 else 1
+    if(ldx > 2) cond <- 3:ldx
+  } else {
+    if(is.character(cond)) cond <- match(cond, names(dimnames(x)))
+    cond <- as.integer(cond)
+    indep <- (1:ldx)[!(1:ldx %in% cond)] 
+  }
+
+  ## sort margins      
   x <- margin.table(x, c(indep, cond))
 
-  if(is.null(cond)) panel(x, ...) ## no conditioning variables
+  ## convenience variables that describe conditioning variables  
+  if(is.null(cond)) {
+    cond.n <- 0
+    cond.num <- cond.dnam <- cond.char <- NULL
+  } else {
+    cond.n <- length(cond)               ## number of variables
+    cond.num <- (length(indep) + 1):ldx  ## position in x
+    cond.dnam <- dimnames(x)[cond.num]   ## corresponding dimnames
+    cond.char <- names(cond.dnam)        ## names of variables
+  }
+
+  ## create panel function (if necessary)
+  if(inherits(panel, "panel_generator"))
+    panel <- do.call("panel", c(list(x, cond.char), as.list(panel_args), list(...)))
+
+  if(cond.n < 1) panel(x, NULL) ## no conditioning variables
   else {
-
-  ind.n <- length(indep)
-  ind.num <- 1:ind.n
-  ind.dnam <- dimnames(x)[ind.num]
-  ind.char <- names(ind.dnam)
   
-  cond.n <- length(cond)
-  cond.num <- (ind.n + 1):length(dim(x))
-  cond.dnam <- dimnames(x)[cond.num]
-  cond.char <- names(cond.dnam)
-
-  ## only for coindep.plot!!
-  indep.formula <- as.formula(paste("~ (",
-                                    paste(ind.char, collapse = " + "),
-				    ") * ",
-				    paste(cond.char, collapse = " * "),
-				    sep = ""))
-  fm <- loglm(indep.formula, data = x, fitted = TRUE)
-  ## expected
-  xx <- co_table(x, cond.num)
-
   cond.nlevels <- sapply(cond.dnam, length)
   nplots <- prod(cond.nlevels)
-  condition <- as.matrix(sapply(expand.grid(cond.dnam), as.character)) ## FIXME: needed?
+  condition <- as.matrix(expand.grid(cond.dnam))
 
   ## compute layout
+  #Z# needs fixing for more than two conditioning variables
   layout <- c(1,1,1) ## rows, cols, pages
   if(cond.n == 1) {
     layout[2] <- ceiling(sqrt(floor(cond.nlevels)))
@@ -147,14 +107,14 @@ tplot <- function(x,
   else {
     layout[1] <- cond.nlevels[1]
     layout[2] <- cond.nlevels[2]
-    if(cond.n > 3) layout[3] <- nplots/prod(cond.nlevels[1:2])
+    if(cond.n >= 3) layout[3] <- nplots/prod(cond.nlevels[1:2]) #Z# FIXME
     if(layout[3] > 1) stop("multiple pages not supported yet")
     layout <- expand.grid(lapply(layout, function(x) 1:x))
   }
 
+  ## push basic grid of nr x nc cells
   nr <- max(layout[,1])
   nc <- max(layout[,2])
-
   pushViewport(plotViewport(margins))
   pushViewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
 
@@ -163,20 +123,27 @@ tplot <- function(x,
         heights = unit.c(strUnit, unit(1, "npc") - strUnit)),
 	name = name)
 
+  ## go through each conditioning combination
   for(i in 1:nrow(condition)) {
-    tabi <- xx[[i]]
-    condistr <- paste(cond.char, condition[i,], sep = " = ")
 
+    ## conditioning information in ith cycle
+    condi <- as.vector(condition[i,])
+    names(condi) <- colnames(condition)
+    condistr <- paste(condi, collapse = ".")
+    condilab <- paste(cond.char, condi, sep = " = ")
+
+    ## header
     pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
-    pushViewport(cellport(paste("cell", paste(condition[i,], collapse = "."), sep = ".")))
-    pushViewport(viewport(layout.pos.row = 1, name = paste("lab", paste(condition[i,], collapse = "."), sep = ".")))
-    grid.rect(gp = gpar(fill = grey(0.9)))
-    grid.text(condistr, y = cond.n:1/cond.n - 1/(2*cond.n), gp = text.gp)
+    pushViewport(cellport(paste("cell", condistr, sep = ".")))
+    pushViewport(viewport(layout.pos.row = 1, name = paste("lab", condistr, sep = ".")))
+    grid.rect(gp = rect_gp)
+    grid.text(condilab, y = cond.n:1/cond.n - 1/(2*cond.n), gp = text_gp)
     grid.segments(0, 0:cond.n/cond.n, 1, 0:cond.n/cond.n)
     upViewport()
 
-    pushViewport(viewport(layout.pos.row = 2, name = paste("plot", paste(condition[i,], collapse = "."), sep = ".")))
-    panel(tabi, ...)
+    ## main plot
+    pushViewport(viewport(layout.pos.row = 2, name = paste("plot", condistr, sep = ".")))
+    panel(x, condi)
     upViewport(2)
     grid.rect()
     upViewport()
@@ -187,3 +154,138 @@ tplot <- function(x,
 
   invisible(x)
 }
+
+cotab_mosaic <- function(x, cond = NULL, ...) {
+  function(x, cond) {
+    if(is.null(cond)) mosaic(x, newpage = FALSE, pop = TRUE, ...)
+      else mosaic(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+                  newpage = FALSE, pop = TRUE, ...)
+  }
+}
+class(cotab_mosaic) <- "panel_generator"
+
+cotab_assoc <- function(x, cond = NULL, ylim = NULL, ...) {
+  if(is.null(ylim))
+    ylim <- range(residuals(coindep_test(x, cond, n = 1)))
+  
+  function(x, cond) {
+    if(is.null(cond)) assoc(x, newpage = FALSE, pop = TRUE, ylim = ylim, ...)
+      else assoc(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+                  newpage = FALSE, pop = TRUE, ylim = ylim, ...)
+  }
+}
+class(cotab_assoc) <- "panel_generator"
+
+cotab_coindep <- function(x, cond,
+  test = c("max", "Chisq"), level = NULL, n = 1000,
+  h = NULL, c = NULL, l = NULL, lty = 1,
+  type = c("mosaic", "assoc"),
+  legend = FALSE, split_vertical = TRUE, ylim = NULL, ...)
+{
+  if(is.null(cond))
+    stop("at least one conditioning variable is required")
+
+  ## set color defaults
+  if(is.null(h)) h <- c(260, 0)
+  if(is.null(c)) c <- c(100, 20)
+  if(is.null(l)) l <- c(90, 50)  
+  
+  ## process conditional variables and get independent variables
+  ## store some convenience information
+  ldx <- length(dim(x))
+  if(is.character(cond)) cond <- match(cond, names(dimnames(x)))
+  cond <- as.integer(cond)
+  indep <- (1:ldx)[!(1:ldx %in% cond)] 
+  
+  ## sort margins      
+  x <- margin.table(x, c(indep, cond))
+
+  ind.n <- length(indep)            
+  ind.num <- 1:ind.n                
+  ind.dnam <- dimnames(x)[ind.num]  
+  ind.char <- names(ind.dnam)       
+  cond.n <- length(cond)		
+  cond.num <- (ind.n + 1):length(dim(x))
+  cond.dnam <- dimnames(x)[cond.num]	
+  cond.char <- names(cond.dnam) 	
+
+  test <- match.arg(test)
+  if(test == "max") {
+    if(is.null(level)) level <- c(0.9, 0.99)
+    fm <- coindep_test(x, cond.num, n = n)
+    resids <- residuals(fm)
+
+    col.bins <- fm$qdist(sort(level))
+    gpfun <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+      h = h, c = c, l = l, interpolate = col.bins, lty = lty, p.value = fm$p.value)
+  } else {
+    if(is.null(level)) level <- 0.95
+    level <- level[1]
+    
+    indep.formula <- as.formula(paste("~ (",
+                                      paste(ind.char, collapse = " + "),
+	    			      ") * ",
+				      paste(cond.char, collapse = " * "),
+				      sep = ""))
+    fm <- loglm(indep.formula, data = x, fitted = TRUE)
+    resids <- residuals(fm, type = "pearson")
+    
+    gpfun <- shading_hcl(x, fitted(fm), resids, fm$df,
+      h = h, c = c, l = l, lty = lty)
+  }
+
+  ## if "maxChisq" should be implemented, use something
+  ## along the lines of
+  ## mosaiclist <- list()
+  ## 
+  ## rval <- function(x, indep, cond)
+  ##   mosaiclist[[ ... ]](co_table(margin.table(x, c(indep, cond)), cond)[[ ... ]])
+
+  type <- match.arg(type)
+  if(type == "mosaic") {
+    rval <- function(x, cond) {
+    if(is.null(cond))
+      mosaic(x, newpage = FALSE, pop = TRUE,
+             gp = gpfun, legend = legend, split_vertical = split_vertical, ...)
+    else
+      mosaic(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+             newpage = FALSE, pop = TRUE,
+	     gp = gpfun, legend = legend, split_vertical = split_vertical, ...)
+    }
+  } else {
+    if(is.null(ylim)) ylim <- range(resids)
+    rval <- function(x, cond) {
+    if(is.null(cond))
+      assoc(x, newpage = FALSE, pop = TRUE,
+             gp = gpfun, legend = legend, split_vertical = split_vertical, ylim = ylim, ...)
+    else
+      assoc(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+             newpage = FALSE, pop = TRUE,
+	     gp = gpfun, legend = legend, split_vertical = split_vertical, ylim = ylim, ...)
+    }
+  }
+
+  return(rval)
+}
+class(cotab_coindep) <- "panel_generator"
+
+
+## Examples:
+## these work (although they are not very meaningful)
+## 
+## cotabplot(~ Class + Survived | Age + Sex, data = Titanic)
+## cotabplot(Titanic)
+## cotabplot(Titanic, panel = cotab_assoc)
+
+## here are some bugs in legends function
+## 
+## cotabplot(Titanic, shade = TRUE)
+## cotabplot(Titanic, shade = TRUE, legend = FALSE)
+
+## further illustrations (legends need to be switched on, see above)
+## 
+## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions)
+## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions,
+##   panel = cotab_coindep, legend = TRUE)
+## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions,
+##   panel = cotab_coindep, legend = TRUE, type = "assoc")

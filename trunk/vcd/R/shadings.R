@@ -22,7 +22,7 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   if(is.null(expected) && !is.null(observed)) {
     expected <- loglin(observed, 1:length(dim(observed)), fit = TRUE, print = FALSE)
     df <- expected$df
-    expected <- expected$df
+    expected <- expected$fit
   }
   if(is.null(residuals) && !is.null(observed)) residuals <- (observed - expected)/sqrt(expected)
     
@@ -105,7 +105,7 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   if(is.null(expected) && !is.null(observed)) {
     expected <- loglin(observed, 1:length(dim(observed)), fit = TRUE, print = FALSE)
     df <- expected$df
-    expected <- expected$df
+    expected <- expected$fit
   }
   if(is.null(residuals) && !is.null(observed)) residuals <- (observed - expected)/sqrt(expected)
     
@@ -182,7 +182,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
   if(is.null(c)) c <- c(100, 20)
   if(is.null(l)) l <- c(90, 50)  
   
-  obs.test <- coindep_test(observed, n = n, return_distribution = TRUE)
+  obs.test <- coindep_test(observed, n = n)
   col.bins <- obs.test$qdist(sort(level))
   rval <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         h = h, c = c, l = l, interpolate = col.bins, lty = lty,
