@@ -125,7 +125,7 @@ strucplot <- function(## main parameters
   if (newpage) grid.newpage()
   
   pushViewport(vcdViewport(mar = margins,
-                           legend = shade & !(is.null(legend) || is.logical(legend) && !legend),
+                           legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                            main = !is.null(main), sub = !is.null(sub), keep_aspect_ratio = keep_aspect_ratio,
                            legend_width = legend_width))
 
@@ -176,7 +176,9 @@ strucplot <- function(## main parameters
 
   seekViewport("base") 
   ## one more up if sandwich-mode
-  if (!is.null(main) || !is.null(sub) || (shade & !is.null(legend))) upViewport()
+  if (!is.null(main) || !is.null(sub) ||
+      (shade && !is.null(legend) && !(is.logical(legend) && !legend))
+      ) upViewport()
   if (pop) popViewport() else upViewport()
 
   ## return visualized table
