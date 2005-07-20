@@ -155,7 +155,7 @@ cotabplot.default <- function(x, cond = NULL,
   invisible(x)
 }
 
-cotab_mosaic <- function(x, cond = NULL, ...) {
+cotab_mosaic <- function(x = NULL, cond = NULL, ...) {
   function(x, cond) {
     if(is.null(cond)) mosaic(x, newpage = FALSE, pop = TRUE, ...)
       else mosaic(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
@@ -164,8 +164,8 @@ cotab_mosaic <- function(x, cond = NULL, ...) {
 }
 class(cotab_mosaic) <- "panel_generator"
 
-cotab_assoc <- function(x, cond = NULL, ylim = NULL, ...) {
-  if(is.null(ylim))
+cotab_assoc <- function(x = NULL, cond = NULL, ylim = NULL, ...) {
+  if(is.null(ylim) & !is.null(x))
     ylim <- range(residuals(coindep_test(x, cond, n = 1)))
   
   function(x, cond) {
