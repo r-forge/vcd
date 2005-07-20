@@ -83,24 +83,17 @@
 \SweaveOpts{engine=R,eps=FALSE}
 \setkeys{Gin}{width=0.8\textwidth}
 
-<<preliminaries,echo=FALSE,results=hide>>=
-set.seed(12345)
+<<load_data,echo=FALSE,results=hide>>=
 library(vcd)
 
 data(Arthritis)
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
-data(Employment)
-emp <- aperm(Employment)
-emp1 <- co_table(Employment, "LayoffCause")[["Replaced"]]
+data(UCBAdmissions)
+ucb <- aperm(UCBAdmissions)
 @
 
-<<auxfunctions,echo=FALSE,results=hide>>=
-## pmos.Friendly <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
-##   labels = FALSE, space = 0.02, gp = gp.Friendly, ...)
-## pmos.max <- function(x, ...) grid.mosaicplot(x, panel = TRUE, legend = FALSE,
-##   labels = FALSE, space = 0.02, gp = gp.max, ...)
-
+<<auxiliary_functions,echo=FALSE,results=hide>>=
 hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
 {
   type <- match.arg(type)
@@ -266,7 +259,7 @@ asymptotic tests of the odds ratio (for $2\times2$ tables) and the Mantel-Haenze
 test.
 
 
-\section{Visualizations} \label{sec:visualization}
+\subsection{Visualizations} \label{sec:visualization}
 
 ONLY SHAPE! not color
 
@@ -321,6 +314,24 @@ this shading does not provide a visualization of the maximum test (\ref{eq:MaxAb
 as in general it is unknown to which significance level $\alpha$ the
 values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
 
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+\begin{center}
+<<classic_plots,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(1, 2)))
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
+mosaic(art, newpage = FALSE, margins = c(2.5, 4, 2.5, 3))
+popViewport()
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
+assoc(art, newpage = FALSE, margins = c(5, 2, 5, 4))
+popViewport(2)
+@
+\caption{Classic mosaic and association plot for the Arthritis data.}
+\label{fig:classic}
+\end{center}
+\end{figure}
 
 \section{Residual-based Shadings} \label{sec:shadings}
 
@@ -380,157 +391,10 @@ Advantages
   - based on a perceptually uniform color space
   - device independent
 
-
-\subsection{Significance}
-
-The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
-substantial improvement of the original mosaic plots and enhanced them
-from a plot for contingency tables to a visualization technique for
-log-linear models (and therefore also for certain independence problems).
-However, it has two major drawbacks: First,
-the significance level for the hard-coded critical values 2 and 4 is
-usually unknown. Second, the colors for (light) blue and red
-used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
-in \textsf{R} are not device-independent and
-do not provide homogeneous saturations over different colors
-and copier proofness. We suggest some ways to overcome these drawbacks.
-
-As pointed out in Section \ref{sec:tests}, the critical values for
-the maximum statistic $M$ from (\ref{eq:MaxAbs}) can be derived
-from the permutation distribution. Instead of the hard-coded
-values 2 and 4, the particular critical values, e.g., at the levels
-$\alpha = 0.1$ and $0.01$, for the table to be visualized could be
-used. Hence, exactly those residuals causing the (potential)
-dependency within the table are highlighted. At the moment, these critical values
-are derived in \texttt{vcd} by simulation of the underlying distribution.
-
-The implementation of Friendly mosaic plots in \textsf{SAS}
-uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
-with hues for blue and red, full saturation, and varying luminance
-for lighter colors. The current \textsf{R} implementation is
-based on colors in the HSV (Hue--Saturation--Value) space where
-decreasing the saturation from 1 towards 0
-%% ---given the hue for blue or red and full saturation---
-generates very similar colors
-as increasing the luminance for HLS colors from 0.5 towards 1.
-As an alternative to those HLS and HSV colors, the device-independent
-HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
-used which also provides homogeneous saturations over different colors and copier
-proofness. The resulting association plot (using critical values for
-$\alpha = 0.1$ and $0.01$) for the Bundesliga data can be seen in
-Figure \ref{fig:goals-assoc-signif}. It indicates very clearly that
-there is no evidence for rejecting the hypothesis of independence
-in this table. Thus, there seems to be neither an advantage for
-the home team nor for the away team.
-
-To illustrate what a `postive' example looks like we give the association plot
-for the well-known Hair-Eye-Color data set (avilable in base \textsf{R}) which cross-tabulates the hair and eye
-color and gender of 592 statistics students: Figure \ref{fig:haireye-assoc-signif}
-shows the association plot for the 328 female students. It is easy to see that
-the hypothesis of independence is rejected at 1\% level by the maximum test (\ref{eq:MaxAbs})
-due to higher frequencies of students with hair and eye color
-black/brown and blond/blue and lower frequencies of
-blond/brown and brown/blue than would be plausible under independence. Furthermore,
-it can also be seen that the residual corresponding to the black/blue
-cell is significant at the 10\% level.
-
-We have seen that this approach performs very well when the test statistic
-which should be visualized is the maximum statistic (\ref{eq:MaxAbs}). However,
-it is difficult to extend this approach to general tests for independence,
-in particular in the HCL space, where the ranges of chroma and luminance are
-not independent. In contrast the HSV space has the advantage that all
-three dimensions hue, saturation and value have the range $[0,1]$ and can
-be varied independently. Therefore, a different approach than the one
-described above could be to use the hue for the sign of the residuals as
-before, the saturation for the absolute size of the residuals, and the
-value as an indicator for the significance of some test statistic (only
-using the full value when the overall test for independence rejects
-the null hypothesis). The resulting mosaic plots under this paradigm
-are depicted in Figure \ref{fig:both-mosaic-signif}. Again, it can
-clearly be seen that despite some large residuals there is no
-evidence against independence for the Bundesliga data, but that the
-null hypothesis has to be rejected for the Hair-Eye-Color data.
-
-
-
-\section{Extensions to Conditional Independence}
-
-\cite{vcd:Friendly:1999} discusses grouping similar to coplots (conditioning
-plots) \citep{vcd:Cleveland:1993} that lead to trellis graphics
-(Becker, R.A., Cleveland, W.S. and Shyu, M. ``The Visual Design and
-Control of Trellis Display'', Journal of Computational and
-Graphical Statistics).
-
-
-Independence problems do not only occur in 2-way tables, although that
-is an important special case, but they are also important in tables of
-higher dimensionality and can follow much more complex patterns.
-These are again defined based on the underlying table of theoretical cell probabilities
-$(\pi_{ij\dots})$ with more than two dimensions. Models of interest include the
-null hypotheses of conditional independence:
-  \[ \pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots} \]
-
-Classical non-graphical methods for these problems include the $\chi^2$
-test, Fisher's exact test, the Cochran-Mantel-Haenzel test (for $2 \times 2 \times
-K$-tables), and the analysis of log-linear models for more
-complex settings.
-
-As an example, two natural ways to use the visualization techniques described in the previous
-sections would be to use (Trellis-like) conditioning plots or pairs plots
-(like mosaic matrices) to visualize these more complex patterns of
-independence.
-
-Two ideas for the problem of conditional independence are briefly outlined
-here and illustrated using the famous admissions data of the University of
-California at Berkley (UCB) which is available in base \textsf{R}.
-In this data, the question whether there is gender
-discrimination at the UCB leads to the result that although women seem to
-be disadvantaged at the aggregated level there is no gender discrimination
-conditioned on the department---with the very exception of one department
-in which women are {\em more} likely to be admitted than would be plausible
-under independence. Exactly this is illustrated in the conditioning
-assocation plot in Figure \ref{fig:UCB-assoc-signif}.
-
-Similarly, the same data can be visualized using a mosaic matrix where
-a conditional independence model is fitted in each plot (see Figure
-\ref{fig:UCB-mosaic-signif}).
-
-
-\section{Conclusions}
-
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[htbp]
+\setkeys{Gin}{width=.8\textwidth}
+\begin{figure}[p]
 \begin{center}
-<<goals-assoc-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-assoc(emp1)
-@
-<<goals-mosaic-classic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(emp1, split_vertical = TRUE)
-@
-\caption{Classic association and mosaic plot for the ``Replaced'' subset of the Employment data.}
-\label{fig:classic}
-\end{center}
-\end{figure}
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<art-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(art, gp = shading_Friendly)
-@
-<<art-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(art, gp = shading_max)
-@
-\caption{Mosaic plots for the Arthritis data.}
-\label{fig:art}
-\end{center}
-\end{figure}
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<Friendly-HSV,fig=TRUE,echo=FALSE,height=7,width=8>>=
+<<shading_HSV,fig=TRUE,echo=FALSE,height=7,width=8>>=
 ## generate colors
 hue23 <- hue.slice(2/3, grid.n = 101, plot = FALSE, type = "HSV")
 hue0 <- hue.slice(0, grid.n = 101, plot = FALSE, type = "HSV")
@@ -603,7 +467,7 @@ lines(c(.45, .05), c(0.525, .525), lty = 2)
 lines(c(.9, .55), c(0.525, .525), lty = 2)
 @
 
-<<HCL-space,fig=TRUE,echo=FALSE,height=7,width=8>>=
+<<shading_HCL,fig=TRUE,echo=FALSE,height=7,width=8>>=
 ## generate colors
 hue260 <- hue.slice(260, grid.n = 101, plot = FALSE)
 hue360 <- hue.slice(360, grid.n = 101, plot = FALSE)
@@ -679,35 +543,221 @@ lines(c(18.75, 11.75), c(52.5, 67.5), lty = 2)
 lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 @
 \caption{Extended shading in HSV and HCL space.}
-\label{fig:ExtHSVHCL}
+\label{fig:shadingHSVHCL}
 \end{center}
 \end{figure}
 
+\subsection{Significance}
+
+The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
+substantial improvement of the original mosaic plots and enhanced them
+from a plot for contingency tables to a visualization technique for
+log-linear models (and therefore also for certain independence problems).
+However, it has two major drawbacks: First,
+the significance level for the hard-coded critical values 2 and 4 is
+usually unknown. Second, the colors for (light) blue and red
+used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
+in \textsf{R} are not device-independent and
+do not provide homogeneous saturations over different colors
+and copier proofness. We suggest some ways to overcome these drawbacks.
+
+As pointed out in Section \ref{sec:tests}, the critical values for
+the maximum statistic $M$ from (\ref{eq:MaxAbs}) can be derived
+from the permutation distribution. Instead of the hard-coded
+values 2 and 4, the particular critical values, e.g., at the levels
+$\alpha = 0.1$ and $0.01$, for the table to be visualized could be
+used. Hence, exactly those residuals causing the (potential)
+dependency within the table are highlighted. At the moment, these critical values
+are derived in \texttt{vcd} by simulation of the underlying distribution.
+
+The implementation of Friendly mosaic plots in \textsf{SAS}
+uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
+with hues for blue and red, full saturation, and varying luminance
+for lighter colors. The current \textsf{R} implementation is
+based on colors in the HSV (Hue--Saturation--Value) space where
+decreasing the saturation from 1 towards 0
+%% ---given the hue for blue or red and full saturation---
+generates very similar colors
+as increasing the luminance for HLS colors from 0.5 towards 1.
+As an alternative to those HLS and HSV colors, the device-independent
+HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
+used which also provides homogeneous saturations over different colors and copier
+proofness. The resulting association plot (using critical values for
+$\alpha = 0.1$ and $0.01$) for the Bundesliga data can be seen in
+Figure \ref{fig:goals-assoc-signif}. It indicates very clearly that
+there is no evidence for rejecting the hypothesis of independence
+in this table. Thus, there seems to be neither an advantage for
+the home team nor for the away team.
+
+To illustrate what a `postive' example looks like we give the association plot
+for the well-known Hair-Eye-Color data set (avilable in base \textsf{R}) which cross-tabulates the hair and eye
+color and gender of 592 statistics students: Figure \ref{fig:haireye-assoc-signif}
+shows the association plot for the 328 female students. It is easy to see that
+the hypothesis of independence is rejected at 1\% level by the maximum test (\ref{eq:MaxAbs})
+due to higher frequencies of students with hair and eye color
+black/brown and blond/blue and lower frequencies of
+blond/brown and brown/blue than would be plausible under independence. Furthermore,
+it can also be seen that the residual corresponding to the black/blue
+cell is significant at the 10\% level.
+
+We have seen that this approach performs very well when the test statistic
+which should be visualized is the maximum statistic (\ref{eq:MaxAbs}). However,
+it is difficult to extend this approach to general tests for independence,
+in particular in the HCL space, where the ranges of chroma and luminance are
+not independent. In contrast the HSV space has the advantage that all
+three dimensions hue, saturation and value have the range $[0,1]$ and can
+be varied independently. Therefore, a different approach than the one
+described above could be to use the hue for the sign of the residuals as
+before, the saturation for the absolute size of the residuals, and the
+value as an indicator for the significance of some test statistic (only
+using the full value when the overall test for independence rejects
+the null hypothesis). The resulting mosaic plots under this paradigm
+are depicted in Figure \ref{fig:both-mosaic-signif}. Again, it can
+clearly be seen that despite some large residuals there is no
+evidence against independence for the Bundesliga data, but that the
+null hypothesis has to be rejected for the Hair-Eye-Color data.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<UCB-mosaic1,fig=TRUE,echo=FALSE,height=6,width=8>>=
-## fm <- loglm(~(EmploymentStatus+EmploymentLength)*LayoffCause, data = emp, fitted = TRUE)
-## my.gp <- gp.HCLshading(emp, residuals(fm, type = "pearson"))
-## my.gp$p.value <- summary(fm)$tests[2,3]
-## my.gp$lty <- c(1,1)
-## grid.mosaicplot(emp, gp = my.gp, margin = ~(EmploymentStatus+EmploymentLength)*LayoffCause,
-##   space = c(0.1, 0.01, 0), dir = "v")
-mosaic(emp, expected = ~(EmploymentStatus+EmploymentLength)*LayoffCause)
+<<shadings,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(1, 2)))
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
+mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3))
+popViewport()
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
+set.seed(1234)
+mosaic(art, newpage = FALSE, gp = shading_max, margins = c(2.5, 3, 2.5, 4))
+popViewport(2)
 @
-\caption{Employment data with mosaic display.}
+\caption{Mosaic plot for the Arthritis data with Friendly shading (left) and extended shading (right).}
+\label{fig:shadings}
+\end{center}
+\end{figure}
+
+\section{Extensions to Conditional Independence}
+
+\cite{vcd:Friendly:1999} discusses grouping similar to coplots (conditioning
+plots) \citep{vcd:Cleveland:1993} that lead to trellis graphics
+(Becker, R.A., Cleveland, W.S. and Shyu, M. ``The Visual Design and
+Control of Trellis Display'', Journal of Computational and
+Graphical Statistics).
+
+
+Independence problems do not only occur in 2-way tables, although that
+is an important special case, but they are also important in tables of
+higher dimensionality and can follow much more complex patterns.
+These are again defined based on the underlying table of theoretical cell probabilities
+$(\pi_{ij\dots})$ with more than two dimensions. Models of interest include the
+null hypotheses of conditional independence:
+  \[ \pi_{ijk\dots} = \pi_{i|k\dots}\pi_{j|k\dots} \]
+
+Classical non-graphical methods for these problems include the $\chi^2$
+test, Fisher's exact test, the Cochran-Mantel-Haenzel test (for $2 \times 2 \times
+K$-tables), and the analysis of log-linear models for more
+complex settings.
+
+As an example, two natural ways to use the visualization techniques described in the previous
+sections would be to use (Trellis-like) conditioning plots or pairs plots
+(like mosaic matrices) to visualize these more complex patterns of
+independence.
+
+Two ideas for the problem of conditional independence are briefly outlined
+here and illustrated using the famous admissions data of the University of
+California at Berkley (UCB) which is available in base \textsf{R}.
+In this data, the question whether there is gender
+discrimination at the UCB leads to the result that although women seem to
+be disadvantaged at the aggregated level there is no gender discrimination
+conditioned on the department---with the very exception of one department
+in which women are {\em more} likely to be admitted than would be plausible
+under independence. Exactly this is illustrated in the conditioning
+assocation plot in Figure \ref{fig:UCB-assoc-signif}.
+
+Similarly, the same data can be visualized using a mosaic matrix where
+a conditional independence model is fitted in each plot (see Figure
+\ref{fig:UCB-mosaic-signif}).
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+\begin{center}
+<<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9>>=
+set.seed(1234)
+cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep, type = "assoc")
+@
+\caption{Conditional association plot for UCB admissions.}
 \label{fig:emp-mosaic1}
 \end{center}
 \end{figure}
+
+\section{Conclusions}
 
 
 \bibliography{vcd}
 
 \end{document}
 
+%% for reproducibility, print also
 
+<<graphics>>
+## load packages and data
+library(vcd)
+data(Arthritis)
+art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+data(UCBAdmissions)
+ucb <- aperm(UCBAdmissions)
 
+## plain classic plots
+mosaic(art)
+assoc(art)
+
+## new max shading with HCL colors
+mosaic(art, gp = shading_Friendly)
+set.seed(1234)
+mosaic(art, gp = shading_max)
+
+## conditional independence
+set.seed(1234)
+cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep, type = "assoc")
+## which uses the double max functional
+set.seed(1234)
+coindep_test(ucb, "Dept")
+
+## alternatively use Peason functional
+## via simulation of conditional distribution:
+set.seed(1234)
+coindep_test(ucb, "Dept", indepfun = function(x) sum(x^2), aggfun = sum)
+## via asymptotic distribution:
+fm <- loglm(~ Dept * (Gender + Admit), data = ucb)
+fm
+plot(fm, labeling_args = list(abbreviate = c(Admit = 2)))
+@
+
+%% deprecated stuff
+
+%% employment data
+<<employment>>
+## data
+data(Employment)
+emp <- aperm(Employment)
+emp1 <- co_table(Employment, "LayoffCause")[["Replaced"]]
+
+## plain
+assoc(emp1)
+mosaic(emp1)
+
+## new shadings
+mosaic(emp1, gp = shading_Friendly)
+mosaic(emp1, gp = shading_max)
+
+## conditional
+mosaic(emp, expected = ~(EmploymentStatus+EmploymentLength)*LayoffCause)
+cotabplot(emp, "LayoffCause", split_vertical = TRUE)
+cotabplot(emp, panel = cotab_coindep, type = "assoc")
+cotabplot(emp, "LayoffCause", panel = cotab_coindep, type = "assoc", split_vertical = TRUE)
+@
+
+%% Friendly shading in detail
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[htbp]
 \begin{center}
@@ -797,41 +847,4 @@ text(0.85, 0.1, "significant", pos = 1, cex = 1.5)
 \label{fig:Friendly-HSV}
 \end{center}
 \end{figure}
-
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<emp1-Friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>
-mosaic(emp1, gp = shading_Friendly)
-@
-<<emp1-max,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>
-mosaic(emp1, gp = shading_max)
-@
-\caption{Mosaic plots for the ``Replaced'' subset of the Employment data.}
-\label{fig:emp1}
-\end{center}
-\end{figure}
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<UCB-mosaic2,fig=TRUE,echo=FALSE,height=4,width=8>>
-tabplot(emp, panel = pmos.max)
-@
-\caption{Employment data with conditioned mosaic display.}
-\label{fig:emp-mosaic2}
-\end{center}
-\end{figure}
-
-\begin{figure}[htbp]
-\begin{center}
-<<UCB-assoc,fig=TRUE,echo=FALSE,height=4,width=8>>
-tabplot(emp)
-@
-\caption{Employment data with conditioned association plot.}
-\label{fig:emp-assoc}
-\end{center}
-\end{figure}
-
 
