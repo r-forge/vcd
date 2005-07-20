@@ -118,11 +118,6 @@ strucplot <- function(## main parameters
     }
   }
 
-  if (!(is.logical(legend) && !legend) && all(residuals == 0)) {
-    warning("All residuals are zero: legend disabled.")
-    legend <- FALSE
-  }
-  
   ## choose gray when no shading is used
   if (is.null(gp)) gp <- gpar(fill = rep.int(grey(0.8), length(x)))
   
