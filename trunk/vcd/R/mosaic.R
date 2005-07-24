@@ -55,7 +55,8 @@ mosaic.default <- function(x, condvars = NULL,
     if (is.character(condvars))
       condvars <- match(condvars, names(dimnames(x)))
     x <- aperm(x, c(condvars, seq(dl)[-condvars]))
-    spacing <- spacing_conditional
+    if (is.null(spacing))
+      spacing <- spacing_conditional
   }
   
   ## splitting argument
