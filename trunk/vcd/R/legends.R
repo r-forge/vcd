@@ -84,12 +84,11 @@ class(legend_resbased) <- "panel_generator"
 
 legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
-                         y = unit(0.2, "npc"),
-                         height = unit(0.8, "npc"),
+                         y = unit(0.25, "npc"),
+                         height = unit(0.65, "npc"),
                          width = unit(1.5, "lines"),
 			 digits = 3,
-                         space = 0.1,
-			 check_overlap = TRUE,
+                         space = 0.05,
                          text = NULL) {
   
   if(!is.unit(x)) x <- unit(x, "native")
@@ -103,7 +102,7 @@ legend_fixed <- function(fontsize = 12,
     if(is.null(text)) text <- autotext
     
     pushViewport(viewport(x = x, y = y, just = c("left", "bottom"),
-                          yscale = c(0,1), default.unit = "native",
+                          yscale = c(0,1), default.unit = "npc",
                           height = height, width = width))
 
     p.value <- attr(shading, "p.value")
@@ -117,30 +116,31 @@ legend_fixed <- function(fontsize = 12,
     }
     l <- length(col.bins)
     y.height <- (1 - (l - 2) * space) / (l - 1)
-    y.pos <- cumsum(c(0, rep(y.height + space, l - 1)))
+    y.pos <- cumsum(c(0, rep(y.height + space, l - 2)))
     res <- col.bins[-l] + diff(col.bins) / 2
-    at <- c(col.bins[-l], col.bins[-1])
 
-    
     grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
-              y = unit(y.pos, "lines"),
-              height = unit(y.height, "lines"),
-              default.unit = "native",
+              y = y.pos,
+              height = y.height,
+              default.unit = "npc",
               gp = gpar(fill = shading(res)$fill),
               just = c("left", "bottom"))
 
-    grid.text(format(signif(at, digits = digits)),
-              x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
-              y = unit(c(y.pos, y.pos + y.height), "lines"),
-              default.unit = "native", just = c("right", "center"), check.overlap = check_overlap)
-    grid.segments(x0 = unit(0, "npc"),
-                  x1 = unit(1,"npc") + unit(0.5, "lines"),
-                  y0 = unit(c(y.pos, y.pos + y.height), "lines"),
-                  y1 = unit(c(y.pos, y.pos + y.height), "lines"),
-                  default.unit = "native")
+    grid.text(format(signif(col.bins[-l], digits = digits)),
+              x = unit(1, "npc") + unit(0.6, "lines") + unit(1, "strwidth", "-4.44"),
+              y = y.pos, gp = gpar(fontsize = fontsize),
+              default.unit = "npc", just = c("right", "bottom"))
+    grid.text(format(signif(col.bins[-1], digits = digits)),
+              x = unit(1, "npc") + unit(0.6, "lines") + unit(1, "strwidth", "-4.44"),
+              y = y.pos + y.height, gp = gpar(fontsize = fontsize),
+              default.unit = "npc", just = c("right", "top"))
+    grid.segments(x0 = unit(1, "npc") + unit(1, "strwidth", "-4.44") + unit(0.2, "lines"),
+                  x1 = unit(1, "npc") + unit(1, "strwidth", "-4.44") + unit(0.5, "lines"),
+                  y0 = y.pos + y.height / 2, y1 = y.pos + y.height / 2,
+                  default.unit = "npc")
 
     popViewport(1)
-    grid.text(text, x = x + 0.5 * width, y = 0,
+    grid.text(text, x = x + 0.5 * width, y = 0.1,
               gp = gpar(fontsize = fontsize, lineheight = 0.8),
               just = c("left", "top"),
               rot = 90
