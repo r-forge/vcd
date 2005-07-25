@@ -15,7 +15,7 @@ strucplot(x, residuals = NULL, expected = NULL,
   panel = struc_mosaic, panel_args = list(),
   legend = NULL, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
-  legend_width = unit(0.15, "npc"), title_gp = gpar(fontsize = 20),
+  legend_width = unit(5, "lines"), title_gp = gpar(fontsize = 20),
   newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE)
 }
 \arguments{
