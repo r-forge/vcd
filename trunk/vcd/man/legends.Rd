@@ -71,8 +71,8 @@ legend_fixed(fontsize = 12, x = unit(1, "lines"), y = unit(0.25, "npc"),
 }
 
 \examples{
-mosaic(Titanic, legend = legend_resbased)
-mosaic(Titanic, legend = legend_fixed)
+mosaic(Titanic, shade = TRUE, legend = legend_resbased)
+mosaic(Titanic, shade = TRUE, legend = legend_fixed, gp = shading_Friendly)
 }
 \keyword{hplot}
 
