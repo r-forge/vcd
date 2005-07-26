@@ -43,10 +43,11 @@ strucplot <- function(## main parameters
   residuals_type <- match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
 
   ## table characteristics
-  dl <- length(dim(x))
+  d <- dim(x)
+  dl <- length(d)
   dn <- dimnames(x)
   if (is.null(dn))
-    dn <- dimnames(x) <- lapply(dim(x), seq)
+    dn <- dimnames(x) <- lapply(d, seq)
   dnn <- names(dimnames(x))
   if (is.null(dnn))
     dnn <- names(dn) <- names(dimnames(x)) <- LETTERS[1:dl]
@@ -97,7 +98,7 @@ strucplot <- function(## main parameters
   if (is.function(spacing)) {
     if (inherits(spacing, "panel_generator"))
       spacing <- do.call("spacing", spacing_args)
-    spacing <- spacing(dim(x), condvars)
+    spacing <- spacing(d, condvars)
   }
 
   ## gp (color, fill, lty, etc.) argument
@@ -119,13 +120,17 @@ strucplot <- function(## main parameters
   }
 
   ## choose gray when no shading is used
-  if (is.null(gp)) gp <- gpar(fill = rep.int(grey(0.8), length(x)))
+  if (is.null(gp)) gp <- gpar(fill = grey(0.8))
+
+  ## recycle gpar values in the last dimension
+  FUN <- function(par) aperm(array(par, dim = rev(d)))
+  gp <- structure(lapply(gp, FUN), class = "gpar")
   
   ## set up page
   if (newpage)
     grid.newpage()
   if (keep_aspect_ratio)
-    pushViewport(viewport(w = 1, h = 1, default.unit = "snpc"))
+    pushViewport(viewport(width = 1, height = 1, default.unit = "snpc"))
   
   pushViewport(vcdViewport(mar = margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
