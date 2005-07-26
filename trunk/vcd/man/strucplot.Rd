@@ -54,7 +54,8 @@ strucplot(x, residuals = NULL, expected = NULL,
     function, if specified.}
   \item{gp}{object of class \code{"gpar"}, shading function or a
     corresponding generating function (see details and
-    \code{\link{shadings}}).
+    \code{\link{shadings}}). Components of \code{"gpar"}
+    objects are recycled as needed along the last splitting dimension.
     Ignored if \code{shade = FALSE}.} 
   \item{gp_args}{list of arguments for the shading-generating function,
     if specified.}
