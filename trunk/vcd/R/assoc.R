@@ -21,7 +21,11 @@ assoc.default <- function(x,
                           split_vertical = NULL,
                           keep_aspect_ratio = FALSE,
 			  residuals_type = "Pearson",
-                          xscale = 0.9, yspace = unit(0.5, "lines"), ...) {
+                          xscale = 0.9, yspace = unit(0.5, "lines"),
+                          main = NULL, ...) {
+
+  if (is.logical(main) && main)
+    main <- deparse(substitute(x))
 
   if (!inherits(x, "ftable")) {
     if (is.null(row_vars) && is.null(col_vars) && is.table(x))
@@ -56,6 +60,7 @@ assoc.default <- function(x,
               yspace = yspace, xscale = xscale),
             keep_aspect_ratio = keep_aspect_ratio,
             residuals_type = "Pearson",
+            main = main, 
             ...)
 }
 

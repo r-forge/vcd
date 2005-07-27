@@ -49,7 +49,10 @@ function(formula, data = NULL, ..., main = NULL)
 mosaic.default <- function(x, condvars = NULL,
                            split_vertical = FALSE, direction = NULL,
                            spacing = NULL, spacing_args = list(),
-                           zero_size = 0.5, ...) {
+                           zero_size = 0.5, main = NULL, ...) {
+  if (is.logical(main) && main)
+    main <- deparse(substitute(x))
+
   dl <- length(dim(x))
   if (!is.null(condvars)) {
     if (is.character(condvars))
@@ -77,6 +80,7 @@ mosaic.default <- function(x, condvars = NULL,
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
+            main = main,
             ...)
 }
 
