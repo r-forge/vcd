@@ -19,6 +19,7 @@ function(formula, data = NULL, ..., main = NULL)
   condnames <- if (length(vars) > 1) vars[[2]] else NULL
 
   if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
+    condind <- NULL
     dat <- as.table(data)
     if(all(varnames != ".")) {
       ind <- match(varnames, names(dimnames(dat)))
@@ -33,7 +34,8 @@ function(formula, data = NULL, ..., main = NULL)
       }
       dat <- margin.table(dat, ind)
     }
-    mosaic.default(dat, main = main, ...)
+    mosaic.default(dat, main = main,
+                   condvars = if (is.null(condind)) NULL else length(condind), ...)
   } else {
     tab <- if ("Freq" %in% colnames(data))
       xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
