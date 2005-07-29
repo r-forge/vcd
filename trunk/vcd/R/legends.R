@@ -119,12 +119,11 @@ legend_fixed <- function(fontsize = 12,
     y.pos <- cumsum(c(0, rep(y.height + space, l - 2)))
     res <- col.bins[-l] + diff(col.bins) / 2
 
-    shade <- shading(res)
     grid.rect(x = unit(rep.int(0, length(y.pos)), "npc"),
               y = y.pos,
               height = y.height,
               default.unit = "npc",
-              gp = gpar(fill = shade$fill, lty = shade$lty),
+              gp = shading(res),
               just = c("left", "bottom"))
 
     grid.text(format(signif(col.bins[-l], digits = digits)),
