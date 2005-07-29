@@ -123,7 +123,8 @@ strucplot <- function(## main parameters
   if (is.null(gp)) gp <- gpar(fill = grey(0.8))
 
   ## recycle gpar values in the last dimension
-  FUN <- function(par) aperm(array(par, dim = rev(d)))
+  size <- prod(d)
+  FUN <- function(par) if (length(par) < size) aperm(array(par, dim = rev(d))) else par
   gp <- structure(lapply(gp, FUN), class = "gpar")
   
   ## set up page
