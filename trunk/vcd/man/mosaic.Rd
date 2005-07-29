@@ -9,7 +9,7 @@
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
   split_vertical = FALSE, direction = NULL, spacing = NULL,
-  spacing_args = list(), zero_size = 0.5, \dots)
+  spacing_args = list(), zero_size = 0.5, main = NULL, \dots)
 \method{mosaic}{formula}(formula, data, \dots, main = NULL)
 }
 \arguments{
