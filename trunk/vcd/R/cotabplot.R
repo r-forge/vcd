@@ -155,34 +155,34 @@ cotabplot.default <- function(x, cond = NULL,
   invisible(x)
 }
 
-cotab_mosaic <- function(x = NULL, cond = NULL, ...) {
-  function(x, cond) {
-    if(is.null(cond)) mosaic(x, newpage = FALSE, pop = TRUE, ...)
-      else mosaic(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
+  function(x, condlevels) {
+    if(is.null(condlevels)) mosaic(x, newpage = FALSE, pop = TRUE, ...)
+      else mosaic(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
                   newpage = FALSE, pop = TRUE, ...)
   }
 }
 class(cotab_mosaic) <- "panel_generator"
 
-cotab_assoc <- function(x = NULL, cond = NULL, ylim = NULL, ...) {
+cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
   if(is.null(ylim) & !is.null(x))
-    ylim <- range(residuals(coindep_test(x, cond, n = 1)))
+    ylim <- range(residuals(coindep_test(x, condvars, n = 1)))
   
-  function(x, cond) {
-    if(is.null(cond)) assoc(x, newpage = FALSE, pop = TRUE, ylim = ylim, ...)
-      else assoc(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+  function(x, condlevels) {
+    if(is.null(condlevels)) assoc(x, newpage = FALSE, pop = TRUE, ylim = ylim, ...)
+      else assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
                   newpage = FALSE, pop = TRUE, ylim = ylim, ...)
   }
 }
 class(cotab_assoc) <- "panel_generator"
 
-cotab_coindep <- function(x, cond,
+cotab_coindep <- function(x, condvars,
   test = c("max", "Chisq"), level = NULL, n = 1000,
   h = NULL, c = NULL, l = NULL, lty = 1,
   type = c("mosaic", "assoc"),
   legend = FALSE, split_vertical = TRUE, ylim = NULL, ...)
 {
-  if(is.null(cond))
+  if(is.null(condvars))
     stop("at least one conditioning variable is required")
 
   ## set color defaults
@@ -193,18 +193,18 @@ cotab_coindep <- function(x, cond,
   ## process conditional variables and get independent variables
   ## store some convenience information
   ldx <- length(dim(x))
-  if(is.character(cond)) cond <- match(cond, names(dimnames(x)))
-  cond <- as.integer(cond)
-  indep <- (1:ldx)[!(1:ldx %in% cond)] 
+  if(is.character(condvars)) condvars <- match(condvars, names(dimnames(x)))
+  condvars <- as.integer(condvars)
+  indep <- (1:ldx)[!(1:ldx %in% condvars)] 
   
   ## sort margins      
-  x <- margin.table(x, c(indep, cond))
+  x <- margin.table(x, c(indep, condvars))
 
   ind.n <- length(indep)            
   ind.num <- 1:ind.n                
   ind.dnam <- dimnames(x)[ind.num]  
   ind.char <- names(ind.dnam)       
-  cond.n <- length(cond)		
+  cond.n <- length(condvars)		
   cond.num <- (ind.n + 1):length(dim(x))
   cond.dnam <- dimnames(x)[cond.num]	
   cond.char <- names(cond.dnam) 	
@@ -243,23 +243,23 @@ cotab_coindep <- function(x, cond,
 
   type <- match.arg(type)
   if(type == "mosaic") {
-    rval <- function(x, cond) {
-    if(is.null(cond))
+    rval <- function(x, condlevels) {
+    if(is.null(condlevels))
       mosaic(x, newpage = FALSE, pop = TRUE,
              gp = gpfun, legend = legend, split_vertical = split_vertical, ...)
     else
-      mosaic(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+      mosaic(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
              newpage = FALSE, pop = TRUE,
 	     gp = gpfun, legend = legend, split_vertical = split_vertical, ...)
     }
   } else {
     if(is.null(ylim)) ylim <- range(resids)
-    rval <- function(x, cond) {
-    if(is.null(cond))
+    rval <- function(x, condlevels) {
+    if(is.null(condlevels))
       assoc(x, newpage = FALSE, pop = TRUE,
              gp = gpfun, legend = legend, split_vertical = split_vertical, ylim = ylim, ...)
     else
-      assoc(co_table(x, names(cond))[[paste(cond, collapse = ".")]],
+      assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
              newpage = FALSE, pop = TRUE,
 	     gp = gpfun, legend = legend, split_vertical = split_vertical, ylim = ylim, ...)
     }
