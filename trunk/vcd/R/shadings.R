@@ -165,10 +165,20 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
 class(shading_hcl) <- "panel_generator"
 
 shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), ...)
+  h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), border = c("red", "blue"), eps = 0.01,
+                             ...)
 {
-  shading_hsv(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+  FUN <- shading_hsv(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
               h = h, v = 1, lty = lty, interpolate = interpolate, p.value = NA, ...)
+  ret <- function(x) {
+    ret <- FUN(x)
+    col <- if (is.array(x)) array("black", dim = dim(x)) else rep("black", length(x))
+    col[x < -eps] <- border[1]
+    col[x > eps] <- border[2]
+    structure(c(ret, col = list(col)), class = "gpar")
+  }
+  attributes(ret) <- attributes(FUN)
+  ret
 }
 class(shading_Friendly) <- "panel_generator"
 
