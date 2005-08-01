@@ -16,7 +16,7 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=TRUE}
+\SweaveOpts{engine=R,eps=TRUE,prefix.string=pics/strucplot}
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
