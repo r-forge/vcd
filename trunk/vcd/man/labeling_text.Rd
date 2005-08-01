@@ -1,5 +1,5 @@
-\name{labeling_text}
-\alias{labeling_text}
+\name{labeling_border}
+\alias{labeling_border}
 \alias{labeling_conditional}
 \alias{labeling_left}
 \alias{labeling_cboxed}
@@ -11,7 +11,7 @@
   These functions generate labeling functions used for strucplots.
 }
 \usage{
-labeling_text(labels = TRUE, varnames = labels, tl_labels = NULL,
+labeling_border(labels = TRUE, varnames = labels, tl_labels = NULL,
   tl_varnames = NULL, gp_labels = gpar(fontsize = 12),
   gp_varnames = gpar(fontsize = 12, fontface = 2),
   rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
@@ -87,7 +87,7 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
     \code{"bottom"} position of the labels (only used for
     \code{labeling_doubledecker}).}
   \item{\dots}{only used for \code{labeling_conditional}: parameters
-    passed to \code{labeling_cells} and \code{labeling_text}.}
+    passed to \code{labeling_cells} and \code{labeling_border}.}
 }
 \details{
   These functions generate labeling functions called by
@@ -104,12 +104,12 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
   overloaded by the sequence of non-named components which are recycled
   as needed (see examples).
 
-  This help page only documents \code{labeling_text} and
+  This help page only documents \code{labeling_border} and
   derived functions, more functions are described on the help page
   for \code{\link{labeling_cells}} and \code{\link{labeling_list}}.
 
   \code{labeling_left}, \code{labeling_cboxed}, and \code{labeling_lboxed}
-  are really just wrappers to \code{labeling_text}, and good examples for
+  are really just wrappers to \code{labeling_border}, and good examples for
   the parameter usage.
 }
 \value{
