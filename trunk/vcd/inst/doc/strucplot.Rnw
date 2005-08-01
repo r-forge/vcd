@@ -237,12 +237,16 @@ specification of conditioning variables (see Figure \ref{fig:conditioning}):
 <<Conditioning,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(~ Class + Age | Sex, data = Titanic, split = TRUE)
 @
-\caption{Mosaic plot for the Titanic data (expected values).}
+\caption{Mosaic plot for conditional independence structures.}
 \label{fig:conditioning}
 \end{center}
 \end{figure}
 
-\noindent Note, however, that the plots in the ``pseudo-strata'' are
+\noindent The effect of using this kind of formula is that
+conditioning variables are permuted before the conditioned variables
+in the table, and that \code{spacing\_conditional()} is used to better
+distinguish conditioning from conditioned dimensions.
+Note, however, that the plots in the ``pseudo-strata'' are
 distorted since they are not corrected for the marginal
 distribution(s) of the conditioning variables. Indeed,
 the \code{cotabplot()} function would do a much better job here (see

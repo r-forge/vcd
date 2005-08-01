@@ -35,7 +35,7 @@ function(formula, data = NULL, ..., main = NULL)
       dat <- margin.table(dat, ind)
     }
     mosaic.default(dat, main = main,
-                   condvars = if (is.null(condind)) NULL else length(condind), ...)
+                   condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
     tab <- if ("Freq" %in% colnames(data))
       xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
