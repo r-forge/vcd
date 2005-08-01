@@ -3,3 +3,5 @@ R/hcl.R
 R/aaa.R
 R/pearson_test.R
 man/pearson_test.Rd
+inst/doc/pics
+
