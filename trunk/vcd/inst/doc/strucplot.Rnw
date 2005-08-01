@@ -186,7 +186,7 @@ each other:
 > popViewport(2)
 \end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+\setkeys{Gin}{width=\textwidth}
 \begin{figure}[h]
 \begin{center}
 <<Variables,fig=TRUE,echo=FALSE,height=6,width=16,results=hide>>=
@@ -367,7 +367,7 @@ all four level combinations of Sex and Age.
 > cotabplot(~ Class + Survived | Sex + Age, data = Titanic)
 \end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+\setkeys{Gin}{width=\textwidth}
 \begin{figure}[h]
 \begin{center}
 <<cotabplot,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
@@ -455,7 +455,7 @@ been drawn (see Figure \ref{fig:afterplot}):
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<afterplot,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+<<afterplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=
 mosaic(~ Sex + Class, data = Titanic, pop = FALSE)
 
 seekViewport("cell..Sex.Male")
@@ -486,11 +486,12 @@ graphical parameters of plot elements after the plotting (see Figure \ref{fig:ch
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<changeplot,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+<<changeplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=
 assoc(Titanic)
-getNames() ## output not shown
-grid.edit("rect..Class.1st..Age.Adult..Sex.Female..Survived.Yes", 
-          gp = gpar(fill = "red"))
+x = Titanic
+x[] = NA
+x["1st", "Female", "Adult", "Yes"] = "Red"
+assoc(Titanic, gp = gpar(fill = x))
 @
 \caption{Changing graphical parameters of elements after drawing.}
 \label{fig:changeplot}
