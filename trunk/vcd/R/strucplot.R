@@ -18,7 +18,7 @@ strucplot <- function(## main parameters
                       spacing_args = list(),
                       gp = NULL,
 		      gp_args = list(),   
-                      labeling = labeling_text,
+                      labeling = labeling_border,
                       labeling_args = list(),
                       panel = struc_mosaic,
                       panel_args = list(),

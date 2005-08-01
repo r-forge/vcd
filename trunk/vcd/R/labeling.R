@@ -32,7 +32,7 @@ labeling_list <- function(gp = gpar(),
     if (is.table(d))
       d <- dimnames(d)
     ld <- length(d)
-    labeling_text(labels = FALSE, varnames = varnames)(d, split_vertical, condvars)
+    labeling_border(labels = FALSE, varnames = varnames)(d, split_vertical, condvars)
     seekViewport("marginBottom")
     pos <- unit(switch(pos, left = 0, center = 0.5, 1) / cols, "npc")
     ind <- split(seq(ld), rep.int(seq(cols), ceiling(ld / cols))[seq(ld)])
@@ -57,7 +57,7 @@ labeling_conditional <- function(...)
       d <- dimnames(d)
     v <- rep.int(TRUE, length(d))
     v[seq(condvars)] <- FALSE
-    labeling_text(labels = !v, ...)(d, split_vertical, condvars)
+    labeling_border(labels = !v, ...)(d, split_vertical, condvars)
     labeling_cells(labels = v, ...)(d, split_vertical, condvars)
   }
 class(labeling_conditional) <- "panel_generator"
@@ -132,7 +132,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
 }
 class(labeling_cells) <- "panel_generator"
 
-labeling_text <- function(labels = TRUE, varnames = labels,
+labeling_border <- function(labels = TRUE, varnames = labels,
                           tl_labels = NULL, tl_varnames = NULL, 
                           gp_labels = gpar(fontsize = 12),
                           gp_varnames = gpar(fontsize = 12, fontface = 2),
@@ -461,14 +461,14 @@ labeling_text <- function(labels = TRUE, varnames = labels,
     split()
     
   }
-class(labeling_text) <- "panel_generator"
+class(labeling_border) <- "panel_generator"
 
 labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
   lab_pos <- match.arg(lab_pos)
   function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
-    labeling_text(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
+    labeling_border(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
                   clip = c(rep.int(TRUE, length(d) - 1), FALSE),
                   labbl_varnames = FALSE,
                   rot_labels = rep.int(0, 4),
@@ -488,14 +488,14 @@ class(labeling_doubledecker) <- "panel_generator"
 
 labeling_left <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
-  labeling_text(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
+  labeling_border(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
 class(labeling_left) <- "panel_generator"
 
 labeling_cboxed <- function(tl_labels = TRUE, boxes = TRUE, clip = TRUE, pos_labels = "center", ...)
-  labeling_text(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
+  labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
 class(labeling_cboxed) <- "panel_generator"
 
 labeling_lboxed <- function(tl_labels = FALSE, boxes = TRUE, clip = TRUE, pos_labels = "left", just_labels = "left", labbl_varnames = FALSE, ...)
-  labeling_text(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, labbl_varnames = labbl_varnames, just_labels = just_labels, ...)
+  labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, labbl_varnames = labbl_varnames, just_labels = just_labels, ...)
 class(labeling_lboxed) <- "panel_generator"

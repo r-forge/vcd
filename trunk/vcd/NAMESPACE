@@ -23,7 +23,7 @@ export(
 
 ## labelings
        "labeling_lboxed",
-       "labeling_text",
+       "labeling_border",
        "labeling_cboxed",
        "labeling_left",
        "labeling_cells",
