@@ -70,14 +70,14 @@
 \begin{document}
 
 \begin{center}
-\textbf{\LARGE Residual-based Shadings for Visualizing\\ (Conditional) Independence}
+\textbf{\LARGE Residual-based Shadings for Visualizing\\[.15cm] (Conditional) Independence}
 
 \vspace{0.5cm}
 {\large Achim \textsc{Zeileis}, David \textsc{Meyer}, and Kurt \textsc{Hornik}}
 
-\vspace{0.3cm}
-\textit{\large Wirtschaftsuniversit\"at Wien, Augasse 2--6, 1090 Wien, Austria}\\[0.14cm]
-{\large \textit{E-mail:} \texttt{Firstname.Lastname@wu-wien.ac.at}}
+%% \vspace{0.3cm}
+%% \textit{\large Wirtschaftsuniversit\"at Wien, Augasse 2--6, 1090 Wien, Austria}\\[0.14cm]
+%% {\large \textit{E-mail:} \texttt{Firstname.Lastname@wu-wien.ac.at}}
 \end{center}
 
 \SweaveOpts{engine=R,eps=FALSE}
@@ -91,9 +91,47 @@ art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
 data(UCBAdmissions)
 ucb <- aperm(UCBAdmissions)
+
+myseed <- 1071
+@
+
+<<inference,echo=FALSE,results=hide>>=
+if(FALSE) {
+  set.seed(myseed)
+  art_max <- coindep_test(art, n = 5000)
+  set.seed(myseed)
+  art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
+
+  set.seed(myseed)
+  art_gp <- shading_max(art, n = 5000)
+
+  set.seed(myseed)
+  ucb_doublemax <- coindep_test(ucb, "Dept", n = 5000)
+  set.seed(myseed)
+  ucb_maxChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
+  set.seed(myseed)
+  ucb_sumChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
+
+  set.seed(myseed)
+  ucb_cotab <- cotab_coindep(ucb, condvars = "Dept", type = "assoc", n = 5000)
+  
+  save(art_max, art_chisq, art_gp,
+       ucb_doublemax, ucb_maxChisq, ucb_sumChisq, ucb_cotab,
+       file = "JCGS-inference.rda")
+} else {
+  load("JCGS-inference.rda")
+}
 @
 
 <<auxiliary_functions,echo=FALSE,results=hide>>=
+stat <- function(x, digits = 3) as.vector(round(x$statistic, digits = digits))
+pval <- function(x, digits = 6) {
+  oop <- options()
+  on.exit(oop)
+  options(scipen = 1000)
+  as.vector(round(x$p.value, digits = digits))
+}
+
 hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
 {
   type <- match.arg(type)
@@ -132,34 +170,10 @@ hue.slice <- function(hue, grid.n = 100, type = c("HCL", "HSV"), plot = TRUE, fi
   class(color.slice) <- "slice"
   invisible(color.slice)
 }
-
-plot.slice <- function(color.slice)
-{
-  nc <- ncol(color.slice)
-  nl <- nrow(color.slice)
-  chroma <- as.numeric(colnames(color.slice))
-  luminance <- as.numeric(rownames(color.slice))
-  if(attr(color.slice, "type") == "HCL") {
-    xlab <- "chroma"
-    ylab <- "luminance"
-  } else {
-    xlab <- "saturation"
-    ylab <- "value"
-  }
-  plot(0.5, 0.5, xlim = range(chroma), ylim = range(luminance), type = "n", axes = FALSE,
-       xlab = xlab, ylab = ylab, yaxs = "i", xaxs = "i", main = deparse(substitute(color.slice)))
-  for(i in 1:(nc-1)) {
-    rect(chroma[i], luminance[-nl], chroma[i] + 100/(nc-1), luminance[-1], border = color.slice[,i+1], col = color.slice[,i+1])
-  }
-  axis(1)
-  axis(2)
-  box()
-}
 @
 
 
 \begin{abstract}
-
 Visualizing independence by association and mosaic plots.
 
 Enhancements: diverging color palette based on HCL color space
@@ -188,20 +202,26 @@ Association plots as residual plots for log-linear models
 in coplot or trellis layout.
 
 
-Arthritis data \citep{vcd:Koch+Edwards:1988}
-
-UCB admissions data \citep{vcd:Bickel+Hammel+O'Connell:1975}
-
 \section{Independence in 2-way Tables}
 \label{sec:2way}
+
+In this section, the basic tools for testing and visualizing 
+independence in 2-way tables are briefly reviewed. 
+For illustration, a data set about treatment and improvement of
+patients with rheumatoid arthritis from \cite{vcd:Koch+Edwards:1988}
+is used. The data set is also discussed in \cite{vcd:Friendly:2000}
+and the subset of the $59$ female patients from the study is given in
+Table~\ref{tab:art}.
+
 
 \subsection{Tests}
 \label{sec:tests}
 
-We consider a 2-way contingency table with cell frequencies $\{n_{ij}\}$ for
-$i = 1, \dots, I$ and $j = 1, \dots, J$ and row and column sums
-$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$ respectively.
-%% For convenience the number of observations is denoted $n = n_{++}$.
+To fix notations, we consider a 2-way contingency table with cell
+frequencies $\{n_{ij}\}$ for $i = 1, \dots, I$ and $j = 1, \dots, J$
+and row and column sums $n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$
+respectively.
+For convenience the number of observations is denoted $n = n_{++}$.
 Given an underlying distribution with theoretical cell probabilities
 $\pi_{ij}$, the null hypothesis of independence of the two categorical
 variables can be formulated as
@@ -210,121 +230,109 @@ H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
 \end{equation}
 
 The expected cell frequencies in this model are
-$\hat n_{ij} = n_{i+}n_{+j}/n$. The best known and most used
-measure of discrepancy
-between observed and expected values are probably the Pearson residuals
+$\hat n_{ij} = n_{i+}n_{+j}/n$. The probably best known and most used
+measure of discrepancy between observed and expected values are the Pearson residuals
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
 \end{equation}
-Therefore, a rather intuitive idea is to reject the null hypothesis when
-there are residuals which are too extreme, i.e., not close enough to
-zero. The most convenient way to aggregate the $I \times J$ residuals
+The most convenient way to aggregate the $I \times J$ residuals
 to one test statistic is their squared sum
 \begin{equation} \label{eq:ChiSquare}
 X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 \end{equation}
-because this is known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
+because this is known to have an unconditional limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
-This is the well-known $\chi^2$ test for independence in 2-way tables.
-%% reference needed
+This is the well-known $\chi^2$ test which is typically introduced at the very beginning
+of the chapter about independence in 2-way tables in statistics textbooks
+\citep[see e.g.,][]{vcd:Agresti:2002}.
 
-But this is not the only plausible way of aggregation of the Pearson
-residuals. There are many conceivable functionals $\lambda(\cdot)$ which
-lead to reasonable test statistics $\lambda(\{r_{ij}\})$, the sum of squares
-is just one of them. Another functional suitable for identifying
-the cells which cause the dependence (if any) is the maximum of the absolute
-values
-\begin{equation} \label{eq:MaxAbs}
-M \quad = \quad \max_{i, j} |r_{ij}|.
-\end{equation}
-Given a critical value $c_\alpha$ for this test statistic, all residuals whose
-absolute value exceeds $c_\alpha$ violate the hypothesis of indendence at level
-$\alpha$ \cite[][ch. 7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells causing
-the dependence can easily be identified.
-
-Furthermore, the main reason for using the unconditional limiting distribution
-for the $\chi^2$ statistic (\ref{eq:ChiSquare}) was the closed form result
-for the distribution. Recently, with the improving perfomance of computers,
-performing permutation tests---either by simulation or by computation of the
-permutation distribution---became more and more popular. In particular for
-the independence hypothesis (\ref{eq:H0}), using a permutation test is very intuitive
-due to the permutation invariance (given row and column sums) of this problem.
-By employing this approach the permutation distribution of statistics of
-type $\lambda(\{r_{ij}\})$ (also including the $\chi^2$ statistic) can be derived.
-
-Other classical tests for the hypothesis of independence  not fitting in
-the Pearson residual-based framework described above include Fisher's exact test,
-asymptotic tests of the odds ratio (for $2\times2$ tables) and the Mantel-Haenzel
-test.
-
-
-\subsection{Visualizations} \label{sec:visualization}
-
-ONLY SHAPE! not color
-
-The two best known visualization techniques for independence in 2-way tables are
-association plots and mosaic plots. Both are suitable to bring out
-departures of an observed table $(n_{ij})$ from the expected table $(\hat n_{ij})$ in a graphical way.
-The former focuses on the visualization of the Pearson residuals $r_{ij}$ (under
-independence) while the latter primarily displays the observed frequencies
-$n_{ij}$.
-
-\textbf{Association Plots}
-\citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
-each cell is represented by a rectangle that has (signed) height
-proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
-square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
-the raw residuals $n_{ij} - \hat n_{ij}$. The sign of the residual is redundantly
-coded by the rectangle's color and its position relative to the baseline.
-
-%% Figure \ref{fig:goals-assoc-classic} shows the association plot for the table of
-%% home and away goals for all 306 games in the 1995/6 season of the German soccer league
-%% Bundesliga \citep[the data is available in the package \texttt{vcd}]{vcd:Knorr-Held:1999}.
-%% In particular, it can be seen that there are
-%% fewer games ending 1--0 and more ending 1--1 than would be expected under independence.
-%% But this does not yet imply the significance of some test statistic.
-
-\textbf{Mosaic Plots}
-\citep{vcd:Hartigan+Kleiner:1981} can be seen as an extension of grouped
-bar charts where width and height of the bars show the relative
-frequencies of the two variables: a mosaic plot simply
-consists of a collection of tiles whose
-sizes are proportional to the observed cell frequencies
-(see Figure \ref{fig:goals-mosaic-classic}).
-
-Sequential horizontal and vertical recursive splits are used to
-visualize the frequencies of more than two variables, each new variable
-conditional to the previously entered variables. A first extension by
-\cite{vcd:Friendly:1994} uses a color coding of the tiles to visualize deviations
-(residuals) from a given log-linear model fitted to the table, that is, from
-the expected frequencies under independence. This approach does not only work in 2-way
-tables but also in log-linear models fitted to multi-way tables. In this
-extension, positive and negative signs of the residuals are coded by rectangles with
-solid and dashed borders respectively. Furthermore, residuals exceeding an absolute
-value of 2 are shaded light blue and red respectively, those that even
-exceed an absolute value of 4 are shaded with full saturation. The heuristic
-behind this shading is that
-the Pearson residuals are approximately standard normal which implies
-that the highlighted cells are those with
-residuals \emph{individually} significant at approximately the 5\% and 0.01\%
-level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
-deviation from independence \citep[p.~109]{vcd:Friendly:2000}. In particular,
-this shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
-as in general it is unknown to which significance level $\alpha$ the
-values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
-
-\begin{table}[htb]
+\begin{table}[t!]
 \begin{center}
+\caption{\label{tab:art} Treatment and improvement among $59$ patients
+with rheumatoid arthritis.}
 \begin{tabular}{rr|rrr}
                    &         & \multicolumn{3}{|l}{\textbf{Improved}} \\
                    &         & None & Some & Marked \\ \hline
 \textbf{Treatment} & Placebo &   19 &    7 &      6 \\
                    & Treated &    6 &    5 &     16
 \end{tabular}
-\caption{\label{tab:art} Treatment and improvement among 59 female
-patients with rheumatoid arthritis.}
 \end{center}
 \end{table}
+
+But the sum of squares is not the only plausible way of capturing deviations
+from $0$ in the Pearson residuals.
+There are many other conceivable functionals $\lambda(\cdot)$ which
+lead to reasonable test statistics $\lambda(\{r_{ij}\})$: one which is particularly
+suitable for identifying the cells which cause the dependence (if any) is
+the maximum of the absolute values
+\begin{equation} \label{eq:MaxAbs}
+M \quad = \quad \max_{i, j} |r_{ij}|.
+\end{equation}
+Given a critical value $c_\alpha$ for this test statistic, all residuals whose
+absolute value exceeds $c_\alpha$ violate the hypothesis of indendence at significance level
+$\alpha$ \cite[][Ch.~7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells causing
+the dependence can easily be identified.
+
+Furthermore, an important reason for using the unconditional limiting distribution
+for the $X^2$ statistic (\ref{eq:ChiSquare}) was the closed form result
+for the distribution. Recently, with the improving perfomance of computers,
+conditional inference (or permutation tests)---carried out either by simulation
+or by computation of the (asymptotic) permutation distribution---have been receiving
+increasing attention \citep{vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
+For testing the independence hypothesis (\ref{eq:H0}), using a permutation test is particularly
+intuitive due to the permutation invariance (given row and column sums) of this problem.
+Consequently, all results in this paper are based on conditional inference performed
+by simulating from the permutation distribution of test statistics of type
+$\lambda(\{r_{ij}\})$.
+
+Other measures of discrepancy (e.g., deviance residuals) could, of course, also be used
+instead of the the Pearson residuals $\{r_{ij}\}$. But as the ideas discussed here
+extend straightforwardly to that situation, we do not discuss it in detail.
+
+For the arthritis data from Table~\ref{tab:art}, both tests indicate a clearly significant
+dependence of improvement on treatment: the sum-of-squares statistic from Equation~(\ref{eq:ChiSquare})
+is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
+and the maximum statistion from Equation~(\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
+with a $p$ value of $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
+by drawing a sample of size $5000$ from the permutation distribution under independence.
+
+
+
+\subsection{Visualizations} \label{sec:visualization}
+
+Two well-established visualization techniques for independence in 2-way tables are
+mosaic plots and association plots. Both are suitable to bring out
+departures of an observed table $\{n_{ij}\}$ from the expected table $\{\hat n_{ij}\}$
+in a graphical way. The latter focuses on the visualization of the Pearson residuals
+$r_{ij}$ (under independence) while the latter primarily displays the observed frequencies
+$n_{ij}$.
+
+\emph{Mosaic plots}
+\citep{vcd:Hartigan+Kleiner:1981} can be seen as an extension of grouped
+bar charts where width and height of the bars show the relative
+frequencies of the two variables: a mosaic plot simply
+consists of a collection of tiles whose
+sizes are proportional to the observed cell frequencies as shown
+in the left panel of Figure~\ref{fig:classic}. A rectangle corresponding
+to $100$ percent of the observations is first split horizontally with respect to 
+the treatment frequencies and then vertically with respect to the conditional
+improvement frequencies. This shows that there have been more placebo than treated 
+patients with no improvement and vice versa for marked improvement.
+This strategy of splitting with respect to conditional frequencies given all
+previous variables can also directly be used for visualizing multi-way tables
+\citep[see][for an overview of how to construct and read mosaic displays]{vcd:Hofmann:2003}.
+
+\emph{Association plots}
+\citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
+each cell is represented by a rectangle that has (signed) height
+proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
+square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
+the raw residuals $n_{ij} - \hat n_{ij}$. The association plot for the arthritis
+data is shown in the right panel of Figure~\ref{fig:classic} which leads to the
+same interpretation as the mosaic plot: there are more placebo patients with no 
+improvement and fewer with marked improvement than expected under independence---vice
+versa for the treated patiens.
+
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
@@ -347,6 +355,28 @@ popViewport(2)
 \section{Residual-based Shadings} \label{sec:shadings}
 
 remarks: Friendly 1994
+
+
+A first extension by
+\cite{vcd:Friendly:1994} uses a color coding of the tiles to visualize deviations
+(residuals) from a given log-linear model fitted to the table, that is, from
+the expected frequencies under independence. This approach does not only work in 2-way
+tables but also in log-linear models fitted to multi-way tables. In this
+extension, positive and negative signs of the residuals are coded by rectangles with
+solid and dashed borders respectively. Furthermore, residuals exceeding an absolute
+value of 2 are shaded light blue and red respectively, those that even
+exceed an absolute value of 4 are shaded with full saturation. The heuristic
+behind this shading is that
+the Pearson residuals are approximately standard normal which implies
+that the highlighted cells are those with
+residuals \emph{individually} significant at approximately the 5\% and 0.01\%
+level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
+deviation from independence \citep[p.~109]{vcd:Friendly:2000}. In particular,
+this shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
+as in general it is unknown to which significance level $\alpha$ the
+values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
+
+
 
 \subsection{Colors}
 
@@ -409,7 +439,7 @@ Advantages
 ## generate colors
 hue23 <- hue.slice(2/3, grid.n = 101, plot = FALSE, type = "HSV")
 hue0 <- hue.slice(0, grid.n = 101, plot = FALSE, type = "HSV")
-mysaturation <- as.numeric(colnames(hue23))
+saturation <- as.numeric(colnames(hue23))
 value <- as.numeric(rownames(hue23))
 
 ## select those with value >= 0.5
@@ -423,10 +453,10 @@ nc <- ncol(hue23)
 plot(0.5, 0.5, xlim = c(-1, 1), ylim = c(0, 1), type = "n", axes = FALSE,
        xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
 for(i in 1:(nc-1)) {
-  rect(mysaturation[i], value[-nl], mysaturation[i] + 1/(nc-1), value[-1], border = hue23[,i+1], col = hue23[,i+1])
+  rect(saturation[i], value[-nl], saturation[i] + 1/(nc-1), value[-1], border = hue23[,i+1], col = hue23[,i+1])
 }
 for(i in 1:(nc-1)) {
-  rect(-mysaturation[i], value[-nl], -(mysaturation[i] + 1/(nc-1)), value[-1], border = hue0[,i+1], col = hue0[,i+1])
+  rect(-saturation[i], value[-nl], -(saturation[i] + 1/(nc-1)), value[-1], border = hue0[,i+1], col = hue0[,i+1])
 }
 axis(2, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
 axis(4, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
@@ -635,11 +665,10 @@ null hypothesis has to be rejected for the Hair-Eye-Color data.
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3))
+mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL))
 popViewport()
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
-set.seed(1234)
-mosaic(art, newpage = FALSE, gp = shading_max, margins = c(2.5, 3, 2.5, 4))
+mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
 popViewport(2)
 @
 \caption{Mosaic plot for the Arthritis data with Friendly shading (left) and extended shading (right).}
@@ -648,6 +677,13 @@ popViewport(2)
 \end{figure}
 
 \section{Extensions to Conditional Independence}
+
+UCB admissions data \citep{vcd:Bickel+Hammel+O'Connell:1975}
+double max: \Sexpr{stat(ucb_doublemax)}, p-value = \Sexpr{pval(ucb_doublemax)}
+max Chisq: \Sexpr{stat(ucb_maxChisq)}, p-value = \Sexpr{pval(ucb_maxChisq)}
+sum Chisq: \Sexpr{stat(ucb_sumChisq)}, p-value = \Sexpr{pval(ucb_sumChisq)}
+simulated from $5000$ repetitions
+
 
 \cite{vcd:Friendly:1999} discusses grouping similar to coplots (conditioning
 plots) \citep{vcd:Cleveland:1993} that lead to trellis graphics
@@ -693,8 +729,7 @@ a conditional independence model is fitted in each plot (see Figure
 \begin{figure}[htbp]
 \begin{center}
 <<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9>>=
-set.seed(1234)
-cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep, type = "assoc")
+cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
 @
 \caption{Conditional association plot for UCB admissions.}
 \label{fig:emp-mosaic1}
