@@ -13,18 +13,18 @@
 \usage{
 shading_hcl(observed, residuals = NULL, expected = NULL, df = NULL,
   h = NULL, c = NULL, l = NULL, interpolate = c(2, 4), lty = 1,
-  p.value = NULL, level = 0.95, \dots)
+  eps = NULL, p.value = NULL, level = 0.95, \dots)
 
 shading_hsv(observed, residuals = NULL, expected = NULL, df = NULL,
   h = c(2/3, 0), s = c(1, 0), v = c(1, 0.5),
-  interpolate = c(2, 4), lty = 1, p.value = NULL, level = 0.95, \dots)
+  interpolate = c(2, 4), lty = 1, eps = NULL, p.value = NULL, level = 0.95, \dots)
 
 shading_max(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  h = NULL, c = NULL, l = NULL, lty = 1, level = c(0.9, 0.99), n = 1000, \dots)
+  h = NULL, c = NULL, l = NULL, lty = 1, eps = NULL, level = c(0.9, 0.99), n = 1000, \dots)
 
 shading_Friendly(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4),
-  border = c("red","blue"), eps = 0.01, \dots)
+  eps = 0.01, \dots)
 
 shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   col = hcl(c(260, 0), 50, 70))
@@ -52,10 +52,11 @@ shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
     case, a step function with steps of equal size going from 0 to 1 is used.}
   \item{lty}{a vector of two line types for positive and negative residuals respectively.
     Recycled if necessary.}
-  \item{border}{vector of length two specifying the tiles' border color of negative
-    and positive residuals, respectively.}
-  \item{eps}{double value below which absolute residuals are considered to be
-    zero, which causes the border color to be set to black.}
+  \item{eps}{numeric tolerance value below which absolute residuals are considered to be
+    zero, which is used for coding the border color. If set to \code{NULL} (default),
+    all border are black. If set to a numeric value, all border colors corresponding
+    to residuals with a larger absolute value are set to the full positive or negative
+    color respectively.}
   \item{p.value}{the \eqn{p} value associated with the independence model. By default,
     this is computed from a Chi-squared distribution with \code{df} degrees of freedom.}
   \item{level}{confidence level of the test used. If \code{p.value} is smaller than
