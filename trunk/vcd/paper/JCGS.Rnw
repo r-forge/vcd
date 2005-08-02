@@ -70,7 +70,7 @@
 \begin{document}
 
 \begin{center}
-\textbf{\LARGE Residual-based Shadings for Visualizing (Conditional) Independence}
+\textbf{\LARGE Residual-based Shadings for Visualizing\\ (Conditional) Independence}
 
 \vspace{0.5cm}
 {\large Achim \textsc{Zeileis}, David \textsc{Meyer}, and Kurt \textsc{Hornik}}
@@ -200,9 +200,8 @@ UCB admissions data \citep{vcd:Bickel+Hammel+O'Connell:1975}
 
 We consider a 2-way contingency table with cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$ and row and column sums
-$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$ respectively. For
-convenience the number of observations is denoted $n = n_{++}$.
-
+$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$ respectively.
+%% For convenience the number of observations is denoted $n = n_{++}$.
 Given an underlying distribution with theoretical cell probabilities
 $\pi_{ij}$, the null hypothesis of independence of the two categorical
 variables can be formulated as
@@ -213,7 +212,7 @@ H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
 The expected cell frequencies in this model are
 $\hat n_{ij} = n_{i+}n_{+j}/n$. The best known and most used
 measure of discrepancy
-between observed and expected values are the Pearson residuals
+between observed and expected values are probably the Pearson residuals
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
 \end{equation}
@@ -314,6 +313,18 @@ this shading does not provide a visualization of the maximum test (\ref{eq:MaxAb
 as in general it is unknown to which significance level $\alpha$ the
 values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
 
+\begin{table}[htb]
+\begin{center}
+\begin{tabular}{rr|rrr}
+                   &         & \multicolumn{3}{|l}{\textbf{Improved}} \\
+                   &         & None & Some & Marked \\ \hline
+\textbf{Treatment} & Placebo &   19 &    7 &      6 \\
+                   & Treated &    6 &    5 &     16
+\end{tabular}
+\caption{\label{tab:art} Treatment and improvement among 59 female
+patients with rheumatoid arthritis.}
+\end{center}
+\end{table}
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
