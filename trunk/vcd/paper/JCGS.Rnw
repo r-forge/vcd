@@ -651,37 +651,70 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 
 \subsection{Significance}
 
-However, it has two major drawbacks: First,
-the significance level for the hard-coded critical values 2 and 4 is
-usually unknown.
+The shading scheme of \cite{vcd:Friendly:1994} was suggested to visualize
+the pattern of dependence in contingency tables, as discussed above, but
+the presence (or absence) of colors in a plot also always conveys an
+impression of interestingness (or uninterstingness respectively). That is,
+statisticians might be tempted to interpret the absence of color in a plot
+as a clue that there is no significant departure from independence. Or vice
+versa, colored cells would convey the impression that there is significant
+dependence. Currently, both is not true as can be seen in the left panel
+of Figure~\ref{fig:shadings} which shows the mosaic display for the arthritis
+data with Friendly shading. Although there is significant dependence, no 
+residual exceeds an absolute value of $2$ and hence no cell is colored.
+Of course, it can be argued that the shading was not designed for this purpose
+and that different cut offs than $2$ and $4$ should be used here. But then
+again, it would be nice if these cut offs could be chosen automatically in a
+data-driven fashion which is what we do below.
 
-  - for non-significant results, clearly reduce the amount of color, i.e. the maximum
-    chroma used.
+The Friendly shading can be interpreted to be a visualization of the maximum
+statistic $M$ (\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
+of $2$ and $4$ respectively. But the problem is that it is not clear to which
+significance levels $\alpha$ these critical values correspond because the distribution
+of $M$ depends on the underlying contingency table. The natural solution to this
+problem is to compute the critical values from the distribution of $M$ in a data-driven
+way (i.e., for the table visualized) and use these instead of the hard-coded values
+$2$ and $4$. In the right panel of Figure~\ref{fig:shadings} this is done for
+the arthritis data by employing the critical values
+$\Sexpr{round(as.vector(art_max$qdist(0.9)), digits = 2)}$ at level $\alpha = 0.1$ and
+$\Sexpr{round(as.vector(art_max$qdist(0.99)), digits = 2)}$ at level $\alpha = 0.01$
+(and using the diverging HCL palette). By using these cut offs, the presence of color
+in the plot is equivalent to significance (of the maximum statistic $M$) at 
+level $\alpha = 0.1$ and $\alpha = 0.01$ respectively and exactly the cells which `cause'
+the dependence are highlighted. For the arthritis data, these are in particular the 
+cells in the last column that signal that there are significantly more
+treated patients and fewer placebo patients with marked improvement than would be expected
+under independence.
 
-In particular,
-the Friendly shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
-as in general it is unknown to which significance level $\alpha$ the
-values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
+The significance $alpha = 0.1$ and $0.01$ are chosen because this leads to displays where
+fully colored cells are clearly significant (i.e., with a $p$ value below $0.01$),
+cells without color are clearly non-significant (i.e., with a $p$ value above $0.1$), and
+cells in between can be considered to be weakly significant (i.e., $0.1 \le p < 0.01$).
+Of course, users could choose any other set of significance levels they feel comfortable
+with, e.g., only a single cutoff at $\alpha = 0.05$ or three cut offs at $0.1$, $0.05$ and $0.01$
+etc. Another option could be to use a continuous shading where the $p$ value corresponding
+to a cell controls the interpolation between the neutral and the full color. However, our
+experience is that this typically results in too much color in a plot which in turn tends
+to conceal the important cells and over-emphasizes the unimportant ones. Hence, we stick
+to a shading with fewer colors that are easier to interpret.
 
-As pointed out in Section \ref{sec:tests}, the critical values for
-the maximum statistic $M$ from (\ref{eq:MaxAbs}) can be derived
-from the permutation distribution. Instead of the hard-coded
-values 2 and 4, the particular critical values, e.g., at the levels
-$\alpha = 0.1$ and $0.01$, for the table to be visualized could be
-used. Hence, exactly those residuals causing the (potential)
-dependency within the table are highlighted. At the moment, these critical values
-are derived in \texttt{vcd} by simulation of the underlying distribution.
 
-To illustrate what a `postive' example looks like we give the association plot
-for the well-known Hair-Eye-Color data set (avilable in base \textsf{R}) which cross-tabulates the hair and eye
-color and gender of 592 statistics students: Figure \ref{fig:haireye-assoc-signif}
-shows the association plot for the 328 female students. It is easy to see that
-the hypothesis of independence is rejected at 1\% level by the maximum test (\ref{eq:MaxAbs})
-due to higher frequencies of students with hair and eye color
-black/brown and blond/blue and lower frequencies of
-blond/brown and brown/blue than would be plausible under independence. Furthermore,
-it can also be seen that the residual corresponding to the black/blue
-cell is significant at the 10\% level.
+
+This extended shading is already very flexible and combines visualization and inference,
+but it should only be applied when using the maximum statistic is appropriate. For 
+the sum-of-squares statistic $X^2$ (and all other functionals $\lambda(\cdot)$), this
+shading cannot be used.
+
+use pre-determined (or manually adjusted) cut offs, but visualize the significance
+by the amount of color in the plot, i.e., use only little color if the corresponding
+test result is non-significant.
+
+For HCL, the amount of color can easily be controlled by varying the maximum
+chroma value. So far $100$, now $20$.
+
+For HSV, a similar effect can be achieved by varying the value dimension which
+was not used up to now. Setting value to $v = 0.5$ a darker palette of colors can be
+obtained.
 
 We have seen that this approach performs very well when the test statistic
 which should be visualized is the maximum statistic (\ref{eq:MaxAbs}). However,
