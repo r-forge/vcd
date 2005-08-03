@@ -354,7 +354,16 @@ popViewport(2)
 
 \section{Residual-based Shadings} \label{sec:shadings}
 
-remarks: Friendly 1994
+Colors are commonly used to enhance mosaic and association plots. To integrate
+a visualization of the Pearson residuals $\{r_{ij}\}$ into the mosaic display---which
+in its `raw' version only visualizes the observed frequencies $\{n_{ij}\}$---\cite{vcd:Friendly:1994}
+suggested a residual-based shading for the mosaic tiles that can also be applied
+to the rectangles in association plots \citep{vcd:Meyer+Zeileis+Hornik:2003}. 
+In this section, we first briefly review the \cite{vcd:Friendly:1994} shading, 
+before we suggest different colors and a combination of visualization and significance
+testing.
+
+\subsection{Friendly Shading}
 
 
 A first extension by
@@ -371,11 +380,38 @@ the Pearson residuals are approximately standard normal which implies
 that the highlighted cells are those with
 residuals \emph{individually} significant at approximately the 5\% and 0.01\%
 level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
-deviation from independence \citep[p.~109]{vcd:Friendly:2000}. In particular,
-this shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
-as in general it is unknown to which significance level $\alpha$ the
-values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
+deviation from independence \citep[p.~109]{vcd:Friendly:2000}. 
 
+The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
+substantial improvement of the original mosaic plots and enhanced them
+from a plot for contingency tables to a visualization technique for
+log-linear models (and therefore also for certain independence problems).
+However, it has two major drawbacks: First,
+the significance level for the hard-coded critical values 2 and 4 is
+usually unknown. Second, the colors for (light) blue and red
+used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
+in \textsf{R} are not device-independent and
+do not provide homogeneous saturations over different colors
+and copier proofness. We suggest some ways to overcome these drawbacks.
+
+The implementation of Friendly mosaic plots in \textsf{SAS}
+uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
+with hues for blue and red, full saturation, and varying luminance
+for lighter colors. The current \textsf{R} implementation is
+based on colors in the HSV (Hue--Saturation--Value) space where
+decreasing the saturation from 1 towards 0
+%% ---given the hue for blue or red and full saturation---
+generates very similar colors
+as increasing the luminance for HLS colors from 0.5 towards 1.
+As an alternative to those HLS and HSV colors, the device-independent
+HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
+used which also provides homogeneous saturations over different colors and copier
+proofness. The resulting association plot (using critical values for
+$\alpha = 0.1$ and $0.01$) for the Bundesliga data can be seen in
+Figure \ref{fig:goals-assoc-signif}. It indicates very clearly that
+there is no evidence for rejecting the hypothesis of independence
+in this table. Thus, there seems to be neither an advantage for
+the home team nor for the away team.
 
 
 \subsection{Colors}
@@ -590,17 +626,10 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 
 \subsection{Significance}
 
-The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
-substantial improvement of the original mosaic plots and enhanced them
-from a plot for contingency tables to a visualization technique for
-log-linear models (and therefore also for certain independence problems).
-However, it has two major drawbacks: First,
-the significance level for the hard-coded critical values 2 and 4 is
-usually unknown. Second, the colors for (light) blue and red
-used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
-in \textsf{R} are not device-independent and
-do not provide homogeneous saturations over different colors
-and copier proofness. We suggest some ways to overcome these drawbacks.
+In particular,
+the Friendly shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
+as in general it is unknown to which significance level $\alpha$ the
+values $c_\alpha = 2$ and $4$ correspond for the table being visualized.
 
 As pointed out in Section \ref{sec:tests}, the critical values for
 the maximum statistic $M$ from (\ref{eq:MaxAbs}) can be derived
@@ -610,25 +639,6 @@ $\alpha = 0.1$ and $0.01$, for the table to be visualized could be
 used. Hence, exactly those residuals causing the (potential)
 dependency within the table are highlighted. At the moment, these critical values
 are derived in \texttt{vcd} by simulation of the underlying distribution.
-
-The implementation of Friendly mosaic plots in \textsf{SAS}
-uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
-with hues for blue and red, full saturation, and varying luminance
-for lighter colors. The current \textsf{R} implementation is
-based on colors in the HSV (Hue--Saturation--Value) space where
-decreasing the saturation from 1 towards 0
-%% ---given the hue for blue or red and full saturation---
-generates very similar colors
-as increasing the luminance for HLS colors from 0.5 towards 1.
-As an alternative to those HLS and HSV colors, the device-independent
-HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
-used which also provides homogeneous saturations over different colors and copier
-proofness. The resulting association plot (using critical values for
-$\alpha = 0.1$ and $0.01$) for the Bundesliga data can be seen in
-Figure \ref{fig:goals-assoc-signif}. It indicates very clearly that
-there is no evidence for rejecting the hypothesis of independence
-in this table. Thus, there seems to be neither an advantage for
-the home team nor for the away team.
 
 To illustrate what a `postive' example looks like we give the association plot
 for the well-known Hair-Eye-Color data set (avilable in base \textsf{R}) which cross-tabulates the hair and eye
@@ -665,7 +675,7 @@ null hypothesis has to be rejected for the Hair-Eye-Color data.
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL))
+mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL, lty = 1))
 popViewport()
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
 mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
@@ -687,10 +697,7 @@ simulated from $5000$ repetitions
 
 \cite{vcd:Friendly:1999} discusses grouping similar to coplots (conditioning
 plots) \citep{vcd:Cleveland:1993} that lead to trellis graphics
-(Becker, R.A., Cleveland, W.S. and Shyu, M. ``The Visual Design and
-Control of Trellis Display'', Journal of Computational and
-Graphical Statistics).
-
+\citep{vcd:Becker+Cleveland+Shyu:1996}.
 
 Independence problems do not only occur in 2-way tables, although that
 is an important special case, but they are also important in tables of
