@@ -192,6 +192,10 @@ independence in 2-way tables
 association and mosaic displays
 
 colors and color spaces
+    because the three perceptual dimensions (hue, lightness, saturation)
+    are not properly mapped to the three dimensions of the color space
+    and hence are confounded \citep{vcd:Brewer:1999}    
+
 
 somewhere:
 mention Augsburg stuff, visualization of log-linear models via mosaics
@@ -361,112 +365,133 @@ suggested a residual-based shading for the mosaic tiles that can also be applied
 to the rectangles in association plots \citep{vcd:Meyer+Zeileis+Hornik:2003}. 
 In this section, we first briefly review the \cite{vcd:Friendly:1994} shading, 
 before we suggest different colors and a combination of visualization and significance
-testing.
+testing to extend these residual-based shadings.
 
 \subsection{Friendly Shading}
 
+The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide a
+substantial improvement of the original mosaic plots and enhanced them
+from a plot for contingency tables to a visualization technique for
+log-linear models---and thus also for independence problems including
+2-way tables as the simplest special case.
 
-A first extension by
-\cite{vcd:Friendly:1994} uses a color coding of the tiles to visualize deviations
-(residuals) from a given log-linear model fitted to the table, that is, from
-the expected frequencies under independence. This approach does not only work in 2-way
-tables but also in log-linear models fitted to multi-way tables. In this
-extension, positive and negative signs of the residuals are coded by rectangles with
-solid and dashed borders respectively. Furthermore, residuals exceeding an absolute
-value of 2 are shaded light blue and red respectively, those that even
-exceed an absolute value of 4 are shaded with full saturation. The heuristic
-behind this shading is that
-the Pearson residuals are approximately standard normal which implies
-that the highlighted cells are those with
-residuals \emph{individually} significant at approximately the 5\% and 0.01\%
+The idea is to use a color coding for the mosaic tiles that visualizes the
+sign and absolute size of each residual $r_{ij}$: Cells corresponding to small
+residuals ($|r_{ij}| < 2$) are shaded white. Cells with medium sized residuals
+($2 \le |r_{ij}| < 4$) are shaded in light blue and light red for positive negative
+residuals respectively. Cells with large residuals ($|r_{ij}| \ge 4$) are shaded
+with a fully saturated blue and red respectively. Mosaic plots enhanced by this 
+shading can thus also bring out departures from independence (or other log-liner 
+models in multi-way tables) graphically and visualize patterns of dependence.
+The heuristic for choosing the cut offs $2$ and $4$ is that the Pearson residuals
+are approximately standard normal which implies that the highlighted cells are those with
+residuals \emph{individually} significant at approximately the $\alpha = 0.05$ and $\alpha = 0.0001$
 level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
 deviation from independence \citep[p.~109]{vcd:Friendly:2000}. 
 
-The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide
-substantial improvement of the original mosaic plots and enhanced them
-from a plot for contingency tables to a visualization technique for
-log-linear models (and therefore also for certain independence problems).
-However, it has two major drawbacks: First,
-the significance level for the hard-coded critical values 2 and 4 is
-usually unknown. Second, the colors for (light) blue and red
-used in the Michael Friendly's \textsf{SAS} implementation and also in the base implementation
-in \textsf{R} are not device-independent and
-do not provide homogeneous saturations over different colors
-and copier proofness. We suggest some ways to overcome these drawbacks.
-
-The implementation of Friendly mosaic plots in \textsf{SAS}
-uses (by default) colors in the HLS (Hue--Luminance--Saturation) color space
-with hues for blue and red, full saturation, and varying luminance
-for lighter colors. The current \textsf{R} implementation is
-based on colors in the HSV (Hue--Saturation--Value) space where
-decreasing the saturation from 1 towards 0
-%% ---given the hue for blue or red and full saturation---
-generates very similar colors
-as increasing the luminance for HLS colors from 0.5 towards 1.
-As an alternative to those HLS and HSV colors, the device-independent
-HCL (Hue--Chroma--Luminance) color space \citep{vcd:Ihaka:2003} could be
-used which also provides homogeneous saturations over different colors and copier
-proofness. The resulting association plot (using critical values for
-$\alpha = 0.1$ and $0.01$) for the Bundesliga data can be seen in
-Figure \ref{fig:goals-assoc-signif}. It indicates very clearly that
-there is no evidence for rejecting the hypothesis of independence
-in this table. Thus, there seems to be neither an advantage for
-the home team nor for the away team.
+In addition to the shading of the rectangles themselves, the Friendly shading also
+encompasses a choice of line type and line color of the borders of the rectangles
+with similar ideas as described above. As both mosaic and association plots are
+area-proportional visualization techniques, we focus on area shadings and always 
+use solid black borders throughout this paper, but the extensions suggested in the
+following could also be applied to control line type and color.
 
 
 \subsection{Colors}
 
-currently: chosen based on HSV or HLS color spaces,
-hue (red and blue) codes sign of residuals, and saturation the absolute size
-in three steps, value currently unused (always set to full value)
+The way the (light) blue and red colors are chosen differs somewhat between
+various implementations of Friendly mosaic plots: In his original 
+\proglang{SAS} implementation \citep[see][]{vcd:Friendly:2000}, Michael Friendly
+uses colors from a palette based on HLS (Hue--Luminance--Saturation) color space.
+The implementation in the \proglang{R} system for statistical computing
+\citep[\url{http://www.R-project.org/}]{vcd:R:2005} employs colors from
+HSV (Hue--Saturation--Value) space. The latter is a very common implementation of
+colors in many computer packages and makes the generation of the Friendly shading
+very simple.
 
-disadvantages:
-  - perceptually not uniform
-    because the three perceptual dimensions (hue, lightness, saturation)
-    are not properly mapped to the three dimensions of the color space
-    and hence are confounded \citep{vcd:Brewer:1999}    
-    in particular, saturation is not uniform across different hues.
-    
-  - can lead to color-caused optical illusions in statistical graphs
-    \citep{vcd:Cleveland+McGill:1983}
-  
-  - flashy fully saturated HSV colors are good for drawing attention to a plot,
-    but hard to look at for a longer time, hence mosaic displays using these 
-    colors are harder to interpret
-    
-  - white is not very suitable as a neutral color, grey conveys neutrality or 
-    uninterestingness much better
+The HSV space originally looks like a regular cone with black at its
+peak (zero value) and full color wheels for different saturations at the other end,
+centered around a white (full value). Type and amount of color are controlled by hue
+and saturation respectively. Typically, polar coordinates that all range in the 
+unit interval are used in this space, such that it looks like a regular cylinder.
+For generating colors in the Friendly shading, the following strategy is used:
+The hue $h$ codes the sign of the residuals---$h = 0$ (red hue) is used for negative residuals,
+$h = 2/3$ (blue hue) for positive residuals. The absolute size of the residuals
+is then coded by the saturation $s$ which is set to $0$, $0.5$ and $1$ respectively
+for small/medium/large residuals respectively. The value is always fixed at $v = 1$.
+This is also depicted in the upper panel of Figure~\ref{fig:shadingHSVHCL} which shows
+to slides from the HSV cylinder side to side. The plot shows the saturation/value plane
+for the given hues $h = 0$ and $h = 2/3$. The significant color palette shows the
+colors used for the Friendly shading when the residuals are increasing from left to right.
+The set of non-significant colors will be explained in the next section.
 
-Alternatives:
-  - \cite{vcd:Munsell:1905} introduced color notation for balanced colors
-  - Commission Internationale de l'\'Eclairage (CIE) introduced two perceptually
-    based color spaces CIELAB and CIELUV where the latter is preferred for 
-    emissive color technologies such as computer displays.
-  - \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003} is an online tool
-    for selcting different sets of colors, based on similar ideas. It includes
-    qualitative, sequential and diverging palettes.
-  - \cite{vcd:Ihaka:2003} discusses how CIELUV colors can be used for choosing
-    colors for statistical graphics such as barplots. He recommends to use
-    polar coordinates in the CIELUV space---called HCL space, using hue, chroma
-    and luminance---and suggests a strategy for choosing qualitative schemes based
-    on these.
+Although this HSV-based shading is already very useful for enhancing mosaic and
+association plots and although HSV is very commonly available implementation of
+color spaces, HSV colors in general and the Friendly shading in particular have
+a number of disadvantages. Most importantly, HSV colors are not perceptually
+uniform because the three HSV dimensions map only poorly to the three
+perceptual dimensions of the human visual system  \citep{vcd:Brewer:1999,vcd:Ihaka:2003}.
+Consequently, the the HSV dimensions are confounded, e.g., saturation
+is not uniform across different hues. A fully saturated blue $(2/3, 1, 1)$ is
+much darker as a fully saturated red $(0, 1, 1)$ or green $(1/3, 1, 1)$.
+This makes it more difficult for the human eye to judge the size of shaded areas
+and can therefore lead to color-caused optical illusions when used in statistical graphs
+\citep{vcd:Cleveland+McGill:1983}. Furthermore, flashy fully saturated HSV colors are
+good for drawing attention to a plot, but hard to look at for a longer time \citep{vcd:Ihaka:2003}
+which makes HSV-shaded graphics harder to interpret. Finally, white is employed as
+the neutral color for small residuals in the Friendly shading, but typically
+grey is found to convey neutrality or uninterestingness much better than white does
+\citep{vcd:Brewer:1999}.
 
-We discuss how similar ideas can be used for deriving a diverging HCL scheme that 
-is suitable for visualizing residuals in association and mosaic displays.
+Alternative ways to choose colors have been available for a long time, but have
+been only slowly adopted for implementations of colors in computer packages in 
+general and for shading in statistical graphs in particular. The idea of using
+perceptually based colors that are `in harmony' go back to \cite{vcd:Munsell:1905} 
+who introduced a color notation for balanced colors. Based on similar principles, Cynthia
+Brewer and co-workers suggested different types of palettes (qualitative/sequential/diverging)
+and provided the online tool \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003} for
+selecting an appropriate palette for a specific problem. Furthermore, the
+Commission Internationale de l'\'Eclairage (CIE) introduced the two perceptually
+based color spaces CIELAB and CIELUV where the latter is typically preferred for 
+emissive color technologies such as computer displays. \cite{vcd:Ihaka:2003} discusses
+how CIELUV colors can be used for choosing colors for statistical graphics such as barplots.
+By taking polar coordinates in CIELUV space, it is called HCL (Hue--Chroma--Luminance) space
+and qualitative palettes can easily be chosen by using a range of hues for fixed values
+of chroma and luminance. Such colors are always balanced towards the same grey 
+and thus do not have the problem of varying saturations as for the HSV colors.
 
-HCL
-  - irregular double cone, i.e., chroma/luminance plane looks rather different
-    for different hues
-  - choose two hues that look similar in the chroma/luminance plane to code
-    the sign of the residuals. Also use red and blue at full chroma for large
-    residuals and use a light gray (instead of a white at the top of the luminance
-    scale) as the neutral color for small residuals, interpolate between.
-  - for non-significant results, clearly reduce the amount of color, i.e. the maximum
-    chroma used.
-    
-Advantages
-  - based on a perceptually uniform color space
-  - device independent
+Here, we discuss how similar ideas can be used for deriving a diverging HCL palettes that 
+provide a suitable translation of the ideas from the Friendly shading to perceptually
+uniform HCL colors. 
+The HCL space looks like a double cone with black (zero luminance) at one end and white
+at the other (full luminance). In its middle, there is a full color wheel for different
+values of chroma (that controls the colorfulness). Unfortunately, the HCL space is not completely
+regular as the HSV space is and consequently its dimensions cannot be standardized to 
+unit intervals: the hue ranges in $[0, 360]$ degrees and chroma and luminance both in $[0, 100]$
+percent. But not all combinations $(h, c, l)$ yield valid HCL colors and the admissable combinations
+of $c$ and $l$ vary across different hues $h$. But for the problem of constructing
+a diverging palette, this problem can easily be overcome as we just need two different
+hues (a `negative' and a `positive' hue) and hence choose two hues that correspond to 
+similar shapes in the chroma/luminance plane. The lower panel of Figure~\ref{fig:shadingHSVHCL}
+shows two such planes side to side for the hues $h = 0$ and $h = 260$. To obtain a 
+sequence of colors with the same properties as the Friendly shading, the palette starts
+at a fully saturated red $(0, 100, 50)$, goes via a neutral color, ends at a fully saturated
+blue $(260, 100, 50)$, and uses linear interpolation in between. Instead of using white
+$(0, 0, 100)$ as the neutral color, a light grey $(0, 0, 90)$ is employed as motivated above.
+
+This diverging palette (see the `significant' colors in Figure~\ref{fig:shadingHSVHCL},
+the `non-significant' colors are again discussed in the following section)
+uses both chroma, i.e., the colorfulness, and luminance, i.e., 
+the amount of grey, to code the absolute size of the quantity visualized, i.e., the
+Pearson residuals when applied to the independence problem. By changing the neutral
+color or by changing the maximum chroma respectively, this can be changed to using only
+chroma or luminance for this purpose, but using both seems to be a very effective way
+of visualization.
+
+The advantages of using this HCL shading scheme instead of the HSV scheme is that
+it is based on a perceptually based color space that provides uniform saturations
+for different hues and is device inependent.
+
 
 \setkeys{Gin}{width=.8\textwidth}
 \begin{figure}[p]
@@ -567,8 +592,8 @@ for(i in 1:(nc-1)) {
 for(i in 1:(nc-1)) {
   rect(-mychroma[i], luminance[-nl], -(mychroma[i] + 100/(nc-1)), luminance[-1], border = hue360[,i+1], col = hue360[,i+1])
 }
-axis(2, at = c(50, 75, 100), labels = c(50, 75, 100))
-axis(4, at = c(50, 75, 100), labels = c(50, 75, 100))
+axis(2, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
+axis(4, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
 axis(3, at = -4:4*25, labels=c(4:0*25, 1:4*25))
 mtext(c("hue = 0", "hue = 260"), side = 3, at = c(-50, 50), line = 3, cex = 1.2)
 mtext("chroma", side = 3, at = 0, line = 2)
@@ -619,12 +644,19 @@ lines(c(-8.75, -1.25), c(72.5, 87.5), lty = 2)
 lines(c(18.75, 11.75), c(52.5, 67.5), lty = 2)
 lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 @
-\caption{Extended shading in HSV and HCL space.}
+\caption{Extended shading in HSV (upper) and HCL space (lower).}
 \label{fig:shadingHSVHCL}
 \end{center}
 \end{figure}
 
 \subsection{Significance}
+
+However, it has two major drawbacks: First,
+the significance level for the hard-coded critical values 2 and 4 is
+usually unknown.
+
+  - for non-significant results, clearly reduce the amount of color, i.e. the maximum
+    chroma used.
 
 In particular,
 the Friendly shading does not provide a visualization of the maximum test (\ref{eq:MaxAbs})
