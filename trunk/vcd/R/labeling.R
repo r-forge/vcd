@@ -133,22 +133,23 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
 class(labeling_cells) <- "panel_generator"
 
 labeling_border <- function(labels = TRUE, varnames = labels,
-                          tl_labels = NULL, tl_varnames = NULL, 
-                          gp_labels = gpar(fontsize = 12),
-                          gp_varnames = gpar(fontsize = 12, fontface = 2),
-                          rot_labels = c(0, 90, 0, 90),
-                          rot_varnames = c(0, 90, 0, 90),
-                          pos_labels = "center", pos_varnames = "center",
-                          just_labels = "center", just_varnames = pos_varnames,
-                          boxes = FALSE, fill_boxes = NULL,
-                          offset = c(0, 0, 0, 0),
+                            set_labels = NULL, set_varnames = NULL,
+                            tl_labels = NULL, tl_varnames = NULL, 
+                            gp_labels = gpar(fontsize = 12),
+                            gp_varnames = gpar(fontsize = 12, fontface = 2),
+                            rot_labels = c(0, 90, 0, 90),
+                            rot_varnames = c(0, 90, 0, 90),
+                            pos_labels = "center", pos_varnames = "center",
+                            just_labels = "center", just_varnames = pos_varnames,
+                            boxes = FALSE, fill_boxes = NULL,
+                            offset = c(0, 0, 0, 0),
                           
-                          labbl_varnames = NULL,
-                          labels_varnames = FALSE, sep = ": ",
+                            labbl_varnames = NULL,
+                            labels_varnames = FALSE, sep = ": ",
                           
-                          abbreviate = FALSE, rep = TRUE,
-                          clip = FALSE, ...
-                          )
+                            abbreviate = FALSE, rep = TRUE,
+                            clip = FALSE, ...
+                            )
   function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
@@ -255,21 +256,25 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     ## varnames in the outer margin  
       ## compute axis names
       tt <- bt <- lt <- rt <- ""
-      for (i in seq(along = dn))
+      for (i in seq(along = dn)) {
+        var <- if (!is.null(set_varnames) && !is.na(set_varnames[dn[i]]))
+          set_varnames[dn[i]]
+        else
+          dn[i]
         if (varnames[i]) {
           if (split_vertical[i]) {
             if (tl_varnames[i])
-              tt <- paste(tt, dn[i], sep = if (tt == "") "" else " / ")
+              tt <- paste(tt, var, sep = if (tt == "") "" else " / ")
             else
-              bt <- paste(bt, dn[i], sep = if (bt == "") "" else " / ")
+              bt <- paste(bt, var, sep = if (bt == "") "" else " / ")
           } else {
             if (tl_varnames[i])
-              lt <- paste(lt, dn[i], sep = if (lt == "") "" else " / ")
+              lt <- paste(lt, var, sep = if (lt == "") "" else " / ")
             else
-              rt <- paste(rt, dn[i], sep = if (rt == "") "" else " / ")
+              rt <- paste(rt, var, sep = if (rt == "") "" else " / ")
           }
         }
-
+      }
       ## draw axis names
       if (tt != "")
         grid.text(tt, y = unit(1, "npc") + unit(tsp + 1, "lines") + offset[1],
@@ -289,27 +294,31 @@ labeling_border <- function(labels = TRUE, varnames = labels,
                   rot = rot_varnames[2], just = just_varnames[2], gp = gp_varnames[[2]])
     } else {
     ## varnames beneath labels
-      for (i in seq(along = dn))
+      for (i in seq(along = dn)) {
+        var <- if (!is.null(set_varnames) && !is.na(set_varnames[dn[i]]))
+          set_varnames[dn[i]]
+        else
+          dn[i]
         if (varnames[i]) {
           if (split_vertical[i]) {
             if (tl_labels[i]) {
               if (labbl_varnames[i]) {
-                grid.text(dn[i],
+                grid.text(var,
                           y = unit(1, "npc") + unit(1 + tsp - labsp[i], "lines") + offset[1],
                           x = unit(-0.5, "lines"),
                           just = "right", gp = gpar(fontface = 2))
               } else {
-                grid.text(dn[i], y = unit(1, "npc") + unit(1 + tsp - labsp[i], "lines") + offset[1],
+                grid.text(var, y = unit(1, "npc") + unit(1 + tsp - labsp[i], "lines") + offset[1],
                           x = unit(1, "npc") + unit(0.5, "lines"),
                           just = "left", gp = gpar(fontface = 2))
               }
             } else {
               if (labbl_varnames[i]) {
-                grid.text(dn[i], y = unit(labsp[i], "lines") + -1 * offset[3],
+                grid.text(var, y = unit(labsp[i], "lines") + -1 * offset[3],
                           x = unit(-0.5, "lines"), just = "right",
                           gp = gpar(fontface = 2))
               } else {
-                grid.text(dn[i], y = unit(labsp[i], "lines") + -1 * offset[3],
+                grid.text(var, y = unit(labsp[i], "lines") + -1 * offset[3],
                           x = unit(1, "npc") + unit(0.5, "lines"),
                           just = "left", gp = gpar(fontface = 2))
               }
@@ -317,27 +326,28 @@ labeling_border <- function(labels = TRUE, varnames = labels,
           } else {
             if (tl_labels[i]) {
               if (labbl_varnames[i]) {
-                grid.text(dn[i], x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset[4],
+                grid.text(var, x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset[4],
                           y = unit(-0.5, "lines"), just = "right", rot = 90,
                           gp = gpar(fontface = 2))
               } else {
-                grid.text(dn[i], x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset[4],
+                grid.text(var, x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset[4],
                           y = unit(1, "npc") + unit(0.5, "lines"),
                           just = "left", rot = 90, gp = gpar(fontface = 2))
               }
             } else {
               if (labbl_varnames[i]) {
-                grid.text(dn[i], x = unit(1, "npc") + unit(labsp[i], "lines") + offset[2],
+                grid.text(var, x = unit(1, "npc") + unit(labsp[i], "lines") + offset[2],
                           y = unit(-0.5, "lines"),
                           just = "right", rot = 90, gp = gpar(fontface = 2))
               } else {
-                grid.text(dn[i], x = unit(1, "npc") + unit(labsp[i], "lines") + offset[2],
+                grid.text(var, x = unit(1, "npc") + unit(labsp[i], "lines") + offset[2],
                           y = unit(1, "npc") + unit(0.5, "lines"),
                           just = "left", rot = 90, gp = gpar(fontface = 2))
               }
             }
           }
         }
+      }
     }
 
     ## draw labels
@@ -352,9 +362,15 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       for (labind in labseq) {
         mlab <- paste(root, "", dn[vind], n[labind], sep = ".")
         if (labels[vind] && (rep[vind] || !printed[[vind]][labind])) {
-          lab <- labs[[vind]][labind]
+          lab <- if (!is.null(set_labels) && !is.null(set_labels[[dn[vind]]]))
+            set_labels[[dn[vind]]][labind]
+          else
+            labs[[vind]][labind]
           if (labels_varnames[vind])
-            lab <- paste(dn[vind], lab, sep = sep)
+            lab <- if (!is.null(set_varnames) && !is.na(set_varnames[dn[vind]]))
+              paste(set_varnames[dn[vind]], lab, sep = sep)
+          else
+              paste(dn[vind], lab, sep = sep)
           if (sp) {
             if (tl_labels[vind]) {
               if (top) {
