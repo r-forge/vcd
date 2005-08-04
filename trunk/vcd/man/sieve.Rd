@@ -11,7 +11,7 @@
   values.
 }
 \usage{
-\method{sieve}{default}(x, condvars = NULL, gp = NULL, shade = FALSE,
+\method{sieve}{default}(x, condvars = NULL, gp = NULL, shade = NULL,
   legend = FALSE, split_vertical = FALSE, direction = NULL, spacing = NULL,
   spacing_args = list(), sievetype = c("observed","expected"), main = NULL, \dots)
 \method{sieve}{formula}(formula, data, \dots, main = NULL, subset = NULL)
@@ -30,11 +30,12 @@
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
   \item{subset}{an optional vector specifying a subset of observations to be used.}
-  \item{shade}{logical specifying whether gp should be used or not
+  \item{shade}{logical specifying whether \code{gp} should be used or not
     (see \code{gp}). If \code{TRUE} and \code{expected} is unspecified,
     a default model is fitted: if \code{condvars} is specified, a
     corresponding conditional independence model, and else the total
-    independence model.}
+    independence model. If \code{shade} is \code{NULL} (default),
+    \code{gp} is used if specified.}
   \item{sievetype}{logical indicating whether rectangles should be filled
     according to \code{observed} or \code{expected} frequencies.}
   \item{gp}{object of class \code{"gpar"}, shading function or a
