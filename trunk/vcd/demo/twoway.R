@@ -55,10 +55,10 @@
   ## aggregate over `sex':
   (tab <- margin.table(HairEyeColor, 1:2))
   ## plot expected values:
-  sieve(t(tab), sievetype = "expected")
+  sieve(t(tab), sievetype = "expected", shade = TRUE)
 
   ## plot sieve diagram:
-  sieve(t(tab))
+  sieve(t(tab), shade = TRUE)
 
   ### Visual Acuity ###
   #####################
@@ -67,9 +67,11 @@
   sieve(Freq ~ right + left,
         data = VisualAcuity,
         subset = gender == "female",
-        main = "Unaided distant vision data")
-#        xlab = "Left Eye Grade",
-#        ylab = "Right Eye Grade")
+        main = "Unaided distant vision data",
+        labeling_args = list(set_varnames = c(left = "Left Eye Grade",
+                               right = "Right Eye Grade")),
+        shade = TRUE
+        )
   detach(VisualAcuity)
   
   ### Berkeley Admission ###
@@ -80,14 +82,15 @@
   data(UCBAdmissions)
 
   (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
-  sieve(tab, 
-#        xlab = "Gender:Admission",
-#        ylab = "Department",
-        main = "Berkeley Admissions Data"
+  sieve(tab,
+        labeling_args = list(set_varnames = c("I(Gender:Admit)" = "Gender:Admission",
+                               Dept = "Department")),
+        main = "Berkeley Admissions Data",
+        shade = TRUE
         )
 
   ## or use extended sieve plots:
-  sieve(UCBAdmissions)
+  sieve(UCBAdmissions, shade = TRUE)
 
   ######################
   ## Association Plot ##
@@ -97,9 +100,8 @@
   ######################
   data(HairEyeColor)
   assoc(margin.table(HairEyeColor, 1:2),
-#                 xlab = "Hair Color",
-#                 ylab = "Eye Color",
-                 main = "Association Plot")
+        labeling_args = list(set_varnames = c(Hair = "Hair Color", Eye = "Eye Color")),
+        main = "Association Plot")
 
   ####################
   ## Agreement Plot ##

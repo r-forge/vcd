@@ -11,8 +11,9 @@
   These functions generate labeling functions used for strucplots.
 }
 \usage{
-labeling_border(labels = TRUE, varnames = labels, tl_labels = NULL,
-  tl_varnames = NULL, gp_labels = gpar(fontsize = 12),
+labeling_border(labels = TRUE, varnames = labels,
+  set_labels = NULL, set_varnames = NULL, 
+  tl_labels = NULL, tl_varnames = NULL, gp_labels = gpar(fontsize = 12),
   gp_varnames = gpar(fontsize = 12, fontface = 2),
   rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
   pos_labels = "center", pos_varnames = "center",
@@ -35,6 +36,13 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
     drawn for a particular dimension.}
   \item{varnames}{vector of logicals indicating whether variable names
     should be drawn for a particular dimension.}
+  \item{set_labels}{An optional character vector with named components
+    replacing the so-specified variable names. The component names must
+    exacty match the variable names to be replaced.}
+  \item{set_varnames}{An optional list with named components of
+    character vectors replacing the labels of the so-specified
+    variables. The component names must
+    exacty match the variable names whose labels should be replaced.}
   \item{tl_labels}{vector of logicals indicating whether labels should
     be positioned on top (column labels) / left (row labels) for a
     particular dimension.}
@@ -154,6 +162,13 @@ mosaic(Titanic,
        labeling_args = list(clip = TRUE, boxes = TRUE,
                             fill_boxes = c(Survived = "blue","red"))
 )
+
+## change variable names
+mosaic(Titanic, labeling_args = list(set_varnames = c(Sex = "Gender")))
+
+## change labels
+mosaic(Titanic, labeling_args = list(set_varnames = c(Survived = "Status"),
+       set_labels = list(Survived = c("Survived", "Not Survived")), rep = FALSE))
 
 }
 \keyword{hplot}
