@@ -176,7 +176,7 @@ class(cotab_sieve) <- "panel_generator"
 cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
   if(!is.null(x)) {
     fm <- coindep_test(x, condvars, n = 1)
-    if(is.null(ylim)) ylim <- range(max(residuals(fm)))
+    if(is.null(ylim)) ylim <- range(residuals(fm))
   }
   
   function(x, condlevels) {
