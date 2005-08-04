@@ -164,17 +164,16 @@ cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
 }
 class(cotab_mosaic) <- "panel_generator"
 
-cotab_assoc <- function(x = NULL, condvars = NULL, xlim = TRUE, ylim = NULL, ...) {
+cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
   if(!is.null(x)) {
     fm <- coindep_test(x, condvars, n = 1)
-    if(!is.null(xlim) && xlim) xlim <- c(-0.5, 0.5) * max(sqrt(fitted(fm)))
     if(is.null(ylim)) ylim <- range(max(residuals(fm)))
   }
   
   function(x, condlevels) {
     if(is.null(condlevels)) assoc(x, newpage = FALSE, pop = TRUE, ylim = ylim, ...)
       else assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                  newpage = FALSE, pop = TRUE, xlim = xlim, ylim = ylim, ...)
+                  newpage = FALSE, pop = TRUE, ylim = ylim, ...)
   }
 }
 class(cotab_assoc) <- "panel_generator"
@@ -183,7 +182,7 @@ cotab_coindep <- function(x, condvars,
   test = c("max", "Chisq"), level = NULL, n = 1000,
   h = NULL, c = NULL, l = NULL, lty = 1,
   type = c("mosaic", "assoc"),
-  legend = FALSE, xlim = TRUE, ylim = NULL, ...)
+  legend = FALSE, ylim = NULL, ...)
 {
   if(is.null(condvars))
     stop("at least one conditioning variable is required")
@@ -257,16 +256,15 @@ cotab_coindep <- function(x, condvars,
     }
   } else {
     if(is.null(ylim)) ylim <- range(resids)
-    if(!is.null(xlim) && is.logical(xlim) && xlim) xlim <- c(-0.5, 0.5) * max(sqrt(fitted(fm)))
 
     rval <- function(x, condlevels) {
     if(is.null(condlevels))
       assoc(x, newpage = FALSE, pop = TRUE,
-             gp = gpfun, legend = legend, xlim = xlim, ylim = ylim, ...)
+             gp = gpfun, legend = legend, ylim = ylim, ...)
     else
       assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
              newpage = FALSE, pop = TRUE,
-	     gp = gpfun, legend = legend, xlim = xlim, ylim = ylim, ...)
+	     gp = gpfun, legend = legend, ylim = ylim, ...)
     }
   }
 
