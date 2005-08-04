@@ -48,9 +48,8 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
   }
 }
 
-sieve.default <- function(x, condvars = NULL,
-                          gp = NULL,
-                          shade = FALSE, legend = FALSE,
+sieve.default <- function(x, condvars = NULL, gp = NULL,
+                          shade = NULL, legend = FALSE,
                           split_vertical = FALSE, direction = NULL,
                           spacing = NULL, spacing_args = list(),
                           sievetype = c("observed","expected"), main = NULL, ...) {
