@@ -181,8 +181,8 @@ combined with visualization of the result of a significance test.
 
 Extensions to visualizing conditional independence.\\[0.3cm]
 
-\textbf{Key Words:} Association plots; Conditional inference; 
-  Contingency tables; HCL colors; HSV colors; Mosaic plots; Permutation tests.
+\noindent \textbf{Key Words:} Association plots; Conditional inference; 
+Contingency tables; HCL colors; HSV colors; Mosaic plots; Permutation tests.
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
@@ -278,12 +278,12 @@ $\alpha$ \cite[][Ch.~7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells 
 the dependence can easily be identified.
 
 Furthermore, an important reason for using the unconditional limiting distribution
-for the $X^2$ statistic (\ref{eq:ChiSquare}) was the closed form result
+for the $X^2$ statistic from (\ref{eq:ChiSquare}) was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
 conditional inference (or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \citep{vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
-For testing the independence hypothesis (\ref{eq:H0}), using a permutation test is particularly
+For testing the independence hypothesis from (\ref{eq:H0}), using a permutation test is particularly
 intuitive due to the permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
 by simulating from the permutation distribution of test statistics of type
@@ -294,12 +294,14 @@ instead of the the Pearson residuals $\{r_{ij}\}$. But as the ideas discussed he
 extend straightforwardly to that situation, we do not discuss it in detail.
 
 For the arthritis data from Table~\ref{tab:art}, both tests indicate a clearly significant
-dependence of improvement on treatment: the sum-of-squares statistic from Equation~(\ref{eq:ChiSquare})
+dependence of improvement on treatment: the sum-of-squares statistic from (\ref{eq:ChiSquare})
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
-and the maximum statistion from Equation~(\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
+and the maximum statistion from (\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
 with a $p$ value of $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
-by drawing a sample of size $5000$ from the permutation distribution under independence.
-
+from a sample of size $5000$ from the permutation distribution under independence
+generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
+using the \cite{vcd:Patefield:1981} algorithm and computing the maximum statistic for 
+each of these tables.
 
 
 \subsection{Visualizations} \label{sec:visualization}
@@ -668,7 +670,7 @@ again, it would be nice if these cut offs could be chosen automatically in a
 data-driven fashion which is what we do below.
 
 The Friendly shading can be interpreted to be a visualization of the maximum
-statistic $M$ (\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
+statistic $M$ from (\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
 of $2$ and $4$ respectively. But the problem is that it is not clear to which
 significance levels $\alpha$ these critical values correspond because the distribution
 of $M$ depends on the underlying contingency table. The natural solution to this
@@ -678,7 +680,8 @@ $2$ and $4$. In the right panel of Figure~\ref{fig:shadings} this is done for
 the arthritis data by employing the critical values
 $\Sexpr{round(as.vector(art_max$qdist(0.9)), digits = 2)}$ at level $\alpha = 0.1$ and
 $\Sexpr{round(as.vector(art_max$qdist(0.99)), digits = 2)}$ at level $\alpha = 0.01$
-(and using the diverging HCL palette). By using these cut offs, the presence of color
+(and using the diverging HCL palette) derived from the permutation distribution of $M$ for 
+the arthritis data as described in Section~\ref{sec:tests}. By using these cut offs, the presence of color
 in the plot is equivalent to significance (of the maximum statistic $M$) at 
 level $\alpha = 0.1$ and $\alpha = 0.01$ respectively and exactly the cells which `cause'
 the dependence are highlighted. For the arthritis data, these are in particular the 
@@ -686,7 +689,7 @@ cells in the last column that signal that there are significantly more
 treated patients and fewer placebo patients with marked improvement than would be expected
 under independence.
 
-The significance $alpha = 0.1$ and $0.01$ are chosen because this leads to displays where
+The significance $\alpha = 0.1$ and $0.01$ are chosen because this leads to displays where
 fully colored cells are clearly significant (i.e., with a $p$ value below $0.01$),
 cells without color are clearly non-significant (i.e., with a $p$ value above $0.1$), and
 cells in between can be considered to be weakly significant (i.e., $0.1 \le p < 0.01$).
@@ -699,39 +702,33 @@ to conceal the important cells and over-emphasizes the unimportant ones. Hence, 
 to a shading with fewer colors that are easier to interpret.
 
 
-
-This extended shading is already very flexible and combines visualization and inference,
-but it should only be applied when using the maximum statistic is appropriate. For 
-the sum-of-squares statistic $X^2$ (and all other functionals $\lambda(\cdot)$), this
-shading cannot be used.
-
-use pre-determined (or manually adjusted) cut offs, but visualize the significance
-by the amount of color in the plot, i.e., use only little color if the corresponding
-test result is non-significant.
-
-For HCL, the amount of color can easily be controlled by varying the maximum
-chroma value. So far $100$, now $20$.
-
-For HSV, a similar effect can be achieved by varying the value dimension which
-was not used up to now. Setting value to $v = 0.5$ a darker palette of colors can be
-obtained.
-
-We have seen that this approach performs very well when the test statistic
-which should be visualized is the maximum statistic (\ref{eq:MaxAbs}). However,
-it is difficult to extend this approach to general tests for independence,
-in particular in the HCL space, where the ranges of chroma and luminance are
-not independent. In contrast the HSV space has the advantage that all
-three dimensions hue, saturation and value have the range $[0,1]$ and can
-be varied independently. Therefore, a different approach than the one
-described above could be to use the hue for the sign of the residuals as
-before, the saturation for the absolute size of the residuals, and the
-value as an indicator for the significance of some test statistic (only
-using the full value when the overall test for independence rejects
-the null hypothesis). The resulting mosaic plots under this paradigm
-are depicted in Figure \ref{fig:both-mosaic-signif}. Again, it can
-clearly be seen that despite some large residuals there is no
-evidence against independence for the Bundesliga data, but that the
-null hypothesis has to be rejected for the Hair-Eye-Color data.
+This extended shading is already very flexible and combines visualization and inference.
+However, it can only be applied when employing the maximum statistic because it is the only
+aggregation functional $\lambda(\cdot)$ where a single large residual $|r_{ij}|$ exceeding
+its critical value (independent from the values of the remaining residuals) is equivalent
+to the a significant value of the whole test statistic $\lambda(\{r_{ij}\})$.\footnote{This
+can easily be seen from the following consideration: To obtain a level $\alpha$ test, where 
+any residual $|r_{ij}|$ exceeding the critical value $c_\alpha$ gives a significant test
+result, the equation $\alpha = P(\mbox{any } |r_{ij}| > c_\alpha)$ must hold. This is equivalent
+to $1 - \alpha = P(\mbox{all } |r_{ij}| \le c_alpha) = P(\max_{i,j} |r_{ij}| \le c_alpha)$.}
+Typically, applying the maximum statistic is feasible and also appropriate for exploratory 
+analysis, but it would be desirable to also have a residual-based shading that can incorporate
+visualization of significance when the sum-of-squares statistic $X^2$ (or any other functional
+$\lambda(\cdot)$) is used. For the reasons discussed above, it is not possible to achieve this by shading
+individual cells differently but can only be realized by using different colors for the
+whole table. A outlined before, colorfulness is often intuitively matched with interestingness,
+therefore a rather natural idea is to use the fully colored palette only when the corresponding
+test is significant and to use a less colorful palette if not. For the HCL scheme, the
+amount of color can easily be controlled by varying the maximum chroma value used. For the full
+colors, the maximum chroma was set to $100$ as shown in Figure~\ref{fig:shadingHSVHCL} and 
+is now reduced to $20$ for the non-significant palette. This palette still codes the absolute
+size of the residuals by luminance (i.e., the amount of grey), uses the same neutral grey
+for small `un-interesting' residuals, codes positive and negative residuals by different hues,
+but gives less emphasis to the pattern by making the plot less colorful. A similar effect
+can be obtained in the HSV space if the value is reduced from $1$ to $0.5$ for non-significant 
+palettes (see Figure~\ref{fig:shadingHSVHCL}). But as for the significant colors,
+the dimensions used for creating this palette are confounded and hence the HCL scheme is clearly
+preferable.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
@@ -810,19 +807,35 @@ cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
 
 \section{Conclusions}
 
+We have presented two approaches for combining visualization and significance testing
+via residual-based shadings. The first one alwyas uses the fully colored palette but relies on
+data-driven cut offs such that the presence of color is equivalent to significance of the
+associated maximum test. The second approach uses pre-defined cut offs (such as $2$ and $4$) but
+codes the result of the significance test by using full colors only for significant results and
+the same type of palette but with a reduced amount of color for non-significant results.
+
+
 
 \bibliography{vcd}
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
 
 %% for reproducibility, print also
 
 <<graphics>>
 ## load packages and data
 library(vcd)
-data(Arthritis)
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
-data(UCBAdmissions)
 ucb <- aperm(UCBAdmissions)
 
 ## plain classic plots
@@ -830,20 +843,20 @@ mosaic(art)
 assoc(art)
 
 ## new max shading with HCL colors
-mosaic(art, gp = shading_Friendly)
-set.seed(1234)
+mosaic(art, gp = shading_Friendly(lty = 1, eps = NULL))
+set.seed(1071)
 mosaic(art, gp = shading_max)
 
 ## conditional independence
-set.seed(1234)
+set.seed(1071)
 cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep, type = "assoc")
 ## which uses the double max functional
-set.seed(1234)
+set.seed(1071)
 coindep_test(ucb, "Dept")
 
 ## alternatively use Peason functional
 ## via simulation of conditional distribution:
-set.seed(1234)
+set.seed(1071)
 coindep_test(ucb, "Dept", indepfun = function(x) sum(x^2), aggfun = sum)
 ## via asymptotic distribution:
 fm <- loglm(~ Dept * (Gender + Admit), data = ucb)
