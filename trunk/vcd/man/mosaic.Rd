@@ -10,7 +10,7 @@
 \method{mosaic}{default}(x, condvars = NULL,
   split_vertical = FALSE, direction = NULL, spacing = NULL,
   spacing_args = list(), zero_size = 0.5, main = NULL, \dots)
-\method{mosaic}{formula}(formula, data, \dots, main = NULL)
+\method{mosaic}{formula}(formula, data, \dots, main = NULL, subset = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -25,6 +25,7 @@
     those for doubledecker plots) have no response variable.}
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
+  \item{subset}{an optional vector specifying a subset of observations to be used.}
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}

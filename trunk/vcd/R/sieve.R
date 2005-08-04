@@ -1,10 +1,10 @@
 ###########################################################
-## mosaicplot
+## sieveplot
 
-mosaic <- function(x, ...)
-  UseMethod("mosaic")
+sieve <- function(x, ...)
+  UseMethod("sieve")
 
-mosaic.formula <-
+sieve.formula <-
 function(formula, data = NULL, ..., main = NULL, subset = NULL)
 {
   if (is.logical(main) && main)
@@ -34,7 +34,7 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
       }
       dat <- margin.table(dat, ind)
     }
-    mosaic.default(dat, main = main,
+    sieve.default(dat, main = main,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
     tab <- if ("Freq" %in% colnames(data))
@@ -44,16 +44,24 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
       xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
             data = data, subset = subset)
     
-    mosaic.default(tab, main = main, ...)
+    sieve.default(tab, main = main, ...)
   }
 }
 
-mosaic.default <- function(x, condvars = NULL,
-                           split_vertical = FALSE, direction = NULL,
-                           spacing = NULL, spacing_args = list(),
-                           zero_size = 0.5, main = NULL, ...) {
+sieve.default <- function(x, condvars = NULL,
+                          gp = NULL,
+                          shade = FALSE, legend = FALSE,
+                          split_vertical = FALSE, direction = NULL,
+                          spacing = NULL, spacing_args = list(),
+                          sievetype = c("observed","expected"), main = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
+  sievetype = match.arg(sievetype)
+  if (is.logical(shade) && shade && is.null(gp))
+    gp <- if (sievetype == "observed")
+      shading_Friendly(interpolate = 0, lty = c("longdash", "solid"))
+    else
+      shading_Friendly(interpolate = 0, line_col = "darkgray", eps = Inf, lty = "dotted")
 
   dl <- length(dim(x))
   if (!is.null(condvars)) {
@@ -78,23 +86,28 @@ mosaic.default <- function(x, condvars = NULL,
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            panel = struc_mosaic(zero_size = zero_size),
+            panel = struc_sieve(sievetype = sievetype),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
             main = main,
+            shade = shade, 
+            legend = legend,
+            gp = gp,
             ...)
 }
 
-struc_mosaic <- function(zero_size = 0.5)
-  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
-    dn <- dimnames(observed)
+struc_sieve <- function(sievetype = c("observed", "expected")) {
+  sievetype = match.arg(sievetype)
+  function(residuals, observed, expected, spacing, gp, split_vertical) {
+    dn <- dimnames(expected)
     dnn <- names(dn)
-    dx <- dim(observed)
+    dx <- dim(expected)
     dl <- length(dx)
-
+    n <- sum(expected)
+    
     ## split workhorse
-    split <- function(x, i, name, row, col) {
+    split <- function(x, i, name, row, col, rowmargin, colmargin) {
       cotab <- co_table(x, 1)
       margin <- sapply(cotab, sum)
       v <- split_vertical[i]
@@ -114,43 +127,62 @@ struc_mosaic <- function(zero_size = 0.5)
       name <- paste(name, "", dnn[i], dn[[i]], sep = ".")
       row <- col <- rep.int(1, d)
       if (v) col <- 2 * 1:d - 1 else row <- 2 * 1:d - 1
-      f <- if (i < dl) 
-        function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m])
-      else
-        function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                             name = name[m])
+      proptab <- function(x) x / max(sum(x), 1)
+      f <- if (i < dl) {
+        if (v)
+          function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m],
+                            colmargin = colmargin * proptab(margin)[m],
+                            rowmargin = rowmargin)
+        else
+          function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m],
+                            colmargin = colmargin,
+                            rowmargin = rowmargin * proptab(margin)[m])
+      } else {
+        if (v)
+          function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
+                               name = name[m],
+                               yscale = c(0, rowmargin),
+                               xscale = c(0, colmargin * proptab(margin)[m]))
+        else
+          function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
+                               name = name[m],
+                               yscale = c(0, rowmargin * proptab(margin)[m]),
+                               xscale = c(0, colmargin))
+      }
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
 
       vpTree(vproot, vpleaves)
     }
 
-    ## start spltting on top, creates viewport-tree
-    pushViewport(split(observed + .Machine$double.eps,
-                       i = 1, name = "cell", row = 1, col = 1))
+    ## start splitting on top, creates viewport-tree
+    pushViewport(split(expected + .Machine$double.eps,
+                       i = 1, name = "cell", row = 1, col = 1,
+                       rowmargin = n, colmargin = n))
 
     ## draw rectangles
-    mnames <-  apply(expand.grid(dn), 1,
-                     function(i) paste(dnn, i, collapse="..", sep = ".")
-                     )
-    zeros <- observed <= .Machine$double.eps
-
+    mnames <- apply(expand.grid(dn), 1,
+                    function(i) paste(dnn, i, collapse="..", sep = ".")
+                    )
+    
     for (i in seq(along = mnames)) {
       seekViewport(paste("cell", mnames[i], sep = ".."))
+      vp <- current.viewport()
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
-      if (!zeros[i]) {
-        grid.rect(gp = gpobj, name = paste("rect", mnames[i], sep = ".."))
-      } else { 
-        grid.lines(x = 0.5, gp = gpobj)
-        grid.lines(y = 0.5, gp = gpobj)
-        if (zero_size > 0) {
-          grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
-                      gp = gpar(col = gp$fill[i]),
-                      name = paste("disc", mnames[i], sep = ".."))
-          grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
-                      name = paste("circle", mnames[i], sep = ".."))
-        }
-      }
-    }
+      
+      div <- if (sievetype == "observed") observed[i] else expected[i]
+      if (div > 0) {
+        square.side <- sqrt(vp$yscale[2] * vp$xscale[2] / div)
 
+        ii <- seq(0, vp$xscale[2], by = square.side)
+        jj <- seq(0, vp$yscale[2], by = square.side)
+
+        grid.segments(x0 = ii, x1 = ii, y0 = 0, y1 = vp$yscale[2],
+                      default.units = "native", gp = gpobj)
+        grid.segments(x0 = 0, x1 = vp$xscale[2], y0 = jj, y1 = jj,
+                      default.units = "native", gp = gpobj)
+      }
+      grid.rect(name = paste("rect", mnames[i], sep = ".."))
+    }
   }
-class(struc_mosaic) <- "panel_generator"
+}
+class(struc_sieve) <- "panel_generator"

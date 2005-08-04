@@ -5,7 +5,7 @@
 
 shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   h = c(2/3, 0), s = c(1, 0), v = c(1, 0.5),
-  interpolate = c(2, 4), lty = 1, eps = NULL,
+  interpolate = c(2, 4), lty = 1, eps = NULL, line_col = "black",
   p.value = NULL, level = 0.95, ...)
 {
   ## get h/s/v and lty
@@ -69,7 +69,7 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
 	        v, ...)
     dim(fill) <- dim(x)
     
-    col <- rep.int("black", length(res))
+    col <- rep(line_col, length.out = length(res))
     if(!is.null(eps)) {
       eps <- abs(eps)
       col[res > eps] <- hsv(my.h[1], 1, v, ...)
@@ -91,7 +91,7 @@ class(shading_hsv) <- "panel_generator"
 
 shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   h = NULL, c = NULL, l = NULL,
-  interpolate = c(2, 4), lty = 1, eps = NULL, 
+  interpolate = c(2, 4), lty = 1, eps = NULL, line_col = "black",
   p.value = NULL, level = 0.95, ...)
 {
   ## set defaults
@@ -162,7 +162,7 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
 	        ...)
     dim(fill) <- dim(x)
     
-    col <- rep.int("black", length(res))
+    col <- rep(line_col, length.out = length(res))
     if(!is.null(eps)) {
       eps <- abs(eps)
       col[res > eps] <- hcl(my.h[1], max.c, my.l[2], ...)
@@ -182,16 +182,16 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
 class(shading_hcl) <- "panel_generator"
 
 shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), eps = 0.01, ...)
+  h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), eps = 0.01, line_col = "black", ...)
 {
   shading_hsv(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
               h = h, v = 1, lty = lty, interpolate = interpolate,
-	      eps = eps, p.value = NA, ...)
+	      eps = eps, line_col = line_col, p.value = NA, ...)
 }
 class(shading_Friendly) <- "panel_generator"
 
 shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  h = NULL, c = NULL, l = NULL, lty = 1, eps = NULL, level = c(0.9, 0.99), n = 1000, ...)
+  h = NULL, c = NULL, l = NULL, lty = 1, eps = NULL, line_col = "black", level = c(0.9, 0.99), n = 1000, ...)
 {
   stopifnot(length(dim(observed)) == 2)
   
@@ -204,7 +204,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
   col.bins <- obs.test$qdist(sort(level))
   rval <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
                         h = h, c = c, l = l, interpolate = col.bins, lty = lty,
-			eps = eps, p.value = obs.test$p.value, ...)
+			eps = eps, line_col = line_col, p.value = obs.test$p.value, ...)
   return(rval)
 }
 class(shading_max) <- "panel_generator"

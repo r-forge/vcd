@@ -16,7 +16,7 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=TRUE,prefix.string=pics/strucplot}
+\SweaveOpts{engine=R,eps=FALSE,prefix.string=pics/strucplot}
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
@@ -35,7 +35,7 @@ data(Titanic)
 
 The \code{strucplot} framework in \pkg{vcd} can be used to visualize
 higher-dimensional contingency tables and integrates techniques such as
-mosaic displays and association plots. The main idea is to visualize
+mosaic displays, association plots, and sieve plots. The main idea is to visualize
 the tables' cells arranged in rectangular form. To allow for more than
 two dimensions, the plot area is constructed using recursive
 conditional splits, given the tiles representing the levels of the
@@ -62,16 +62,18 @@ The core function is \code{strucplot()} which processes the parameters,
 sets up the graphical layout using grid viewports (see Figure \ref{fig:layout}),
 and coordinates panel, labeling, shading, and spacing functions to produce 
 the plot. The actual workhorse is the chosen panel function: currently, 
-low-level panel functions for association plots (\code{struc\_assoc}) and 
-mosaic plots (\code{struc\_mosaic}) are available. In addition, there are
-high-level wrapper functions such as \code{mosaic()} and \code{assoc()} 
-to \code{strucplot()} that conveniently set the 
+low-level panel functions for association plots (\code{struc\_assoc}), 
+mosaic plots (\code{struc\_mosaic}), and sieve plots (\code{struc\_sieve})
+are available. In addition, there are
+high-level wrapper functions such as \code{mosaic()}, \code{assoc()},
+and \code{sieve()} to \code{strucplot()} that conveniently set the 
 parameters---it is these high-level functions that the user normally would like to use, 
-although \code{strucplot()} is fully functional on its own. \code{mosaic()} and 
-\code{assoc} are generic functions: for both, there exist a formula method and a default 
+although \code{strucplot()} is fully functional on its own. \code{mosaic()}, 
+\code{assoc}, and \code{sieve()} are generic functions: 
+for both, there exist a formula method and a default 
 method. Other functions, such as \code{doubledecker()}, \code{pairs()}, and 
 \code{cotabplot}, are on even higher level and make use of 
-code{mosaic()} and \code{assoc()} to produce plots.
+code{mosaic()}, \code{assoc()}, and \code{sieve()} to produce plots.
 
 \begin{figure}[h]
   \centering
@@ -134,7 +136,6 @@ observed values (see Figure \ref{fig:expected}):
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
-
 \begin{center}
 <<Expected,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
@@ -144,7 +145,26 @@ mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
 \end{center}
 \end{figure}
 
-\noindent The Pearson residuals (standardized deviations of observed from expected values) 
+\noindent In order to directly compare observed and expected values,
+we can use a sieve plot (see Figure \ref{fig:sieve}):
+\begin{Sinput}
+> sieve(Titanic)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<sieve,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+sieve(Titanic)
+@
+\caption{Sieve plot for the Titanic data visualizing simultaneously
+  observed and expected values.}
+\label{fig:sieve}
+\end{center}
+\end{figure}
+
+\noindent The next step is to directly inspect the residuals. 
+The Pearson residuals (standardized deviations of observed from expected values) 
 are preferably visualized using association
 plots \citep{vcd:Cohen:1980}. In contrast to \code{assocplot()}, \pkg{vcd}'s \code{assoc()}
 function scales to more than two variables (see Figure \ref{fig:residuals}):
@@ -452,7 +472,7 @@ been drawn (see Figure \ref{fig:afterplot}):
 > grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
 \end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+\setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
 \begin{center}
 <<afterplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=
@@ -483,7 +503,7 @@ graphical parameters of plot elements after the plotting (see Figure \ref{fig:ch
             gp = gpar(fill = "red"))
 \end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+\setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
 \begin{center}
 <<changeplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=

@@ -19,9 +19,11 @@
   fourfold(UCBAdmissions, extended = FALSE)
   fourfold(UCBAdmissions) ## extended plots
 
-  #tabplot(UCBAdmissions,
-  #        panel = function(x, ...) fourfold(x, panel = TRUE, ...)
-  #        )
+  ## using cotabplot
+  cotabplot(UCBAdmissions, panel = function(x, condlevels, ...)
+              fourfold(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
+                       newpage = F, ...)
+            )
 
   ### Coal Miners Lung Data ###
   #############################
@@ -53,35 +55,39 @@
   ## aggregate over `sex':
   (tab <- margin.table(HairEyeColor, 1:2))
   ## plot expected values:
-  sieveplot(t(tab), type = "expected", values = "both")
+  sieve(t(tab), sievetype = "expected")
 
   ## plot sieve diagram:
-  sieveplot(t(tab))
+  sieve(t(tab))
 
   ### Visual Acuity ###
   #####################
   data(VisualAcuity)
-  sieveplot(Freq ~ right + left,
-                 data = VisualAcuity,
-                 subset = gender == "female",
-                 reverse_y = FALSE,
-                 main = "Unaided distant vision data",
-                 xlab = "Left Eye Grade",
-                 ylab = "Right Eye Grade")
+  attach(VisualAcuity)
+  sieve(Freq ~ right + left,
+        data = VisualAcuity,
+        subset = gender == "female",
+        main = "Unaided distant vision data")
+#        xlab = "Left Eye Grade",
+#        ylab = "Right Eye Grade")
+  detach(VisualAcuity)
   
   ### Berkeley Admission ###
   ##########################
 
-  ## -> Larger tables: Cross factors
+  ## -> Larger tables: e.g., Cross factors
   ### Cross Gender and Admission
   data(UCBAdmissions)
 
   (tab <- xtabs(Freq ~ Dept + I(Gender : Admit), data = UCBAdmissions))
-  sieveplot(tab, reverse_y = FALSE,
-                 xlab = "Gender:Admission",
-                 ylab = "Department",
-                 main = "Berkeley Admissions Data"
-                 )
+  sieve(tab, 
+#        xlab = "Gender:Admission",
+#        ylab = "Department",
+        main = "Berkeley Admissions Data"
+        )
+
+  ## or use extended sieve plots:
+  sieve(UCBAdmissions)
 
   ######################
   ## Association Plot ##

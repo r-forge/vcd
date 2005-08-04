@@ -65,8 +65,9 @@ strucplot(x, residuals = NULL, expected = NULL,
     function, if specified.}
   \item{panel}{either a panel function, or a corresponding generating
     function (see details).  Currently, generating functions for
-    mosaic plots (\code{\link{struc_mosaic}}) and association plots
-    (\code{\link{struc_assoc}}) are provided.}
+    mosaic plots (\code{\link{struc_mosaic}}), association plots
+    (\code{\link{struc_assoc}}), and sieve plots
+    (\code{\link{struc_sieve}}) are provided.}
   \item{panel_args}{list of arguments for the panel-generating function,
     if specified.}
   \item{legend}{either a legend-generating function, or a legend
@@ -161,7 +162,9 @@ strucplot(x, residuals = NULL, expected = NULL,
 \seealso{
   \code{\link{assoc}},
   \code{\link{mosaic}},
+  \code{\link{sieve}},
   \code{\link{struc_assoc}},
+  \code{\link{struc_sieve}},
   \code{\link{struc_mosaic}},
   \code{\link{structable}},
   \code{\link{doubledecker}},

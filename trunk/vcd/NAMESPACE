@@ -10,7 +10,7 @@ export(
        "mosaic",
        "oddsratio",
        "rootogram", 
-       "sieveplot",
+       "sieve",
        "spineplot",
        "structable",
 
@@ -57,6 +57,7 @@ export(
        "struc_assoc",
        "cotab_mosaic",
        "cotab_assoc",
+       "cotab_sieve",
        "cotab_coindep",
 
 ## `normal' functions
@@ -103,8 +104,8 @@ S3method("mosaic", "loglm")
 S3method("rootogram", "default")
 S3method("rootogram", "goodfit")
 
-S3method("sieveplot", "default")
-S3method("sieveplot", "formula")
+S3method("sieve", "default")
+S3method("sieve", "formula")
 
 S3method("structable", "default")
 S3method("structable", "formula")

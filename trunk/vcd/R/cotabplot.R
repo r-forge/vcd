@@ -164,6 +164,15 @@ cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
 }
 class(cotab_mosaic) <- "panel_generator"
 
+cotab_sieve <- function(x = NULL, condvars = NULL, ...) {
+  function(x, condlevels) {
+    if(is.null(condlevels)) sieve(x, newpage = FALSE, pop = TRUE, ...)
+      else sieve(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
+                 newpage = FALSE, pop = TRUE, ...)
+  }
+}
+class(cotab_sieve) <- "panel_generator"
+
 cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
   if(!is.null(x)) {
     fm <- coindep_test(x, condvars, n = 1)
