@@ -951,7 +951,8 @@ mosaic(art, gp = shading_max)
 
 ## Figure 4
 set.seed(rseed)
-cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep, type = "assoc")
+cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep,
+          n = 5000, type = "assoc")
 
 ## Inference
 ## X^2 (3)
