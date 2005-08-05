@@ -1,7 +1,7 @@
 coindep_test <- function(x, margin = NULL, n = 1000,
   indepfun = function(x) max(abs(x)), aggfun = max,
   alternative = c("greater", "less"),
-  pearson = TRUE, return_distribution = TRUE)
+  pearson = TRUE)
 {
   DNAME <- deparse(substitute(x))
   alternative <- match.arg(alternative)
