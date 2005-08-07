@@ -1,0 +1,428 @@
+\documentclass[a4paper]{article}
+\usepackage{hyperref, graphicx, color, alltt, a4wide}
+\usepackage{Sweave}
+\usepackage[round]{natbib}
+\definecolor{Red}{rgb}{0.7,0,0}
+\definecolor{Blue}{rgb}{0,0,0.8}
+\definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newenvironment{smallexample}{\begin{alltt}}{\end{alltt}}
+
+\begin{document}
+
+%\VignetteIndexEntry{Colors and residual-based Shadings in Strucplots}
+%\VignetteDepends{vcd}
+%\VignetteKeywords{graphics, categorical data}
+%\VignettePackage{vcd}
+
+\SweaveOpts{engine=R,eps=TRUE}
+\setkeys{Gin}{width=0.8\textwidth}
+
+<<preliminaries,echo=FALSE,results=hide>>=
+set.seed(1071)
+library(vcd)
+data(Titanic)
+@
+
+\title{Colors and residual-based Shadings in Strucplots}
+\author{by David Meyer\\
+  Wirtschaftsuniversit\"at Wien, Austria\\
+\url{David.Meyer@R-project.org}
+}
+\maketitle
+\sloppy
+
+Unlike other R graphics functions, strucplots allow almost full
+control over the graphical parameters of all plot elements. In
+particular, the user can \emph{independently} modify the appearance of the 
+tiles of association plots and mosaic plots. Built on top of this functionality, the
+framework supplies a set of shading functions that choose colors
+appropriate to the visualization of independence models fit to the
+visualized data.
+The tiles' graphical parameters are set using the \code{gp} argument
+of the strucplot functions. This argument basically expects an object
+of class \code{gpar} whose components have the same shape (length and dimensionality) 
+than the data table (see Section \ref{sec:gp}). For convenience, however, the user can also
+supply a function that computes such an object given a vector of
+residuals, or, alternatively, a generating function that takes
+parameters and returns such a function (see Section \ref{sec:shading}).
+
+\section{Specifying graphical parameters in strucplots}
+\label{sec:gp}
+
+As an example, consider the Admissions to the University of California
+in Berkely (UCB) data. In the table collapsed over departments, we
+would like to highlight the (incidentally wrong) impression that there
+were to much male students accepted compared to the presumably
+discriminated female students (see Figure \ref{fig:ucb}):
+
+<<ucb,fig=FALSE,echo=TRUE,height=6,width=7,results=verbatim>>=
+ucb <- margin.table(UCBAdmissions, 1:2)
+ucb
+
+fill_colors <- matrix(c("dark cyan","gray","gray","dark magenta"), ncol = 2)
+fill_colors
+
+mosaic(ucb, gp = gpar(fill = fill_colors, col = 0))
+@
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<ucbfig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(ucb, gp = gpar(fill = fill_colors, col = 0))
+@
+\caption{Mosaic plot for the UCBAdmissions data with highlighted cells.}
+\label{fig:ucb}
+\end{center}
+\end{figure}
+
+\noindent As the example shows, we therefore create a fourfold table with appropriate colors and supply them to the \code{fill} component of the \code{gpar} object passed to the \code{gp} argument of \code{mosaic()}. In addition, we use the \code{col} component to turn off the borders for cosmetic reasons.
+
+If the parameters specified in the \code{gpar} object are incomplete,
+strucplot functions will recycle them along the last splitting
+dimension. In the following example based on the Survival on the
+Titanic data, we will highlight all cells corresponding to survived
+passengers (see Figure \ref{fig:recycling}):
+
+\begin{Sinput}
+> mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")))
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<recycling,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")))
+@
+\caption{Recycling of parameters.}
+\label{fig:recycling}
+\end{center}
+\end{figure}
+
+\section{Using residual-based shadings}
+\label{sec:shading}
+
+This new flexible way of specifying graphical parameters is the basis for a suite of
+shading functions that modify the tiles' appearance with respect to a vector of 
+residuals, resulting from deviations of the observed from the expected
+values under a given independence model. 
+The idea is to visualize at least the size of the residuals, but some
+shadings, additionally, indicate overall significance. One particular
+shading, the maximum shading, even allows to identify those cells that
+cause the rejection of the independence hypothesis.
+
+All shading functions are parameterized be the means of generating
+functions that return the actual shading functions. As an example,
+consider the \code{shading\_binary()} function that only visualizes the
+sign of the residuals:
+
+\begin{Sinput}
+shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, 
+                           df = NULL, col = hcl(c(260, 0), 50, 70))
+{
+\dots
+}
+\end{Sinput}
+
+\noindent Each generating function, passed to a strucplot functions' \code{gp}
+argument, takes a few arguments that describe the model
+(\code{observed}, \code{expected}, \code{residuals}, and \code{df}), and a
+number of parameters that specify the appearance (in the case of
+\code{shading\_binary()} only \code{col}, a vector of length two, 
+that specifies the two colors corresponding to negative and 
+positive residuals, respectively). The
+generating function then return the actual shading function taking 
+only one argument: a vector of residuals, and returning an object
+of class \code{gpar} that contains the graphical parameters for all
+tiles corresponding to the residuals. In the following example, positive 
+and negative residuals of an hypothesized independence model shall be 
+visualized by different colors (see Figure \ref{fig:binary}):
+
+\begin{Sinput}
+> obs <- margin.table(UCBAdmissions, 1:2)
+> exp <- independence_table(obs)
+> res <- (obs - exp) / sqrt(exp)
+> res
+          Gender
+Admit           Male    Female
+  Admitted  4.784093 -5.793466
+  Rejected -3.807325  4.610614
+
+> gpobj <- shading_binary()(res)
+> gpobj
+$fill
+     [,1]      [,2]     
+[1,] "#96A2DF" "#E18E9E"
+[2,] "#E18E9E" "#96A2DF"
+
+> mosaic(obs, gp = gpobj)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<binary,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+obs <- margin.table(UCBAdmissions, 1:2)
+exp <- independence_table(obs)
+res <- (obs - exp) / sqrt(exp)
+gpobj <- shading_binary()(res)
+mosaic(obs, gp = gpobj)
+@
+\caption{Binary shading.}
+\label{fig:binary}
+\end{center}
+\end{figure}
+
+\noindent The shading-generating functions available
+in \pkg{vcd} include model-fitting, and hence the {\sf R} code
+corresponding to the example above in fact reduces to:
+
+\begin{Sinput}
+> mosaic(obs, gp = shading_binary)
+\end{Sinput}
+
+\section{An overview of the shading functions in \pkg{vcd}}
+
+Currently, there are three basic shadings available
+(\code{shading\_hcl(), shading\_hsv(), and shading\_binary()}, as well
+as two derived functions (\code{shading\_Friendly()} building upon
+\code{shading\_hsv()} and \code{shading\_max()} building upon \code{shading\_hcl}).
+\code{shading\_binary()} has been explained in the previous
+paragraph. \code{shading\_hsv()} and \code{shading\_hcl()} are quite
+similar in their functionality, but use different color spaces: the
+Hue-Saturation-Value (HSV) and the Hue-Chroma-Luminance (HCL) scheme,
+respectively. We will focus on the latter, since the HCL space is
+preferable to the HSV space in many respects (e.g., uniform saturations over
+different hues, device independentness, \dots). 
+
+In the HCL space, colors are specified in three dimensions: hue, chroma (`colorfulness', saturation), and luminance (`brightness', amount of gray). These three dimensions are used by \code{shading\_hcl()} to visualize information about the residuals and the underlying independence model. A residuals' hue indicates its sign (by default blue and red for positive and negative ones, respectively). An overall full or poor chroma indicates significant or non-significant results, respectively. Finally, the luminance of a residual is set according to its size. 
+
+As an example, we will visualize the (in)dependence of hair and eye
+color in the HairEyeColor data set (see Figure \ref{fig:haireye})
+
+\begin{Sinput}
+> haireye <- margin.table(HairEyeColor, 1:2)
+> mosaic(haireye, shade = TRUE)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<haireye,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+haireye <- margin.table(HairEyeColor, 1:2)
+mosaic(haireye, shade = TRUE)
+@
+\caption{Shaded residuals in the HairEyeColor data set---two cut-off points}
+\label{fig:haireye}
+\end{center}
+\end{figure}
+
+\noindent The default shading scheme is \code{shading\_hcl()}, so it
+suffices to turn shading on to bring colors to the mosaic plot. Large
+positive residuals (greater than $4$) can be found for brown eyes/black hair and blue
+eyes/blond hair, they are colored in saturated red. 
+On the other side, there is a large negative residual
+(less than $-4$) for brown eyes/blond hair, colored deep blue. There are also three
+medium-sized positive (negative) residuals between 2 and 4 ($-2$ and
+$-4$): the colors for them are less saturated. 
+The heuristic for choosing the cut-off points $2$ and $4$ is that the Pearson residuals
+are approximately standard normal which implies that the highlighted cells are those with
+residuals \emph{individually} significant at approximately the $\alpha
+= 0.05$ and $\alpha = 0.0001$ level. These default cut-off points can
+be changed to alternative values using the \code{interpolate}
+argument (see Figure \ref{fig:interpolate}):
+
+\begin{Sinput}
+> mosaic(haireye, shade = TRUE, 
+         gp_args = list(interpolate = 1:4, h = c(100, 200)))
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<interpolate,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(haireye, shade = TRUE, 
+       gp_args = list(interpolate = 1:4, h = c(100, 200)))
+@
+\caption{Shaded residuals in the HairEyeColor data set---four cut-off points}
+\label{fig:interpolate}
+\end{center}
+\end{figure}
+
+\noindent Note that we also changed the hue values for purely cosmetic
+reasons. The third remaining dimension, the luminance, is used for
+visualizing the significance of a test statistic. The $p$ value can
+be supplied to the \code{p.value} argument. If none is specified, it
+is computed from a Chi-squared distribution with \code{df} degrees of
+freedom. The \code{level} argument is used to specify the confidence
+level:  if \code{p.value} is smaller than \code{1 - level}, bright colors are used, 
+otherwise dark colors are employed. These colors are computed using
+the two luminance values supplied to the \code{l} argument. The
+following example shows the relationship of home goals and away
+goals of the German Bundesliga in 1995: although there are two
+``larger'' residuals (one greater than 2, one less then $-2$), the
+Chi-squared test does not reject the null hypothesis of
+independence. Consequently, the colors appear dark (see Figure \ref{fig:bundesliga}):
+
+\begin{Sinput}
+> bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
+> mosaic(bl, shade = TRUE)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<bundesliga,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
+mosaic(bl, shade = TRUE)
+@
+\caption{Non-significant Chi-squared test using part of the Bundesliga data.}
+\label{fig:bundesliga}
+\end{center}
+\end{figure}
+
+\noindent The \code{interpolate} argument also accepts a function that
+automatically chooses the cut-off points in a data-driven way. 
+This functionality is used by \code{shading\_max()} that uses the
+maximum statistic to visualize significant \emph{cells} causing the
+rejection of the independence hypothesis. The
+\code{level} argument of \code{shading\_max()} 
+then can be used to specify several confidence
+levels from which the corresponding cut-off points are computed. 
+By default, two cut-off points are computed corresponding 
+to confidence levels of $90\%$ and $99\%$, respectively.
+In the following example, we investigate the effect of a new treatment
+for rheumatoid arthritis on a group of female patients using the
+maximum shading (see Figure \ref{fig:maximum}):
+
+\begin{Sinput}
+> art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
+> mosaic(art, shade = TRUE, gp = shading_max)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
+mosaic(art, gp = shading_max)
+@
+\caption{Significant maximum test on female patients of the Arthritis
+  data.}
+\label{fig:maximum}
+\end{center}
+\end{figure}
+
+\noindent The maximum test is significant although the residuals are
+all in the $[-2,2]$ interval, as the cut-off points are even smaller.
+The \code{shading\_hcl} function with default cut-off points would
+not have shown any color. In addition, since the test statistic is the
+maximum of the absolute pearson residuals, \emph{every} colored
+residual violates the hypotheses of independence, and thus, the
+`culprits' can immediately be identified.
+
+The last shading function is \code{shading\_Friendly()}. This shading
+mimics the shading introduced by \cite{vcd:Friendly:2000}. This
+shading corresponds to the HSV shading with default cut-off points (2 and 4), and in
+addition uses the border color and line type to visualize the
+residuals' sign. The following example again visualizes the Bundesliga
+data from above, this time using the Friendly scheme and, in addition, an
+alternative legend:
+
+\begin{Sinput}
+> mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
+@
+\caption{The Bundesliga data for 1995 using the Friendly shading.}
+\label{fig:friendly}
+\end{center}
+\end{figure}
+
+\noindent (The bullets indicating zero observed values are removed here
+since this feature does not exist in the original SAS implementation
+of the Friendly mosaic plots).
+
+\section{Creating new shading functions}
+
+The example with four cut-off points (Figure \ref{fig:interpolate})
+might suggest that a continuous shading simply visualizing the complete
+range of confidence levels might be useful. The following code shows
+how such a shading function might be constructed:
+
+\begin{Sinput}
+shading_continuous <- function(observed = NULL, residuals = NULL,
+                               expected = NULL, df = NULL, n = 5000, ...)
+{
+  ## function works only for two-way tables
+  stopifnot(length(dim(observed)) == 2)
+
+  ## sample permutation distribution of the maximum statistic
+  obs.test <- coindep_test(observed, n = n)
+
+  ## Use distribution to map residuals to [0,1] range
+  ipol <- function(x) abs(obs.test$pdist(x))
+
+  ## call HCL shading 
+  shading_hcl(observed = NULL, residuals = NULL, expected = NULL,
+              df = NULL, interpolate = ipol, p.value = obs.test$p.value, ...)
+}
+class(shading_continuous) <- "panel_generator"
+
+mosaic(haireye, gp = shading_continuous)
+\end{Sinput}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<continuous,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+shading_continuous <- function(observed = NULL, residuals = NULL,
+                               expected = NULL, df = NULL, n = 5000, ...)
+{
+  ## function works only for two-way tables
+  stopifnot(length(dim(observed)) == 2)
+
+  ## sample permutation distribution of the maximum statistic
+  obs.test <- coindep_test(observed, n = n)
+
+  ## Use distribution to map residuals to [0,1] range
+  ipol <- function(x) abs(obs.test$pdist(x))
+
+  ## call HCL shading 
+  shading_hcl(observed = NULL, residuals = NULL, expected = NULL,
+              df = NULL, interpolate = ipol, p.value = obs.test$p.value, ...)
+}
+class(shading_continuous) <- "panel_generator"
+
+mosaic(haireye, gp = shading_continuous)
+@
+\caption{The HairEyeColor data with continuous shading.}
+\label{fig:continuous}
+\end{center}
+\end{figure}
+
+\noindent We first compute the permutation distribution for the
+maximum statistic using \code{coindep\_test}, and then simply use it
+as the interpolation function passed to \code{shading\_hcl}. The result
+using the HairEyeColor data, however, is disappointing: too much color
+makes it difficult to interpret the image, and the subtle color
+differences are hard to catch. Therefore, we only included shadings
+with discrete cut-off points.
+
+\begin{thebibliography}{}
+
+\bibitem[Friendly, 2000]{vcd:Friendly:2000}
+Friendly, M. (2000).
+\newblock {\em Visualizing Categorical Data}.
+\newblock SAS Insitute, Carey, NC.
+
+\end{thebibliography}
+
+\end{document}

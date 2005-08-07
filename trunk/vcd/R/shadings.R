@@ -48,6 +48,7 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   }
 
   ## store color and lty information for legend
+  legend <- NULL
   if(!is.null(col.bins)) {
     res2 <- col.bins
     res2 <- c(head(res2, 1) - 1, res2[-1] - diff(res2)/2, tail(res2, 1) + 1)
@@ -139,6 +140,7 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   }
 
   ## store color and lty information for legend
+  legend <- NULL
   if(!is.null(col.bins)) {
     res2 <- col.bins
     res2 <- c(head(res2, 1) - 1, res2[-1] - diff(res2)/2, tail(res2, 1) + 1)

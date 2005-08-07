@@ -16,7 +16,7 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=FALSE,prefix.string=pics/labeling}
+\SweaveOpts{engine=R,eps=FALSE}
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
@@ -25,7 +25,7 @@ library(vcd)
 data(Titanic)
 @
 
-\title{Labeling in Stucplots}
+\title{Labeling in Strucplots}
 \author{by David Meyer\\
   Wirtschaftsuniversit\"at Wien, Austria\\
 \url{David.Meyer@R-project.org}
