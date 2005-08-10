@@ -84,12 +84,12 @@
 \setkeys{Gin}{width=0.8\textwidth}
 
 <<load_data,echo=FALSE,results=hide>>=
-library(vcd)
+library("vcd")
 
-data(Arthritis)
+data("Arthritis")
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
-data(UCBAdmissions)
+data("UCBAdmissions")
 ucb <- aperm(UCBAdmissions)
 
 myseed <- 1071
@@ -222,8 +222,8 @@ Table~\ref{tab:art}.
 \label{sec:tests}
 
 To fix notations, we consider a 2-way contingency table with cell
-frequencies $\{n_{ij}\}$ for $i = 1, \dots, I$ and $j = 1, \dots, J$
-and row and column sums $n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$
+frequencies $[n_{ij}]$ for $i = 1, \dots, I$ and $j = 1, \dots, J$
+and row and column sums $n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$,
 respectively.
 Given an underlying distribution with theoretical cell probabilities
 $\pi_{ij}$, the null hypothesis of independence of the two categorical
@@ -253,19 +253,22 @@ of the chapter about independence in 2-way tables in statistics textbooks
 \begin{center}
 \caption{\label{tab:art} Treatment and improvement among $59$ patients
 with rheumatoid arthritis.}
+
 \begin{tabular}{rr|rrr}
+\\
                    &         & \multicolumn{3}{|l}{\textbf{Improved}} \\
                    &         & None & Some & Marked \\ \hline
 \textbf{Treatment} & Placebo &   19 &    7 &      6 \\
                    & Treated &    6 &    5 &     16
 \end{tabular}
+
 \end{center}
 \end{table}
 
 But the sum of squares is not the only plausible way of capturing deviations
 from $0$ in the residuals.
 There are many other conceivable functionals $\lambda(\cdot)$ which
-lead to reasonable test statistics $\lambda(\{r_{ij}\})$: one which is particularly
+lead to reasonable test statistics $\lambda([r_{ij}])$: one which is particularly
 suitable for identifying the cells which cause the dependence (if any) is
 the maximum of the absolute values
 \begin{equation} \label{eq:MaxAbs}
@@ -286,17 +289,17 @@ For testing the independence hypothesis from (\ref{eq:H0}), using a permutation 
 intuitive due to the permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
 by simulating the permutation distribution of test statistics of type
-$\lambda(\{r_{ij}\})$.
+$\lambda([r_{ij}])$.
 
 Other measures of discrepancy (e.g., deviance residuals) could, of course, also be used
-instead of the the Pearson residuals $\{r_{ij}\}$. But as the ideas discussed here
+instead of the the Pearson residuals $[r_{ij}]$. But as the ideas discussed here
 extend straightforwardly to that situation, we do not go into detail about this.
 
 For the arthritis data from Table~\ref{tab:art}, both tests indicate a clearly significant
 dependence of improvement on treatment: the sum-of-squares statistic from (\ref{eq:ChiSquare})
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
-and the maximum statistion from (\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
-with a $p$ value of $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
+and the maximum statistic from (\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
+with $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
 from a sample of size $5000$ from the permutation distribution under independence
 generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
 using the \cite{vcd:Patefield:1981} algorithm and computing the maximum statistic for 
@@ -307,7 +310,7 @@ each of these tables.
 
 Two well-established visualization techniques for independence in 2-way tables are
 mosaic plots and association plots. Both are suitable to bring out
-departures of an observed table $\{n_{ij}\}$ from the expected table $\{\hat n_{ij}\}$
+departures of an observed table $[n_{ij}]$ from the expected table $[\hat n_{ij}]$
 in a graphical way. The latter focuses on the visualization of the Pearson residuals
 $r_{ij}$ (under independence) while the former primarily displays the observed frequencies
 $n_{ij}$.
@@ -316,8 +319,8 @@ $n_{ij}$.
 \citep{vcd:Hartigan+Kleiner:1981} can be seen as an extension of grouped
 bar charts where width and height of the bars show the relative
 frequencies of the two variables: a mosaic plot simply
-consists of a collection of tiles whose
-sizes are proportional to the observed cell frequencies as shown
+consists of a collection of tiles with areas
+proportional to the observed cell frequencies as shown
 in the left panel of Figure~\ref{fig:classic}. A rectangle corresponding
 to $100$ percent of the observations is first split horizontally with respect to 
 the treatment frequencies and then vertically with respect to the conditional
@@ -352,7 +355,7 @@ pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
 assoc(art, newpage = FALSE, margins = c(5, 2, 5, 4))
 popViewport(2)
 @
-\caption{Classic mosaic and association plot for the Arthritis data.}
+\caption{Classic mosaic and association plot for the arthritis data.}
 \label{fig:classic}
 \end{center}
 \end{figure}
@@ -360,34 +363,34 @@ popViewport(2)
 \section{Residual-based Shadings} \label{sec:shadings}
 
 Colors are commonly used to enhance mosaic and association plots. To integrate
-a visualization of the residuals $\{r_{ij}\}$ into the mosaic display---which
-in its `raw' version only visualizes the observed frequencies $\{n_{ij}\}$---\cite{vcd:Friendly:1994}
+a visualization of the residuals $[r_{ij}]$ into the mosaic display---which
+in its `raw' version only visualizes the observed frequencies $[n_{ij}]$---\cite{vcd:Friendly:1994}
 suggested a residual-based shading for the mosaic tiles that can also be applied
 to the rectangles in association plots \citep{vcd:Meyer+Zeileis+Hornik:2003}. 
 In this section, we first briefly review the \cite{vcd:Friendly:1994} shading, 
 before we suggest different colors and a combination of visualization and significance
 testing to extend these residual-based shadings.
 
-\subsection{Friendly Shading}
+\subsection{Friendly Shading} \label{sec:Friendly}
 
 The extensions of \cite{vcd:Friendly:1994} to mosaic plots provide a
-substantial improvement of the original mosaic plots and enhanced them
+substantial improvement of the original mosaic plots enhancing them
 from a plot for contingency tables to a visualization technique for
 log-linear models---and thus also for independence problems including
-2-way tables as the simplest special case.
+2-way tables as the simplest case.
 
 The idea is to use a color coding for the mosaic tiles that visualizes the
 sign and absolute size of each residual $r_{ij}$: Cells corresponding to small
 residuals ($|r_{ij}| < 2$) are shaded white. Cells with medium sized residuals
 ($2 \le |r_{ij}| < 4$) are shaded light blue and light red for positive and negative
-residuals respectively. Cells with large residuals ($|r_{ij}| \ge 4$) are shaded
-with a fully saturated blue and red respectively. Mosaic plots enhanced by this 
+residuals, respectively. Cells with large residuals ($|r_{ij}| \ge 4$) are shaded
+with a fully saturated blue and red, respectively. Mosaic plots enhanced by this 
 shading can thus also bring out departures from independence (or other log-linear 
 models in multi-way tables) graphically and visualize patterns of dependence.
 The heuristic for choosing the cut offs $2$ and $4$ is that the Pearson residuals
 are approximately standard normal which implies that the highlighted cells are those with
 residuals \emph{individually} significant at approximately the $\alpha = 0.05$ and $\alpha = 0.0001$
-level. But the main purpose of the shading is not to visualize significance but the \emph{pattern} of
+levels. However, the main purpose of the shading is not to visualize significance but the \emph{pattern} of
 deviation from independence \citep[p.~109]{vcd:Friendly:2000}. 
 
 In addition to the shading of the rectangles themselves, the Friendly shading also
@@ -398,36 +401,36 @@ use solid black borders throughout this paper, but the extensions suggested in t
 following could also be applied to control line type and color.
 
 
-\subsection{Colors}
+\subsection{Colors} \label{sec:colors}
 
 The way the (light) blue and red colors are chosen differs somewhat between
 various implementations of Friendly mosaic plots: In his original 
 \proglang{SAS} implementation \citep[see][]{vcd:Friendly:2000}, Michael Friendly
 uses colors from a palette based on HLS (Hue--Luminance--Saturation) color space.
-The implementation in the \proglang{R} system for statistical computing
-\citep[\url{http://www.R-project.org/}]{vcd:R:2005} employs colors from
+The implementation in the \proglang{R} system for statistical computing and graphics
+\citep{vcd:R:2005} employs colors from
 HSV (Hue--Saturation--Value) space. The latter is a very common implementation of
 colors in many computer packages and makes the generation of the Friendly shading
 very simple.
 
-The HSV space originally looks like a regular cone with black at its
+The HSV space originally looks like a cone with black at its
 peak (zero value) and full color wheels for different saturations at the other end,
 centered around a white (full value). Type and amount of color are controlled by hue
-and saturation respectively. Typically, polar coordinates that all range in the 
-unit interval are used in this space, such that it looks like a regular cylinder.
+and saturation, respectively. Typically, polar coordinates $(h, s, v)$ rescaled to the 
+unit interval are used in this space, giving it the appearance of a cylinder.
 For generating colors in the Friendly shading, the following strategy is used:
 The hue $h$ codes the sign of the residuals---$h = 0$ (red hue) is used for negative residuals,
 $h = 2/3$ (blue hue) for positive residuals. The absolute size of the residuals
-is then coded by the saturation $s$ which is set to $0$, $0.5$ and $1$ respectively
+is then coded by the saturation $s$ which is set to $0$, $0.5$ and $1$, respectively,
 for small/medium/large residuals. The value is always fixed at $v = 1$.
 This is also depicted in the upper panel of Figure~\ref{fig:shadingHSVHCL} which shows
 two slides from the HSV cylinder side by side. The plot shows the saturation/value plane
 for the given hues $h = 0$ and $h = 2/3$. The significant color palette shows the
 colors used for the Friendly shading when the residuals are increasing from left to right.
-The set of non-significant colors will be explained in the next section.
+The set of non-significant colors will be explained in Section~\ref{sec:significance}.
 
 Although this HSV-based shading is already very useful for enhancing mosaic and
-association plots and although HSV is very commonly available implementation of
+association plots and although HSV is a very commonly available implementation of
 color spaces, HSV colors in general and the Friendly shading in particular have
 a number of disadvantages. Most importantly, HSV colors are not perceptually
 uniform because the three HSV dimensions map only poorly to the three
@@ -464,10 +467,10 @@ and thus do not have the problem of varying saturations as the HSV colors.
 Here, we discuss how similar ideas can be used for deriving diverging HCL palettes that 
 provide a suitable translation of the ideas from the Friendly shading to perceptually
 uniform HCL colors. 
-The HCL space looks like a double cone with black (zero luminance) at one end and white
+The HCL space looks like a distorted double cone with black (zero luminance) at one end and white
 at the other (full luminance). In its middle, there is a full color wheel for different
-values of chroma (that controls the colorfulness). Unfortunately, the HCL space is not completely
-regular as the HSV space is and consequently it cannot be standardized in the same way as the
+values of chroma (that controls the colorfulness). Unfortunately, the HCL space is not as
+regular as the HSV space and consequently cannot be standardized in the same way as the
 HSV space. Its dimensions are usually given by a
 hue ranging in $[0, 360]$ degrees and chroma and luminance ranging in $[0, 100]$
 percent. But not all combinations $(h, c, l)$ yield valid HCL colors and the admissable combinations
@@ -481,12 +484,11 @@ at a fully saturated red $(0, 100, 50)$, goes via a neutral color, ends at a ful
 blue $(260, 100, 50)$, and uses linear interpolation in between. Instead of using white
 $(0, 0, 100)$ as the neutral color, a light grey $(0, 0, 90)$ is employed as motivated above.
 
-This diverging palette (see the `significant' colors in Figure~\ref{fig:shadingHSVHCL},
-the `non-significant' colors are again discussed in the following section)
-uses both chroma, i.e., the colorfulness, and luminance, i.e., 
-the amount of grey, to code the absolute size of the quantity visualized, i.e., the
-residuals $r_{ij}$ when applied to the independence problem. By changing the neutral
-color or by changing the maximum chroma respectively, this can be changed to using only
+This diverging palette (see the `significant' colors in Figure~\ref{fig:shadingHSVHCL})
+uses both chroma---i.e., the colorfulness---and luminance---i.e., 
+the amount of grey---to code the absolute size of the quantity visualized---i.e., the
+residuals $r_{ij}$---when applied to the independence problem. By changing the neutral
+color or by changing the maximum chroma, respectively, this can be changed to using only
 chroma or luminance for this purpose, but using both seems to be a very effective way
 of visualization.
 
@@ -647,13 +649,13 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 \end{center}
 \end{figure}
 
-\subsection{Significance}
+\subsection{Significance} \label{sec:significance}
 
 The shading scheme of \cite{vcd:Friendly:1994} was suggested to visualize
 the pattern of dependence in contingency tables, as discussed above, but
 the presence (or absence) of colors in a plot also always conveys an
-impression of interestingness (or un-interstingness respectively). That is,
-statisticians might be tempted to interpret the absence of color in a plot
+impression of interestingness (or un-interstingness, respectively). That is,
+viewers might be tempted to interpret the absence of color in a plot
 as a clue that there is no significant departure from independence. Or vice
 versa, colored cells would convey the impression that there is significant
 dependence. Currently, both is not true as can be seen in the left panel
@@ -679,30 +681,30 @@ $\Sexpr{round(as.vector(art_max$qdist(0.99)), digits = 2)}$ at level $\alpha = 0
 (and using the diverging HCL palette) derived from the permutation distribution of $M$ for 
 the arthritis data as described in Section~\ref{sec:tests}. By using these cut offs, the presence of color
 in the plot is equivalent to significance (of the maximum statistic $M$) at 
-level $\alpha = 0.1$ and $\alpha = 0.01$ respectively and exactly the cells which `cause'
+level $\alpha = 0.1$ and $\alpha = 0.01$, respectively, and exactly the cells which `cause'
 the dependence are highlighted. For the arthritis data, these are in particular the 
 cells in the last column that signal that there are significantly more
 treated patients and fewer placebo patients with marked improvement than would be expected
 under independence.
 
-The significance levels $\alpha = 0.1$ and $0.01$ are chosen because this leads to displays where
-fully colored cells are clearly significant (i.e., with a $p$ value below $0.01$),
-cells without color are clearly non-significant (i.e., with a $p$ value above $0.1$), and
-cells in between can be considered to be weakly significant (i.e., $0.1 \le p < 0.01$).
+The significance levels $\alpha = 0.1$ and $\alpha = 0.01$ are chosen because this
+leads to displays where fully colored cells are clearly significant ($p < 0.01$),
+cells without color are clearly non-significant ($p > 0.1$), and
+cells in between can be considered to be weakly significant ($0.01 \le p \le 0.1$).
 Of course, users could choose any other set of significance levels they feel comfortable
-with, e.g., only a single cutoff at $\alpha = 0.05$ or three cut offs at $0.1$, $0.05$ and $0.01$
+with, e.g., only a single cut off at $\alpha = 0.05$ or three cut offs at $0.1$, $0.05$ and $0.01$
 etc. Another option could be to use a continuous shading where the $p$ value corresponding
-to a cell controls the interpolation between the neutral and the full color. However, our
-experience is that this typically results in too much color in a plot which in turn tends
-to conceal the important cells and over-emphasizes the unimportant ones. Hence, we stick
-to a discrete shading with few colors that is easier to interpret.
+to a cell controls the interpolation between the neutral and the full color. However,
+this typically results in too much color in the plot which in turn tends
+to conceal the important cells and over-emphasize the unimportant ones. Hence,
+a discrete shading with few colors is much easier to interpret.
 
 
 This maximum shading is already very flexible and combines visualization and inference.
 However, it can only be applied when employing the maximum statistic because it is the only
 aggregation functional $\lambda(\cdot)$ where a single large residual $|r_{ij}|$ exceeding
 its critical value is equivalent
-to a significant value of the whole test statistic $\lambda(\{r_{ij}\})$.\footnote{This
+to a significant value of the whole test statistic $\lambda([r_{ij}])$.\footnote{This
 can easily be seen from the following consideration: To obtain a level $\alpha$ test, where 
 any residual $|r_{ij}|$ exceeding the critical value $c_\alpha$ gives a significant test
 result, the equation $\alpha = P(\mbox{any } |r_{ij}| > c_\alpha)$ must hold. This is equivalent
@@ -712,12 +714,12 @@ analysis, but it would be desirable to also have a residual-based shading that c
 visualization of significance when the sum-of-squares statistic $X^2$ (or any other functional
 $\lambda(\cdot)$) is used. For the reasons discussed above, it is not possible to achieve this by shading
 individual cells differently but can only be realized by using different colors for the
-whole table. A outlined before, colorfulness is intuitively matched with interestingness,
+whole table. As outlined before, colorfulness is intuitively matched with interestingness,
 therefore a rather natural idea is to use the fully colored palette only when the corresponding
 test is significant and to use a less colorful palette if not. For the HCL scheme, the
 amount of color can conveniently be controlled by varying the maximum chroma value used. For the full
 colors, the maximum chroma was set to $100$ as shown in Figure~\ref{fig:shadingHSVHCL} and 
-is now reduced to $20$ for the non-significant palette. This palette still codes the absolute
+is reduced to $20$ for the non-significant palette. This palette still codes the absolute
 size of the residuals by luminance (i.e., the amount of grey), uses the same neutral grey
 for small `un-interesting' residuals, codes positive and negative residuals by different hues,
 but gives less emphasis to the pattern by making the plot less colorful. A similar effect
@@ -739,7 +741,7 @@ pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
 mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
 popViewport(2)
 @
-\caption{Mosaic plot for the Arthritis data with Friendly shading (left) and maximum shading (right).}
+\caption{Mosaic plot for the arthritis data with Friendly shading (left) and maximum shading (right).}
 \label{fig:shadings}
 \end{center}
 \end{figure}
@@ -750,18 +752,18 @@ popViewport(2)
 
 To introduce the new residual-based shadings without too much overhead in
 Section~\ref{sec:shadings}, we have only considered the independence problem
-in 2-way tables up to now. But, in fact, none of the ideas described are really
+in 2-way tables. But, in fact, none of the ideas described are really
 confined to the 2-dimensional case as will be outlined in this section.
 
 Mosaic displays have been emphasized in the literature to be an excellent means
 of visualization for log-linear models \citep{vcd:Friendly:1999,vcd:Theus+Lauer:1999}.
 Problems of interest include complete, joint or conditional independence for all of 
 which the tables of expected values and residuals (again Pearson or deviance) can
-be computed. \citep{vcd:Friendly:1994,vcd:Friendly:1999} shows that his residual-based 
+be computed. \cite{vcd:Friendly:1994,vcd:Friendly:1999} shows that his residual-based 
 shading scheme can directly be applied to these more complex independence models.
 For inference, the most commonly used aggregation functional for the residuals
 is again the sum of squares yielding the associated Pearson or likelihood
-ratio statistic respectively \citep{vcd:Agresti:2002}. Hence, our residual-based
+ratio statistic, respectively \citep{vcd:Agresti:2002}. Hence, our residual-based
 shading with different HCL palettes for significant and non-significant results
 can directly be applied to these models. For the maximum shading with
 data-driven cut offs, even more flexibility is possible than in the 2-way case
@@ -779,21 +781,22 @@ choosing appropriate critical values in the maximum shading and for selecting
 a suitable layout of mosaic or association plots, we consider the conditional
 independence problem. To keep the notational overhead low again, only the 3-way
 case is spelt out, but the same ideas extend fairly straightforwardly to conditional
-independence in higher dimensions. In a 3-way table $\{n_{ijk}\}$ with underlying
-theoretical probability distribution $\{p_{ijk}\}$ the conditional independence
+independence in higher dimensions. In a 3-way table $[n_{ijk}]$ with underlying
+theoretical probability distribution $[p_{ijk}]$ the conditional independence
 problem can be formulated as
 \begin{equation} \label{eq:H0ci}
 H_0: \; \pi_{ij|k} \quad = \quad \pi_{i+|k} \pi_{+j|k}.
 \end{equation}
 where $\pi_{ij|k}$ are the conditional probabilities given the stratum $k$
 with $k = 1, \dots, K$. Under the assumption of conditional independence,
-we can again compute expected frequencies $\{\hat n_{ijk}\}$ and the corresponding 
-residuals $\{r_{ijk}\}$. To test the conditional independence hypothesis, usually
+we can again compute expected frequencies $[\hat n_{ijk}]$ and the corresponding 
+residuals $[r_{ijk}]$. To test the conditional independence hypothesis, usually
 the sum-of-squares statistic is used
 \begin{equation} \label{eq:sumChisq}
 \sum_{i, j, k} r_{ijk}^2 \quad = \quad \sum_k X_k^2,
 \end{equation}
 which is simply the sum of the individual sum-of-squares statistics $X_k^2$ in each stratum $k$.
+
 Alternatively, a maximum statistic similar to that from Equation~(\ref{eq:MaxAbs})
 can be constructed
 \begin{equation} \label{eq:doublemax}
@@ -801,42 +804,44 @@ can be constructed
 \end{equation}
 As in the 2-way case, this allows for identification of the cells that are responsible
 for the deviation from conditional independence (if any). If it is not so much of interest
-in which \emph{cell} but only in which \emph{stratum} the deviation occures, then
+in which \emph{cell} but only in which \emph{stratum} the deviation occurs, then
 it would be natural to use 
 \begin{equation} \label{eq:maxChisq}
 \max_k \sum_{i,j} r_{ijk}^2 \quad = \quad \max_k X_k^2.
 \end{equation}
 Given a critical value for this statistic, all strata $k$ whose associated sum-of-squares
 statistics $X_k^2$ exceed the critical value are in conflict with the hypothesis of 
-conditional independence. All these statistics are of type
+conditional independence.
+
+All these statistics are of type
 \begin{equation} \label{eq:coindep_test}
-\lambda_\mathrm{agg} (\lambda_\mathrm{indep}(r_{ijk}))
+\lambda_\mathrm{agg} (\lambda_\mathrm{indep}(r_{ijk})),
 \end{equation}
 where $\lambda_\mathrm{indep}$ is a functional for assessing independence in stratum $k$
 and $\lambda_\mathrm{agg}$ is a functional for aggregating over the $k = 1, \dots, K$ strata.
 If the maximum is used for the latter, then identification of the strata causing the
 independence is possible. If additionally $\lambda_\mathrm{indep}$ is the maximum,
 the corresponding cells can also be identified. Hence, the double maximum
-statistic from~(\ref{eq:doublemax}) is the only functional allowing for detection of
-both the strata and the cells which caused the independence.
+statistic from Equation~(\ref{eq:doublemax}) is the only functional allowing for detection of
+both the strata and the cells which caused the dependence.
 
 But the main purpose of the formulation of the different test statistics is not so much 
-inference but their applicability to diagnostic plots via residual-based shadings. As stated
-at the beginning of this section, it is possible for all aggregation functionals to simply use either
+inference but their applicability to diagnostic plots via residual-based shadings. As already
+discussed, it is possible for all aggregation functionals to simply use either
 the significant or the non-significant shading for all cells in the contingency table---this
-strategy would have to be used for the sum-of-squares statistic from~(\ref{eq:sumChisq}). If
-$\lambda_\mathrm{agg}$ is the maximum as in~(\ref{eq:maxChisq}),
+strategy would have to be used for the sum-of-squares statistic from Equation~(\ref{eq:sumChisq}). If
+$\lambda_\mathrm{agg}$ is the maximum as in Equation~(\ref{eq:maxChisq}),
 then the significant palette would only be used
 in those strata in conflict with the hypothesis of conditional independence whereas the
 non-significant palette would be used for the remaining strata. Finally, if both $\lambda_\mathrm{agg}$
 and $\lambda_\mathrm{indep}$ are the maximum, then the same strategy as in Section~\ref{sec:shadings}
 can be pursued, i.e., only the significant palette is used but with data-driven cut offs
-derived from the distribution of the double maximum statistic from~(\ref{eq:doublemax}).
+derived from the distribution of the double maximum statistic from Equation~(\ref{eq:doublemax}).
 
-To arrange the shaded rectangles of the association or the mosaic plot respectively,
+To arrange the shaded rectangles of the association or the mosaic plot, respectively,
 the most intuitive approach is to use the same conditioning in the display that
 was also used for conditioning in the model. For this situation, \cite{vcd:Friendly:1999}
-discusses a grouping similar to coplots \citep[conditioning plots, see]{vcd:Cleveland:1993}
+discusses a grouping similar to coplots \citep[conditioning plots, see][]{vcd:Cleveland:1993}
 that lead to trellis graphics \citep{vcd:Becker+Cleveland+Shyu:1996}. Thus, a
 natural visualization of such an independence model would be a trellis-like coplot
 where each stratum $k$ could be visualized by an association or mosaic display.
@@ -852,11 +857,11 @@ given the department leads to the well-known result that there is no
 gender discrimination in five of six departments, but that women are more
 likely to be admitted than men in the first department. This departure
 from conditional independence is picked up by all three statistics formulated
-above: the sum-of-squares statistic from~(\ref{eq:sumChisq}) is
+above: the sum-of-squares statistic from Equation~(\ref{eq:sumChisq}) is
 $\sum_k X_k^2 = \Sexpr{stat(ucb_sumChisq)}$ ($p = \Sexpr{pval(ucb_sumChisq)}$),
-the maximum sum-of-squares statistic from~(\ref{eq:maxChisq}) is
+the maximum sum-of-squares statistic from Equation~(\ref{eq:maxChisq}) is
 $\max_k X_k^2 = \Sexpr{stat(ucb_maxChisq)}$ ($p = \Sexpr{pval(ucb_maxChisq)}$),
-and the double maximum statistic from~(\ref{eq:doublemax}) is
+and the double maximum statistic from Equation~(\ref{eq:doublemax}) is
 $\max_k M_k = \Sexpr{stat(ucb_doublemax)}$ ($p = \Sexpr{pval(ucb_doublemax)}$).
 The $p$ values are again computed by drawing $5000$ samples from the corresponding
 permutation distribution. The latter two test statistics both indicate the 
@@ -891,7 +896,7 @@ uniform HCL colors and the combination of visualization and significance testing
 To achieve the former, a general guideline for constructing diverging palettes
 in HCL space is introduced. The advantages of using this HCL shading scheme
 instead of an HSV scheme are that the colors from this perceptually based color space
-are device inependent and provide uniform saturations over different hues.
+are device independent and provide uniform saturations over different hues.
 Furthermore, the colorfulness in this shading can be controlled independently from
 the other two dimensions.
 
@@ -915,8 +920,8 @@ instead of relying on unconditional asymptotic results.
 \section*{Computational Details}
 
 The results in this paper were obtained using
-\proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")} \citep{vcd:R:2005}
-and the packages
+\proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")}
+\citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2005} and the packages
 \pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2005},
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep{vcd:Murrell:2002} and
@@ -936,7 +941,7 @@ and the packages
 rseed <- 1071
 
 ## load packages and data
-library(vcd)
+library("vcd")
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 ucb <- aperm(UCBAdmissions)
 
@@ -992,7 +997,7 @@ coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
 %% employment data
 <<employment>>
 ## data
-data(Employment)
+data("Employment")
 emp <- aperm(Employment)
 emp1 <- co_table(Employment, "LayoffCause")[["Replaced"]]
 

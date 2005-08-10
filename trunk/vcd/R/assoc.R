@@ -153,7 +153,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                     )
     for (i in seq(along = mnames)) {
       seekViewport(paste("cell", mnames[i], sep = ".."))
-      grid.lines(y = unit(0, "native"), gp = gpar(lty = 5))
+      grid.lines(y = unit(0, "native"), gp = gpar(lty = 3))
       grid.rect(y = 0, x = 0,
                 height = residuals[i],
                 width = xscale * unit(sqrt(expected[i]), "native"),
