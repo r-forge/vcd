@@ -58,5 +58,14 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
 pie(rep(1, 12), col = rainbow_hcl(12))
 pie(rep(1, 5), col = diverge_hcl(5))
 pie(rep(1, 5), col = diverge_hsv(5))
+
+## a few useful diverging HCL palettes
+pie(rep(1, 7), col = diverge_hcl(7))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(246, 40), c = 96, l = c(90, 65)))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(130, 43), c = 100, l = c(90, 70)))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(180, 70), c = 70, l = c(95, 90)))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(180, 330), c = 59, l = c(95, 75)))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(128, 330), c = 98, l = c(90, 65)))
+pie(rep(1, 7), col = diverge_hcl(7, h = c(255, 330)))
 }
 \keyword{hplot}
