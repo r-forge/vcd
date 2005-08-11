@@ -40,8 +40,9 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
   fixed value \code{v}. The saturation is then varied to obtain the
   diverging colors. For the diverging HCL colors, again two hues \code{h}
   are needed, a maximal chroma \code{chroma} and two luminances \code{l}.
-  The colors are then created by linear interpolation between the full
-  chroma and minimal luminance and a chroma of 0 and maximal luminance.
+  The colors are then created by linear interpolation between the 
+  neutral color (with zero chroma and luminance \code{l[1]}) and 
+  the full color (with chroma \code{c} and luminance \code{l[2]}).
 
   The diverging palettes are used for choosing the colors for mosaic 
   displays in \code{\link{mosaic}}.
