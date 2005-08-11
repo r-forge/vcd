@@ -245,8 +245,8 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 \end{equation}
 because this is known to have an unconditional limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
-This is the well-known $\chi^2$ test which is typically introduced at the very beginning
-of the chapter about independence in 2-way tables in statistics textbooks
+This is the well-known $\chi^2$ test which is typically introduced first in statistics
+textbooks if they address the independence problem in 2-way tables
 \citep[see e.g.,][]{vcd:Agresti:2002}.
 
 \begin{table}[t!]
@@ -280,12 +280,12 @@ $\alpha$ \cite[][ch.~7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells 
 the dependence can easily be identified.
 
 Furthermore, an important reason for using the unconditional limiting distribution
-for the $X^2$ statistic from (\ref{eq:ChiSquare}) was the closed form result
+for the $X^2$ statistic from Equation~(\ref{eq:ChiSquare}) was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
 conditional inference (or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
-increasing attention \citep{vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
-For testing the independence hypothesis from (\ref{eq:H0}), using a permutation test is particularly
+increasing attention \citep[e.g.,][]{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
+For testing the independence hypothesis from Equation~(\ref{eq:H0}), using a permutation test is particularly
 intuitive due to the permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
 by simulating the permutation distribution of test statistics of type
@@ -296,9 +296,9 @@ instead of the the Pearson residuals $[r_{ij}]$. But as the ideas discussed here
 extend straightforwardly to that situation, we do not go into detail about this.
 
 For the arthritis data from Table~\ref{tab:art}, both tests indicate a clearly significant
-dependence of improvement on treatment: the sum-of-squares statistic from (\ref{eq:ChiSquare})
+dependence of improvement on treatment: the sum-of-squares statistic from Equation~(\ref{eq:ChiSquare})
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
-and the maximum statistic from (\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
+and the maximum statistic from Equation~(\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
 with $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
 from a sample of size $5000$ from the permutation distribution under independence
 generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
@@ -408,10 +408,12 @@ various implementations of Friendly mosaic plots: In his original
 \proglang{SAS} implementation \citep[see][]{vcd:Friendly:2000}, Michael Friendly
 uses colors from a palette based on HLS (Hue--Luminance--Saturation) color space.
 The implementation in the \proglang{R} system for statistical computing and graphics
-\citep{vcd:R:2005} employs colors from
-HSV (Hue--Saturation--Value) space. The latter is a very common implementation of
-colors in many computer packages and makes the generation of the Friendly shading
-very simple.
+\citep{vcd:R:2005} employs colors from HSV (Hue--Saturation--Value) space. 
+Both spaces are rather similar transformations of RGB (Red--Green--Blue) space
+\citep{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
+colors in many computer packages \citep{vcd:Moretti+Lyons:2002} making the generation
+of the Friendly shading very simple. As both spaces can generate the
+same colors, we only discuss HSV space in the following.
 
 The HSV space originally looks like a cone with black at its
 peak (zero value) and full color wheels for different saturations at the other end,
@@ -455,7 +457,7 @@ who introduced a color notation for balanced colors. Based on similar principles
 Brewer and co-workers suggested different types of palettes (qualitative/sequential/diverging)
 and provided the online tool \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003} for
 selecting an appropriate palette for a specific problem. Furthermore, the
-Commission Internationale de l'\'Eclairage (CIE) introduced the two perceptually
+\citet[CIE,][]{vcd:CIE:2004} introduced the two perceptually
 based color spaces CIELAB and CIELUV where the latter is typically preferred for 
 emissive color technologies such as computer displays. \cite{vcd:Ihaka:2003} discusses
 how CIELUV colors can be used for choosing qualitative palettes for statistical graphics such as barplots.
@@ -668,7 +670,7 @@ again, it would be nice if these cut offs could be chosen automatically in a
 data-driven fashion which is what we do below.
 
 The Friendly shading can be interpreted to be a visualization of the maximum
-statistic $M$ from (\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
+statistic $M$ from Equation~(\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
 $2$ and $4$. But the problem is that it is not clear to which
 significance levels $\alpha$ these critical values correspond because the distribution
 of $M$ depends on the underlying contingency table. The natural solution to this
