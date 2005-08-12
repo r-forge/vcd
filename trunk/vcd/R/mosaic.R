@@ -37,14 +37,14 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
     mosaic.default(dat, main = main,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
-    tab <- if ("Freq" %in% colnames(data))
-      xtabs(formula(paste("Freq~", paste(c(condnames, varnames), collapse = "+"))),
-            data = data, subset = subset)
-    else
-      xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
-            data = data, subset = subset)
-    
-    mosaic.default(tab, main = main, ...)
+      m <- m[c(1, match(c("formula", "data", "subset"), names(m), 0))]
+      m[[1]] <- as.name("xtabs")
+      m$formula <-
+          formula(paste(if("Freq" %in% colnames(data)) "Freq",
+                        "~",
+                        paste(c(condnames, varnames), collapse = "+")))
+      tab <- eval(m, parent.frame())
+      mosaic.default(tab, main = main, ...)  
   }
 }
 
