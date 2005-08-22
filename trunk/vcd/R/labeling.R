@@ -141,7 +141,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
                             rot_varnames = c(0, 90, 0, 90),
                             pos_labels = "center", pos_varnames = "center",
                             just_labels = "center", just_varnames = pos_varnames,
-                            boxes = FALSE, fill_boxes = NULL,
+                            boxes = FALSE, fill_boxes = FALSE,
                             offset = c(0, 0, 0, 0),
                           
                             labbl_varnames = NULL,
@@ -232,11 +232,29 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     boxes <- pexpand(boxes, ld, FALSE, dn)
 
     ## fill_boxes
-    if (is.null(fill_boxes))
-      fill_boxes <- lapply(sapply(d, length),
-                           function(i) gray(0.3 + 0.4 * rev(seq(i)) / i))
-    else
-      fill_boxes <- pexpand(fill_boxes, ld, "grey", dn)
+    dnl <- sapply(d, length)
+    fill_boxes <- if (is.atomic(fill_boxes)) {
+      fill_boxes <- if (is.logical(fill_boxes))
+        ifelse(pexpand(fill_boxes, ld, FALSE, dn), "grey", NA)
+      else
+        pexpand(fill_boxes, ld, "grey", dn)
+      col <- rgb2hsv(col2rgb(fill_boxes))
+      lapply(seq(along.with = dnl),
+             function(i) if (is.na(fill_boxes[i])) "white" else
+                         hsv(h = col["h",i],
+                             s = col["s",i],
+                             v = seq(from = col["v",i],
+                                     to = 0.5 * col["v",i],
+                                     length = dnl[i])
+                             )
+             )
+    } else {
+      fill_boxes <- pexpand(fill_boxes, ld, "white", dn)
+      lapply(seq(ld),
+             function(i) pexpand(fill_boxes[[i]], dnl[i], "white", d[[i]])
+             )
+    }
+    
 
     ## precompute spaces
     lsp <- tsp <- bsp <- rsp <- 0

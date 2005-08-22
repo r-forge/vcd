@@ -22,7 +22,10 @@ assoc.default <- function(x,
                           keep_aspect_ratio = FALSE,
 			  residuals_type = "Pearson",
                           xscale = 0.9, yspace = unit(0.5, "lines"),
-                          main = NULL, ...) {
+                          main = NULL,
+                          ...,
+                          gp_axis = gpar(lty = 3)
+                          ) {
 
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
@@ -57,7 +60,7 @@ assoc.default <- function(x,
             spacing = spacing,
             split_vertical = split_vertical,
             panel = struc_assoc(compress = compress, xlim = xlim, ylim = ylim,
-              yspace = yspace, xscale = xscale),
+              yspace = yspace, xscale = xscale, gp_axis = gp_axis),
             keep_aspect_ratio = keep_aspect_ratio,
             residuals_type = "Pearson",
             main = main, 
@@ -65,7 +68,8 @@ assoc.default <- function(x,
 }
 
 struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
-                        yspace = unit(0.5, "lines"), xscale = 0.9)
+                        yspace = unit(0.5, "lines"), xscale = 0.9,
+                        gp_axis = gpar(lty = 3))
   function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
@@ -153,7 +157,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                     )
     for (i in seq(along = mnames)) {
       seekViewport(paste("cell", mnames[i], sep = ".."))
-      grid.lines(y = unit(0, "native"), gp = gpar(lty = 3))
+      grid.lines(y = unit(0, "native"), gp = gp_axis)
       grid.rect(y = 0, x = 0,
                 height = residuals[i],
                 width = xscale * unit(sqrt(expected[i]), "native"),
