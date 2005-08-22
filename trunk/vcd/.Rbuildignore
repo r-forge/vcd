@@ -3,5 +3,7 @@ R/hcl.R
 R/aaa.R
 R/pearson_test.R
 man/pearson_test.Rd
-inst/doc/pics
+inst/doc/*.tex
+inst/doc/*.eps
+inst/doc/*.ps
 

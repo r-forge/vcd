@@ -13,7 +13,7 @@
   xlim = NULL, ylim = NULL,
   spacing = spacing_conditional(sp = 0), spacing_args = list(),
   split_vertical = NULL, keep_aspect_ratio = FALSE, residuals_type = "Pearson",
-  xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, \dots)
+  xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, \dots, gp_axis = gpar(lty = 3))
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots, main = NULL)
 }
 \arguments{
@@ -30,7 +30,6 @@
   \item{compress}{logical; if \code{FALSE}, the space between the rows
     (columns) are chosen such that the \emph{total} heights (widths) of
     the rows (columns) are all equal.  If \code{TRUE}, the space between
-
     rows and columns is fixed and hence the plot is more
     \dQuote{compressed}.}
   \item{xlim}{a \eqn{2 \times k}{2 x k} matrix of doubles, \eqn{k}
@@ -70,6 +69,8 @@
     additional space between the tiles. }
   \item{yspace}{object of class \code{"unit"} specifying additional
     space separating the rows.}
+  \item{gp_axis}{object of class \code{"gpar"} specifying the visual
+    aspects of the tiles' baseline.}
   \item{formula}{ a formula object with both left and right hand sides
     specifying the column and row variables of the flat table.}
   \item{data}{a data frame, list or environment containing the variables
@@ -188,8 +189,7 @@ assoc(aperm(HairEyeColor), expected = ~ (Hair + Eye) * Sex,
                            tl_varnames = c(Eye = TRUE))
 )
 
-assoc(aperm(UCBAdmissions), expected = ~ (Admit + Gender) * Dept,
-      compress = FALSE,
+assoc(aperm(UCBAdmissions), expected = ~ (Admit + Gender) * Dept, compress = FALSE,
       labeling_args = list(abbreviate = c(Gender = TRUE), rot_labels = 0)
 )
 }

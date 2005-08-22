@@ -18,7 +18,7 @@ labeling_border(labels = TRUE, varnames = labels,
   rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
   pos_labels = "center", pos_varnames = "center",
   just_labels = "center", just_varnames = pos_varnames,
-  boxes = FALSE, fill_boxes = NULL, offset = c(0, 0, 0, 0),
+  boxes = FALSE, fill_boxes = FALSE, offset = c(0, 0, 0, 0),
   labbl_varnames = NULL, labels_varnames = FALSE, sep = ": ",
   abbreviate = FALSE, rep = TRUE, clip = FALSE, \dots)
 labeling_conditional(\dots)
@@ -70,7 +70,18 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
     four sides of the plot.}
   \item{boxes}{vector of logicals indicating whether boxes should be
     drawn around the labels for a particular dimension.}
-  \item{fill_boxes}{character vector of fill colors for the boxes.}
+  \item{fill_boxes}{Either a vector of logicals, or a vector of characters,
+    or a list of such vectors, specifying the fill colors for the
+    boxes. \code{"TRUE"} and \code{"FALSE"} values are
+    transformed into \code{"grey"} and \code{"white"}, respectively. If
+    \code{fill_boxes} is atomic, each component
+    specifies a basic color for the corresponding dimension. This color
+    is transformed into its HSV representation, and the value is varied
+    from 50\% to 100\% to give a sequential color palette for the
+    levels. For \code{NA} components, no palette is produced (no fill
+    color). If \code{fill_boxes} is a list of vectors,
+    each vector specifies the level colors of the corresponding
+    dimension.}
   \item{offset}{numeric vector of length 4 indicating the offset of the
     labels for each of the four sides of the plot.}
   \item{labbl_varnames}{vector of logicals indicating whether variable
@@ -160,7 +171,17 @@ mosaic(Titanic,
 
 mosaic(Titanic,
        labeling_args = list(clip = TRUE, boxes = TRUE,
-                            fill_boxes = c(Survived = "blue","red"))
+                            fill_boxes = c(Survived = "green", "red"))
+)
+
+mosaic(Titanic,
+       labeling_args = list(clip = TRUE, boxes = TRUE,
+                            fill_boxes = list(Sex = "red", "green"))
+)
+
+mosaic(Titanic,
+       labeling_args = list(clip = TRUE, boxes = TRUE,
+                            fill_boxes = list(Sex = c(Male = "red", "blue"), "green"))
 )
 
 ## change variable names
