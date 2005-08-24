@@ -120,10 +120,10 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = name)
+                         layout = layout, name = substr(name, 1, nchar(name) - 1))
       
       ## next level: either create further splits, or final viewports
-      name <- paste(name, "", dnn[i], dn[[i]], sep = ".")
+      name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
       row <- col <- rep.int(1, d)
       if (v) col <- 2 * 1:d - 1 else row <- 2 * 1:d - 1
       proptab <- function(x) x / max(sum(x), 1)
@@ -139,12 +139,12 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       } else {
         if (v)
           function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                               name = name[m],
+                               name = substr(name[m], 1, nchar(name[m]) - 1),
                                yscale = c(0, rowmargin),
                                xscale = c(0, colmargin * proptab(margin)[m]))
         else
           function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                               name = name[m],
+                               name = substr(name[m], 1, nchar(name[m]) - 1),
                                yscale = c(0, rowmargin * proptab(margin)[m]),
                                xscale = c(0, colmargin))
       }
@@ -155,16 +155,16 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
 
     ## start splitting on top, creates viewport-tree
     pushViewport(split(expected + .Machine$double.eps,
-                       i = 1, name = "cell", row = 1, col = 1,
+                       i = 1, name = "cell:", row = 1, col = 1,
                        rowmargin = n, colmargin = n))
 
     ## draw rectangles
     mnames <- apply(expand.grid(dn), 1,
-                    function(i) paste(dnn, i, collapse="..", sep = ".")
+                    function(i) paste(dnn, i, collapse=",", sep = "=")
                     )
     
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell", mnames[i], sep = ".."))
+      seekViewport(paste("cell:", mnames[i], sep = ""))
       vp <- current.viewport()
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       
@@ -180,7 +180,7 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
         grid.segments(x0 = 0, x1 = vp$xscale[2], y0 = jj, y1 = jj,
                       default.units = "native", gp = gpobj)
       }
-      grid.rect(name = paste("rect", mnames[i], sep = ".."))
+      grid.rect(name = paste("rect:", mnames[i], sep = ""))
     }
   }
 }

@@ -33,7 +33,7 @@ labeling_list <- function(gp = gpar(),
       d <- dimnames(d)
     ld <- length(d)
     labeling_border(labels = FALSE, varnames = varnames)(d, split_vertical, condvars)
-    seekViewport("marginBottom")
+    seekViewport("margin_bottom")
     pos <- unit(switch(pos, left = 0, center = 0.5, 1) / cols, "npc")
     ind <- split(seq(ld), rep.int(seq(cols), ceiling(ld / cols))[seq(ld)])
     
@@ -97,8 +97,8 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
       for (labind in seq(along = n)) {
         lab <- c(labs, n[labind])
         names(lab) <- names(d)[1:vind]
-        mlab <- paste("cell", paste(dn[1:vind], lab, sep = ".", collapse = ".."),
-                      sep = "..")
+        mlab <- paste("cell:", paste(dn[1:vind], lab, sep = "=", collapse = ","),
+                      sep = "")
 
         if (vind < ld)
           split(vind + 1, lab)
@@ -369,7 +369,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     }
 
     ## draw labels
-    split <- function(vind = 1, root = "cell",
+    split <- function(vind = 1, root = "cell:",
                       left = TRUE, right = TRUE, top = TRUE, bottom = TRUE) {
       n <- d[[vind]]
       vl <- length(n)
@@ -378,7 +378,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       if (!sp) labseq <- rev(labseq)
       
       for (labind in labseq) {
-        mlab <- paste(root, "", dn[vind], n[labind], sep = ".")
+        mlab <- paste(root, dn[vind], "=", n[labind], sep = "")
         if (labels[vind] && (rep[vind] || !printed[[vind]][labind])) {
           lab <- if (!is.null(set_labels) && !is.null(set_labels[[dn[vind]]]))
             set_labels[[dn[vind]]][labind]
@@ -485,7 +485,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
           }
         }
         
-        if (vind < ld) Recall(vind + 1, mlab,
+        if (vind < ld) Recall(vind + 1, paste(mlab, ",", sep = ""),
                               if (sp) left && labind == 1 else left,
                               if (sp) right && labind == vl else right,
                               if (!sp) top && labind == 1 else top,
@@ -512,7 +512,7 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
                   offset = c(0, -0.6, 0, 0),
                   tl_labels = c(rep.int(lab_pos== "top", length(d) - 1), FALSE)
                   )(d, split_vertical, condvars)
-    seekViewport("marginRight")
+    seekViewport("margin_right")
     grid.text(names(d)[length(d)],
               x = unit(0.5, "lines"), y = unit(1, "npc"), just = c("left","top"),
               gp = gpar(fontface = 2))

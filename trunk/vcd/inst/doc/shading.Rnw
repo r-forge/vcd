@@ -16,10 +16,11 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=TRUE}
-\setkeys{Gin}{width=0.8\textwidth}
+\SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
+\setkeys{Gin}{width=0.7\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
+options(width=90)
 set.seed(1071)
 library(vcd)
 data(Titanic)
@@ -51,50 +52,50 @@ parameters and returns such a function (see Section \ref{sec:shading}).
 \section{Specifying graphical parameters in strucplots}
 \label{sec:gp}
 
-As an example, consider the Admissions to the University of California
-in Berkely (UCB) data. In the table collapsed over departments, we
+As an example, consider the `Admissions to the University of California
+in Berkely (UCB)' data. In the table collapsed over departments, we
 would like to highlight the (incidentally wrong) impression that there
 were to much male students accepted compared to the presumably
 discriminated female students (see Figure \ref{fig:ucb}):
 
-<<ucb,fig=FALSE,echo=TRUE,height=6,width=7,results=verbatim>>=
-ucb <- margin.table(UCBAdmissions, 1:2)
-ucb
+<<ucb,results=verbatim>>=
+(ucb <- margin.table(UCBAdmissions, 1:2))
 
-fill_colors <- matrix(c("dark cyan","gray","gray","dark magenta"), ncol = 2)
-fill_colors
+(fill_colors <- matrix(c("dark cyan","gray","gray","dark magenta"), ncol = 2))
 
 mosaic(ucb, gp = gpar(fill = fill_colors, col = 0))
 @
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<ucbfig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(ucb, gp = gpar(fill = fill_colors, col = 0))
+<<ucbfig,fig=TRUE,echo=FALSE>>=
+<<ucb>>
 @
 \caption{Mosaic plot for the UCBAdmissions data with highlighted cells.}
 \label{fig:ucb}
 \end{center}
 \end{figure}
 
-\noindent As the example shows, we therefore create a fourfold table with appropriate colors and supply them to the \code{fill} component of the \code{gpar} object passed to the \code{gp} argument of \code{mosaic()}. In addition, we use the \code{col} component to turn off the borders for cosmetic reasons.
+\noindent As the example shows, we therefore create a fourfold table 
+with appropriate colors and supply them to the \code{fill} component 
+of the \code{gpar} object passed to the \code{gp} argument of \code{mosaic()}. 
+In addition, we use the \code{col} component to turn off the borders 
+for cosmetic reasons.
 
 If the parameters specified in the \code{gpar} object are incomplete,
 strucplot functions will recycle them along the last splitting
-dimension. In the following example based on the Survival on the
-Titanic data, we will highlight all cells corresponding to survived
+dimension. In the following example based on the `Survival on the
+Titanic' data, we will highlight all cells corresponding to survived
 passengers (see Figure \ref{fig:recycling}):
 
-\begin{Sinput}
-> mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")))
-\end{Sinput}
+<<recycling>>=
+mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<recycling,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")))
+<<recyclingfig,fig=TRUE,echo=FALSE>>=
+<<recycling>>
 @
 \caption{Recycling of parameters.}
 \label{fig:recycling}
@@ -140,35 +141,20 @@ tiles corresponding to the residuals. In the following example, positive
 and negative residuals of an hypothesized independence model shall be 
 visualized by different colors (see Figure \ref{fig:binary}):
 
-\begin{Sinput}
-> obs <- margin.table(UCBAdmissions, 1:2)
-> exp <- independence_table(obs)
-> res <- (obs - exp) / sqrt(exp)
-> res
-          Gender
-Admit           Male    Female
-  Admitted  4.784093 -5.793466
-  Rejected -3.807325  4.610614
-
-> gpobj <- shading_binary()(res)
-> gpobj
-$fill
-     [,1]      [,2]     
-[1,] "#96A2DF" "#E18E9E"
-[2,] "#E18E9E" "#96A2DF"
-
-> mosaic(obs, gp = gpobj)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<binary,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<binary,results=verbatim>>=
 obs <- margin.table(UCBAdmissions, 1:2)
 exp <- independence_table(obs)
-res <- (obs - exp) / sqrt(exp)
-gpobj <- shading_binary()(res)
+(res <- (obs - exp) / sqrt(exp))
+
+(gpobj <- shading_binary()(res))
+
 mosaic(obs, gp = gpobj)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<binaryfig,fig=TRUE,echo=FALSE>>=
+<<binary>>
 @
 \caption{Binary shading.}
 \label{fig:binary}
@@ -179,9 +165,9 @@ mosaic(obs, gp = gpobj)
 in \pkg{vcd} include model-fitting, and hence the {\sf R} code
 corresponding to the example above in fact reduces to:
 
-\begin{Sinput}
-> mosaic(obs, gp = shading_binary)
-\end{Sinput}
+<<binaryfun>>=
+mosaic(obs, gp = shading_binary)
+@ 
 
 \section{An overview of the shading functions in \pkg{vcd}}
 
@@ -200,19 +186,17 @@ different hues, device independentness, \dots).
 In the HCL space, colors are specified in three dimensions: hue, chroma (`colorfulness', saturation), and luminance (`brightness', amount of gray). These three dimensions are used by \code{shading\_hcl()} to visualize information about the residuals and the underlying independence model. A residuals' hue indicates its sign (by default blue and red for positive and negative ones, respectively). An overall full or poor chroma indicates significant or non-significant results, respectively. Finally, the luminance of a residual is set according to its size. 
 
 As an example, we will visualize the (in)dependence of hair and eye
-color in the HairEyeColor data set (see Figure \ref{fig:haireye})
+color in the `Hair and Eye Color' data set (see Figure \ref{fig:haireye})
 
-\begin{Sinput}
-> haireye <- margin.table(HairEyeColor, 1:2)
-> mosaic(haireye, shade = TRUE)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<haireye,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<haireye>>=
 haireye <- margin.table(HairEyeColor, 1:2)
 mosaic(haireye, shade = TRUE)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<haireyefig,fig=TRUE,echo=FALSE>>=
+<<haireye>>
 @
 \caption{Shaded residuals in the HairEyeColor data set---two cut-off points}
 \label{fig:haireye}
@@ -234,17 +218,15 @@ residuals \emph{individually} significant at approximately the $\alpha
 be changed to alternative values using the \code{interpolate}
 argument (see Figure \ref{fig:interpolate}):
 
-\begin{Sinput}
-> mosaic(haireye, shade = TRUE, 
-         gp_args = list(interpolate = 1:4, h = c(100, 200)))
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<interpolate,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<interpolate>>=
 mosaic(haireye, shade = TRUE, 
        gp_args = list(interpolate = 1:4, h = c(100, 200)))
+@
+
+\begin{figure}[h]
+\begin{center}
+<<interpolatefig,fig=TRUE,echo=FALSE>>=
+<<interpolate>>
 @
 \caption{Shaded residuals in the HairEyeColor data set---four cut-off points}
 \label{fig:interpolate}
@@ -260,23 +242,22 @@ freedom. The \code{level} argument is used to specify the confidence
 level:  if \code{p.value} is smaller than \code{1 - level}, bright colors are used, 
 otherwise dark colors are employed. These colors are computed using
 the two luminance values supplied to the \code{l} argument. The
-following example shows the relationship of home goals and away
-goals of the German Bundesliga in 1995: although there are two
+following example using the `Bundesliga' data 
+shows the relationship of home goals and away
+goals of the German football league in 1995: although there are two
 ``larger'' residuals (one greater than 2, one less then $-2$), the
 Chi-squared test does not reject the null hypothesis of
 independence. Consequently, the colors appear dark (see Figure \ref{fig:bundesliga}):
 
-\begin{Sinput}
-> bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
-> mosaic(bl, shade = TRUE)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<bundesliga,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<bundesliga>>=
 bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
 mosaic(bl, shade = TRUE)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<bundesligafig,fig=TRUE,echo=FALSE>>=
+<<bundesliga>>
 @
 \caption{Non-significant Chi-squared test using part of the Bundesliga data.}
 \label{fig:bundesliga}
@@ -297,17 +278,15 @@ In the following example, we investigate the effect of a new treatment
 for rheumatoid arthritis on a group of female patients using the
 maximum shading (see Figure \ref{fig:maximum}):
 
-\begin{Sinput}
-> art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
-> mosaic(art, shade = TRUE, gp = shading_max)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<arthritis>>=
 art <- xtabs(~ Improved + Treatment, data = Arthritis, subset = Sex == "Female")
 mosaic(art, gp = shading_max)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<arthritisfig,fig=TRUE,echo=FALSE>>=
+<<arthritis>>
 @
 \caption{Significant maximum test on female patients of the Arthritis
   data.}
@@ -331,15 +310,14 @@ residuals' sign. The following example again visualizes the Bundesliga
 data from above, this time using the Friendly scheme and, in addition, an
 alternative legend:
 
-\begin{Sinput}
-> mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
-\end{Sinput}
+<<friendly>>=
+mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
+<<friendlyfig,fig=TRUE,echo=FALSE>>=
+<<friendly>>
 @
 \caption{The Bundesliga data for 1995 using the Friendly shading.}
 \label{fig:friendly}
@@ -357,32 +335,7 @@ might suggest that a continuous shading simply visualizing the complete
 range of confidence levels might be useful. The following code shows
 how such a shading function might be constructed:
 
-\begin{Sinput}
-shading_continuous <- function(observed = NULL, residuals = NULL,
-                               expected = NULL, df = NULL, n = 5000, ...)
-{
-  ## function works only for two-way tables
-  stopifnot(length(dim(observed)) == 2)
-
-  ## sample permutation distribution of the maximum statistic
-  obs.test <- coindep_test(observed, n = n)
-
-  ## Use distribution to map residuals to [0,1] range
-  ipol <- function(x) abs(obs.test$pdist(x))
-
-  ## call HCL shading 
-  shading_hcl(observed = NULL, residuals = NULL, expected = NULL,
-              df = NULL, interpolate = ipol, p.value = obs.test$p.value, ...)
-}
-class(shading_continuous) <- "panel_generator"
-
-mosaic(haireye, gp = shading_continuous)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<continuous,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<continuous>>=
 shading_continuous <- function(observed = NULL, residuals = NULL,
                                expected = NULL, df = NULL, n = 5000, ...)
 {
@@ -403,10 +356,16 @@ class(shading_continuous) <- "panel_generator"
 
 mosaic(haireye, gp = shading_continuous)
 @
+
+\begin{figure}[h]
+\begin{center}
+<<continuousfig,fig=TRUE,echo=FALSE>>=
+<<continuous>>
+@
 \caption{The HairEyeColor data with continuous shading.}
 \label{fig:continuous}
 \end{center}
-\end{figure}
+\end{figure} 
 
 \noindent We first compute the permutation distribution for the
 maximum statistic using \code{coindep\_test}, and then simply use it
