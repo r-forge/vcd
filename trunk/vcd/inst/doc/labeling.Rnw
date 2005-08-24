@@ -6,8 +6,16 @@
 \definecolor{Blue}{rgb}{0,0,0.8}
 \definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
-\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\var}[1]{\textit{\texttt{#1}}}
 \newenvironment{smallexample}{\begin{alltt}}{\end{alltt}}
+
+%% \code without `-' ligatures
+{\catcode`\-=\active%
+  \global\def\code{\bgroup%
+    \catcode`\-=\active \let-\codedash%
+    \Rd@code}}
+\def\codedash{-\discretionary{}{}{}}
+\def\Rd@code#1{\texttt{#1}\egroup}
 
 \begin{document}
 
@@ -16,10 +24,11 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=FALSE}
-\setkeys{Gin}{width=0.8\textwidth}
+\SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
+\setkeys{Gin}{width=0.7\textwidth}
 
-<<preliminaries,echo=FALSE,results=hide>>=
+<<preliminaries,echo=FALSE>>=
+options(width=70)
 set.seed(1071)
 library(vcd)
 data(Titanic)
@@ -33,7 +42,9 @@ data(Titanic)
 \maketitle
 \sloppy
 
-One of the major enhancements in vcd is the labeling of strucplots which now
+One of the major enhancements in \pkg{vcd} compared to
+\code{mosaicplot()} and \code{assocplot()} in
+base {\sf R} is the labeling of strucplots which now
 has become much more powerful and flexible. Like the panel, the
 shading, the spacing, and the legend, labeling is now completely modular.
 The user supplies either a labeling function, or, alternatively, 
@@ -61,34 +72,34 @@ as arguments, and returns the actual labeling function which takes
 only three arguments: the dimnames structure of the table, the logical
 vector with the splitting information, and the number of conditioning
 variables (if any). The labeling function has access to the arguments
-of the generating function because of lexical scoping. In the
+of the generating function because in {\sf R}, nested functions are
+lexically scoped. In the
 following, we describe the three basic modules
 (\code{labeling\_text()}, \code{labeling\_list()}, and \code{labeling\_cells()}) and
 derived functions that build upon them.
 
-\section{Labels in the borders: \code{labeling\_text()}}
+\section{Labels in the borders: \texttt{labeling\_text()}}
 
 \code{labeling\_text()} is the default for all strucplot displays. It
 plots labels in the borders similar to the \code{mosaicplot()}
-function, but is much more flexible: it is not limited
+function in base {\sf R}, but is much more flexible: it is not limited
 to 4 dimensions, and the positioning and graphical parameters 
 of levels and variable names are quite customizable. In addition,
 the problem of overlapping labels can be handled in several ways. 
 
-As an example, consider the `Survival on the Titanic' data, consisting
-of 4 categorical variables: Survival, Gender (``Sex''), Age, and
+As an example, consider the `Titanic' data, consisting
+of 4 categorical variables: Survived, Sex (i.e., `Gender'), Age, and
 Crew. By default, the variable names and levels are plotted `around' the
 plot in a counter-clockwise way (see Figure \ref{fig:defaults}):
 
-\begin{Sinput}
-> mosaic(Titanic)
-\end{Sinput}
+<<default>>=
+mosaic(Titanic)
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<default,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic)
+<<defaultfig,fig=TRUE,echo=FALSE>>=
+<<default>>
 @
 \caption{Mosaic plot for the Titanic data.}
 \label{fig:defaults}
@@ -96,18 +107,18 @@ mosaic(Titanic)
 \end{figure}
 
 \noindent Note that the last two levels of the `Survived' variable do
-overlap. This issue can be addressed in several ways. The `brute force'
-method is to enable clipping for the `Survivcal' dimension (see Figure \ref{fig:clipping}):
+overlap, as well as some `Adult' and `Child' labels of the `Age' Variable.
+This issue can be addressed in several ways. The `brute force'
+method is to enable clipping for these dimensions (see Figure \ref{fig:clipping}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE)))
-\end{Sinput}
+<<clipping>>=
+mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE, Age = TRUE)))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<clipping,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE)))
+<<clippingfig,fig=TRUE,echo=FALSE>>=
+<<clipping>>
 @
 \caption{The effect of clipping.}
 \label{fig:clipping}
@@ -121,58 +132,56 @@ each dimension). Almost all vectorized arguments in the strucplot
 framework can be abbreviated in the following way: unnamed components
 (or the defaults, if there are none) are recycled as needed, but
 overridden by the named components. Here, the default is \code{FALSE},
-and therefore clipping is enabled only for the \code{Survived} dimension.
-A more sensible solution to the overlap problem is to abbreviate the `Survival'
+and therefore clipping is enabled only for the `Survived' and `Age' dimensions.
+A more sensible solution to the overlap problem is to abbreviate the 
 levels (see Figure \ref{fig:abbreviating}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE)))
-\end{Sinput}
+<<abbreviating>>=
+mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 4)))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<abbreviating,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE)))
+<<abbreviatingfig,fig=TRUE,echo=FALSE>>=
+<<abbreviating>>
 @
 \caption{Abbreviating.}
 \label{fig:abbreviating}
 \end{center}
 \end{figure}
 
-\noindent The \code{abbreviate} argument actually takes a vector of
-integers indicating the number of characters the levels should be
-abbreviated to, but logical values are equivalent to 1. Abbreviation
+\noindent The \code{abbreviate} argument takes a vector of
+integers indicating the number of significant characters the levels should be
+abbreviated to (\code{TRUE} is interpreted as 1, obviously). Abbreviation
 is performed using {\sf R}'s \code{abbreviate()} function. Another
 possibility is to rotate the levels (see Figure \ref{fig:rotating}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 45)))
-\end{Sinput}
+<<rotate>>=
+mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0)),
+                margins = c(right = 6, bottom = 4))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<rotate,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 45)))
+<<rotatefig,fig=TRUE,echo=FALSE>>=
+<<rotate>>
 @
 \caption{Rotating labels.}
 \label{fig:rotating}
 \end{center}
 \end{figure}
 
-\noindent Finally, we could also inhibit the output of repeated levels
-for the `Survival' dimension (see Figure \ref{fig:repeat}):
+\noindent Finally, we could also inhibit the output of repeated levels 
+(see Figure \ref{fig:repeat}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE)))
-\end{Sinput}
+<<repeat>>=
+mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<repeat,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE)))
+<<repeatfig,fig=TRUE,echo=FALSE>>=
+<<repeat>>
 @
 \caption{Inhibiting the repetition of levels.}
 \label{fig:repeat}
@@ -184,17 +193,15 @@ A first simple, but effectful modification is to position
 all labels and variables left-aligned, which can
 also be achieved by using \code{labeling\_left()} (see Figure \ref{fig:left}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
-         just_labels = "left", rep = FALSE))
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<left,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<left>>=
 mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
        just_labels = "left", rep = FALSE))
+@
+
+\begin{figure}[h]
+\begin{center}
+<<leftfig,fig=TRUE,echo=FALSE>>=
+<<left>>
 @
 \caption{Left-aligning.}
 \label{fig:left}
@@ -205,36 +212,33 @@ mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left",
 bottom and right margins, and all variable names to the top and left
 margins (see Figure \ref{fig:margins}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE))
-\end{Sinput}
+<<margins>>=
+mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbreviate = c(Survived = 1, Age = 4)))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<margins,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE))
+<<marginsfig,fig=TRUE,echo=FALSE>>=
+<<margins>>
 @
 \caption{Changes in the margins.}
 \label{fig:margins}
 \end{center}
 \end{figure}
 
-\noindent The \code{"tl\_foo"} (``top left'') arguments are \code{TRUE} by default. 
+\noindent The \var{tl\_foo} (``top left'') arguments are \code{TRUE} by default. 
 Now, we will add boxes to the labels and additionally
 enable clipping (see Figure \ref{fig:boxes}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, 
-         boxes = TRUE, clip = TRUE))
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<boxes,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<boxes>>=
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, 
        boxes = TRUE, clip = TRUE))
+@
+
+\begin{figure}[h]
+\begin{center}
+<<boxesfig,fig=TRUE,echo=FALSE>>=
+<<boxes>>
 @
 \caption{Boxes and Clipping.}
 \label{fig:boxes}
@@ -246,17 +250,15 @@ all dimensions. The result is pretty close to what the \code{labels\_cboxed()}
 wrapper does. Another variant is to put the variable names into the
 same line as the levels (see Figure \ref{fig:labbl}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, 
-         clip = TRUE, labbl_varnames = TRUE), margins = c(left = 4, right = 1, 3))
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<labbll,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<labbll>>=
 mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, clip = TRUE, 
        labbl_varnames = TRUE), margins = c(left = 4, right = 1, 3))
+@
+
+\begin{figure}[h]
+\begin{center}
+<<labbllfig,fig=TRUE,echo=FALSE>>=
+<<labbll>>
 @
 \caption{Variable names beneath levels.}
 \label{fig:labbl}
@@ -268,21 +270,20 @@ labels'') is a vector of logicals indicating the side for the
 variable names. The resulting layout is basically what \code{labeling\_lboxed()} produces,
 and a similar design is used by the \code{doubledecker()}.
 
-\section{Labels in the cells: \code{labeling\_cells()}}
+\section{Labels in the cells: \texttt{labeling\_cells()}}
 
 This labeling draws both variable names and levels in the
 cells. As an example, we use the `PreSex' data on pre- and
 extramarital sex and divorce (see Figure \ref{fig:cell}):
 
-\begin{Sinput}
-> mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
-\end{Sinput}
+<<cell>>=
+mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<cell,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
+<<cellfig,fig=TRUE,echo=FALSE>>=
+<<cell>>
 @
 \caption{Cell labeling for the `PreSex' data.}
 \label{fig:cell}
@@ -292,17 +293,15 @@ mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
 \noindent In the case of narrow cells, it might be useful to
 abbreviate labels and/or variable names and turn off clipping (see Figure \ref{fig:cell2}):
 
-\begin{Sinput}
-> mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, 
-         labeling = labeling_cells(abbreviate_labels = TRUE, 
-         abbreviate_varnames = TRUE, clip = F))
-\end{Sinput}
+<<cell2>>=
+mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, 
+labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, clip = FALSE))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<cell2,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, clip = F))
+<<cell2fig,fig=TRUE,echo=FALSE>>=
+<<cell2>>
 @
 \caption{Cell labeling for the `PreSex' data, labels abbreviated.}
 \label{fig:cell2}
@@ -313,17 +312,14 @@ mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, labeling = labeling_cel
 labeling with border labeling as done by \code{labels\_conditional()}
 (see Figure \ref{fig:conditional}):
 
-\begin{Sinput}
-> mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, 
-         labeling = labeling_conditional(abbreviate_varnames = TRUE, 
-         abbreviate_labels = TRUE))
-\end{Sinput}
+<<conditional>>=
+mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, labeling = labeling_conditional(abbreviate_varnames = TRUE, abbreviate_labels = TRUE))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<conditional,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, labeling = labeling_conditional(abbreviate_varnames = TRUE, abbreviate_labels = TRUE))
+<<conditionalfig,fig=TRUE,echo=FALSE>>=
+<<conditional>>
 @
 \caption{Conditional labeling for the `PreSex' data, labels abbreviated.}
 \label{fig:conditional}
@@ -337,42 +333,37 @@ are ignored). In the following example, this is used to add all observed values 
 than 5 to the cells after the mosaic for the `Titanic' data has been plotted
 (see Figure \ref{fig:text}):
 
-\begin{Sinput}
-> mosaic(Titanic, pop = FALSE)
-
-> tab <- ifelse(Titanic < 6, NA, Titanic)
-> labeling_cells(text = tab, clip = FALSE)(Titanic)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<text,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, pop = FALSE)
+<<text>>=
+mosaic(Titanic, pop = FALSE, labeling_args = list(abbreviate = c(Survived = 1, Age = 4)))
 
 tab <- ifelse(Titanic < 6, NA, Titanic)
 labeling_cells(text = tab, clip = FALSE)(Titanic)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<textfig,fig=TRUE,echo=FALSE>>=
+<<text>>
 @
 \caption{User-supplied Text added to a mosaic display of the `Titanic' data.}
 \label{fig:text}
 \end{center}
 \end{figure}
 
-\section{A simple list of labels:\code{labels\_list()}}
+\section{A simple list of labels:\texttt{labels\_list()}}
 
 If problems with overlapping labels cannot satisfactorily resolved,
 the last remedy could be to simply list the levels below the plot
 (see Figure \ref{fig:list}):
 
-\begin{Sinput}
-> mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
-\end{Sinput}
+<<list>>=
+mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
+@
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<list,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
+<<listfig,fig=TRUE,echo=FALSE>>=
+<<list>>
 @
 \caption{Labels indicated below the plot.}
 \label{fig:list}
@@ -382,3 +373,4 @@ mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
 \noindent The number of columns can be specified.
 
 \end{document}
+

@@ -209,14 +209,14 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   vpPlot <- vpStack(viewport(layout.pos.col = 2, layout.pos.row = 2),
                     viewport(width = 1, height = 1, name = "plot",
                              default.units = if (keep_aspect_ratio) "snpc" else "npc"))
-  vpMarginBottom <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "marginBottom")
-  vpMarginLeft <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginLeft")
-  vpMarginTop <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "marginTop")
-  vpMarginRight <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = "marginRight")
-  vpCornerTL <- viewport(layout.pos.col = 1, layout.pos.row = 1, name = "cornerTL")
-  vpCornerTR <- viewport(layout.pos.col = 3, layout.pos.row = 1, name = "cornerTR")
-  vpCornerBL <- viewport(layout.pos.col = 1, layout.pos.row = 3, name = "cornerBL")
-  vpCornerBR <- viewport(layout.pos.col = 3, layout.pos.row = 3, name = "cornerBR")
+  vpMarginBottom <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "margin_bottom")
+  vpMarginLeft <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "margin_left")
+  vpMarginTop <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "margin_top")
+  vpMarginRight <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = "margin_right")
+  vpCornerTL <- viewport(layout.pos.col = 1, layout.pos.row = 1, name = "corner_top_left")
+  vpCornerTR <- viewport(layout.pos.col = 3, layout.pos.row = 1, name = "corner_top_right")
+  vpCornerBL <- viewport(layout.pos.col = 1, layout.pos.row = 3, name = "corner_bottom_left")
+  vpCornerBR <- viewport(layout.pos.col = 3, layout.pos.row = 3, name = "corner_bottom_right")
 
   if (legend) {
     vpLegend <- viewport(layout.pos.col = 4, layout.pos.row = 2, name = "legend")

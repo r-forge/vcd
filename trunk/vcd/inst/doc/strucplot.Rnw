@@ -16,8 +16,8 @@
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
 
-\SweaveOpts{engine=R,eps=FALSE}
-\setkeys{Gin}{width=0.8\textwidth}
+\SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
+\setkeys{Gin}{width=0.7\textwidth}
 
 <<preliminaries,echo=FALSE,results=hide>>=
 set.seed(1071)
@@ -99,29 +99,28 @@ gender), as well as two categorical variables (class and age). The
 \code{structable()} function (quite similar to \code{ftable()}, but
 allowing the specification of split directions as in mosaic():
 
-<<structable,fig=FALSE,echo=TRUE,height=6,width=7,results=verbatim>>=
+<<structable,results=verbatim>>=
 structable(Titanic)
 @
 
-Let us
-first visualize the contingency table by the means of a mosaic plot
+Let us first visualize the contingency table by the means of a mosaic plot
 \citep{vcd:Hartigan+Kleiner:1984} which is basically 
 an area-proportional visualization of (typically observed) frequencies, composed
 of tiles (corresponding to the cells) created by recursive
 vertical and horizontal splits of a square. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
 dimensions of previous splits (see Figure \ref{fig:observed}):
-\begin{Sinput}
-> mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
-\end{Sinput}
+
+<<Observed>>=
+mosaic(Titanic, main = TRUE)
+@
 
 \noindent The small bullets indicate zero entries in the corresponding cell.
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<Observed,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, main = TRUE)
+<<Observedfig,fig=TRUE,echo=FALSE>>=
+<<Observed>>
 @
 \caption{Mosaic plot for the Titanic data.}
 \label{fig:observed}
@@ -130,15 +129,16 @@ mosaic(Titanic, main = TRUE)
 
 \noindent  It is also possible to visualize the expected values instead of the
 observed values (see Figure \ref{fig:expected}):
-\begin{Sinput}
-> mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
-\end{Sinput}
+
+<<Expected>>=
+mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
+@
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<Expected,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
+<<Expectedfig,fig=TRUE,echo=FALSE>>=
+<<Expected>>
 @
 \caption{Mosaic plot for the Titanic data (expected values).}
 \label{fig:expected}
@@ -147,15 +147,15 @@ mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
 
 \noindent In order to directly compare observed and expected values,
 we can use a sieve plot (see Figure \ref{fig:sieve}):
-\begin{Sinput}
-> sieve(Titanic)
-\end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+<<sieve>>=
+sieve(Titanic)
+@
+
 \begin{figure}[h]
 \begin{center}
-<<sieve,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-sieve(Titanic)
+<<sievefig,fig=TRUE,echo=FALSE>>=
+<<sieve>>
 @
 \caption{Sieve plot for the Titanic data visualizing simultaneously
   observed and expected values.}
@@ -168,15 +168,15 @@ The Pearson residuals (standardized deviations of observed from expected values)
 are preferably visualized using association
 plots \citep{vcd:Cohen:1980}. In contrast to \code{assocplot()}, \pkg{vcd}'s \code{assoc()}
 function scales to more than two variables (see Figure \ref{fig:residuals}):
-\begin{Sinput}
-> assoc(Titanic, compress = FALSE)
-\end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+<<Residuals>>=
+assoc(Titanic, compress = FALSE)
+@
+
 \begin{figure}[h]
 \begin{center}
-<<Residuals,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-assoc(Titanic, compress = FALSE)
+<<Residualsfig,fig=TRUE,echo=FALSE>>=
+<<Residuals>>
 @
 \caption{Association plot for the Titanic data.}
 \label{fig:residuals}
@@ -192,46 +192,32 @@ formula interfaces. The following example compares the age
 distribution among classes, given gender, and also shows how to 
 use grid's viewport framework to put two plots besides 
 each other:
-\begin{Sinput}
-> pushViewport(viewport(layout = grid.layout(ncol = 2)))
 
-> pushViewport(viewport(layout.pos.col = 1))
-> mosaic(~ Class + Age, data = Titanic[,"Male",,], 
-+        margin = c(bottom = 0), sub = "Male", newpage = FALSE)
-> popViewport()
-
-> pushViewport(viewport(layout.pos.col = 2))
-> mosaic(~ Class + Age, data = Titanic[,"Female",,], 
-+        margin = c(bottom = 0), sub = "Female", newpage = FALSE)
-> popViewport(2)
-\end{Sinput}
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<Variables,fig=TRUE,echo=FALSE,height=6,width=16,results=hide>>=
+<<Variables>>=
 pushViewport(viewport(layout = grid.layout(ncol = 2)))
 
 pushViewport(viewport(layout.pos.col = 1))
 mosaic(~ Class + Age, data = Titanic[,"Male",,], 
-       margin = c(bottom = 0), sub = "Male", newpage = FALSE,
-       labeling_args = list(gp_labels = gpar(fontsize = 24), 
-                            gp_varnames = gpar(fontsize = 24)),
-       title_gp = gpar(fontsize = 35))
+       margin = c(bottom = 0, 0), sub = "Male", newpage = FALSE)
 popViewport()
 
 pushViewport(viewport(layout.pos.col = 2))
 mosaic(~ Class + Age, data = Titanic[,"Female",,], 
-       margin = c(bottom = 0), sub = "Female", newpage = FALSE,
-       labeling_args = list(gp_labels = gpar(fontsize = 24), 
-                            gp_varnames = gpar(fontsize = 24)),
-       title_gp = gpar(fontsize = 35))
+       margin = c(bottom = 0, 0), sub = "Female", newpage = FALSE)
 popViewport(2)
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<Variablesfig,fig=TRUE,echo=FALSE,height=6,width=6>>=
+<<Variables>>
 @
 \caption{Age distribution among classes, given gender.}
 \label{fig:parttable}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
 
 \noindent note the use of the \code{margin} argument: it takes a
 vector with up to four values whose unnamed components are recycled,
@@ -246,16 +232,14 @@ also use one single mosaic for stratified plots.
 The formula interface of \code{mosaic()} allows the
 specification of conditioning variables (see Figure \ref{fig:conditioning}):
 
-\begin{Sinput}
-> mosaic(~ Class + Age | Sex, data = Titanic, split = TRUE)
-\end{Sinput}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
-
-\begin{center}
-<<Conditioning,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<Conditioning>>=
 mosaic(~ Class + Age | Sex, data = Titanic, split = TRUE)
+@
+
+\begin{figure}[h]
+\begin{center}
+<<Conditioningfig,fig=TRUE,echo=FALSE>>=
+<<Conditioning>>
 @
 \caption{Mosaic plot for conditional independence structures.}
 \label{fig:conditioning}
@@ -279,28 +263,30 @@ with a vertical one). Sensible recycling rules apply.
 For compatibility with \code{mosaicplot()}, the \code{mosaic()} function
 also allows the use of a \code{"direction"} argument taking a vector of \code{"h"} and
 \code{"v"} characters (see Figures \ref{fig:split1} and \ref{fig:split2}):
-\begin{Sinput}
-> mosaic(Titanic, direction = "h")
-> mosaic(Titanic, split_vertical = c(TRUE, TRUE, TRUE, FALSE))
-\end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+<<split1>>=
+mosaic(Titanic, direction = "h")
+@
+
+<<split2>>=
+mosaic(Titanic, split_vertical = c(TRUE, TRUE, TRUE, FALSE),
+                labeling_args = list(abbreviate = c(Sex = TRUE, Age = TRUE)))
+@
+
 \begin{figure}[h]
 \begin{center}
-<<split1,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, direction = "h")
+<<split1fig,fig=TRUE,echo=FALSE>>=
+<<split1>>
 @
 \caption{Mosaic plot for the Titanic data---alternative splitting (1).}
 \label{fig:split1}
 \end{center}
 \end{figure}
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<split2,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(Titanic, split_vertical = c(TRUE, TRUE, TRUE, FALSE),
-                labeling_args = list(abbreviate = c(Sex = TRUE, Age = TRUE)))
+<<split2fig,fig=TRUE,echo=FALSE>>=
+<<split2>>
 @
 \caption{Mosaic plot for the Titanic data---alternative splitting (2).}
 \label{fig:split2}
@@ -317,17 +303,21 @@ it really is just a wrapper for \code{mosaic()}, setting the right
 defaults. Figure \ref{fig:doubledecker} shows a doubledecker plot of
 the Titanic data, explaining the probability of Survival by Age, given
 Sex, given Class:
-\begin{Sinput}
-> doubledecker(Titanic)
-> ## equivalent to:
-> doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
-\end{Sinput}
 
-\setkeys{Gin}{width=0.7\textwidth}
+<<doubledecker1>>=
+doubledecker(Titanic)
+@
+
+\noindent equivalent to:
+
+<<doubledecker2>>=
+doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
+@
+
 \begin{figure}[h]
 \begin{center}
-<<doubledecker,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-doubledecker(Titanic)
+<<doubledeckerfig,fig=TRUE,echo=FALSE>>=
+<<doubledecker1>>
 @
 \caption{Doubledecker plot for the Titanic data.}
 \label{fig:doubledecker}
@@ -341,15 +331,15 @@ the variable names (with, optionally, univariate statistics) in the diagonal cel
 \ref{fig:pairs} shows mosaic plots visualizing mutual independence in the lower triangle,
 association plots for the same in the upper triangle, and bar charts in the diagonal.
 
-\begin{Sinput}
-> pairs(Titanic, upper_panel = pairs_assoc)
-\end{Sinput}
+<<pairs>>=
+pairs(Titanic, upper_panel = pairs_assoc)
+@
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<pairs,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-pairs(Titanic, upper_panel = pairs_assoc)
+<<pairsfig,fig=TRUE,echo=FALSE>>=
+<<pairs>>
 @
 \caption{Pairs plot for the Titanic data.}
 \label{fig:pairs}
@@ -383,20 +373,21 @@ is conditioning on variables, \code{cotabplot()} is conditioning on variable \em
 The plot in Figure \ref{fig:cotabplot} shows the Survival rate among the classes, given
 all four level combinations of Sex and Age.
 
-\begin{Sinput}
-> cotabplot(~ Class + Survived | Sex + Age, data = Titanic)
-\end{Sinput}
+<<cotabplot>>=
+cotabplot(~ Class + Survived | Sex + Age, data = Titanic)
+@
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<cotabplot,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
-cotabplot(~ Class + Survived | Sex + Age, data = Titanic)
+<<cotabplotfig,fig=TRUE,echo=FALSE,height=6,width=6>>=
+<<cotabplot>>
 @
 \caption{cotabplot for the Titanic data.}
 \label{fig:cotabplot}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
 
 \section{Technical Notes on Panel Functions}
 
@@ -404,8 +395,8 @@ All strucplot components (including the panel functions)
 are parameterized through the use of generating functions, that is,
 functions with all parameters in their signature returning a function
 to be called by \code{strucplot()}. This returned function has access
-to all parameters passed to the generating function thanks to 
-lexical scope. The idea is to use module-specific `code
+to all parameters passed to the generating function because in {\sf
+  R}, nested functions are lexically scoped. The idea is to use module-specific `code
 factories' that generate parameterized workhorses rather than
 struggling with monolithic functions with endless parameter lists. As
 a simple example, consider \code{struc\_mosaic()} and \code{struc\_assoc},
@@ -439,11 +430,13 @@ specifying the corresponding function along with the specific
 parameters. Now, there a several ways of doing the same thing, as
 illustrated by the following equivalent calls:
 
-\begin{Sinput}
-> strucplot(Titanic, panel = struc_mosaic(zero_size = 1))
-> strucplot(Titanic, panel = struc_mosaic, panel_args = list(zero_size = 1))
-> strucplot(Titanic, panel = myworkhorse)
-\end{Sinput}
+<<panelfuns>>=
+strucplot(Titanic, panel = struc_mosaic(zero_size = 1))
+strucplot(Titanic, panel = struc_mosaic, panel_args = list(zero_size = 1))
+@ 
+<<panelfuns2,eval=FALSE>>=
+strucplot(Titanic, panel = myworkhorse)
+@ 
 
 \noindent where \code{myworkhorse} could be, e.g., a function with
 hard-wired parameters, but with an interface complying with the
@@ -461,28 +454,22 @@ plotted. Note that the viewport tree is popped by default. The
 following example shows how to access parts of the plot after it has
 been drawn (see Figure \ref{fig:afterplot}):
 
-\begin{Sinput}
-> mosaic(~ Sex + Class, data = Titanic, pop = FALSE)
-> current.vpTree() ## output not shown
+<<viewportnames>>=
+mosaic(~ Sex + Class, data = Titanic, pop = FALSE)
+current.vpTree() ## output not shown
 
-> seekViewport("cell..Sex.Male")
-> grid.rect(gp = gpar(col = "red", lwd = 4))
+seekViewport("cell:Sex=Male")
+grid.rect(gp = gpar(col = "red", lwd = 4))
 
-> seekViewport("cell..Sex.Male..Class.Crew")
-> grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
-\end{Sinput}
+seekViewport("cell:Sex=Male,Class=Crew")
+grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
+@ 
 
 \setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<afterplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=
-mosaic(~ Sex + Class, data = Titanic, pop = FALSE)
-
-seekViewport("cell..Sex.Male")
-grid.rect(gp = gpar(col = "red", lwd = 4))
-
-seekViewport("cell..Sex.Male..Class.Crew")
-grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
+<<viewportnamesfig,fig=TRUE,echo=FALSE>>=
+<<viewportnames>>
 @
 \caption{Adding elements to a mosaic plot after drawing.}
 \label{fig:afterplot}
@@ -496,17 +483,16 @@ In addition to the viewports, the main graphical elements get names
 following a similar construction method. This allows to change
 graphical parameters of plot elements after the plotting (see Figure \ref{fig:changeplot}):
 
-\begin{Sinput}
-> assoc(Titanic)
-> getNames() ## output not shown
-> grid.edit("rect..Class.1st..Age.Adult..Sex.Female..Survived.Yes", 
+<<changeplot>>=
+assoc(Titanic)
+getNames() ## output not shown
+grid.edit("rect:Class=1st,Age=Adult,Sex=Female,Survived=Yes", 
             gp = gpar(fill = "red"))
-\end{Sinput}
+@ 
 
-\setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<changeplot,fig=TRUE,echo=FALSE,height=6,width=6,results=hide>>=
+<<changeplotfig,fig=TRUE,echo=FALSE>>=
 assoc(Titanic)
 x = Titanic
 x[] = NA
@@ -535,11 +521,3 @@ Hartigan, J. and Kleiner, B. (1984).
 \end{thebibliography}
 
 \end{document}
-
-
-
-
-
-
-
-

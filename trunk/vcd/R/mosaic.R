@@ -108,17 +108,17 @@ struc_mosaic <- function(zero_size = 0.5)
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = name)
+                         layout = layout, name = substr(name, 1, nchar(name) - 1))
       
       ## next level: either create further splits, or final viewports
-      name <- paste(name, "", dnn[i], dn[[i]], sep = ".")
+      name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
       row <- col <- rep.int(1, d)
       if (v) col <- 2 * 1:d - 1 else row <- 2 * 1:d - 1
       f <- if (i < dl) 
         function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m])
       else
         function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                             name = name[m])
+                             name = substr(name[m], 1, nchar(name[m]) - 1))
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
 
       vpTree(vproot, vpleaves)
@@ -126,28 +126,28 @@ struc_mosaic <- function(zero_size = 0.5)
 
     ## start spltting on top, creates viewport-tree
     pushViewport(split(observed + .Machine$double.eps,
-                       i = 1, name = "cell", row = 1, col = 1))
+                       i = 1, name = "cell:", row = 1, col = 1))
 
     ## draw rectangles
     mnames <-  apply(expand.grid(dn), 1,
-                     function(i) paste(dnn, i, collapse="..", sep = ".")
+                     function(i) paste(dnn, i, collapse=",", sep = "=")
                      )
     zeros <- observed <= .Machine$double.eps
 
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell", mnames[i], sep = ".."))
+      seekViewport(paste("cell:", mnames[i], sep = ""))
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       if (!zeros[i]) {
-        grid.rect(gp = gpobj, name = paste("rect", mnames[i], sep = ".."))
+        grid.rect(gp = gpobj, name = paste("rect:", mnames[i], sep = ""))
       } else { 
         grid.lines(x = 0.5, gp = gpobj)
         grid.lines(y = 0.5, gp = gpobj)
         if (zero_size > 0) {
           grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                       gp = gpar(col = gp$fill[i]),
-                      name = paste("disc", mnames[i], sep = ".."))
+                      name = paste("disc:", mnames[i], sep = ""))
           grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
-                      name = paste("circle", mnames[i], sep = ".."))
+                      name = paste("circle:", mnames[i], sep = ""))
         }
       }
     }

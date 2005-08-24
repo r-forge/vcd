@@ -120,10 +120,10 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = name)
+                         layout = layout, name = substr(name, 1, nchar(name) - 1))
 
       ## next level: either create further splits, or final viewports
-      name <- paste(name, "", dnn[i], dn[[i]], sep = ".")
+      name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
       rows <- cols <- rep.int(1, d)
       if (v) cols <- 2 * 1:d - 1 else rows <- 2 * 1:d - 1
 
@@ -135,11 +135,13 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
       } else {
         if (v)
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
-                               name = name[m], yscale = res[,1],
+                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               yscale = res[,1],
                                xscale = sexp[,m], default.units = "null")
         else
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
-                               name = name[m], yscale = res[,m],
+                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               yscale = res[,m],
                                xscale = sexp[,1], default.units = "null")
       }
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
@@ -148,15 +150,15 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
     ## start spltting on top, creates viewport-tree
-    pushViewport(split(ylim, xlim, i = 1, name = "cell", row = 1, col = 1))
+    pushViewport(split(ylim, xlim, i = 1, name = "cell:", row = 1, col = 1))
 
     ## draw tiles
     mnames <- paste(apply(expand.grid(dn), 1,
-                          function(i) paste(dnn, i, collapse="..", sep = ".")
+                          function(i) paste(dnn, i, collapse = ",", sep = "=")
                           )
                     )
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell", mnames[i], sep = ".."))
+      seekViewport(paste("cell:", mnames[i], sep = ""))
       grid.lines(y = unit(0, "native"), gp = gp_axis)
       grid.rect(y = 0, x = 0,
                 height = residuals[i],
@@ -164,7 +166,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                 default.units = "native",
                 gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"),
-                name = paste("rect", mnames[i], sep = "..")
+                name = paste("rect:", mnames[i], sep = "")
                 )
     }
 
