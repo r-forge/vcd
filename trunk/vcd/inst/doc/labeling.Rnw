@@ -10,12 +10,14 @@
 \newenvironment{smallexample}{\begin{alltt}}{\end{alltt}}
 
 %% \code without `-' ligatures
+\def\nohyphenation{\hyphenchar\font=-1 \aftergroup\restorehyphenation}
+\def\restorehyphenation{\hyphenchar\font=`-}
 {\catcode`\-=\active%
   \global\def\code{\bgroup%
     \catcode`\-=\active \let-\codedash%
     \Rd@code}}
 \def\codedash{-\discretionary{}{}{}}
-\def\Rd@code#1{\texttt{#1}\egroup}
+\def\Rd@code#1{\texttt{\nohyphenation#1}\egroup}
 
 \begin{document}
 
