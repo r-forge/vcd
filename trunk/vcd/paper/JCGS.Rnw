@@ -2,14 +2,7 @@
 
 %% Packages:
 \usepackage{graphicx,color,a4wide,thumbpdf,hyperref}
-
-%% \usepackage{Sweave} is essentially
-\RequirePackage[T1]{fontenc}
-\RequirePackage{ae,fancyvrb}
-\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{}
-\DefineVerbatimEnvironment{Scode}{Verbatim}{fontshape=sl}
-\newenvironment{Schunk}{}{}
+%% need no \usepackage{Sweave}
 
 %% BibTeX
 \usepackage[authoryear,round,longnamesfirst]{natbib}
@@ -57,7 +50,7 @@
   pdfkeywords = {association plots, conditional inference, contingency tables, HCL colors, HSV colors, mosaic plots},
   pdfauthor = {Achim Zeileis, David Meyer, Kurt Hornik},
   %% change colorlinks to false for pretty printing
-  colorlinks = {true},
+  colorlinks = {false},
   linkcolor = {Blue},
   citecolor = {Blue},
   urlcolor = {Red},
@@ -176,15 +169,15 @@ hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fi
 Residual-based shadings for enhancing mosaic and association plots
 to visualize independence models for contingency tables are extended
 in two directions: (a)~perceptually uniform HCL colors are used and (b)~the
-result of an associated significance test is coded by the presence of
+result of an associated significance test is coded by the appearance of
 color in the visualization. For obtaining (a), a general strategy for
 deriving diverging palettes in the perceptually-based HCL space is suggested. As for (b),
 cut offs that control the appearance of color are computed in a data-driven
 way based on the conditional permutation distribution of maximum-type
 test statistics. The shadings are first established for the case of independence
 in 2-way tables and then extended to more general independence models
-for multi-way tables, including in particular the conditional independence
-problem.\\[0.3cm]
+for multi-way tables, including in particular conditional independence
+problems.\\[0.3cm]
 
 \noindent \textbf{Key Words:} Association plots; Conditional inference; 
 Contingency tables; HCL colors; HSV colors; Mosaic plots.
@@ -196,8 +189,8 @@ Relationships between categorical variables are typically
 analyzed based on the underlying contingency tables that can be explored
 for (in)dependence. Two standard methods from the statistical tool box
 are log-linear models \citep[see, e.g.,][]{vcd:Agresti:2002} for modeling
-independence and mosaic plots \citep{vcd:Hartigan+Kleiner:1981} for 
-bringing it out graphically. Both methods can also be combined such that
+(in)dependence structures and mosaic plots \citep{vcd:Hartigan+Kleiner:1981} for 
+bringing them out graphically. Both methods can also be combined such that
 a certain mosaic plot visualizes a particular log-linear model by 
 controlling splitting order and direction and shading of the tiles
 in the mosaic display
@@ -222,7 +215,7 @@ to properly read and interpret the corresponding plots. For overcoming this prob
 a general strategy for constructing diverging palettes in the perceptually-based HCL
 space \citep{vcd:Ihaka:2003} is derived. To couple the visualization and the independence
 model of a contingency table more tightly than in previous approaches, the residual-based
-shading is extended such that presence of color in the display is equivalent to significance
+shading is extended such that appearance of color in the display is equivalent to significance
 of the associated independence test. This is achieved by using data-driven cut offs
 for the appearance of color computed from the conditional permutation distribution
 \citep{vcd:Ernst:2004,vcd:Pesarin:2001} of maximum-type test statistics. The resulting
@@ -235,7 +228,7 @@ independence problem in 2-way contingency tables. Based on this, Section~\ref{se
 introduces the extended residual-based shadings using perceptually uniform HCL colors
 and combining visualization and significance testing. The results are generalized to
 multi-way tables in Section~\ref{sec:3way} with a more detailed discussion of adapting
-them to conditional independence. Section~\ref{sec:conclusions} summarizes the paper
+them to conditional independence problems. Section~\ref{sec:conclusions} summarizes the paper
 and gives some concluding remarks.
 
 
@@ -295,30 +288,30 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 because this is known to have an unconditional limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
 This is the well-known $\chi^2$ test which is typically introduced first in statistics
-textbooks if they address the independence problem in 2-way tables
+textbooks when addressing the independence problem in 2-way tables
 \citep[see, e.g.,][]{vcd:Agresti:2002}.
 
 However, the sum of squares is not the only plausible way of capturing deviations
-from $0$ in the residuals.
+from zero in the residuals.
 There are many other conceivable functionals $\lambda(\cdot)$ which
 lead to reasonable test statistics $\lambda([r_{ij}])$: one which is particularly
-suitable for identifying the cells responsible for the dependence (if any) is
-the maximum of the absolute values
+suitable for identifying the cells responsible for the `dependence' (i.e., significant
+departure from independence), if any, is the maximum of the absolute values
 \begin{equation} \label{eq:MaxAbs}
 M \quad = \quad \max_{i, j} |r_{ij}|.
 \end{equation}
 Given a critical value $c_\alpha$ for this test statistic, all residuals whose
-absolute value exceeds $c_\alpha$ violate the hypothesis of indendence at significance level
+absolute value exceeds $c_\alpha$ violate the null hypothesis of indendence at significance level
 $\alpha$ \cite[][ch.~7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells responsible
 for the dependence can easily be identified.
 
 Furthermore, an important reason for using the unconditional limiting distribution
-for the $X^2$ statistic from Equation~(\ref{eq:ChiSquare}) was the closed form result
+for the $X^2$ statistic from Equation~\ref{eq:ChiSquare} was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
 conditional inference (or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \citep[e.g.,][]{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
-For testing the independence hypothesis from Equation~(\ref{eq:H0}), using a permutation test is particularly
+For testing the independence hypothesis from Equation~\ref{eq:H0}, using a permutation test is particularly
 intuitive due to the permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
 by simulating the permutation distribution of test statistics of type
@@ -329,9 +322,9 @@ where other measures of discrepancy (such as, e.g., deviance residuals) are used
 instead of the Pearson residuals $[r_{ij}]$.
 
 For the arthritis data from Table~\ref{tab:art}, both tests indicate a clearly significant
-dependence of improvement on treatment: the sum-of-squares statistic from Equation~(\ref{eq:ChiSquare})
+dependence of improvement on treatment: the sum-of-squares statistic from Equation~\ref{eq:ChiSquare}
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
-and the maximum statistic from Equation~(\ref{eq:MaxAbs}) is $M = \Sexpr{stat(art_max)}$
+and the maximum statistic from Equation~\ref{eq:MaxAbs} is $M = \Sexpr{stat(art_max)}$
 with $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
 from a sample of size $5000$ from the permutation distribution under independence
 generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
@@ -433,6 +426,7 @@ area-proportional visualization techniques, we focus on area shadings and always
 use solid black borders throughout this paper, but the extensions suggested in the
 following could also be applied to control line type and color.
 
+\clearpage
 
 \subsection{Colors} \label{sec:colors}
 
@@ -440,7 +434,8 @@ The way the (light) blue and red colors are chosen differs somewhat between
 various implementations of Friendly mosaic plots: In his original 
 \proglang{SAS} implementation \citep[see][]{vcd:Friendly:2000}, Michael Friendly
 uses colors from a palette based on HLS (Hue-Luminance-Saturation) color space.
-The implementation in the \proglang{R} system for statistical computing and graphics
+The implementation in the standard packages of the
+\proglang{R} system for statistical computing and graphics
 \citep{vcd:R:2005} employs colors from HSV (Hue-Saturation-Value) space. 
 Both spaces are rather similar transformations of RGB (Red-Green-Blue) space
 \citep{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
@@ -708,8 +703,8 @@ in this situation, it would be nice if such cut offs could be chosen automatical
 data-driven way. Strategies for this are derived in the following.
 
 The Friendly shading can be interpreted to be a visualization of the maximum
-statistic $M$ from Equation~(\ref{eq:MaxAbs}) which always employs the critical values $c_\alpha$
-$2$ and $4$. The problem is that it is not clear to which
+statistic $M$ from Equation~\ref{eq:MaxAbs} which always employs the critical values $c_\alpha$
+$2$ and $4$. However, it is not clear to which
 significance levels $\alpha$ these critical values correspond because the distribution
 of $M$ depends on the underlying contingency table. The natural solution to this
 problem is to compute the critical values from the distribution of $M$ in a data-driven
@@ -740,6 +735,24 @@ to conceal the important cells and over-emphasize the unimportant ones. Hence,
 a discrete shading with few colors is much easier to interpret.
 
 
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<shadings,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(1, 2)))
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
+mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL, lty = 1))
+popViewport()
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
+mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
+popViewport(2)
+@
+\caption{Mosaic plot for the arthritis data with Friendly shading (left) and maximum shading (right).}
+\label{fig:shadings}
+\end{center}
+\end{figure}
+
 This maximum shading is already very flexible and combines visualization and inference.
 However, it can only be applied when employing the maximum statistic because it is the only
 aggregation functional $\lambda(\cdot)$ where a single large residual $|r_{ij}|$ exceeding
@@ -768,28 +781,7 @@ palettes (see Figure~\ref{fig:shadingHSVHCL}). As for the significant colors,
 the dimensions used for creating this palette are confounded and hence the HCL scheme is clearly
 preferable.
 
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[htbp]
-\begin{center}
-<<shadings,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
-grid.newpage()
-pushViewport(viewport(layout = grid.layout(1, 2)))
-pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL, lty = 1))
-popViewport()
-pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
-popViewport(2)
-@
-\caption{Mosaic plot for the arthritis data with Friendly shading (left) and maximum shading (right).}
-\label{fig:shadings}
-\end{center}
-\end{figure}
-
-
-\clearpage
-
-\section{Extension to Conditional Independence} \label{sec:3way}
+\section{Extensions} \label{sec:3way}
 
 To introduce the new residual-based shadings without too much overhead in
 Section~\ref{sec:shadings}, we have only considered the independence problem
@@ -813,7 +805,7 @@ However, such independence models often additionally provide further structure t
 decomposition of the overall model into smaller independence problems which can be exploited
 both for choosing appropriate data-driven cut-offs in the shading and for selecting 
 a suitable layout of mosaic or association plots. Specific strategies for the conditional
-independence problem are derived in the following.
+independence problem in 3-way tables are derived in the following.
 
 Association plots are not commonly used for contingency tables with more than two 
 margins, although there is nothing in the definition that would prevent application
@@ -839,7 +831,7 @@ the sum-of-squares statistic is used
 \end{equation}
 which is simply the sum of the individual sum-of-squares statistics $X_k^2$ in each stratum $k$.
 
-Alternatively, a maximum statistic similar to that from Equation~(\ref{eq:MaxAbs})
+Alternatively, a maximum statistic similar to that from Equation~\ref{eq:MaxAbs}
 can be constructed
 \begin{equation} \label{eq:doublemax}
 \max_{i, j, k} |r_{ijk}| \quad = \quad \max_k M_k.
@@ -864,21 +856,21 @@ and $\lambda_\mathrm{agg}$ is a functional for aggregating over the $k = 1, \dot
 If the maximum is used for the latter, then identification of the strata responsible for the
 dependence is possible. If additionally $\lambda_\mathrm{indep}$ is the maximum,
 the corresponding cells can also be identified. Hence, the double maximum
-statistic from Equation~(\ref{eq:doublemax}) is the only functional allowing for detection of
+statistic from Equation~\ref{eq:doublemax} is the only functional allowing for detection of
 both the strata and the cells violating the conditional independence hypothesis.
 
 However, the main purpose of the formulation of the different test statistics is not so much 
 inference but their applicability to diagnostic plots via residual-based shadings. As already
 discussed, it is possible for all aggregation functionals to simply use either
 the significant or the non-significant shading for all cells in the contingency table---this
-strategy would have to be used for the sum-of-squares statistic from Equation~(\ref{eq:sumChisq}). If
-$\lambda_\mathrm{agg}$ is the maximum as in Equation~(\ref{eq:maxChisq}),
+strategy would have to be used for the sum-of-squares statistic from Equation~\ref{eq:sumChisq}. If
+$\lambda_\mathrm{agg}$ is the maximum as in Equation~\ref{eq:maxChisq},
 then the significant palette would only be used
 in those strata in conflict with the hypothesis of conditional independence whereas the
 non-significant palette would be used for the remaining strata. Finally, if both $\lambda_\mathrm{agg}$
 and $\lambda_\mathrm{indep}$ are the maximum, then the same strategy as in Section~\ref{sec:shadings}
 can be pursued, i.e., only the significant palette is used but with data-driven cut offs
-derived from the distribution of the double maximum statistic from Equation~(\ref{eq:doublemax}).
+derived from the distribution of the double maximum statistic from Equation~\ref{eq:doublemax}.
 
 To arrange the shaded rectangles of the association or the mosaic plot, respectively,
 the most intuitive approach is to use the same conditioning in the display that
@@ -899,11 +891,11 @@ given the department leads to the well-known result that there is no
 gender discrimination in five of six departments, but that women are more
 likely to be admitted than men in the first department. This departure
 from conditional independence is picked up by all three statistics formulated
-above: the sum-of-squares statistic from Equation~(\ref{eq:sumChisq}) is
+above: the sum-of-squares statistic from Equation~\ref{eq:sumChisq} is
 $\sum_k X_k^2 = \Sexpr{stat(ucb_sumChisq)}$ ($p = \Sexpr{pval(ucb_sumChisq)}$),
-the maximum sum-of-squares statistic from Equation~(\ref{eq:maxChisq}) is
+the maximum sum-of-squares statistic from Equation~\ref{eq:maxChisq} is
 $\max_k X_k^2 = \Sexpr{stat(ucb_maxChisq)}$ ($p = \Sexpr{pval(ucb_maxChisq)}$),
-and the double maximum statistic from Equation~(\ref{eq:doublemax}) is
+and the double maximum statistic from Equation~\ref{eq:doublemax} is
 $\max_k M_k = \Sexpr{stat(ucb_doublemax)}$ ($p = \Sexpr{pval(ucb_doublemax)}$).
 The $p$ values are again computed by drawing $5000$ samples from the corresponding
 permutation distribution. The latter two test statistics both indicate the 
@@ -965,9 +957,10 @@ The results in this paper were obtained using
 \citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2005} and the packages
 \pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2005},
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep{vcd:Venables+Ripley:2002},
-{\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep{vcd:Murrell:2002} and
+{\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
 
+\clearpage
 
 \bibliography{vcd}
 
