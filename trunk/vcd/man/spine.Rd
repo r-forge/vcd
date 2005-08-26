@@ -1,16 +1,16 @@
-\name{spineplot}
-\alias{spineplot}
-\alias{spineplot.default}
-\alias{spineplot.formula}
-\title{Spineplots}
+\name{spine}
+\alias{spine}
+\alias{spine.default}
+\alias{spine.formula}
+\title{Spine Plots and Spinograms}
 \description{
-  Spine plots are special cases of mosaic plots, \code{spineplot} is a
+  Spine plots are special cases of mosaic plots, \code{spine} is a
   convenience interface to \code{\link{mosaic}}.
 }
 \usage{
-spineplot(x, ...)
-\method{spineplot}{default}(x, split_vertical = TRUE, ...)
-\method{spineplot}{formula}(formula, data = list(), cut = NULL,  ...)
+spine(x, ...)
+\method{spine}{default}(x, split_vertical = TRUE, ...)
+\method{spine}{formula}(formula, data = list(), cut = NULL,  ...)
 }
 \arguments{
   \item{x}{an object, the default method covers all cases covered by
@@ -26,7 +26,7 @@ spineplot(x, ...)
   \item{...}{additional arguments passed to \code{\link{mosaic}}.}
 }
 \details{
-  \code{spineplot} is a simple convenience interface to \code{mosaic}
+  \code{spine} is a simple convenience interface to \code{mosaic}
   which uses a different default for the splitting direction. It is aimed
   at simple explanatory models like \code{y ~ x} where \code{x} can be 
   either a factor or a numeric which is \code{cut} to a factor.
@@ -39,11 +39,14 @@ spineplot(x, ...)
 }
 \examples{
 ## Arthritis data (dependence on a categorical variable)
-data(Arthritis)
-(spineplot(Improved ~ Treatment, data = Arthritis))
+data("Arthritis")
+(spine(Improved ~ Treatment, data = Arthritis))
+
+## Arthritis data (dependence on a numerical variable)
+(spine(Improved ~ Treatment, data = Arthritis))
 
 ## Space shuttle data (dependence on a numerical variable)
-data(SpaceShuttle)
-(spineplot(Fail ~ Temperature, data = SpaceShuttle))
+data("SpaceShuttle")
+(spine(Fail ~ Temperature, data = SpaceShuttle, breaks = 3))
 }
 \keyword{htest}
