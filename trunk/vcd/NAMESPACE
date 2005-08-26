@@ -2,6 +2,7 @@ export(
 ## generic functions
        "agreementplot",
        "assoc",
+       "cd_plot",
        "cotabplot",
        "distplot",	    
        "doubledecker",
@@ -90,6 +91,9 @@ S3method("agreementplot", "formula")
 S3method("assoc", "default")
 S3method("assoc", "formula")
 S3method("assoc", "loglm")
+
+S3method("cd_plot", "default")
+S3method("cd_plot", "formula")
 
 S3method("cotabplot", "default")
 S3method("cotabplot", "formula")

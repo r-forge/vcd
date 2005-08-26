@@ -4,7 +4,7 @@ spine <- function(x, ...)
 spine.formula <- function(formula, data = list(),
   breaks = NULL, ylab_tol = 0.05, off = NULL,
   main = "", xlab = NULL, ylab = NULL, margins = c(5.1, 4.1, 4.1, 3.1),
-  gp = gpar(col = 1, fill = NULL), name = "spineplot", newpage = TRUE, pop = TRUE,
+  gp = gpar(), name = "spineplot", newpage = TRUE, pop = TRUE,
   ...)
 {
   ## extract x, y from formula
@@ -25,7 +25,7 @@ spine.formula <- function(formula, data = list(),
 spine.default <- function(x, y = NULL,
   breaks = NULL, ylab_tol = 0.05, off = NULL,
   main = "", xlab = NULL, ylab = NULL, margins = c(5.1, 4.1, 4.1, 3.1),
-  gp = gpar(col = 1, fill = NULL), name = "spineplot", newpage = TRUE, pop = TRUE,
+  gp = gpar(), name = "spineplot", newpage = TRUE, pop = TRUE,
   ...)
 {
   ## either supply a 2-way table (i.e., both y and x are categorical)
@@ -101,7 +101,8 @@ spine.default <- function(x, y = NULL,
   ## axes
   ## 1: either numeric or level names
   if(x.categorical)
-    grid.text(x = unit((xat[1:nx] + xat[2:(nx+1)] - off)/2, "native"), y = unit(-1.5, "lines"), label = xnam)
+    grid.text(x = unit((xat[1:nx] + xat[2:(nx+1)] - off)/2, "native"), y = unit(-1.5, "lines"),
+      label = xnam, check.overlap = TRUE)
   else
     grid.xaxis(at = xat, label = breaks)
     
@@ -110,7 +111,8 @@ spine.default <- function(x, y = NULL,
   equidist <- any(diff(yat) < ylab_tol)
   yat <- if(equidist) seq(1/(2*ny), 1-1/(2*ny), by = 1/ny)
            else (yat[-1] + yat[-length(yat)])/2
-  grid.text(x = unit(-1.5, "lines"), y = unit(yat, "native"), label = ynam, rot = 90)
+  grid.text(x = unit(-1.5, "lines"), y = unit(yat, "native"), label = ynam,
+    rot = 90, check.overlap = TRUE)
   
   ## 3: none
   ## 4: simple numeric  
@@ -120,6 +122,9 @@ spine.default <- function(x, y = NULL,
   grid.text(xlab, y = unit(-3.5, "lines"))
   grid.text(ylab, x = unit(-3, "lines"), rot = 90)
   grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
+
+  ## pop
+  if(pop) popViewport()
   
   ## return table visualized
   names(dimnames(tab)) <- c(xlab, ylab)
