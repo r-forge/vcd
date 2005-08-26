@@ -182,7 +182,7 @@ strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
 
 ## modify a tile's color
 strucplot(Titanic, pop = FALSE)
-grid.edit("rect..Class.1st..Sex.Male..Age.Adult..Survived.Yes",
+grid.edit("rect:Class=1st,Sex=Male,Age=Adult,Survived=Yes",
           gp = gpar(fill = "red"))
 }
 \keyword{hplot}

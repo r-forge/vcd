@@ -352,7 +352,7 @@ labeling_cells(text = tab, clip = FALSE)(Titanic)
 \end{center}
 \end{figure}
 
-\section{A simple list of labels:\texttt{labels\_list()}}
+\section{A simple list of labels: \texttt{labels\_list()}}
 
 If problems with overlapping labels cannot satisfactorily resolved,
 the last remedy could be to simply list the levels below the plot
