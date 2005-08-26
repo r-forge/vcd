@@ -11,7 +11,7 @@ export(
        "oddsratio",
        "rootogram", 
        "sieve",
-       "spineplot",
+       "spine",
        "structable",
 
 ## spacings
@@ -110,8 +110,8 @@ S3method("sieve", "formula")
 S3method("structable", "default")
 S3method("structable", "formula")
 
-S3method("spineplot", "default")
-S3method("spineplot", "formula")
+S3method("spine", "default")
+S3method("spine", "formula")
 
 S3method("pairs", "table")
 
