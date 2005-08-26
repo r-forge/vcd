@@ -71,7 +71,17 @@ spine(x, \dots)
   The table visualized is returned invisibly.
 }
 \seealso{
-  \code{\link{cd_plot}}, \code{\link{mosaic}}
+  \code{\link{cd_plot}}, \code{\link{mosaic}}, \code{\link{hist}}
+}
+\references{
+  Hummel, J. (1996), Linked bar charts: Analysing categorical data graphically.
+  \emph{Computational Statistics}, \bold{11}, 23--33.
+
+  Hofmann, H., Theus, M. (2005), \emph{Interactive graphics for visualizing
+  conditional distributions}, Unpublished Manuscript.
+}
+\author{
+  Achim Zeileis \email{Achim.Zeileis@R-project.org}
 }
 \examples{
 ## Arthritis data (dependence on a categorical variable)
