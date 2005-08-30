@@ -484,9 +484,9 @@ following a similar construction method. This allows to change
 graphical parameters of plot elements after the plotting (see Figure \ref{fig:changeplot}):
 
 <<changeplot>>=
-assoc(Titanic)
+assoc(Titanic, pop = FALSE)
 getNames() ## output not shown
-grid.edit("rect:Class=1st,Age=Adult,Sex=Female,Survived=Yes", 
+grid.edit("rect:Class=1st,Sex=Female,Age=Adult,Survived=Yes", 
             gp = gpar(fill = "red"))
 @ 
 

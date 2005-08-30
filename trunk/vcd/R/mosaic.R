@@ -54,7 +54,9 @@ mosaic.default <- function(x, condvars = NULL,
                            zero_size = 0.5, main = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
-
+  if (inherits(x, "structable"))
+    x <- as.table(x)
+  
   dl <- length(dim(x))
   if (!is.null(condvars)) {
     if (is.character(condvars))

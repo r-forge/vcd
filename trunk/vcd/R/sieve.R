@@ -62,6 +62,9 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
     else
       shading_Friendly(interpolate = 0, line_col = "darkgray", eps = Inf, lty = "dotted")
 
+  if (inherits(x, "structable"))
+    x <- as.table(x)
+  
   dl <- length(dim(x))
   if (!is.null(condvars)) {
     if (is.character(condvars))
