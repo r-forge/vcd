@@ -30,11 +30,14 @@ assoc.default <- function(x,
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
 
-  if (!inherits(x, "ftable")) {
-    if (is.null(row_vars) && is.null(col_vars) && is.table(x))
-      row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
-    x <- ftable(x, row.vars = row_vars, col.vars = col_vars)
-  }
+  if (!inherits(x, "ftable"))
+    x <- structable(x)
+
+#     {
+#     if (is.null(row_vars) && is.null(col_vars) && is.table(x))
+#       row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
+#     x <- ftable(x, row.vars = row_vars, col.vars = col_vars)
+#   }
 
   tab <- as.table(x)
   dl <- length(dim(tab))
@@ -47,6 +50,8 @@ assoc.default <- function(x,
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
+  if (is.null(split_vertical))
+    split_vertical <- attr(x, "split_vertical")
   if (is.null(split_vertical)) {
     split_vertical <- rep(FALSE, dl)
     names(split_vertical) <- names(dimnames(tab))

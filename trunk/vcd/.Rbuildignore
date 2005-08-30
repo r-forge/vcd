@@ -4,7 +4,11 @@ R/aaa.R
 R/pearson_test.R
 R/spineplot.R
 man/pearson_test.Rd
+inst
+inst/doc
 inst/doc/*.tex
 inst/doc/*.eps
 inst/doc/*.ps
+inst/doc/*.Rnw
+
 

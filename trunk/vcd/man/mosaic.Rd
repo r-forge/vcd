@@ -14,7 +14,8 @@
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
-    labels specified in the \code{dimnames(x)} attribute.}
+    labels specified in the \code{dimnames(x)} attribute, or an object
+    of class \code{"structable"}.}
   \item{condvars}{vector of integers or character strings indicating
     conditioning variables, if any. The table will be permuted to order
     them first.}

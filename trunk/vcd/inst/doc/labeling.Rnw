@@ -7,7 +7,7 @@
 \definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\var}[1]{\textit{\texttt{#1}}}
-\newenvironment{smallexample}{\begin{alltt}}{\end{alltt}}
+\newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
 
 %% \code without `-' ligatures
 \def\nohyphenation{\hyphenchar\font=-1 \aftergroup\restorehyphenation}
@@ -18,6 +18,8 @@
     \Rd@code}}
 \def\codedash{-\discretionary{}{}{}}
 \def\Rd@code#1{\texttt{\nohyphenation#1}\egroup}
+
+\newcommand{\codefun}[1]{\code{#1()}}
 
 \begin{document}
 
@@ -39,51 +41,52 @@ data(Titanic)
 \title{Labeling in Strucplots}
 \author{by David Meyer\\
   Wirtschaftsuniversit\"at Wien, Austria\\
-\url{David.Meyer@R-project.org}
+\email{David.Meyer@R-project.org}
 }
 \maketitle
 \sloppy
 
 One of the major enhancements in \pkg{vcd} compared to
-\code{mosaicplot()} and \code{assocplot()} in
-base {\sf R} is the labeling of strucplots which now
+\codefun{mosaicplot} and \codefun{assocplot} in
+base {\sf R} is the labeling in the strucplot framework which now
 has become much more powerful and flexible. Like the panel, the
 shading, the spacing, and the legend, labeling is now completely modular.
 The user supplies either a labeling function, or, alternatively, 
 a generating function that parameterizes a labeling function, 
-to \code{strucplot()} which then draws the labels. The labeling is 
+to \codefun{strucplot} which then draws the labels (generating
+functions are discussed in a separate vignette). The labeling is 
 well-separated from the actual plotting that occurs in the panel functions;
 it actually only relies on the viewport tree produced by them, and the
 `dimnames' attribute of the visualized table. The drawing of the
 labels happens after the actual plot has been drawn by the panel function.
 Thus, it is possible to supply one's own labeling function, or
 to combine some of the basic functions to produce a more complex labeling.
-As an example, consider \code{labeling\_list()}:
+% As an example, consider \codefun{labeling\_list}:
 
-\begin{Sinput}
-labeling_list <- function(gp = gpar(), just = "left", pos = "left", lsep = ": ", 
-                          sep = " ", offset = unit(c(2, 2), "lines"),
-                          varnames = TRUE, cols = 2, ...) 
-  function(d, split_vertical, condvars) {
-    \dots
-  }
-\end{Sinput}
+% \begin{Sinput}
+% labeling_list <- function(gp = gpar(), just = "left", pos = "left", lsep = ": ", 
+%                           sep = " ", offset = unit(c(2, 2), "lines"),
+%                           varnames = TRUE, cols = 2, ...) 
+%   function(d, split_vertical, condvars) {
+%     \dots
+%   }
+% \end{Sinput}
 
-\code{labeling\_list()} is a generating function that takes all parameters
-as arguments, and returns the actual labeling function which takes
-only three arguments: the dimnames structure of the table, the logical
-vector with the splitting information, and the number of conditioning
-variables (if any). The labeling function has access to the arguments
-of the generating function because in {\sf R}, nested functions are
-lexically scoped. In the
-following, we describe the three basic modules
-(\code{labeling\_text()}, \code{labeling\_list()}, and \code{labeling\_cells()}) and
+% \codefun{labeling\_list} is a generating function that takes all parameters
+% as arguments, and returns the actual labeling function which takes
+% only three arguments: the dimnames structure of the table, the logical
+% vector with the splitting information, and the number of conditioning
+% variables (if any). The labeling function has access to the arguments
+% of the generating function because in {\sf R}, nested functions are
+% lexically scoped. 
+In the following, we describe the three basic modules
+(\codefun{labeling\_text}, \codefun{labeling\_list}, and \codefun{labeling\_cells}) and
 derived functions that build upon them.
 
 \section{Labels in the borders: \texttt{labeling\_text()}}
 
-\code{labeling\_text()} is the default for all strucplot displays. It
-plots labels in the borders similar to the \code{mosaicplot()}
+\codefun{labeling\_text} is the default for all strucplot displays. It
+plots labels in the borders similar to the \codefun{mosaicplot}
 function in base {\sf R}, but is much more flexible: it is not limited
 to 4 dimensions, and the positioning and graphical parameters 
 of levels and variable names are quite customizable. In addition,
@@ -98,7 +101,7 @@ plot in a counter-clockwise way (see Figure \ref{fig:defaults}):
 mosaic(Titanic)
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<defaultfig,fig=TRUE,echo=FALSE>>=
 <<default>>
@@ -117,7 +120,7 @@ method is to enable clipping for these dimensions (see Figure \ref{fig:clipping}
 mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE, Age = TRUE)))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<clippingfig,fig=TRUE,echo=FALSE>>=
 <<clipping>>
@@ -155,7 +158,7 @@ mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 4)))
 \noindent The \code{abbreviate} argument takes a vector of
 integers indicating the number of significant characters the levels should be
 abbreviated to (\code{TRUE} is interpreted as 1, obviously). Abbreviation
-is performed using {\sf R}'s \code{abbreviate()} function. Another
+is performed using the \codefun{abbreviate} function in base {\sf R}. Another
 possibility is to rotate the levels (see Figure \ref{fig:rotating}):
 
 <<rotate>>=
@@ -163,7 +166,7 @@ mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0)),
                 margins = c(right = 6, bottom = 4))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<rotatefig,fig=TRUE,echo=FALSE>>=
 <<rotate>>
@@ -180,7 +183,7 @@ mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0)),
 mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<repeatfig,fig=TRUE,echo=FALSE>>=
 <<repeat>>
@@ -193,7 +196,7 @@ mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
 We now proceed with a few more `cosmetic' features.
 A first simple, but effectful modification is to position
 all labels and variables left-aligned, which can
-also be achieved by using \code{labeling\_left()} (see Figure \ref{fig:left}):
+also be achieved by using \codefun{labeling\_left} (see Figure \ref{fig:left}):
 
 <<left>>=
 mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
@@ -218,7 +221,7 @@ margins (see Figure \ref{fig:margins}):
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbreviate = c(Survived = 1, Age = 4)))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<marginsfig,fig=TRUE,echo=FALSE>>=
 <<margins>>
@@ -237,7 +240,7 @@ mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE,
        boxes = TRUE, clip = TRUE))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<boxesfig,fig=TRUE,echo=FALSE>>=
 <<boxes>>
@@ -248,7 +251,7 @@ mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE,
 \end{figure}
 
 \noindent The values to \code{boxes} and \code{clip} are recycled for
-all dimensions. The result is pretty close to what the \code{labels\_cboxed()}
+all dimensions. The result is pretty close to what the \codefun{labels\_cboxed}
 wrapper does. Another variant is to put the variable names into the
 same line as the levels (see Figure \ref{fig:labbl}):
 
@@ -269,8 +272,8 @@ mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, clip = TRUE
 
 \noindent \code{labbl\_varnames} (``variable names to the bottom/left of the
 labels'') is a vector of logicals indicating the side for the
-variable names. The resulting layout is basically what \code{labeling\_lboxed()} produces,
-and a similar design is used by the \code{doubledecker()}.
+variable names. The resulting layout is basically what \codefun{labeling\_lboxed} produces,
+and a similar design is used by the \codefun{doubledecker}.
 
 \section{Labels in the cells: \texttt{labeling\_cells()}}
 
@@ -311,7 +314,7 @@ labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, 
 \end{figure}
 
 \noindent For some data, it might be convenient to combine cell
-labeling with border labeling as done by \code{labels\_conditional()}
+labeling with border labeling as done by \codefun{labels\_conditional}
 (see Figure \ref{fig:conditional}):
 
 <<conditional>>=
