@@ -8,5 +8,6 @@ inst
 inst/doc/*.tex
 inst/doc/*.eps
 inst/doc/*.ps
+inst/doc/*.sxi
 
 

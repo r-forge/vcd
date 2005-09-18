@@ -18,7 +18,8 @@ labeling_border(labels = TRUE, varnames = labels,
   rot_labels = c(0, 90, 0, 90), rot_varnames = c(0, 90, 0, 90),
   pos_labels = "center", pos_varnames = "center",
   just_labels = "center", just_varnames = pos_varnames,
-  boxes = FALSE, fill_boxes = FALSE, offset = c(0, 0, 0, 0),
+  boxes = FALSE, fill_boxes = FALSE,
+  offset_labels = c(0, 0, 0, 0), offset_varnames = offset_labels,
   labbl_varnames = NULL, labels_varnames = FALSE, sep = ": ",
   abbreviate = FALSE, rep = TRUE, clip = FALSE, \dots)
 labeling_conditional(\dots)
@@ -82,8 +83,9 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
     color). If \code{fill_boxes} is a list of vectors,
     each vector specifies the level colors of the corresponding
     dimension.}
-  \item{offset}{numeric vector of length 4 indicating the offset of the
-    labels for each of the four sides of the plot.}
+  \item{offset_labels, offset_varnames}{numeric vector of length 4
+    indicating the offset of the
+    labels (variable names) for each of the four sides of the plot.}
   \item{labbl_varnames}{vector of logicals indicating whether variable
     names should be drawn on the left (column variables) / on top (row
     variables) of the corresponding labels.}

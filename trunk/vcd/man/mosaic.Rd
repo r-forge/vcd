@@ -8,7 +8,7 @@
 }
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
-  split_vertical = FALSE, direction = NULL, spacing = NULL,
+  split_vertical = NULL, direction = NULL, spacing = NULL,
   spacing_args = list(), zero_size = 0.5, main = NULL, \dots)
 \method{mosaic}{formula}(formula, data, \dots, main = NULL, subset = NULL)
 }
@@ -30,11 +30,11 @@
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
-    is the number of margins of \code{x} (values are recycled as needed). 
+    is the number of margins of \code{x} (default: \code{FALSE}).
+    Values are recycled as needed. 
     A \code{TRUE} component indicates that the tile(s) of the
     corresponding dimension should be split vertically, \code{FALSE}
-    means horizontal splits.
-    Ignored if \code{direction} is not \code{NULL}.}
+    means horizontal splits. Ignored if \code{direction} is not \code{NULL}.}
   \item{direction}{character vector of length \eqn{k}, where \eqn{k} is the
     number of margins of \code{x} (values are recycled as needed).
     For each component, a value of \code{"h"} indicates that the tile(s)

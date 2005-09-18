@@ -56,7 +56,8 @@
   \item{spacing_args}{list of arguments for the spacing-generating function, if
     specified (see \code{\link{strucplot}} for more information).}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
-    is the number of margins of \code{x} (values are recycled as needed).
+    is the number of margins of \code{x} (default: \code{FALSE}).
+    Values are recycled as needed.
     A \code{TRUE} component indicates that the corresponding dimension
     is folded into the columns, \code{FALSE} folds the dimension into the
     rows.}
@@ -184,7 +185,8 @@ assoc(x, main = "Relation between hair color and sex", shade = TRUE)
 # Visualize multi-way table
 assoc(aperm(HairEyeColor), expected = ~ (Hair + Eye) * Sex,
       labeling_args = list(just_labels = c(Eye = "left"),
-                           offset = c(right = -0.5),
+                           offset_labels = c(right = -0.5),
+                           offset_varnames = c(right = 1.2),
                            rot_labels = c(right = 0),
                            tl_varnames = c(Eye = TRUE))
 )

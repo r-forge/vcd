@@ -8,7 +8,10 @@
 \usage{
 pairs_barplot(gp_bars = gpar(fill = "gray"),
   gp_vartext = gpar(fontsize = 17),
-  gp_leveltext = gpar(), \dots)
+  gp_leveltext = gpar(),
+  just_leveltext = c("center", "bottom"),
+  just_vartext = c("center", "top"),
+  rot = 0, abbreviate = FALSE, \dots)
 pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
   gp_leveltext = gpar(), gp_border = gpar(), \dots) 
 }
@@ -23,6 +26,12 @@ pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17),
     levels.}
   \item{gp_border}{object of class \code{"gpar"} used for the border
     (only used for \code{pairs_text}).}
+  \item{just_leveltext, just_vartext}{character string indicating the
+    justification for variable names and levels.}
+  \item{rot}{rotation angle for the variable levels.}
+  \item{abbreviate}{integer or logical indicating
+    the number of characters the labels should be abbreviated
+    to. \code{TRUE} means 1 character, \code{FALSE} causes no abbreviation.}
   \item{\dots}{other parameters passed to the underlying graphics
     functions.}
 }

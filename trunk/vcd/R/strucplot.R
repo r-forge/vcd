@@ -13,7 +13,7 @@ strucplot <- function(## main parameters
                       residuals_type = c("Pearson", "deviance", "FT"),
                       
                       ## layout
-                      split_vertical = TRUE, 
+                      split_vertical = NULL, 
                       spacing = spacing_equal,
                       spacing_args = list(),
                       gp = NULL,
@@ -42,6 +42,15 @@ strucplot <- function(## main parameters
   type <- match.arg(type)
   residuals_type <- match.arg(tolower(residuals_type), c("pearson", "deviance", "ft"))
 
+  ## convert structable object
+  if (is.structable(x)) {
+    if (is.null(split_vertical))
+      split_vertical <- attr(x, "split_vertical")
+    x <- as.table(x)
+  }
+  if (is.null(split_vertical))
+    split_vertical <- FALSE
+  
   ## table characteristics
   d <- dim(x)
   dl <- length(d)
@@ -96,7 +105,7 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing)) {
-    if (inherits(spacing, "panel_generator"))
+    if (inherits(spacing, "generating_function"))
       spacing <- do.call("spacing", spacing_args)
     spacing <- spacing(d, condvars)
   }
@@ -107,7 +116,7 @@ strucplot <- function(## main parameters
     if (is.function(gp)) {
       if (is.null(legend) || (is.logical(legend) && legend))
         legend <- legend_resbased
-      gpfun <- if(inherits(gp, "panel_generator"))
+      gpfun <- if(inherits(gp, "generating_function"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend) && !(is.logical(legend) && !legend))
@@ -139,7 +148,7 @@ strucplot <- function(## main parameters
                            legend_width = legend_width))
 
   ## legend
-  if (inherits(legend, "panel_generator"))
+  if (inherits(legend, "generating_function"))
     legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend) && !(is.logical(legend) && !legend)) {
     seekViewport("legend")
@@ -163,7 +172,7 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  if (inherits(panel, "panel_generator"))
+  if (inherits(panel, "generating_function"))
     panel <- do.call("panel", panel_args)
   panel(residuals = residuals,
         observed = if (type == "observed") x else expected,
@@ -176,7 +185,7 @@ strucplot <- function(## main parameters
 
   ## labels
   if (!is.null(labeling)) {
-    if (inherits(labeling, "panel_generator"))
+    if (inherits(labeling, "generating_function"))
       labeling <- do.call("labeling", labeling_args)
     labeling(dn, split_vertical, condvars)
   }

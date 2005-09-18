@@ -33,30 +33,19 @@ assoc.default <- function(x,
   if (!inherits(x, "ftable"))
     x <- structable(x)
 
-#     {
-#     if (is.null(row_vars) && is.null(col_vars) && is.table(x))
-#       row_vars <- names(dimnames(x))[seq(1, length(dim(x)), by = 2)]
-#     x <- ftable(x, row.vars = row_vars, col.vars = col_vars)
-#   }
-
   tab <- as.table(x)
   dl <- length(dim(tab))
   
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
-  if (inherits(spacing, "panel_generator"))
+  if (inherits(spacing, "generating_function"))
     spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
   ## splitting arguments
   if (is.null(split_vertical))
     split_vertical <- attr(x, "split_vertical")
-  if (is.null(split_vertical)) {
-    split_vertical <- rep(FALSE, dl)
-    names(split_vertical) <- names(dimnames(tab))
-    split_vertical[names(attr(x, "col.vars"))] <- TRUE
-  }
 
   if(match.arg(tolower(residuals_type), "pearson") != "pearson")
     warning("Only Pearson residuals can be visualized with association plots.")
@@ -176,4 +165,4 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(struc_assoc) <- "panel_generator"
+class(struc_assoc) <- "generating_function"

@@ -8,7 +8,7 @@
 \usage{
 strucplot(x, residuals = NULL, expected = NULL,
   condvars = NULL, shade = NULL, type = c("observed", "expected"),
-  residuals_type = c("Pearson", "deviance", "FT"), split_vertical = TRUE, 
+  residuals_type = c("Pearson", "deviance", "FT"), split_vertical = NULL, 
   spacing = spacing_equal, spacing_args = list(),
   gp = NULL, gp_args = list(),
   labeling = labeling_border, labeling_args = list(),
@@ -47,7 +47,7 @@ strucplot(x, residuals = NULL, expected = NULL,
     \eqn{k} is the number of margins of \code{x} (values are recycled as needed).
     A \code{TRUE} component indicates that the tile(s) of the
     corresponding dimension should be split vertically, \code{FALSE}
-    means horizontal splits.}
+    means horizontal splits. Default is \code{FALSE.}}
   \item{spacing}{spacing object, spacing function, or a corresponding
     generating function (see details and \code{\link{spacings}}).}
   \item{spacing_args}{list of arguments for the spacing-generating
@@ -127,7 +127,7 @@ strucplot(x, residuals = NULL, expected = NULL,
     etc.
     \item Passing a corresponding \emph{generating} function to \var{foo},
     along with parameters passed to \var{foo\_args}, that generates such a
-    function. Generating functions must inherit from class \code{"panel_generator"}.
+    function. Generating functions must inherit from class \code{"generating_function"}.
     \item Except for the shading functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
     \item For shadings and spacings, passing the final parameter object
