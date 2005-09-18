@@ -49,23 +49,22 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
 }
 
 mosaic.default <- function(x, condvars = NULL,
-                           split_vertical = FALSE, direction = NULL,
+                           split_vertical = NULL, direction = NULL,
                            spacing = NULL, spacing_args = list(),
                            zero_size = 0.5, main = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
-  if (inherits(x, "structable"))
+
+  if (is.structable(x)) {
+    if (is.null(direction) && is.null(split_vertical))
+      split_vertical <- attr(x, "split_vertical")
     x <- as.table(x)
+  }
+  if (is.null(split_vertical))
+    split_vertical <- FALSE
   
   dl <- length(dim(x))
-  if (!is.null(condvars)) {
-    if (is.character(condvars))
-      condvars <- match(condvars, names(dimnames(x)))
-    x <- aperm(x, c(condvars, seq(dl)[-condvars]))
-    if (is.null(spacing))
-      spacing <- spacing_conditional
-  }
-  
+
   ## splitting argument
   if (!is.null(direction))
     split_vertical <- direction == "v"
@@ -74,6 +73,15 @@ mosaic.default <- function(x, condvars = NULL,
   if (length(split_vertical) < dl)
     split_vertical <- rep(split_vertical, length.out = dl)
 
+  ## condvars
+  if (!is.null(condvars)) {
+    if (is.character(condvars))
+      condvars <- match(condvars, names(dimnames(x)))
+    x <- aperm(x, c(condvars, seq(dl)[-condvars]))
+    if (is.null(spacing))
+      spacing <- spacing_conditional
+  }
+  
   ## spacing argument
   if (is.null(spacing))
     spacing <- if (dl < 3) spacing_equal else spacing_increase
@@ -155,4 +163,4 @@ struc_mosaic <- function(zero_size = 0.5)
     }
 
   }
-class(struc_mosaic) <- "panel_generator"
+class(struc_mosaic) <- "generating_function"

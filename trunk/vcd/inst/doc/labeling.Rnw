@@ -8,6 +8,7 @@
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\var}[1]{\textit{\texttt{#1}}}
 \newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
+\newcommand{\data}[1]{`\texttt{#1}'}
 
 %% \code without `-' ligatures
 \def\nohyphenation{\hyphenchar\font=-1 \aftergroup\restorehyphenation}
@@ -38,7 +39,7 @@ library(vcd)
 data(Titanic)
 @
 
-\title{Labeling in Strucplots}
+\title{Labeling in the Strucplots Framework}
 \author{by David Meyer\\
   Wirtschaftsuniversit\"at Wien, Austria\\
 \email{David.Meyer@R-project.org}
@@ -46,39 +47,23 @@ data(Titanic)
 \maketitle
 \sloppy
 
-One of the major enhancements in \pkg{vcd} compared to
+One of the major enhancements in package \pkg{vcd} compared to
 \codefun{mosaicplot} and \codefun{assocplot} in
-base {\sf R} is the labeling in the strucplot framework which now
-has become much more powerful and flexible. Like the panel, the
-shading, the spacing, and the legend, labeling is now completely modular.
+base {\sf R} is the labeling in the strucplot framework which 
+offers much more features and flexibility. Like the core, 
+shading, spacing, and legend modules, labeling is now completely
+modular (see the introducing vignette for an overview on
+the strucplot framework).
 The user supplies either a labeling function, or, alternatively, 
 a generating function that parameterizes a labeling function, 
-to \codefun{strucplot} which then draws the labels (generating
-functions are discussed in a separate vignette). The labeling is 
-well-separated from the actual plotting that occurs in the panel functions;
-it actually only relies on the viewport tree produced by them, and the
-`dimnames' attribute of the visualized table. The drawing of the
-labels happens after the actual plot has been drawn by the panel function.
+to \codefun{strucplot} which then draws the labels (the idea behind generating
+functions is discussed in detail in the vignette on colors and shadings). 
+Labeling is well-separated from the actual plotting that occurs in the
+low-level core functions. It only relies on the viewport tree produced by them, and the
+`\texttt{dimnames}' attribute of the visualized table. The drawing of the
+labels happens after the actual plot has been drawn by the core function.
 Thus, it is possible to supply one's own labeling function, or
 to combine some of the basic functions to produce a more complex labeling.
-% As an example, consider \codefun{labeling\_list}:
-
-% \begin{Sinput}
-% labeling_list <- function(gp = gpar(), just = "left", pos = "left", lsep = ": ", 
-%                           sep = " ", offset = unit(c(2, 2), "lines"),
-%                           varnames = TRUE, cols = 2, ...) 
-%   function(d, split_vertical, condvars) {
-%     \dots
-%   }
-% \end{Sinput}
-
-% \codefun{labeling\_list} is a generating function that takes all parameters
-% as arguments, and returns the actual labeling function which takes
-% only three arguments: the dimnames structure of the table, the logical
-% vector with the splitting information, and the number of conditioning
-% variables (if any). The labeling function has access to the arguments
-% of the generating function because in {\sf R}, nested functions are
-% lexically scoped. 
 In the following, we describe the three basic modules
 (\codefun{labeling\_text}, \codefun{labeling\_list}, and \codefun{labeling\_cells}) and
 derived functions that build upon them.
@@ -92,7 +77,7 @@ to 4 dimensions, and the positioning and graphical parameters
 of levels and variable names are quite customizable. In addition,
 the problem of overlapping labels can be handled in several ways. 
 
-As an example, consider the `Titanic' data, consisting
+As an example, consider the \data{Titanic} data, consisting
 of 4 categorical variables: Survived, Sex (i.e., `Gender'), Age, and
 Crew. By default, the variable names and levels are plotted `around' the
 plot in a counter-clockwise way (see Figure \ref{fig:defaults}):
@@ -106,7 +91,7 @@ mosaic(Titanic)
 <<defaultfig,fig=TRUE,echo=FALSE>>=
 <<default>>
 @
-\caption{Mosaic plot for the Titanic data.}
+\caption{Mosaic plot for the \data{Titanic} data.}
 \label{fig:defaults}
 \end{center}
 \end{figure}
@@ -133,7 +118,9 @@ mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE, Age = TRUE)))
 \noindent The \code{clip} parameter is passed to the labeling function
 via the \code{labeling\_args} argument which takes a list of
 parameters. \code{clip} itself takes a vector of logicals (one for
-each dimension). Almost all vectorized arguments in the strucplot
+each dimension). 
+% as mentioned before
+Almost all vectorized arguments in the strucplot
 framework can be abbreviated in the following way: unnamed components
 (or the defaults, if there are none) are recycled as needed, but
 overridden by the named components. Here, the default is \code{FALSE},
@@ -162,8 +149,8 @@ is performed using the \codefun{abbreviate} function in base {\sf R}. Another
 possibility is to rotate the levels (see Figure \ref{fig:rotating}):
 
 <<rotate>>=
-mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0)),
-                margins = c(right = 6, bottom = 4))
+mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0), 
+offset_varnames = c(right = 1), offset_labels = c(right = 0.3)), margins = c(right = 4, bottom = 3))
 @
 
 \begin{figure}[p]
@@ -273,12 +260,12 @@ mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, clip = TRUE
 \noindent \code{labbl\_varnames} (``variable names to the bottom/left of the
 labels'') is a vector of logicals indicating the side for the
 variable names. The resulting layout is basically what \codefun{labeling\_lboxed} produces,
-and a similar design is used by the \codefun{doubledecker}.
+and a similar design is used by the \codefun{doubledecker} function.
 
 \section{Labels in the cells: \texttt{labeling\_cells()}}
 
 This labeling draws both variable names and levels in the
-cells. As an example, we use the `PreSex' data on pre- and
+cells. As an example, we use the \data{PreSex} data on pre- and
 extramarital sex and divorce (see Figure \ref{fig:cell}):
 
 <<cell>>=
@@ -290,7 +277,7 @@ mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
 <<cellfig,fig=TRUE,echo=FALSE>>=
 <<cell>>
 @
-\caption{Cell labeling for the `PreSex' data.}
+\caption{Cell labeling for the \data{PreSex} data.}
 \label{fig:cell}
 \end{center}
 \end{figure}
@@ -308,7 +295,7 @@ labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, 
 <<cell2fig,fig=TRUE,echo=FALSE>>=
 <<cell2>>
 @
-\caption{Cell labeling for the `PreSex' data, labels abbreviated.}
+\caption{Cell labeling for the \data{PreSex} data, labels abbreviated.}
 \label{fig:cell2}
 \end{center}
 \end{figure}
@@ -326,7 +313,7 @@ mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex
 <<conditionalfig,fig=TRUE,echo=FALSE>>=
 <<conditional>>
 @
-\caption{Conditional labeling for the `PreSex' data, labels abbreviated.}
+\caption{Conditional labeling for the \data{PreSex}, labels abbreviated.}
 \label{fig:conditional}
 \end{center}
 \end{figure}
@@ -334,12 +321,12 @@ mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex
 \noindent Additionally, the cell labeling allows the user to add
 arbitrary text to the cells by supplying a character array in the same
 shape than the data array to the \code{text} argument (cells with missing values
-are ignored). In the following example, this is used to add all observed values greater
-than 5 to the cells after the mosaic for the `Titanic' data has been plotted
-(see Figure \ref{fig:text}):
+are ignored). In the following example using the `Titanic' data, 
+this is used to add all observed values greater
+than 5 to the cells after the mosaic has been plotted (see Figure \ref{fig:text}):
 
 <<text>>=
-mosaic(Titanic, pop = FALSE, labeling_args = list(abbreviate = c(Survived = 1, Age = 4)))
+mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = 1, Age = 4)), pop = FALSE)
 
 tab <- ifelse(Titanic < 6, NA, Titanic)
 labeling_cells(text = tab, clip = FALSE)(Titanic)
@@ -350,12 +337,12 @@ labeling_cells(text = tab, clip = FALSE)(Titanic)
 <<textfig,fig=TRUE,echo=FALSE>>=
 <<text>>
 @
-\caption{User-supplied Text added to a mosaic display of the `Titanic' data.}
+\caption{User-supplied Text added to a mosaic display of the \data{Titanic} data.}
 \label{fig:text}
 \end{center}
 \end{figure}
 
-\section{A simple list of labels: \texttt{labels\_list()}}
+\section{A simple list of labels: \texttt{labeling\_list()}}
 
 If problems with overlapping labels cannot satisfactorily resolved,
 the last remedy could be to simply list the levels below the plot

@@ -34,7 +34,7 @@ cotab_coindep(x, condvars,
     respectively).}
 }
 \details{
-  These functions of class \code{"panel_generator"} are panel-generating
+  These functions of class \code{"generating_function"} are panel-generating
   functions for use with \code{\link{cotabplot}}, i.e., they return functions
   with the interface
   

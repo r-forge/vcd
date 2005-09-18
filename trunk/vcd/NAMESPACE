@@ -20,7 +20,7 @@ export(
        "spacing_equal",
        "spacing_dimequal",
        "spacing_increase",
-       "spacing_doubledecker",
+       "spacing_highlighting",
 
 ## labelings
        "labeling_lboxed",
@@ -69,6 +69,7 @@ export(
        "coindep_test",
        "grid_barplot",
        "hls",
+       "is.structable",
        ## "hcl",
        "independence_table",
        "mar_table", 
@@ -119,6 +120,9 @@ S3method("spine", "default")
 S3method("spine", "formula")
 
 S3method("pairs", "table")
+S3method("pairs", "structable")
+
+S3method("t", "structable")
 
 S3method("fitted", "goodfit")
 S3method("fitted", "coindep_test")

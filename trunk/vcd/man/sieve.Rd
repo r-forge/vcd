@@ -12,7 +12,7 @@
 }
 \usage{
 \method{sieve}{default}(x, condvars = NULL, gp = NULL, shade = NULL,
-  legend = FALSE, split_vertical = FALSE, direction = NULL, spacing = NULL,
+  legend = FALSE, split_vertical = NULL, direction = NULL, spacing = NULL,
   spacing_args = list(), sievetype = c("observed","expected"), main = NULL, \dots)
 \method{sieve}{formula}(formula, data, \dots, main = NULL, subset = NULL)
 }
@@ -54,7 +54,8 @@
     If \code{legend} is \code{NULL} or \code{TRUE} and \code{gp} is a
     function, legend defaults to \code{\link{legend_resbased}}.}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
-    is the number of margins of \code{x} (values are recycled as needed). 
+    is the number of margins of \code{x} (default: \code{FALSE}).
+    Values are recycled as needed. 
     A \code{TRUE} component indicates that the tile(s) of the
     corresponding dimension should be split vertically, \code{FALSE}
     means horizontal splits.

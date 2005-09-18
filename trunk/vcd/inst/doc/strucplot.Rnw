@@ -8,6 +8,20 @@
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\code}[1]{\texttt{#1}}
 \newenvironment{smallexample}{\begin{alltt}}{\end{alltt}}
+\newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
+\newcommand{\data}[1]{`\texttt{#1}'}
+
+%% \code without `-' ligatures
+\def\nohyphenation{\hyphenchar\font=-1 \aftergroup\restorehyphenation}
+\def\restorehyphenation{\hyphenchar\font=`-}
+{\catcode`\-=\active%
+  \global\def\code{\bgroup%
+    \catcode`\-=\active \let-\codedash%
+    \Rd@code}}
+\def\codedash{-\discretionary{}{}{}}
+\def\Rd@code#1{\texttt{\nohyphenation#1}\egroup}
+
+\newcommand{\codefun}[1]{\code{#1()}}
 
 \begin{document}
 
@@ -23,29 +37,33 @@
 set.seed(1071)
 library(vcd)
 data(Titanic)
+data(HairEyeColor)
 @
 
-\title{strucplots---Visualizing higher-dimensional Contingency Tables in \pkg{vcd}}
+\title{The Strucplot Framework---Visualizing Multi-way Contingency Tables}
 \author{by David Meyer\\
   Wirtschaftsuniversit\"at Wien, Austria\\
-\url{David.Meyer@R-project.org}
+\email{David.Meyer@R-project.org}
 }
 \maketitle
 \sloppy
 
-The \code{strucplot} framework in \pkg{vcd} can be used to visualize
-higher-dimensional contingency tables and integrates techniques such as
+\section{Framework Overview}
+
+The strucplot framework in the {\sf R} package \pkg{vcd} visualizes
+multi-way contingency tables and integrates techniques such as
 mosaic displays, association plots, and sieve plots. The main idea is to visualize
-the tables' cells arranged in rectangular form. To allow for more than
-two dimensions, the plot area is constructed using recursive
-conditional splits, given the tiles representing the levels of the
-previous dimension.
-This principle defines a graph `family' with still many parameters
+the tables' cells arranged in rectangular form. For multi-way tables,
+the variables are nested into row and columns using recursive
+conditional splits, given the margins. The result is a 
+`flat' representation that can be visualized in similar
+ways than a two-dimensional table.
+This principle defines a class of conditional displays with still many parameters
 left such as:
 
 \begin{itemize}
-\item the split direction for each dimension
 \item the content of the tiles
+\item the split direction for each dimension
 \item the graphical parameters of the tiles' content
 \item the spacing between the tiles
 \item the labeling of the tiles
@@ -54,53 +72,94 @@ left such as:
 \noindent The document at hand gives an introduction to the framework,
 whereas labeling and shading issues are described in separate vignettes.
 
-\section{Framework Overview}
-
 The strucplot framework is highly modularized; Figure \ref{fig:struc}
 shows the hierarchical relationship between the various components. 
-The core function is \code{strucplot()} which processes the parameters,
+On the lowest level, there are several groups of workhorse and 
+parameter functions that directly or indirectly influence the final
+appearance of the plot. The workhorse functions (\code{\emph{struc\_foo()}}, 
+\code{\emph{labeling\_foo()}}, and \code{\emph{legend\_foo()}}) 
+directly produce graphical output, the parameter functions
+(\code{\emph{spacing\_foo()}} and \code{\emph{shading\_foo()}}) compute
+graphical parameters used by the others. The \code{\emph{struc\_foo()}} functions
+implement the core functionality, creating the tiles and their
+content. On the second level, a suitable combination of these functions
+is passed as ``hyperparameters'' to \codefun{strucplot}.
+These central function 
 sets up the graphical layout using grid viewports (see Figure \ref{fig:layout}),
-and coordinates panel, labeling, shading, and spacing functions to produce 
-the plot. The actual workhorse is the chosen panel function: currently, 
-low-level panel functions for association plots (\code{struc\_assoc}), 
-mosaic plots (\code{struc\_mosaic}), and sieve plots (\code{struc\_sieve})
-are available. In addition, there are
-high-level wrapper functions such as \code{mosaic()}, \code{assoc()},
-and \code{sieve()} to \code{strucplot()} that conveniently set the 
-parameters---it is these high-level functions that the user normally would like to use, 
-although \code{strucplot()} is fully functional on its own. \code{mosaic()}, 
-\code{assoc}, and \code{sieve()} are generic functions: 
-for both, there exist a formula method and a default 
-method. Other functions, such as \code{doubledecker()}, \code{pairs()}, and 
-\code{cotabplot}, are on even higher level and make use of 
-code{mosaic()}, \code{assoc()}, and \code{sieve()} to produce plots.
+and coordinates the specified core, labeling, shading, and spacing functions to produce 
+the plot. On the third level, we provide
+several high-level functions such as \codefun{mosaic},
+\codefun{sieve}, \codefun{assoc}, and \codefun{doubledecker} which 
+conveniently interface \codefun{strucplot} through sensible parameter defaults
+and support for model formulas. Finally, on the fourth
+level, there are `related' \pkg{vcd} functions (such as \codefun{pairs.table} and
+\codefun{cotabplot}) combining single plots of the strucplot 
+framework into more complex displays.
 
 \begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{struc}
-  \caption{Strucplot components.}
-  \label{fig:struc}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{struc}
+    \caption{Components of the strucplot framework.}
+    \label{fig:struc}
+  \end{center}
 \end{figure}
 
 \begin{figure}[h]
-  \centering
-  \includegraphics{vcdViewport}
-  \caption{Viewport layout for strucplots with their names. [A] =
-    ``cornerTL'', [B] = ``cornerTR'', [C] = ``cornerBL'', [D] = ``cornerBR''.}
-  \label{fig:layout}
+\begin{center}
+<<vcdlayout,fig=TRUE,echo=FALSE,width=6,height=5>>=
+    pushViewport(vcd:::vcdViewport(legend = T, mar =4))
+    seekViewport("plot")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("plot", gp = gpar(fontsize = 30))
+    seekViewport("legend")
+    grid.text("legend", rot = 90, gp = gpar(fontsize = 30))
+    grid.rect(gp = gpar(lwd = 3))
+    seekViewport("pval")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("pval", gp = gpar(fontsize = 30))
+    seekViewport("margin_top")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("margin_top", gp = gpar(fontsize = 30))
+    seekViewport("margin_bottom")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("margin_bottom", gp = gpar(fontsize = 30))
+    seekViewport("margin_right")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("margin_right", rot = 90, gp = gpar(fontsize = 30))
+    seekViewport("margin_left")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("margin_left", rot = 90, gp = gpar(fontsize = 30))
+    seekViewport("corner_top_left")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("[A]", gp = gpar(fontsize = 30))
+    seekViewport("corner_top_right")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("[B]", gp = gpar(fontsize = 30))
+    seekViewport("corner_bottom_left")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("[C]", gp = gpar(fontsize = 30))
+    seekViewport("corner_bottom_right")
+    grid.rect(gp = gpar(lwd = 3))
+    grid.text("[D]", gp = gpar(fontsize = 30))
+@ 
+\caption{Viewport layout for strucplot displays with their names. [A] =
+  ``corner\_top\_left'', [B] = ``corner\_top\_right'', 
+  [C] = ``corner\_bottom\_left'', [D] = ``corner\_bottom\_right''.}
+\label{fig:layout}
+\end{center}
 \end{figure}
 
-\section{Mosaic and Association Plots}
+\section{Mosaic, Association, and Sieve Plots}
 
-As an example, consider the famous `Survival on the Titanic' 
-data containing two binary variables (survival to the disaster and
-gender), as well as two categorical variables (class and age). The
-`flattened' contincency table can be obtained using the
-\code{structable()} function (quite similar to \code{ftable()}, but
-allowing the specification of split directions as in mosaic():
+As an example, consider the \data{HairEyeColor} 
+data containing two polytomous variables (hair and eye color), 
+as well as one (artificial) dichotomous variable (sex, i.e. gender). The
+`flattened' contingency table can be obtained using the
+\codefun{structable} function (quite similar to \codefun{ftable} in
+base {\sf R}, but allowing the specification of split directions):
 
 <<structable,results=verbatim>>=
-structable(Titanic)
+(hec <- structable(aperm(HairEyeColor)))
 @
 
 Let us first visualize the contingency table by the means of a mosaic plot
@@ -109,47 +168,54 @@ an area-proportional visualization of (typically observed) frequencies, composed
 of tiles (corresponding to the cells) created by recursive
 vertical and horizontal splits of a square. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
-dimensions of previous splits (see Figure \ref{fig:observed}):
+dimensions of previous splits. Figure \ref{fig:observed} depicts 
+the effect of
 
 <<Observed>>=
-mosaic(Titanic, main = TRUE)
+mosaic(hec)
 @
 
-\noindent The small bullets indicate zero entries in the corresponding cell.
+\noindent equivalent to
 
-\begin{figure}[h]
+<<Observed2>>=
+mosaic(~ Sex + Eye + Hair, data = HairEyeColor)
+@
+
+\begin{figure}[p]
 \begin{center}
 <<Observedfig,fig=TRUE,echo=FALSE>>=
 <<Observed>>
 @
-\caption{Mosaic plot for the Titanic data.}
+\caption{Mosaic plot for the \data{HairEyeColor} data.}
 \label{fig:observed}
 \end{center}
 \end{figure}
 
-\noindent  It is also possible to visualize the expected values instead of the
+\noindent The small bullets indicate zero entries in the corresponding cell.
+It is also possible to visualize the expected values instead of the
 observed values (see Figure \ref{fig:expected}):
 
 <<Expected>>=
-mosaic(Titanic, type = "expected", main = TRUE, sub = "Expected values")
+mosaic(hec, type = "expected")
 @
 
 \setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<Expectedfig,fig=TRUE,echo=FALSE>>=
 <<Expected>>
 @
-\caption{Mosaic plot for the Titanic data (expected values).}
+\caption{Mosaic plot for the \data{HairEyeColor} data (expected values).}
 \label{fig:expected}
 \end{center}
 \end{figure}
 
-\noindent In order to directly compare observed and expected values,
-we can use a sieve plot (see Figure \ref{fig:sieve}):
+\noindent In order to compare observed and expected values,
+a sieve plot \citep{vcd:riedwyl+schuepbach:1994} 
+could be used (see Figure \ref{fig:sieve}):
 
 <<sieve>>=
-sieve(Titanic)
+sieve(hec)
 @
 
 \begin{figure}[h]
@@ -157,28 +223,29 @@ sieve(Titanic)
 <<sievefig,fig=TRUE,echo=FALSE>>=
 <<sieve>>
 @
-\caption{Sieve plot for the Titanic data visualizing simultaneously
+\caption{Sieve plot for the \data{HairEyeColor} data visualizing simultaneously
   observed and expected values.}
 \label{fig:sieve}
 \end{center}
 \end{figure}
 
-\noindent The next step is to directly inspect the residuals. 
+\noindent Alternatively, we can directly inspect the residuals. 
 The Pearson residuals (standardized deviations of observed from expected values) 
 are preferably visualized using association
-plots \citep{vcd:Cohen:1980}. In contrast to \code{assocplot()}, \pkg{vcd}'s \code{assoc()}
+plots \citep{vcd:Cohen:1980}. In contrast to \codefun{assocplot} in
+base {\sf R}, \pkg{vcd}'s \codefun{assoc}
 function scales to more than two variables (see Figure \ref{fig:residuals}):
 
 <<Residuals>>=
-assoc(Titanic, compress = FALSE)
+assoc(hec, compress = FALSE)
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<Residualsfig,fig=TRUE,echo=FALSE>>=
 <<Residuals>>
 @
-\caption{Association plot for the Titanic data.}
+\caption{Association plot for the \data{HairEyeColor} data.}
 \label{fig:residuals}
 \end{center}
 \end{figure}
@@ -186,123 +253,43 @@ assoc(Titanic, compress = FALSE)
 \noindent The \code{compress} argument keeps distances between tiles
 equal for better comparison.
 
-So far, we have visualized the full table. Parts of the data can be
-selected either using \code{margin.table()} on the input data, or the
-formula interfaces. The following example compares the age
-distribution among classes, given gender, and also shows how to 
-use grid's viewport framework to put two plots besides 
-each other:
-
-<<Variables>>=
-pushViewport(viewport(layout = grid.layout(ncol = 2)))
-
-pushViewport(viewport(layout.pos.col = 1))
-mosaic(~ Class + Age, data = Titanic[,"Male",,], 
-       margin = c(bottom = 0, 0), sub = "Male", newpage = FALSE)
-popViewport()
-
-pushViewport(viewport(layout.pos.col = 2))
-mosaic(~ Class + Age, data = Titanic[,"Female",,], 
-       margin = c(bottom = 0, 0), sub = "Female", newpage = FALSE)
-popViewport(2)
-@
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[h]
-\begin{center}
-<<Variablesfig,fig=TRUE,echo=FALSE,height=6,width=6>>=
-<<Variables>>
-@
-\caption{Age distribution among classes, given gender.}
-\label{fig:parttable}
-\end{center}
-\end{figure}
-\setkeys{Gin}{width=0.7\textwidth}
-
-\noindent note the use of the \code{margin} argument: it takes a
-vector with up to four values whose unnamed components are recycled,
-but ``overruled'' by the named arguments. Thus, in the example, only
-the bottom margin is set to 0, leaving the default size of 2 lines
-unchanged for the other margins. This idea applies to almost all
-vectorized arguments in the strucplot framework (with
-\code{split\_vertical} as a prominent exception).
-
-Since mosaic displays are ``conditional plots'' by definition, we can
-also use one single mosaic for stratified plots.
-The formula interface of \code{mosaic()} allows the
-specification of conditioning variables (see Figure \ref{fig:conditioning}):
-
-<<Conditioning>>=
-mosaic(~ Class + Age | Sex, data = Titanic, split = TRUE)
-@
-
-\begin{figure}[h]
-\begin{center}
-<<Conditioningfig,fig=TRUE,echo=FALSE>>=
-<<Conditioning>>
-@
-\caption{Mosaic plot for conditional independence structures.}
-\label{fig:conditioning}
-\end{center}
-\end{figure}
-
-\noindent The effect of using this kind of formula is that
-conditioning variables are permuted before the conditioned variables
-in the table, and that \code{spacing\_conditional()} is used to better
-distinguish conditioning from conditioned dimensions.
-Note, however, that the plots in the ``pseudo-strata'' are
-distorted since they are not corrected for the marginal
-distribution(s) of the conditioning variables. Indeed,
-the \code{cotabplot()} function would do a much better job here (see
-next section).
-
 For both mosaic plots and association plots, 
 the splitting of the tiles can be controlled using the
 \code{split\_vertical} argument (default: alternating splits starting
-with a vertical one). Sensible recycling rules apply. 
-For compatibility with \code{mosaicplot()}, the \code{mosaic()} function
-also allows the use of a \code{"direction"} argument taking a vector of \code{"h"} and
-\code{"v"} characters (see Figures \ref{fig:split1} and \ref{fig:split2}):
+with a vertical one). 
 
 <<split1>>=
-mosaic(Titanic, direction = "h")
+mosaic(hec, split_vertical = c(TRUE, TRUE, FALSE))
 @
+
+\noindent For compatibility with \codefun{mosaicplot} in base {\sf R},
+the \codefun{mosaic} function also allows the use of a \code{"direction"} 
+argument taking a vector of \code{"h"} and
+\code{"v"} characters (see Figure \ref{fig:split}):
 
 <<split2>>=
-mosaic(Titanic, split_vertical = c(TRUE, TRUE, TRUE, FALSE),
-                labeling_args = list(abbreviate = c(Sex = TRUE, Age = TRUE)))
+mosaic(hec, direction = c("v","h","v"))
 @
 
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
-<<split1fig,fig=TRUE,echo=FALSE>>=
+<<splitfig,fig=TRUE,echo=FALSE>>=
 <<split1>>
 @
-\caption{Mosaic plot for the Titanic data---alternative splitting (1).}
-\label{fig:split1}
+\caption{Mosaic plot for the \data{HairEyeColor} data---alternative splitting.}
+\label{fig:split}
 \end{center}
 \end{figure}
 
-\begin{figure}[h]
-\begin{center}
-<<split2fig,fig=TRUE,echo=FALSE>>=
-<<split2>>
-@
-\caption{Mosaic plot for the Titanic data---alternative splitting (2).}
-\label{fig:split2}
-\end{center}
-\end{figure}
-
-
-\section{Higher-level functions}
-
-The last plot pretty much resembles a doubledecker plot, except for
-the spacing. Since spacing is also modular in the strucplot framework,
-the \code{doubledecker()} function was straightforward to implement:
-it really is just a wrapper for \code{mosaic()}, setting the right
-defaults. Figure \ref{fig:doubledecker} shows a doubledecker plot of
-the Titanic data, explaining the probability of Survival by Age, given
-Sex, given Class:
+By a suitable combination of splitting, spacing, and
+labeling settings, the funtions provided by the strucplot framework
+can be customized in a quite flexible way. For example, 
+it was almost trivial to implement doubledecker
+plots---\codefun{doubledecker} is really just a wrapper for 
+\codefun{mosaic}, setting the right defaults. 
+Figure \ref{fig:doubledecker} shows a doubledecker plot of
+the \data{Titanic} data, explaining the probability of survival (`Survived') by Age, given
+Sex, given Class. It is created by:
 
 <<doubledecker1>>=
 doubledecker(Titanic)
@@ -319,151 +306,208 @@ doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
 <<doubledeckerfig,fig=TRUE,echo=FALSE>>=
 <<doubledecker1>>
 @
-\caption{Doubledecker plot for the Titanic data.}
+\caption{Doubledecker plot for the \data{Titanic} data.}
 \label{fig:doubledecker}
 \end{center}
 \end{figure}
 
-Another high-level function is \code{pairs.table()}, that is, the S3-method for objects
-of class "table" of the \code{pairs()} generic. This function produces a matrix 
-of strucplots (currently, association or mosaic plots) in the off-diagonal cells, and
-the variable names (with, optionally, univariate statistics) in the diagonal cells. Figure
-\ref{fig:pairs} shows mosaic plots visualizing mutual independence in the lower triangle,
-association plots for the same in the upper triangle, and bar charts in the diagonal.
+\section{Conditional and partial views}
 
-<<pairs>>=
-pairs(Titanic, upper_panel = pairs_assoc)
+So far, we have visualized full tables. For objects of class \code{table},
+conditioning on levels (i.e., choosing a table subset for fixed levels
+of the conditioning variable(s)) is simply done by indexing.
+However, subsetting \code{"structable"} objects is more restrictive 
+because of their inherent conditional structure. Since the variables
+on both the row and the columns side are nested, 
+conditioning is only possible ``outside-in'':
+
+<<subsetting,results=verbatim>>=
+hec
+hec[["Male",]]
+hec[[c("Male", "Brown"),]]
+hec[["Male","Green"]]
+@ 
+
+\noindent Now, there are several ways for visualizing 
+conditional independence structures. The ``brute force'' method is to
+draw separate plots for the strata. The following example compares 
+the association between hair and eye color, given gender, by using
+subsetting on the flat table and the \pkg{grid} package's viewport 
+framework to visualize the two groups besides each other:
+
+<<Variables>>=
+pushViewport(viewport(layout = grid.layout(ncol = 2)))
+
+pushViewport(viewport(layout.pos.col = 1))
+mosaic(hec[["Male"]], margins = c(top = 2, 0), sub = "Male", newpage = FALSE)
+popViewport()
+
+pushViewport(viewport(layout.pos.col = 2))
+mosaic(hec[["Female"]], margins = c(top = 2, 0), sub = "Female", newpage = FALSE)
+popViewport(2)
 @
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}[h]
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[p]
 \begin{center}
-<<pairsfig,fig=TRUE,echo=FALSE>>=
-<<pairs>>
+<<Variablesfig,fig=TRUE,echo=FALSE,height=5,width=12>>=
+<<Variables>>
 @
-\caption{Pairs plot for the Titanic data.}
-\label{fig:pairs}
+\caption{Distribution of hair and eye color, given gender.}
+\label{fig:parttable}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
+
+\noindent Note the use of the \code{margins} argument: it takes a
+vector with up to four values whose unnamed components are recycled,
+but ``overruled'' by the named arguments. Thus, in the example, only
+the top margin is set to 2 lines, and all other to 0.
+This idea applies to almost all
+vectorized arguments in the strucplot framework (with
+\code{split\_vertical} as a prominent exception).
+
+Since mosaic displays are ``conditional plots'' by definition, we can
+also use one single mosaic for stratified plots.
+The formula interface of \codefun{mosaic} allows the
+specification of conditioning variables (see Figure \ref{fig:conditioning}):
+
+<<Conditioning>>=
+mosaic(~ Hair + Eye | Sex, data = hec, split_vertical = TRUE)
+@
+
+\begin{figure}[p]
+\begin{center}
+<<Conditioningfig,fig=TRUE,echo=FALSE>>=
+<<Conditioning>>
+@
+\caption{Mosaic plot for conditional independence structures.}
+\label{fig:conditioning}
 \end{center}
 \end{figure}
 
-\noindent Each cell's row and column define two variables $X$ and $Y$ used for the
-specification of four different types of independence: `\code{pairwise}',
-     `\code{total}', `\code{conditional}' and `\code{joint}'. The pairwise mosaic
-     matrix shows bivariate marginal relations between $X$ and $Y$, collapsed over all
-     other variables. The total independence mosaic matrix shows mosaic
-     plots for mutual independence, i.e., for marginal and conditional
-     independence among all pairs of variables. The conditional
-     independence mosaic matrix shows mosaic plots for marginal
-     independence of $X$ and $Y$ given all other variables. The joint independence
-     mosaic matrix shows mosaic plots for joint independence of all
-     pairs ($X$, $Y$) of variables from the others.
+\noindent The effect of using this kind of formula is that
+conditioning variables are permuted before the conditioned variables
+in the table, and that \codefun{spacing\_conditional} is used as
+default to better
+distinguish conditioning from conditioned dimensions.
+This spacing uses equal space between tiles of conditioned variables,
+and increasing space between tiles of conditioning variables.
+Note, however, that the plots in the ``pseudo-strata'' are
+distorted since they are not corrected for the marginal
+distribution(s) of the conditioning variables. 
 
-Since the matrix is symmetric, the upper and lower part can be used to display different 
-types of independence models, or different strucplots (currently, only association and 
-mosaic plots are supported). The available panel functions (\code{pairs\_assoc()} and 
-\code{pairs\_mosaic()}) are just simple wrappers to \code{assoc()} and 
-\code{mosaic()}. Obviously, seeing patterns in strucplot matrices 
-becomes increasingly difficult with
-higher dimensionality. Typically, therefore, this plot is used with a suitable 
-residual-based shading (described in a separate vignette).
-
-Another useful high-level plot is produced by \code{cotabplot()}: this function can be
-used for plotting stratified strucplots in a lattice-like display. Whereas \code{pairs()} 
-is conditioning on variables, \code{cotabplot()} is conditioning on variable \emph{levels}.
-The plot in Figure \ref{fig:cotabplot} shows the Survival rate among the classes, given
-all four level combinations of Sex and Age.
+The \codefun{cotabplot} function does a much better job on this task:
+it arranges stratified strucplot displays 
+in a lattice-like layout, conditioning on variable \emph{levels}.
+The plot in Figure \ref{fig:cotabplot} shows Hair and Eye color, given Sex:
 
 <<cotabplot>>=
-cotabplot(~ Class + Survived | Sex + Age, data = Titanic)
+cotabplot(~ Hair + Eye | Sex, data = hec, labeling_args = list(abbreviate = c(Eye = 2)))
 @
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<cotabplotfig,fig=TRUE,echo=FALSE,height=6,width=6>>=
+<<cotabplotfig,fig=TRUE,echo=FALSE,height=4,width=7>>=
 <<cotabplot>>
 @
-\caption{cotabplot for the Titanic data.}
+\caption{Conditional tabular plot for the \data{HairEyeColor} data.}
 \label{fig:cotabplot}
 \end{center}
 \end{figure}
 \setkeys{Gin}{width=0.7\textwidth}
 
-\section{Technical Notes on Panel Functions}
+\noindent The \code{labeling\_args} argument ensures that `Eye' levels
+are abbreviated (See the vignette on labeling for detailed information).
 
-All strucplot components (including the panel functions) 
-are parameterized through the use of generating functions, that is,
-functions with all parameters in their signature returning a function
-to be called by \code{strucplot()}. This returned function has access
-to all parameters passed to the generating function because in {\sf
-  R}, nested functions are lexically scoped. The idea is to use module-specific `code
-factories' that generate parameterized workhorses rather than
-struggling with monolithic functions with endless parameter lists. As
-a simple example, consider \code{struc\_mosaic()} and \code{struc\_assoc},
-the generating functions for the mosaic and the association plots:
+Another high-level function for visualizing conditional independence
+models is \codefun{pairs.table} (\codefun{pairs.structable}), 
+that is, the {\sf S3}-method for objects
+of class \code{"table"} (\code{"structable"}) of the \codefun{pairs} generic. 
+In contrast to \codefun{cotabplot} which is conditioning on variable \emph{levels},
+\codefun{pairs.table} is conditioning on the variables themselves, creating
+partial views of the table. The function produces a matrix 
+having strucplot displays in the off-diagonal cells, and
+the variable names (with, optionally, univariate statistics) in the diagonal cells. 
+Figure \ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
+independence in the lower triangle,
+association plots for the same in the upper triangle, and bar charts in the diagonal.
 
-\begin{smallexample}
-struc_mosaic <- function(zero_size = 0.5)
-  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
-  \dots
-  }
+<<pairs>>=
+pairs(hec, upper_panel = pairs_assoc, space = 0.3, 
+      diag_panel_args = list(rot = -45, just_leveltext = c("left","bottom")))
+@
 
-struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
-                        yspace = unit(0.5, "lines"), xscale = 0.9)
-  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
-  \dots
-  }
-\end{smallexample}
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pairsfig,fig=TRUE,echo=FALSE>>=
+<<pairs>>
+@
+\caption{Pairs plot for the \data{HairEyeColor} data.}
+\label{fig:pairs}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
 
-\noindent Both functions have specific parameters in their signature,
-but both return a function with a standardized interface that
-subsequently is called by \code{strucplot} to produce the actual
-plot. As can be seen, the only information \code{strucplot()} passes
-to the panel functions are residuals, observed and expected
-values, a structure containing the between-tile spacing information,
-an object of class \code{"gpar"} for the tiles' graphical parameters,
-and a logical vector with the splitting information for each
-dimension. The workhorse function, of course, is free to use only
-part or all of this information. High-level interface functions such
-as \code{mosaic()} and \code{assoc{}} call \code{strucplot()} by
-specifying the corresponding function along with the specific
-parameters. Now, there a several ways of doing the same thing, as
-illustrated by the following equivalent calls:
+\noindent In plots produced by \codefun{pairs.table}, 
+each cell's row and column define two variables $X$ and $Y$ used for the
+specification of four different types of independence: `\code{pairwise}',
+`\code{total}', `\code{conditional}' and `\code{joint}'. The pairwise mosaic
+matrix shows bivariate marginal relations between $X$ and $Y$, collapsed over all
+other variables. The total independence mosaic matrix shows mosaic
+plots for mutual independence, i.e., for marginal and conditional independence
+among all pairs of variables. The conditional
+independence mosaic matrix shows mosaic plots for marginal
+independence of $X$ and $Y$, given all other variables. The joint independence
+mosaic matrix shows mosaic plots for joint independence of all
+pairs ($X$, $Y$) of variables from the others.
 
-<<panelfuns>>=
-strucplot(Titanic, panel = struc_mosaic(zero_size = 1))
-strucplot(Titanic, panel = struc_mosaic, panel_args = list(zero_size = 1))
-@ 
-<<panelfuns2,eval=FALSE>>=
-strucplot(Titanic, panel = myworkhorse)
-@ 
+Since the matrix is symmetric, the upper and lower parts can
+independently be used to display different 
+types of independence models, or different strucplots displays
+(mosaic, association, or sieve plots).
+The available core functions (\codefun{pairs\_assoc}, 
+\codefun{pairs\_mosaic}, and \codefun{pairs\_sieve}) 
+are just simple wrappers to \codefun{assoc}, 
+\codefun{mosaic}, and \codefun{sieve}, respectively. 
+Obviously, seeing patterns in strucplot matrices 
+becomes increasingly difficult with
+higher dimensionality. Typically, therefore, this plot is used with a suitable 
+residual-based shading (described in a separate vignette).
 
-\noindent where \code{myworkhorse} could be, e.g., a function with
-hard-wired parameters, but with an interface complying with the
-workhorse signature. To enable \code{strucplot()} to distinguish
-between generating functions and workhorse functions, the generating
-functions must be of class \code{"panel\_generator"}.
+\section{Interactive plot modifications}
 
-All panel functions are supposed to produce conditional hierarchical
+All strucplot core functions are supposed to produce conditional hierarchical
 plots by the means of nested viewports, corresponding to the provided splitting
 information. Thus, at the end of the plotting, each tile is associated with
 a particular viewport. Each of those viewports has to be
 conventionally named, enabling other strucplot modules, in particular the
 labeling functions, to access specific tiles after they have been
-plotted. Note that the viewport tree is popped by default. The
-following example shows how to access parts of the plot after it has
+plotted. The naming convention for the viewports is:
+
+\begin{center}
+\code{cell:\emph{[Variable 1]}=\emph{[Level 1]},\emph{[Variable 2]}=\emph{[Level 2]}} \dots
+\end{center}
+
+\noindent Clearly, these names depend on the splitting.
+The following example shows how to access parts of the plot after it has
 been drawn (see Figure \ref{fig:afterplot}):
 
 <<viewportnames>>=
-mosaic(~ Sex + Class, data = Titanic, pop = FALSE)
-current.vpTree() ## output not shown
+mosaic(~ Hair + Eye, data = hec, pop = FALSE)
 
-seekViewport("cell:Sex=Male")
+seekViewport("cell:Hair=Blond")
 grid.rect(gp = gpar(col = "red", lwd = 4))
 
-seekViewport("cell:Sex=Male,Class=Crew")
+seekViewport("cell:Hair=Blond,Eye=Blue")
 grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
 @ 
+
+\noindent Note that the viewport tree is removed by
+default. Therefore, the \texttt{pop} argument has to be set to
+\texttt{FALSE} when viewports shall be accessed. 
 
 \setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
@@ -476,48 +520,32 @@ grid.circle(r = 0.2, gp = gpar(fill = "cyan"))
 \end{center}
 \end{figure}
 
-\noindent The naming convention for the viewports is:
-\code{cell..\emph{[Variable 1]}.\emph{[Level 1]}..\emph{[Variable 2]}.\emph{[Level 2]}} \dots. Clearly, these names depend on the splitting.
-
 In addition to the viewports, the main graphical elements get names
 following a similar construction method. This allows to change
-graphical parameters of plot elements after the plotting (see Figure \ref{fig:changeplot}):
+graphical parameters of plot elements \emph{after} 
+the plotting (see Figure \ref{fig:changeplot}):
 
-<<changeplot>>=
-assoc(Titanic, pop = FALSE)
-getNames() ## output not shown
-grid.edit("rect:Class=1st,Sex=Female,Age=Adult,Survived=Yes", 
-            gp = gpar(fill = "red"))
+<<changeplot,results=verbatim>>=
+assoc(Eye ~ Hair, data = hec, pop = FALSE)
+getNames()[1:6]
+grid.edit("rect:Hair=Blond,Eye=Blue", gp = gpar(fill = "red"))
 @ 
 
+%% code-chunk reuse does not work with parameter changing
 \begin{figure}[h]
 \begin{center}
 <<changeplotfig,fig=TRUE,echo=FALSE>>=
-assoc(Titanic)
-x = Titanic
-x[] = NA
-x["1st", "Female", "Adult", "Yes"] = "Red"
-assoc(Titanic, gp = gpar(fill = x))
+x = tab = margin.table(HairEyeColor, 1:2)
+x[] = "light gray"
+x["Blond","Blue"] = "Red"
+assoc(tab, gp = gpar(fill = x))
 @
 \caption{Changing graphical parameters of elements after drawing.}
 \label{fig:changeplot}
 \end{center}
 \end{figure}
 
-\begin{thebibliography}{}
-
-\bibitem[Cohen, 1980]{vcd:Cohen:1980}
-Cohen, A. (1980).
-\newblock On the graphical display of the significant components in a two-way
-  contingency table.
-\newblock {\em Communications in Statistics---Theory and Methods},
-  A9:1025--1041.
-
-\bibitem[Hartigan and Kleiner, 1984]{vcd:Hartigan+Kleiner:1984}
-Hartigan, J. and Kleiner, B. (1984).
-\newblock A mosaic of television ratings.
-\newblock {\em The American Statistician}, 38:32--35.
-
-\end{thebibliography}
+\bibliographystyle{apalike}
+\bibliography{vcd}
 
 \end{document}

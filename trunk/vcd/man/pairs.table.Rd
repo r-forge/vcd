@@ -1,8 +1,9 @@
 \name{pairs.table}
 \alias{pairs.table}
+\alias{pairs.structable}
 \title{Pairs Plot for Contingency Tables}
 \description{
-  Produces a matrix of strucplots.
+  Produces a matrix of strucplot displays.
 }
 \usage{
 \method{pairs}{table}(x, upper_panel = pairs_mosaic, upper_panel_args = list(),
@@ -35,8 +36,8 @@
 }
 \details{
   This is a \code{\link[graphics]{pairs}} method for objects inheriting
-  from class \code{"table"}.  It plots a matrix of pairwise mosaic
-  plots.
+  from class \code{"table"} or \code{"structable"}.
+  It plots a matrix of pairwise mosaic plots.
   
   Four independence types are distinguished: \code{"pairwise"},
   \code{"total"}, \code{"conditional"} and \code{"joint"}.
@@ -62,7 +63,7 @@
     subsequently is called for each cell with the corresponding
     coordinates.
     \item Passing a corresponding \emph{generating function} (of class
-    \code{"panel_generator"}) to \var{foo\_panel}, along with parameters passed to
+    \code{"generating_function"}) to \var{foo\_panel}, along with parameters passed to
     \var{foo\_panel\_args}, that generates such a function. 
   }
 Hence, the second approach is equivalent to the first if
