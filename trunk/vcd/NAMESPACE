@@ -70,7 +70,7 @@ export(
        "grid_barplot",
        "hls",
        "is.structable",
-       ## "hcl",
+       "mondrian",
        "independence_table",
        "mar_table", 
        "Ord_estimate",
@@ -78,7 +78,6 @@ export(
        "strucplot",
        "ternaryplot",
        "grid_legend",
-       ## "pearson_test",
        "woolf_test")
 
 import(MASS)

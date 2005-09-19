@@ -12,7 +12,7 @@ strucplot(x, residuals = NULL, expected = NULL,
   spacing = spacing_equal, spacing_args = list(),
   gp = NULL, gp_args = list(),
   labeling = labeling_border, labeling_args = list(),
-  panel = struc_mosaic, panel_args = list(),
+  core = struc_mosaic, core_args = list(),
   legend = NULL, legend_args = list(),
   main = NULL, sub = NULL, margins = rep.int(2.5, 4),
   legend_width = unit(5, "lines"), title_gp = gpar(fontsize = 20),
@@ -63,12 +63,12 @@ strucplot(x, residuals = NULL, expected = NULL,
     generating function (see details and \code{\link{labelings}}.}
   \item{labeling_args}{list of arguments for the labeling-generating
     function, if specified.}
-  \item{panel}{either a panel function, or a corresponding generating
+  \item{core}{either a core function, or a corresponding generating
     function (see details).  Currently, generating functions for
     mosaic plots (\code{\link{struc_mosaic}}), association plots
     (\code{\link{struc_assoc}}), and sieve plots
     (\code{\link{struc_sieve}}) are provided.}
-  \item{panel_args}{list of arguments for the panel-generating function,
+  \item{core_args}{list of arguments for the core-generating function,
     if specified.}
   \item{legend}{either a legend-generating function, or a legend
     function (see details and \code{\link{legends}}), or a logical.
@@ -113,10 +113,10 @@ strucplot(x, residuals = NULL, expected = NULL,
   the plot.  The function invisibly returns the \code{"structable"} object
   visualized.
 
-  Most elements of the plot, such as the panel function, the spacing
+  Most elements of the plot, such as the core function, the spacing
   between the tiles, the shading of the tiles, the labeling, and the
   legend, are modularized in functions and specified as parameters.  For
-  each element \emph{foo} (= \code{spacing}, \code{labeling}, \code{panel},
+  each element \emph{foo} (= \code{spacing}, \code{labeling}, \code{core},
   or \code{legend}), \code{strucplot} takes two arguments:
   \var{foo} and \var{foo\_args}, which can be used to specify the
   parameters in the following alternative ways:
@@ -139,7 +139,7 @@ strucplot(x, residuals = NULL, expected = NULL,
   the plot to preserve the 1:1 aspect ratio.
 
   If \code{type = "expected"}, the expected values are passed to the
-  \code{observed} argument of the panel function, and the observed
+  \code{observed} argument of the core function, and the observed
   values to the \code{expected} argument.
 
   Although the \code{gp} argument is typically used for shading, it can
@@ -175,7 +175,7 @@ strucplot(x, residuals = NULL, expected = NULL,
 }
 \examples{
 strucplot(Titanic)
-strucplot(Titanic, panel = struc_assoc)
+strucplot(Titanic, core = struc_assoc)
 strucplot(Titanic, spacing = spacing_increase,
                    spacing_args = list(start = 0.5, rate = 1.5))
 strucplot(Titanic, spacing = spacing_increase(start = 0.5, rate = 1.5))
