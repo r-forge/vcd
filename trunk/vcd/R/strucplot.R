@@ -1,6 +1,6 @@
 ################################################################
 ### strucplot - generic plot framework for mosaic-like layouts
-### 2 panel functions are provided: struc_mosaic and struc_assoc
+### 2 core functions are provided: struc_mosaic and struc_assoc
 ################################################################
 
 strucplot <- function(## main parameters
@@ -20,8 +20,8 @@ strucplot <- function(## main parameters
 		      gp_args = list(),   
                       labeling = labeling_border,
                       labeling_args = list(),
-                      panel = struc_mosaic,
-                      panel_args = list(),
+                      core = struc_mosaic,
+                      core_args = list(),
                       legend = NULL,
                       legend_args = list(),
                       
@@ -172,14 +172,14 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  if (inherits(panel, "generating_function"))
-    panel <- do.call("panel", panel_args)
-  panel(residuals = residuals,
-        observed = if (type == "observed") x else expected,
-        expected = if (type == "observed") expected else x,
-        spacing = spacing,
-        gp = gp,
-        split_vertical = split_vertical)
+  if (inherits(core, "generating_function"))
+    core <- do.call("core", core_args)
+  core(residuals = residuals,
+       observed = if (type == "observed") x else expected,
+       expected = if (type == "observed") expected else x,
+       spacing = spacing,
+       gp = gp,
+       split_vertical = split_vertical)
 
   upViewport(dl)
 

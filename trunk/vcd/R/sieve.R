@@ -95,7 +95,7 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            panel = struc_sieve(sievetype = sievetype),
+            core = struc_sieve(sievetype = sievetype),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,

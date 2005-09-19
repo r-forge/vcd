@@ -88,7 +88,7 @@ mosaic.default <- function(x, condvars = NULL,
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            panel = struc_mosaic(zero_size = zero_size),
+            core = struc_mosaic(zero_size = zero_size),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,

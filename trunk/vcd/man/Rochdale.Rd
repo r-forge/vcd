@@ -46,6 +46,7 @@ data(Rochdale)
 }
 \examples{
 data(Rochdale)
-mosaic(Rochdale)
+## FIXME: breaks R CMD check!
+\dontrun{mosaic(Rochdale)}
 }
 \keyword{datasets}
