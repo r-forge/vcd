@@ -163,26 +163,31 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
 }
 
 "[[.structable" <- function(x, ...) {
+  args <- if (nargs() < 3)
+    list(..1)
+  else
+    list(..1, ..2)
+  
   ## handle one-arg cases
   if (nargs() < 3)
-    if (length(..1) > 1)
+    if (length(args[[1]]) > 1)
       ## resolve calls like x[[c(1,2)]]
-      return(x[[ ..1[1] ]] [[ ..1[-1] ]])
+      return(x[[ args[[1]][1] ]] [[ args[[1]][-1] ]])
     else
       ## resolve x[[foo]] 
-      return(if (attr(x, "split_vertical")[1]) x[[,..1]] else x[[..1,]])
+      return(if (attr(x, "split_vertical")[1]) x[[,args[[1]]]] else x[[args[[1]],]])
 
   ## handle calls like x[[c(1,2), c(3,4)]]
-  if (length(..1) > 1 && length(..2) > 1)
-    return(x[[ ..1[1], ..2[[1]] ]] [[ ..1[-1], ..2[-1] ]])
+  if (length(args[[1]]) > 1 && length(args[[2]]) > 1)
+    return(x[[ args[[1]][1], args[[2]][[1]] ]] [[ args[[1]][-1], args[[2]][-1] ]])
   
   ## handle calls like x[[c(1,2), 3]]
-  if (length(..1) > 1)
-    return(x[[ ..1[1], ..2 ]] [[ ..1[-1], ]])
+  if (length(args[[1]]) > 1)
+    return(x[[ args[[1]][1], args[[2]] ]] [[ args[[1]][-1], ]])
   
   ## handle calls like x[[1, c(1,3)]]
-  if (length(..2) > 1)
-    return(x[[ ..1, ..2[[1]] ]] [[ , ..2[-1] ]])
+  if (length(args[[2]]) > 1)
+    return(x[[ args[[1]], args[[2]][[1]] ]] [[ , args[[2]][-1] ]])
 
   ## final cases like x[[1,2]] or x[[1,]] or x[[,1]]
   dnames <- attr(x, "dnames")
@@ -190,32 +195,32 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   rv <- dnames[!split]
   cv <- dnames[split]
 
-  lsym <- is.symbol(..1)
-  rsym <- is.symbol(..2)
+  lsym <- is.symbol(args[[1]])
+  rsym <- is.symbol(args[[2]])
   if (!lsym) {
     rstep <- dim(x)[1] / length(rv[[1]])
-    if (is.character(..1))
-      ..1 <- match(..1, rv[[1]])
+    if (is.character(args[[1]]))
+      args[[1]] <- match(args[[1]], rv[[1]])
   }
   if (!rsym) {
     cstep <- dim(x)[2] / length(cv[[1]])
-    if (is.character(..2))
-      ..2 <- match(..2, cv[[1]])
+    if (is.character(args[[2]]))
+      args[[2]] <- match(args[[2]], cv[[1]])
   }
 
-  ret <- x[if (!lsym) (1 + (..1 - 1) * rstep) : (..1 * rstep) else 1:nrow(x),
-           if (!rsym) (1 + (..2 - 1) * cstep) : (..2 * cstep) else 1:ncol(x),
+  ret <- x[if (!lsym) (1 + (args[[1]] - 1) * rstep) : (args[[1]] * rstep) else 1:nrow(x),
+           if (!rsym) (1 + (args[[2]] - 1) * cstep) : (args[[2]] * cstep) else 1:ncol(x),
            drop = FALSE
            ]
 
-  if (!is.symbol(..1)) {
+  if (!lsym) {
     i <- which(!split)[1]
     split <- split[-i]
     dnames <- dnames[-i]
   }
     
 
-  if (!is.symbol(..2)) {
+  if (!rsym) {
     i <- which(split)[1]
     split <- split[-i]
     dnames <- dnames[-i]
