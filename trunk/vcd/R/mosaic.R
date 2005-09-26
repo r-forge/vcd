@@ -118,7 +118,7 @@ struc_mosaic <- function(zero_size = 0.5)
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = substr(name, 1, nchar(name) - 1))
+                         layout = layout, name = remove_trailing_comma(name))
       
       ## next level: either create further splits, or final viewports
       name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
@@ -128,7 +128,7 @@ struc_mosaic <- function(zero_size = 0.5)
         function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m])
       else
         function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                             name = substr(name[m], 1, nchar(name[m]) - 1))
+                             name = remove_trailing_comma(name[m]))
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
 
       vpTree(vproot, vpleaves)

@@ -114,7 +114,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = substr(name, 1, nchar(name) - 1))
+                         layout = layout, name = remove_trailing_comma(name))
 
       ## next level: either create further splits, or final viewports
       name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
@@ -129,12 +129,12 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
       } else {
         if (v)
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
-                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               name = remove_trailing_comma(name[m]),
                                yscale = res[,1],
                                xscale = sexp[,m], default.units = "null")
         else
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
-                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               name = remove_trailing_comma(name[m]),
                                yscale = res[,m],
                                xscale = sexp[,1], default.units = "null")
       }
