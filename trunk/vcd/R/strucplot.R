@@ -144,7 +144,8 @@ strucplot <- function(## main parameters
   
   pushViewport(vcdViewport(mar = margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
-                           main = !is.null(main), sub = !is.null(sub), keep_aspect_ratio = keep_aspect_ratio,
+                           main = !is.null(main), sub = !is.null(sub),
+                           keep_aspect_ratio = keep_aspect_ratio,
                            legend_width = legend_width))
 
   ## legend
@@ -194,9 +195,8 @@ strucplot <- function(## main parameters
 
   seekViewport("base") 
   ## one more up if sandwich-mode
-  if (!is.null(main) || !is.null(sub) ##||
-##      (shade && !is.null(legend) && !(is.logical(legend) && !legend))
-      ) upViewport()
+  if (!is.null(main) || !is.null(sub) ||
+      (shade && !(is.null(legend) || is.logical(legend) && !legend))) upViewport()
   if (pop) popViewport(1 + keep_aspect_ratio) else upViewport(1 + keep_aspect_ratio)
 
   ## return visualized table
@@ -209,6 +209,7 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
                         legend = FALSE, main = FALSE, sub = FALSE,
                         keep_aspect_ratio = TRUE)
 {
+  if (legend) main = sub = TRUE
   mar <- if (!is.unit(mar))
     unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
   else
@@ -252,32 +253,29 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   }
 
   ## main/sub-title, margins for legend layout
-  if (main || sub) {
+  if (main || sub || legend) {
     vpTop <- viewport(layout.pos.row = 1, name = "main")
     vpSub <- viewport(layout.pos.row = 2 + main, name = "sub")
     
     sandwich <-
-## no additional space when keep_aspect_ratio = F
-#       if (legend) {
-#       space <- max(legend_width + mar[2] + mar[4] - mar[1] - mar[3],
-#                    unit((main + sub) * 2, "lines"))
-#       vplist <- vpList(vpTop, vpPlotregion, vpSub)
-#       viewport(layout = grid.layout(3, 1,
-#                  height = unit.c(0.5 * space, unit(1, "null"), 0.5 * space)))
-#     } else
-    if (main && sub) {
-      vplist <- vpList(vpTop, vpPlotregion, vpSub)
-      viewport(layout = grid.layout(3, 1,
-                 height = unit.c(unit(2, "lines"), unit(1, "null"), unit(2, "lines"))))
-    } else if (main) {
-      vplist <- vpList(vpTop, vpPlotregion)
-      viewport(layout = grid.layout(2, 1,
-                 height = unit.c(unit(2, "lines"), unit(1, "null"))))
-    } else {
-      vplist <- vpList(vpPlotregion, vpSub)
-      viewport(layout = grid.layout(2, 1,
-                 height = unit.c(unit(1, "null"), unit(2, "lines"))))
-    }
+      if (legend) {
+        space <- max(legend_width + mar[2] + mar[4] - mar[1] - mar[3], unit(2, "lines"))
+        vplist <- vpList(vpTop, vpPlotregion, vpSub)
+        viewport(layout = grid.layout(3, 1,
+                   height = unit.c(0.5 * space, unit(1, "null"), 0.5 * space)))
+      } else if (main && sub) {
+        vplist <- vpList(vpTop, vpPlotregion, vpSub)
+        viewport(layout = grid.layout(3, 1,
+                   height = unit.c(unit(2, "lines"), unit(1, "null"), unit(2, "lines"))))
+      } else if (main) {
+        vplist <- vpList(vpTop, vpPlotregion)
+        viewport(layout = grid.layout(2, 1,
+                   height = unit.c(unit(2, "lines"), unit(1, "null"))))
+      } else {
+        vplist <- vpList(vpPlotregion, vpSub)
+        viewport(layout = grid.layout(2, 1,
+                   height = unit.c(unit(1, "null"), unit(2, "lines"))))
+      }
 
     vpTree(sandwich, vplist)
   } else vpPlotregion

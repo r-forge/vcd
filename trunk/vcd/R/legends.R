@@ -85,7 +85,7 @@ class(legend_resbased) <- "generating_function"
 legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
                          y = unit(0.25, "npc"),
-                         height = unit(0.65, "npc"),
+                         height = unit(0.75, "npc"),
                          width = unit(1.5, "lines"),
                          steps = 200,
 			 digits = 3,
@@ -141,7 +141,7 @@ legend_fixed <- function(fontsize = 12,
                   default.unit = "npc")
 
     popViewport(1)
-    grid.text(text, x = x + 0.5 * width, y = 0.1,
+    grid.text(text, x = x + 0.5 * width, y = 0,
               gp = gpar(fontsize = fontsize, lineheight = 0.8),
               just = c("left", "top"),
               rot = 90
