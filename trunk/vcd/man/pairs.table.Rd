@@ -13,6 +13,7 @@
   newpage = TRUE, \dots)
 }
 \arguments{
+
   \item{x}{a contingency table in array form, with optional category
     labels specified in the \code{dimnames(x)} attribute.}
   \item{upper_panel}{function for the upper triangle of the matrix, or
@@ -75,9 +76,12 @@ Hence, the second approach is equivalent to the first if
 \seealso{
   \code{\link{pairs_mosaic}},
   \code{\link{pairs_assoc}},
+  \code{\link{pairs_sieve}},
   \code{\link{pairs_text}},
   \code{\link{pairs_barplot}},
-  \code{\link{assoc}}
+  \code{\link{assoc}},
+  \code{\link{sieve}},
+  \code{\link{mosaic}}
 }
 \references{
   Cohen, A. (1980),

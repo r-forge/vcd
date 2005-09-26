@@ -104,9 +104,10 @@ framework into more complex displays.
   \end{center}
 \end{figure}
 
+\setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[h]
 \begin{center}
-<<vcdlayout,fig=TRUE,echo=FALSE,width=6,height=5>>=
+<<vcdlayout,fig=TRUE,echo=FALSE,width=6,height=6>>=
     pushViewport(vcd:::vcdViewport(legend = T, mar =4))
     seekViewport("plot")
     grid.rect(gp = gpar(lwd = 3))
@@ -148,6 +149,7 @@ framework into more complex displays.
 \label{fig:layout}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
 
 \section{Mosaic, Association, and Sieve Plots}
 

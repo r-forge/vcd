@@ -54,6 +54,7 @@ export(
        "pairs_strucplot",
        "pairs_mosaic",
        "pairs_assoc",
+       "pairs_sieve",
        "struc_mosaic",
        "struc_assoc",
        "cotab_mosaic",
