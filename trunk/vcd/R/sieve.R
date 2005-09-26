@@ -130,7 +130,7 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       else
         grid.layout(nrow = 2 * d - 1, heights = dist[idx])
       vproot <- viewport(layout.pos.col = col, layout.pos.row = row,
-                         layout = layout, name = substr(name, 1, nchar(name) - 1))
+                         layout = layout, name = remove_trailing_comma(name))
       
       ## next level: either create further splits, or final viewports
       name <- paste(name, dnn[i], "=", dn[[i]], ",", sep = "")
@@ -149,12 +149,12 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       } else {
         if (v)
           function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               name = remove_trailing_comma(name[m]),
                                yscale = c(0, rowmargin),
                                xscale = c(0, colmargin * proptab(margin)[m]))
         else
           function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                               name = substr(name[m], 1, nchar(name[m]) - 1),
+                               name = remove_trailing_comma(name[m]),
                                yscale = c(0, rowmargin * proptab(margin)[m]),
                                xscale = c(0, colmargin))
       }
