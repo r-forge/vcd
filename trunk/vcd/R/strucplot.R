@@ -27,7 +27,8 @@ strucplot <- function(## main parameters
                       
                       main = NULL,
                       sub = NULL,
-                      margins = rep.int(2.5, 4),
+                      margins = unit(2.5, "lines"),
+                      title_margins = NULL,
                       legend_width = unit(5, "lines"),
                       
                       ## control parameters
@@ -133,7 +134,11 @@ strucplot <- function(## main parameters
 
   ## recycle gpar values in the last dimension
   size <- prod(d)
-  FUN <- function(par) if (length(par) < size) aperm(array(par, dim = rev(d))) else par
+  FUN <- function(par) {
+    if (is.structable(par))
+      par <- as.table(par)
+    if (length(par) < size) aperm(array(par, dim = rev(d))) else par
+  }
   gp <- structure(lapply(gp, FUN), class = "gpar")
   
   ## set up page
@@ -143,6 +148,7 @@ strucplot <- function(## main parameters
     pushViewport(viewport(width = 1, height = 1, default.unit = "snpc"))
   
   pushViewport(vcdViewport(mar = margins,
+                           oma = title_margins,
                            legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                            main = !is.null(main), sub = !is.null(sub),
                            keep_aspect_ratio = keep_aspect_ratio,
@@ -167,6 +173,8 @@ strucplot <- function(## main parameters
 
   if (!is.null(sub)) {
     seekViewport("sub")
+    if (is.logical(sub) && sub && is.null(main))
+      sub <- deparse(substitute(x))
     grid.text(sub, gp = title_gp)
   }
 
@@ -206,16 +214,35 @@ strucplot <- function(## main parameters
 
 vcdViewport <- function(mar = rep.int(2.5, 4),
                         legend_width = unit(5, "lines"),
+                        oma = NULL,
                         legend = FALSE, main = FALSE, sub = FALSE,
                         keep_aspect_ratio = TRUE)
 {
-  if (legend) main = sub = TRUE
+  ## process parameters
+  if (legend && !main && !sub) main <- sub <- TRUE
   mar <- if (!is.unit(mar))
     unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
   else
     unit.rep(mar, length.out = 4)
+  if (is.null(oma)) {
+    space <- if (legend && keep_aspect_ratio)
+      legend_width + mar[2] + mar[4] - mar[1] - mar[3]
+    else unit(0, "lines")
+    oma <- if (main && sub)
+      max(unit(2, "lines"), 0.5 * space)
+    else if (main || sub)
+      max(unit(2, "lines"), space)
+    else
+      0.5 * space
+  }
+  oma <- if (!is.unit(oma))
+    unit(pexpand(oma, 2, rep.int(2, 2), c("top","bottom")), "lines")
+  else
+    unit.rep(oma, length.out = 2)
   if (!is.unit(legend_width))
     legend_width <- unit(legend_width, "lines")
+  
+  ## set up viewports
   vpPlot <- vpStack(viewport(layout.pos.col = 2, layout.pos.row = 2),
                     viewport(width = 1, height = 1, name = "plot",
                              default.units = if (keep_aspect_ratio) "snpc" else "npc"))
@@ -253,29 +280,23 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   }
 
   ## main/sub-title, margins for legend layout
-  if (main || sub || legend) {
+  if (main || sub) {
     vpTop <- viewport(layout.pos.row = 1, name = "main")
     vpSub <- viewport(layout.pos.row = 2 + main, name = "sub")
     
-    sandwich <-
-      if (legend) {
-        space <- max(legend_width + mar[2] + mar[4] - mar[1] - mar[3], unit(2, "lines"))
-        vplist <- vpList(vpTop, vpPlotregion, vpSub)
-        viewport(layout = grid.layout(3, 1,
-                   height = unit.c(0.5 * space, unit(1, "null"), 0.5 * space)))
-      } else if (main && sub) {
-        vplist <- vpList(vpTop, vpPlotregion, vpSub)
-        viewport(layout = grid.layout(3, 1,
-                   height = unit.c(unit(2, "lines"), unit(1, "null"), unit(2, "lines"))))
-      } else if (main) {
-        vplist <- vpList(vpTop, vpPlotregion)
-        viewport(layout = grid.layout(2, 1,
-                   height = unit.c(unit(2, "lines"), unit(1, "null"))))
-      } else {
-        vplist <- vpList(vpPlotregion, vpSub)
-        viewport(layout = grid.layout(2, 1,
-                   height = unit.c(unit(1, "null"), unit(2, "lines"))))
-      }
+    sandwich <- if (main && sub) {
+      vplist <- vpList(vpTop, vpPlotregion, vpSub)
+      viewport(layout = grid.layout(3, 1,
+                 height = unit.c(oma[1], unit(1, "null"), oma[2])))
+    } else if (main) {
+      vplist <- vpList(vpTop, vpPlotregion)
+      viewport(layout = grid.layout(2, 1,
+                 height = unit.c(oma[1], unit(1, "null"))))
+    } else {
+      vplist <- vpList(vpPlotregion, vpSub)
+      viewport(layout = grid.layout(2, 1,
+                 height = unit.c(unit(1, "null"), oma[2])))
+    }
 
     vpTree(sandwich, vplist)
   } else vpPlotregion

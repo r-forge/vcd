@@ -13,8 +13,9 @@
 \usage{
 \method{sieve}{default}(x, condvars = NULL, gp = NULL, shade = NULL,
   legend = FALSE, split_vertical = NULL, direction = NULL, spacing = NULL,
-  spacing_args = list(), sievetype = c("observed","expected"), main = NULL, \dots)
-\method{sieve}{formula}(formula, data, \dots, main = NULL, subset = NULL)
+  spacing_args = list(), sievetype = c("observed","expected"),
+  main = NULL, sub = NULL, \dots)
+\method{sieve}{formula}(formula, data, \dots, main = NULL, sub = NULL, subset = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -72,8 +73,8 @@
     and  \code{spacing_increase} for more dimensions.}
   \item{spacing_args}{list of arguments for the generating function, if
     specified (see \code{\link{strucplot}} for more information).}
-  \item{main}{either a logical, or a character string used for plotting
-    the main title.  If \code{main} is a logical and \code{TRUE}, the
+  \item{main, sub}{either a logical, or a character string used for plotting
+    the main (sub) title.  If logical and \code{TRUE}, the
     name of the \code{data} object is used.}
   \item{\dots}{Other arguments passed to \code{\link{strucplot}}}
 }

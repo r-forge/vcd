@@ -325,9 +325,9 @@ conditioning is only possible ``outside-in'':
 
 <<subsetting,results=verbatim>>=
 hec
-hec[["Male",]]
-hec[[c("Male", "Brown"),]]
-hec[["Male","Green"]]
+hec["Male",]
+hec[c("Male", "Brown"),]
+hec["Male","Green"]
 @ 
 
 \noindent Now, there are several ways for visualizing 
@@ -341,11 +341,11 @@ framework to visualize the two groups besides each other:
 pushViewport(viewport(layout = grid.layout(ncol = 2)))
 
 pushViewport(viewport(layout.pos.col = 1))
-mosaic(hec[["Male"]], margins = c(top = 2, 0), sub = "Male", newpage = FALSE)
+mosaic(hec["Male"], margins = c(top = 2, 0), sub = "Male", newpage = FALSE)
 popViewport()
 
 pushViewport(viewport(layout.pos.col = 2))
-mosaic(hec[["Female"]], margins = c(top = 2, 0), sub = "Female", newpage = FALSE)
+mosaic(hec["Female"], margins = c(top = 2, 0), sub = "Female", newpage = FALSE)
 popViewport(2)
 @
 

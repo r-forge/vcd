@@ -5,12 +5,14 @@ assoc <- function(x, ...)
   UseMethod("assoc")
 
 assoc.formula <-
-function(formula, data = NULL, subset, na.action, ..., main = NULL)
+function(formula, data = NULL, subset, na.action, ..., main = NULL, sub = NULL)
 {
     if (is.logical(main) && main)
       main <- deparse(substitute(data))
+    else if (is.logical(sub) && sub)
+      sub <- deparse(substitute(data))
 
-    assoc.default(ftable(formula, data, subset, na.action), main = main, ...)
+    assoc.default(ftable(formula, data, subset, na.action), main = main, sub = sub, ...)
 }
 
 assoc.default <- function(x,
@@ -23,12 +25,15 @@ assoc.default <- function(x,
 			  residuals_type = "Pearson",
                           xscale = 0.9, yspace = unit(0.5, "lines"),
                           main = NULL,
+                          sub = NULL,
                           ...,
                           gp_axis = gpar(lty = 3)
                           ) {
 
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
+  else if (is.logical(sub) && sub)
+    sub <- deparse(substitute(x))
 
   if (!inherits(x, "ftable"))
     x <- structable(x)
@@ -57,7 +62,8 @@ assoc.default <- function(x,
               yspace = yspace, xscale = xscale, gp_axis = gp_axis),
             keep_aspect_ratio = keep_aspect_ratio,
             residuals_type = "Pearson",
-            main = main, 
+            main = main,
+            sub = sub,
             ...)
 }
 
@@ -76,11 +82,11 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     rfunc <- function(x) c(min(x, 0), max(x, 0))
     if (is.null(ylim))
       ylim <- if (compress)
-        matrix(apply(resid, 1, rfunc), nrow = 2)
+        matrix(apply(as.matrix(resid), 1, rfunc), nrow = 2)
       else
-        rfunc(resid)
+        rfunc(as.matrix(resid))
     if (!is.matrix(ylim))
-      ylim <- matrix(ylim, nrow = 2, ncol = nrow(resid))
+      ylim <- matrix(as.matrix(ylim), nrow = 2, ncol = nrow(as.matrix(resid)))
 
     attr(ylim, "split_vertical") <- rep(TRUE, sum(!split_vertical))
     attr(ylim, "dnames") <- dn[!split_vertical]
@@ -88,11 +94,11 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
 
     if(is.null(xlim))
       xlim <- if (compress)
-        matrix(c(-0.5, 0.5) %o% apply(sexpected, 2, max), nrow = 2)
+        matrix(c(-0.5, 0.5) %o% apply(as.matrix(sexpected), 2, max), nrow = 2)
       else
         c(-0.5, 0.5) * max(sexpected)
     if (!is.matrix(xlim))
-      xlim <- matrix(xlim, nrow = 2, ncol = ncol(resid))
+      xlim <- matrix(as.matrix(xlim), nrow = 2, ncol = ncol(as.matrix(resid)))
     attr(xlim, "split_vertical") <- rep(TRUE, sum(split_vertical))
     attr(xlim, "dnames") <- dn[split_vertical]
     class(xlim) <- "structable"
@@ -101,8 +107,8 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     split <- function(res, sexp, i, name, row, col) {
       v <- split_vertical[i]
       splitbase <- if (v) sexp else res
-      splittab <- lapply(seq(dx[i]), function(j) splitbase[[j]])
-      len <- sapply(splittab, function(x) sum(x[1,] - x[2,]))
+      splittab <- lapply(seq(dx[i]), function(j) splitbase[j])
+      len <- sapply(splittab, function(x) sum(unclass(x)[1,] - unclass(x)[2,]))
 
       d <- dx[i]
 
@@ -130,13 +136,13 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
         if (v)
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
                                name = remove_trailing_comma(name[m]),
-                               yscale = res[,1],
-                               xscale = sexp[,m], default.units = "null")
+                               yscale = unclass(res)[,1],
+                               xscale = unclass(sexp)[,m], default.units = "null")
         else
           function(m) viewport(layout.pos.col = cols[m], layout.pos.row = rows[m],
                                name = remove_trailing_comma(name[m]),
-                               yscale = res[,m],
-                               xscale = sexp[,1], default.units = "null")
+                               yscale = unclass(res)[,m],
+                               xscale = unclass(sexp)[,1], default.units = "null")
       }
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
 

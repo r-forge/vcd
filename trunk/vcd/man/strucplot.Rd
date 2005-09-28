@@ -14,9 +14,10 @@ strucplot(x, residuals = NULL, expected = NULL,
   labeling = labeling_border, labeling_args = list(),
   core = struc_mosaic, core_args = list(),
   legend = NULL, legend_args = list(),
-  main = NULL, sub = NULL, margins = rep.int(2.5, 4),
-  legend_width = unit(5, "lines"), title_gp = gpar(fontsize = 20),
-  newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE)
+  main = NULL, sub = NULL, margins = unit(2.5, "lines"),
+  title_margins = NULL, legend_width = unit(5, "lines"),
+  title_gp = gpar(fontsize = 20), newpage = TRUE, pop = TRUE,
+  keep_aspect_ratio = TRUE)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -82,12 +83,26 @@ strucplot(x, residuals = NULL, expected = NULL,
   \item{sub}{a character string used for plotting the subtitle.}
   \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as needed.
-    The four components specify the \code{top}, \code{right},
-    \code{bottom}, and \code{left} margin of the plot, respectively.
+    The four components specify the top, right,
+    bottom, and left margin of the plot, respectively.
     When a numeric vector is supplied, the numbers are interpreted as
-    \code{"lines"} units.  In addition, it may have named arguments
+    \code{"lines"} units.  In addition, the unit or numeric vector
+    may have named arguments
     (\samp{top}, \samp{right}, \samp{bottom}, and \samp{left}), in which
     case the non-named arguments specify the default values (recycled as
+    needed), overloaded by the named arguments.}
+  \item{title_margins}{either an object of class \code{"unit"} of length 2, or
+    a numeric vector of length 2. The elements are recycled as needed.
+    The two components specify the top and bottom \emph{title} margin
+    of the plot, respectively. The default for each
+    \emph{specified} title are 2 lines (and 0 else), except when a
+    legend is plotted and \code{keep_aspect_ratio} is \code{TRUE}: in
+    this case, the default values of both margins are set as to align
+    the heights of legend and actual plot.
+    When a numeric vector is supplied, the numbers are interpreted as
+    \code{"lines"} units.  In addition, the unit or numeric vector
+    may have named arguments (\samp{top} and \samp{bottom}), in which
+    case the non-named argument specify the default value (recycled as
     needed), overloaded by the named arguments.}
   \item{legend_width}{either an object of class \code{"unit"} of length
     1, or a numeric value interpreted as proportion of the available

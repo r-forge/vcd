@@ -5,10 +5,12 @@ sieve <- function(x, ...)
   UseMethod("sieve")
 
 sieve.formula <-
-function(formula, data = NULL, ..., main = NULL, subset = NULL)
+function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
 {
   if (is.logical(main) && main)
     main <- deparse(substitute(data))
+  else if (is.logical(sub) && sub)
+    sub <- deparse(substitute(data))
   
   m <- match.call(expand.dots = FALSE)
   edata <- eval(m$data, parent.frame())
@@ -34,7 +36,7 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
       }
       dat <- margin.table(dat, ind)
     }
-    sieve.default(dat, main = main,
+    sieve.default(dat, main = main, sub = sub,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
     tab <- if ("Freq" %in% colnames(data))
@@ -44,7 +46,7 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
       xtabs(formula(paste("~", paste(c(condnames, varnames), collapse = "+"))),
             data = data, subset = subset)
     
-    sieve.default(tab, main = main, ...)
+    sieve.default(tab, main = main, sub = sub, ...)
   }
 }
 
@@ -52,9 +54,12 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
                           shade = NULL, legend = FALSE,
                           split_vertical = NULL, direction = NULL,
                           spacing = NULL, spacing_args = list(),
-                          sievetype = c("observed","expected"), main = NULL, ...) {
+                          sievetype = c("observed","expected"),
+                          main = NULL, sub = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
+  else if (is.logical(sub) && sub)
+    sub <- deparse(substitute(x))
   sievetype = match.arg(sievetype)
   if (is.logical(shade) && shade && is.null(gp))
     gp <- if (sievetype == "observed")
@@ -100,6 +105,7 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
             spacing = spacing,
             spacing_args = spacing_args,
             main = main,
+            sub = sub,
             shade = shade, 
             legend = legend,
             gp = gp,

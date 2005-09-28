@@ -5,6 +5,11 @@
 \alias{Extract.structable}
 \alias{t.structable}
 \alias{is.structable}
+\alias{as.matrix.structable}
+\alias{as.vector.structable}
+\alias{dim.structable}
+\alias{dimnames.structable}
+\alias{as.table.structable}
 \title{Structured Contingency Tables}
 \description{
   This function produces a \sQuote{flat} representation of a
@@ -80,14 +85,23 @@ structable(Sex + Class ~ Survived + Age, data = Titanic)
 (hec <- structable(aperm(HairEyeColor)))
 
 ## subset _dimensions_ sequentially
-hec[[1]]
-hec[[2]]
-hec[["Male"]]
-hec[[c("Male","Brown")]]
+hec[1]
+hec[2]
+hec["Male"]
+hec[c("Male","Brown")]
 
 ## subset _rows_ and/or _columns_ sequentially
-hec[["Male","Hazel"]]
-hec[[c("Male","Brown"),]]
-hec[[c("Male","Brown"),"Hazel"]]
+hec["Male","Hazel"]
+hec[c("Male","Brown"),]
+hec[c("Male","Brown"),"Hazel"]
+
+## a few other operations
+t(hec)
+dim(hec)
+dimnames(hec)
+as.matrix(hec)
+
+as.vector(hec) ## computed on the _multiway_ table
+as.vector(unclass(hec))
 }
 \keyword{hplot}

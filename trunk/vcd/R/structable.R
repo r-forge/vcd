@@ -162,7 +162,7 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   ret
 }
 
-"[[.structable" <- function(x, ...) {
+"[.structable" <- function(x, ...) {
   args <- if (nargs() < 3)
     list(..1)
   else
@@ -171,25 +171,25 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   ## handle one-arg cases
   if (nargs() < 3)
     if (length(args[[1]]) > 1)
-      ## resolve calls like x[[c(1,2)]]
-      return(x[[ args[[1]][1] ]] [[ args[[1]][-1] ]])
+      ## resolve calls like x[c(1,2)]
+      return(x[ args[[1]][1] ] [ args[[1]][-1] ])
     else
-      ## resolve x[[foo]] 
-      return(if (attr(x, "split_vertical")[1]) x[[,args[[1]]]] else x[[args[[1]],]])
+      ## resolve x[foo] 
+      return(if (attr(x, "split_vertical")[1]) x[,args[[1]] ] else x[args[[1]],])
 
-  ## handle calls like x[[c(1,2), c(3,4)]]
+  ## handle calls like x[c(1,2), c(3,4)]
   if (length(args[[1]]) > 1 && length(args[[2]]) > 1)
-    return(x[[ args[[1]][1], args[[2]][[1]] ]] [[ args[[1]][-1], args[[2]][-1] ]])
+    return(x[ args[[1]][1], args[[2]][1] ] [ args[[1]][-1], args[[2]][-1] ])
   
-  ## handle calls like x[[c(1,2), 3]]
+  ## handle calls like x[c(1,2), 3]
   if (length(args[[1]]) > 1)
-    return(x[[ args[[1]][1], args[[2]] ]] [[ args[[1]][-1], ]])
+    return(x[ args[[1]][1], args[[2]] ] [ args[[1]][-1], ])
   
-  ## handle calls like x[[1, c(1,3)]]
+  ## handle calls like x[1, c(1,3)]
   if (length(args[[2]]) > 1)
-    return(x[[ args[[1]], args[[2]][[1]] ]] [[ , args[[2]][-1] ]])
+    return(x[ args[[1]], args[[2]][1] ] [ , args[[2]][-1] ])
 
-  ## final cases like x[[1,2]] or x[[1,]] or x[[,1]]
+  ## final cases like x[1,2] or x[1,] or x[,1]
   dnames <- attr(x, "dnames")
   split <- attr(x, "split_vertical")
   rv <- dnames[!split]
@@ -198,20 +198,25 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   lsym <- is.symbol(args[[1]])
   rsym <- is.symbol(args[[2]])
   if (!lsym) {
-    rstep <- dim(x)[1] / length(rv[[1]])
+    rstep <- dim(unclass(x))[1] / length(rv[[1]])
     if (is.character(args[[1]]))
       args[[1]] <- match(args[[1]], rv[[1]])
   }
   if (!rsym) {
-    cstep <- dim(x)[2] / length(cv[[1]])
+    cstep <- dim(unclass(x))[2] / length(cv[[1]])
     if (is.character(args[[2]]))
       args[[2]] <- match(args[[2]], cv[[1]])
   }
 
-  ret <- x[if (!lsym) (1 + (args[[1]] - 1) * rstep) : (args[[1]] * rstep) else 1:nrow(x),
-           if (!rsym) (1 + (args[[2]] - 1) * cstep) : (args[[2]] * cstep) else 1:ncol(x),
-           drop = FALSE
-           ]
+  lind <- if (!lsym)
+    (1 + (args[[1]] - 1) * rstep) : (args[[1]] * rstep)
+  else
+    1:nrow(unclass(x))
+  rind <- if (!rsym)
+    (1 + (args[[2]] - 1) * cstep) : (args[[2]] * cstep)
+  else
+    1:ncol(unclass(x))
+  ret <- unclass(x)[lind, rind, drop = FALSE]
 
   if (!lsym) {
     i <- which(!split)[1]
@@ -219,7 +224,6 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
     dnames <- dnames[-i]
   }
     
-
   if (!rsym) {
     i <- which(split)[1]
     split <- split[-i]
@@ -232,6 +236,79 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
   ## add dimension attributes in ftable-format
   attr(ret, "col.vars") <- dnames[split]
   attr(ret, "row.vars") <- dnames[!split]
+
+  class(ret) <- class(x)
+  ret
+}
+
+"[<-.structable" <- function(x, ..., value) {
+  args <- if (nargs() < 4)
+    list(..1)
+  else
+    list(..1, ..2)
+  
+  ## handle one-arg cases
+  if (nargs() < 4)
+    return(if (length(args[[1]]) > 1)
+               ## resolve calls like x[c(1,2)]
+               Recall(x, args[[1]][1],
+                      value = Recall(x[ args[[1]][1] ], args[[1]][-1], value = value))
+           else
+               ## resolve x[foo] 
+               if (attr(x, "split_vertical")[1])
+                   Recall(x,,args[[1]], value = value)
+               else
+                   Recall(x,args[[1]],, value = value)
+           )
+  
+  ## handle calls like x[c(1,2), c(3,4)]
+  if (length(args[[1]]) > 1 && length(args[[2]]) > 1)
+    return(Recall(x, args[[1]][1], args[[2]][1],
+                  value = Recall(x[ args[[1]][1], args[[2]][1] ],
+                    args[[1]][-1], args[[2]][-1], value = value)))
+  
+  ## handle calls like x[c(1,2), 3]
+  if (length(args[[1]]) > 1)
+    return(Recall(x, args[[1]][1], args[[2]],
+                  value = Recall(x[ args[[1]][1], args[[2]] ],
+                    args[[1]][-1], ,value = value)))
+  
+  ## handle calls like x[1, c(1,3)]
+  if (length(args[[2]]) > 1)
+    return(Recall(x, args[[1]], args[[2]][1],
+                  value = Recall(x[ args[[1]], args[[2]][1] ],,
+                    args[[2]][-1], value = value)))
+
+  ## final cases like x[1,2] or x[1,] or x[,1]
+  dnames <- attr(x, "dnames")
+  split <- attr(x, "split_vertical")
+  rv <- dnames[!split]
+  cv <- dnames[split]
+
+  lsym <- is.symbol(args[[1]])
+  rsym <- is.symbol(args[[2]])
+  if (!lsym) {
+    rstep <- dim(unclass(x))[1] / length(rv[[1]])
+    if (is.character(args[[1]]))
+      args[[1]] <- match(args[[1]], rv[[1]])
+  }
+  if (!rsym) {
+    cstep <- dim(unclass(x))[2] / length(cv[[1]])
+    if (is.character(args[[2]]))
+      args[[2]] <- match(args[[2]], cv[[1]])
+  }
+
+  lind <- if (!lsym)
+    (1 + (args[[1]] - 1) * rstep) : (args[[1]] * rstep)
+  else
+    1:nrow(unclass(x))
+  rind <- if (!rsym)
+    (1 + (args[[2]] - 1) * cstep) : (args[[2]] * cstep)
+  else
+    1:ncol(unclass(x))
+  ret <- unclass(x)
+
+  ret[lind, rind] <- value
 
   class(ret) <- class(x)
   ret
@@ -257,3 +334,18 @@ t.structable <- function(x) {
 
 is.structable <- function(x)
   inherits(x, "structable")
+
+dim.structable <- function(x)
+  as.integer(sapply(attr(x, "dnames"), length))
+
+print.structable <- function(x, ...) {
+  class(x) <- "ftable"
+  NextMethod("print", object = x)
+}
+
+dimnames.structable <- function(x) attr(x,"dnames")
+
+as.vector.structable <- function(x, ...)
+  as.vector(as.table(x), ...)
+  
+as.matrix.structable <- function(x) matrix(as.vector(unclass(x)), ncol = attr(x, "dim")[2])
