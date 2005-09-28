@@ -5,11 +5,13 @@ mosaic <- function(x, ...)
   UseMethod("mosaic")
 
 mosaic.formula <-
-function(formula, data = NULL, ..., main = NULL, subset = NULL)
+function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
 {
   if (is.logical(main) && main)
     main <- deparse(substitute(data))
-  
+  else if (is.logical(sub) && sub)
+    sub <- deparse(substitute(data))
+
   m <- match.call(expand.dots = FALSE)
   edata <- eval(m$data, parent.frame())
   
@@ -34,7 +36,7 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
       }
       dat <- margin.table(dat, ind)
     }
-    mosaic.default(dat, main = main,
+    mosaic.default(dat, main = main, sub = sub,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
       m <- m[c(1, match(c("formula", "data", "subset"), names(m), 0))]
@@ -44,16 +46,18 @@ function(formula, data = NULL, ..., main = NULL, subset = NULL)
                         "~",
                         paste(c(condnames, varnames), collapse = "+")))
       tab <- eval(m, parent.frame())
-      mosaic.default(tab, main = main, ...)  
+      mosaic.default(tab, main = main, sub = sub, ...)  
   }
 }
 
 mosaic.default <- function(x, condvars = NULL,
                            split_vertical = NULL, direction = NULL,
                            spacing = NULL, spacing_args = list(),
-                           zero_size = 0.5, main = NULL, ...) {
+                           zero_size = 0.5, main = NULL, sub = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
+  else if (is.logical(sub) && sub)
+    sub <- deparse(substitute(x))
 
   if (is.structable(x)) {
     if (is.null(direction) && is.null(split_vertical))
@@ -93,6 +97,7 @@ mosaic.default <- function(x, condvars = NULL,
             spacing = spacing,
             spacing_args = spacing_args,
             main = main,
+            sub = sub,
             ...)
 }
 

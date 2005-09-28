@@ -13,8 +13,10 @@
   xlim = NULL, ylim = NULL,
   spacing = spacing_conditional(sp = 0), spacing_args = list(),
   split_vertical = NULL, keep_aspect_ratio = FALSE, residuals_type = "Pearson",
-  xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, \dots, gp_axis = gpar(lty = 3))
-\method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots, main = NULL)
+  xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, sub = NULL,
+  \dots, gp_axis = gpar(lty = 3))
+\method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots,
+  main = NULL, sub = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form with optional category
@@ -82,8 +84,8 @@
   \item{na.action}{a function which indicates what should happen when
     the data contain \code{NA}s.
     Ignored if \code{data} is a contingency table.}
-  \item{main}{either a logical, or a character string used for plotting
-    the main title.  If \code{main} is \code{TRUE}, the
+  \item{main, sub}{either a logical, or a character string used for plotting
+    the main (sub) title.  If logical and \code{TRUE}, the
     name of the \code{data} object is used.}
   \item{\dots}{other parameters passed to \code{\link{strucplot}}}
 }
