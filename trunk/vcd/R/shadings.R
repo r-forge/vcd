@@ -87,7 +87,7 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(shading_hsv) <- "generating_function"
+class(shading_hsv) <- "grapcon_generator"
 
 
 shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
@@ -181,7 +181,7 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   attr(rval, "p.value") <- p.value
   return(rval)
 }
-class(shading_hcl) <- "generating_function"
+class(shading_hcl) <- "grapcon_generator"
 
 shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), eps = 0.01, line_col = "black", ...)
@@ -190,7 +190,7 @@ shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL,
               h = h, v = 1, lty = lty, interpolate = interpolate,
 	      eps = eps, line_col = line_col, p.value = NA, ...)
 }
-class(shading_Friendly) <- "generating_function"
+class(shading_Friendly) <- "grapcon_generator"
 
 shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   h = NULL, c = NULL, l = NULL, lty = 1, eps = NULL, line_col = "black", level = c(0.9, 0.99), n = 1000, ...)
@@ -209,7 +209,7 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
 			eps = eps, line_col = line_col, p.value = obs.test$p.value, ...)
   return(rval)
 }
-class(shading_max) <- "generating_function"
+class(shading_max) <- "grapcon_generator"
 
 shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   col = hcl(c(260, 0), 50, 70))
@@ -230,7 +230,7 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
   
   rval
 }
-class(shading_binary) <- "generating_function"
+class(shading_binary) <- "grapcon_generator"
 
 
 

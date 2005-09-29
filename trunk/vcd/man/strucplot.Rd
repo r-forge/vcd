@@ -16,8 +16,8 @@ strucplot(x, residuals = NULL, expected = NULL,
   legend = NULL, legend_args = list(),
   main = NULL, sub = NULL, margins = unit(2.5, "lines"),
   title_margins = NULL, legend_width = unit(5, "lines"),
-  title_gp = gpar(fontsize = 20), newpage = TRUE, pop = TRUE,
-  keep_aspect_ratio = TRUE)
+  main_gp = gpar(fontsize = 20), sub_gp = gpar(fontsize = 15),
+  newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE, \dots)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -109,12 +109,14 @@ strucplot(x, residuals = NULL, expected = NULL,
     horizontal space, specifying the width of the legend (if any).}
   \item{pop}{logical indicating whether the generated viewport tree
     should be removed at the end of the drawing or not.}
-  \item{title_gp}{object of class \code{"gpar"} containing the graphical
-    parameters used for the main and sub titles.}
+  \item{main_gp, sub_gp}{object of class \code{"gpar"} containing the graphical
+    parameters used for the main (sub) title, if specified.}
   \item{newpage}{logical indicating whether a new page should be created
     for the plot or not.}
   \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not.}
+  \item{\dots}{For convenience, list of arguments passed to the
+    labeling-generating function, if specified.}
 }
 \details{
   This function---usually called by higher-level functions such as
@@ -130,7 +132,8 @@ strucplot(x, residuals = NULL, expected = NULL,
 
   Most elements of the plot, such as the core function, the spacing
   between the tiles, the shading of the tiles, the labeling, and the
-  legend, are modularized in functions and specified as parameters.  For
+  legend, are modularized in graphical appearance control (``grapcon'')
+  functions and specified as parameters.  For
   each element \emph{foo} (= \code{spacing}, \code{labeling}, \code{core},
   or \code{legend}), \code{strucplot} takes two arguments:
   \var{foo} and \var{foo\_args}, which can be used to specify the
@@ -142,7 +145,7 @@ strucplot(x, residuals = NULL, expected = NULL,
     etc.
     \item Passing a corresponding \emph{generating} function to \var{foo},
     along with parameters passed to \var{foo\_args}, that generates such a
-    function. Generating functions must inherit from class \code{"generating_function"}.
+    function. Generating functions must inherit from class \code{"grapcon_generator"}.
     \item Except for the shading functions (\var{shading\_bar}),
     passing \var{foo(foo\_args)} to the \var{foo} argument.
     \item For shadings and spacings, passing the final parameter object

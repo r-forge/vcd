@@ -43,6 +43,11 @@ export(
        "shading_max",
        "shading_Friendly",
 
+# core functions
+       "struc_mosaic",
+       "struc_assoc",
+       "struc_sieve",
+
 ## palettes
        "rainbow_hcl",
        "diverge_hcl",
@@ -51,12 +56,11 @@ export(
 ## panel functions
        "pairs_barplot",
        "pairs_text",
+       "pairs_diagonal_text",
        "pairs_strucplot",
        "pairs_mosaic",
        "pairs_assoc",
        "pairs_sieve",
-       "struc_mosaic",
-       "struc_assoc",
        "cotab_mosaic",
        "cotab_assoc",
        "cotab_sieve",

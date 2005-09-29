@@ -200,4 +200,4 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
     }
   }
 }
-class(struc_sieve) <- "generating_function"
+class(struc_sieve) <- "grapcon_generator"
