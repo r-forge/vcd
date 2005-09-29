@@ -44,7 +44,7 @@ assoc.default <- function(x,
   ## spacing
   cond <- rep(TRUE, dl)
   cond[length(attr(x, "row.vars")) + c(0, length(attr(x, "col.vars")))] <- FALSE
-  if (inherits(spacing, "generating_function"))
+  if (inherits(spacing, "grapcon_generator"))
     spacing <- do.call("spacing", spacing_args)
   spacing <- spacing(dim(tab), condvars = which(cond))
 
@@ -171,4 +171,4 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
   }
-class(struc_assoc) <- "generating_function"
+class(struc_assoc) <- "grapcon_generator"

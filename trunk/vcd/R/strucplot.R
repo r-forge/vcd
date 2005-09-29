@@ -32,10 +32,12 @@ strucplot <- function(## main parameters
                       legend_width = unit(5, "lines"),
                       
                       ## control parameters
-                      title_gp = gpar(fontsize = 20),
+                      main_gp = gpar(fontsize = 20),
+                      sub_gp = gpar(fontsize = 15),
                       newpage = TRUE,
                       pop = TRUE,
-                      keep_aspect_ratio = TRUE
+                      keep_aspect_ratio = TRUE,
+                      ...
                       ) {
   ## default behaviour of shade
   if (is.null(shade)) shade <- !is.null(gp) || !is.null(expected)
@@ -106,7 +108,7 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing)) {
-    if (inherits(spacing, "generating_function"))
+    if (inherits(spacing, "grapcon_generator"))
       spacing <- do.call("spacing", spacing_args)
     spacing <- spacing(d, condvars)
   }
@@ -117,7 +119,7 @@ strucplot <- function(## main parameters
     if (is.function(gp)) {
       if (is.null(legend) || (is.logical(legend) && legend))
         legend <- legend_resbased
-      gpfun <- if(inherits(gp, "generating_function"))
+      gpfun <- if(inherits(gp, "grapcon_generator"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
       gp <- gpfun(residuals)
     } else if (!is.null(legend) && !(is.logical(legend) && !legend))
@@ -155,7 +157,7 @@ strucplot <- function(## main parameters
                            legend_width = legend_width))
 
   ## legend
-  if (inherits(legend, "generating_function"))
+  if (inherits(legend, "grapcon_generator"))
     legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend) && !(is.logical(legend) && !legend)) {
     seekViewport("legend")
@@ -168,20 +170,20 @@ strucplot <- function(## main parameters
     seekViewport("main")
     if (is.logical(main) && main)
       main <- deparse(substitute(x))
-    grid.text(main, gp = title_gp)
+    grid.text(main, gp = main_gp)
   }
 
   if (!is.null(sub)) {
     seekViewport("sub")
     if (is.logical(sub) && sub && is.null(main))
       sub <- deparse(substitute(x))
-    grid.text(sub, gp = title_gp)
+    grid.text(sub, gp = sub_gp)
   }
 
   ## make plot
   seekViewport("plot")
   
-  if (inherits(core, "generating_function"))
+  if (inherits(core, "grapcon_generator"))
     core <- do.call("core", core_args)
   core(residuals = residuals,
        observed = if (type == "observed") x else expected,
@@ -194,8 +196,8 @@ strucplot <- function(## main parameters
 
   ## labels
   if (!is.null(labeling)) {
-    if (inherits(labeling, "generating_function"))
-      labeling <- do.call("labeling", labeling_args)
+    if (inherits(labeling, "grapcon_generator"))
+      labeling <- do.call("labeling", c(labeling_args, list(...)))
     labeling(dn, split_vertical, condvars)
   }
 

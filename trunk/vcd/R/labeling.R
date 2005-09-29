@@ -49,7 +49,7 @@ labeling_list <- function(gp = gpar(),
                 gp = gp
                 )
   }
-class(labeling_list) <- "generating_function"
+class(labeling_list) <- "grapcon_generator"
 
 labeling_conditional <- function(...)
   function (d, split_vertical, condvars) {
@@ -60,7 +60,7 @@ labeling_conditional <- function(...)
     labeling_border(labels = !v, ...)(d, split_vertical, condvars)
     labeling_cells(labels = v, ...)(d, split_vertical, condvars)
   }
-class(labeling_conditional) <- "generating_function"
+class(labeling_conditional) <- "grapcon_generator"
 
 labeling_cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
@@ -130,7 +130,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
     split()
     
 }
-class(labeling_cells) <- "generating_function"
+class(labeling_cells) <- "grapcon_generator"
 
 labeling_border <- function(labels = TRUE, varnames = labels,
                             set_labels = NULL, set_varnames = NULL,
@@ -502,7 +502,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     split()
     
   }
-class(labeling_border) <- "generating_function"
+class(labeling_border) <- "grapcon_generator"
 
 labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
   lab_pos <- match.arg(lab_pos)
@@ -525,18 +525,18 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
               gp = gpar(fontface = 2))
   }
 }
-class(labeling_doubledecker) <- "generating_function"
+class(labeling_doubledecker) <- "grapcon_generator"
 
 labeling_left <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
   labeling_border(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
-class(labeling_left) <- "generating_function"
+class(labeling_left) <- "grapcon_generator"
 
 labeling_cboxed <- function(tl_labels = TRUE, boxes = TRUE, clip = TRUE, pos_labels = "center", ...)
   labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
-class(labeling_cboxed) <- "generating_function"
+class(labeling_cboxed) <- "grapcon_generator"
 
 labeling_lboxed <- function(tl_labels = FALSE, boxes = TRUE, clip = TRUE, pos_labels = "left", just_labels = "left", labbl_varnames = FALSE, ...)
   labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, labbl_varnames = labbl_varnames, just_labels = just_labels, ...)
-class(labeling_lboxed) <- "generating_function"
+class(labeling_lboxed) <- "grapcon_generator"

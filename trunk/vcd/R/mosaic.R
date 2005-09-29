@@ -168,4 +168,4 @@ struc_mosaic <- function(zero_size = 0.5)
     }
 
   }
-class(struc_mosaic) <- "generating_function"
+class(struc_mosaic) <- "grapcon_generator"

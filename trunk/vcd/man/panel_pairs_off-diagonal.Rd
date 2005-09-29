@@ -10,8 +10,7 @@
 \usage{
 pairs_strucplot(panel = mosaic, 
   type = c("pairwise", "total", "conditional", "joint"),
-  legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL,
-  shade = FALSE, \dots)
+  legend = FALSE, margins = c(0, 0, 0, 0), labeling = NULL, \dots)
 pairs_assoc(\dots)
 pairs_mosaic(\dots)
 pairs_sieve(\dots)
@@ -26,8 +25,6 @@ pairs_sieve(\dots)
     in the cells or not.}
   \item{margins}{margins inside each cell (see \code{\link{strucplot}}).}
   \item{labeling}{labeling function or labeling-generating function (see
-  \code{\link{strucplot}}).}
-  \item{shade}{shading function or shading-generating function (see
   \code{\link{strucplot}}).}
 \item{\dots}{\code{pairs_mosaic}, \code{\link{pairs_assoc}}, and
   \code{pairs_sieve}: parameters

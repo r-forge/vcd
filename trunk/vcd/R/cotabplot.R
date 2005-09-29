@@ -86,7 +86,7 @@ cotabplot.default <- function(x, cond = NULL,
   }
 
   ## create panel function (if necessary)
-  if(inherits(panel, "generating_function"))
+  if(inherits(panel, "panel_generator"))
     panel <- do.call("panel", c(list(x, cond.char), as.list(panel_args), list(...)))
 
   if(cond.n < 1) panel(x, NULL) ## no conditioning variables
@@ -162,7 +162,7 @@ cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
                   newpage = FALSE, pop = TRUE, ...)
   }
 }
-class(cotab_mosaic) <- "generating_function"
+class(cotab_mosaic) <- "panel_generator"
 
 cotab_sieve <- function(x = NULL, condvars = NULL, ...) {
   function(x, condlevels) {
@@ -171,7 +171,7 @@ cotab_sieve <- function(x = NULL, condvars = NULL, ...) {
                  newpage = FALSE, pop = TRUE, ...)
   }
 }
-class(cotab_sieve) <- "generating_function"
+class(cotab_sieve) <- "panel_generator"
 
 cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
   if(!is.null(x)) {
@@ -185,7 +185,7 @@ cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
                   newpage = FALSE, pop = TRUE, ylim = ylim, ...)
   }
 }
-class(cotab_assoc) <- "generating_function"
+class(cotab_assoc) <- "panel_generator"
 
 cotab_coindep <- function(x, condvars,
   test = c("max", "Chisq"), level = NULL, n = 1000,
@@ -279,7 +279,7 @@ cotab_coindep <- function(x, condvars,
 
   return(rval)
 }
-class(cotab_coindep) <- "generating_function"
+class(cotab_coindep) <- "panel_generator"
 
 
 ## Examples:
