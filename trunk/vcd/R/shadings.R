@@ -85,9 +85,10 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   }
   attr(rval, "legend") <- legend
   attr(rval, "p.value") <- p.value
+  class(rval) <- c("grapcon","shading")
   return(rval)
 }
-class(shading_hsv) <- "grapcon_generator"
+class(shading_hsv) <- c("grapcon_generator","shading")
 
 
 shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
@@ -179,9 +180,10 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
   }
   attr(rval, "legend") <- legend
   attr(rval, "p.value") <- p.value
+  class(rval) <- c("grapcon","shading")
   return(rval)
 }
-class(shading_hcl) <- "grapcon_generator"
+class(shading_hcl) <- c("grapcon_generator","shading")
 
 shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   h = c(2/3, 0), lty = 1:2, interpolate = c(2, 4), eps = 0.01, line_col = "black", ...)
@@ -190,7 +192,7 @@ shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL,
               h = h, v = 1, lty = lty, interpolate = interpolate,
 	      eps = eps, line_col = line_col, p.value = NA, ...)
 }
-class(shading_Friendly) <- "grapcon_generator"
+class(shading_Friendly) <- c("grapcon_generator","shading")
 
 shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   h = NULL, c = NULL, l = NULL, lty = 1, eps = NULL, line_col = "black", level = c(0.9, 0.99), n = 1000, ...)
@@ -204,12 +206,11 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
   
   obs.test <- coindep_test(observed, n = n)
   col.bins <- obs.test$qdist(sort(level))
-  rval <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-                        h = h, c = c, l = l, interpolate = col.bins, lty = lty,
-			eps = eps, line_col = line_col, p.value = obs.test$p.value, ...)
-  return(rval)
+  shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+              h = h, c = c, l = l, interpolate = col.bins, lty = lty,
+              eps = eps, line_col = line_col, p.value = obs.test$p.value, ...)
 }
-class(shading_max) <- "grapcon_generator"
+class(shading_max) <- c("grapcon_generator","shading")
 
 shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   col = hcl(c(260, 0), 50, 70))
@@ -227,10 +228,11 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
   ## add meta information for legend
   attr(rval, "legend") <- legend
   attr(rval, "p.value") <- NULL
+  class(rval) <- c("grapcon","shading")
   
   rval
 }
-class(shading_binary) <- "grapcon_generator"
+class(shading_binary) <- c("grapcon_generator","shading")
 
 
 

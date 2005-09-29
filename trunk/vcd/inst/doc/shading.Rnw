@@ -196,9 +196,11 @@ residuals. For that, we can just reuse the code from the previous step:
 
 <<shading2>>=
 shade_fun <- function(res) gpar(fill = ifelse(res > 0, "lightblue", "lightsalmon"))
+class(shade_fun) <- c("grapcon","shading")
 @ 
 
-\noindent To create a mosaic display with binary shading, 
+\noindent Note the \code{class} attribute set on \codefun{shade\_fun}.
+To create a mosaic display with binary shading, 
 it now suffices to specify the data table along with
 \codefun{shade\_fun}:
 
@@ -233,7 +235,8 @@ extensions for our running example:
 <<shading3>>=
 myshading_binary <- function(col = c("lightblue", "lightsalmon")) {
   if (length(col) != 2) stop("Need exactly two colors!")
-  function(res) gpar(fill = ifelse(res > 0, col[1], col[2]))  
+  ret <- function(res) gpar(fill = ifelse(res > 0, col[1], col[2]))  
+  structure(ret, class = c("grapcon","shading"))
 }
 @ 
 
@@ -270,9 +273,10 @@ appearance (to be specified by the user):
 myshading_binary2 <- function(observed = NULL, residuals = NULL, expected = NULL, 
     df = NULL, col = c("lightblue", "lightsalmon")) {
   if (length(col) != 2) stop("Need exactly two colors!")
-  function(res) gpar(fill = ifelse(res > 0, col[1], col[2]))  
+  ret <- function(res) gpar(fill = ifelse(res > 0, col[1], col[2]))  
+  structure(ret, class = c("grapcon","shading"))
 }
-class(myshading_binary2) <- "generating_function"
+class(myshading_binary2) <- c("grapcon_generator","shading")
 @ 
 
 In some sence, generating

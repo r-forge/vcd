@@ -3,40 +3,44 @@
 
 spacing_equal <- function(sp = unit(0.5, "lines")) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
-  function(d, condvars = NULL) lapply(d, function(x) unit.rep(sp, x - 1))
+  ret <- function(d, condvars = NULL) lapply(d, function(x) unit.rep(sp, x - 1))
+  structure(ret, class = c("grapcon","spacing"))
 }
-class(spacing_equal) <- "grapcon_generator"
+class(spacing_equal) <- c("grapcon_generator","spacing")
 
 spacing_dimequal <- function(sp) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
-  function(d, condvars = NULL)
+  ret <- function(d, condvars = NULL)
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
+  structure(ret, class = c("grapcon","spacing"))
 }
-class(spacing_dimequal) <- "grapcon_generator"
+class(spacing_dimequal) <- c("grapcon_generator","spacing")
 
 spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
   if (!is.unit(start)) start <- unit(start, "lines")
-  function(d, condvars = NULL) {
+  ret <- function(d, condvars = NULL) {
     sp <- start * rev(cumprod(c(1, rep.int(rate, length(d) - 1))))
     lapply(seq(along = d), function(i) unit.rep(sp[i], d[[i]] - 1))
   }
+  structure(ret, class = c("grapcon","spacing"))
 }
-class(spacing_increase) <- "grapcon_generator"
+class(spacing_increase) <- c("grapcon_generator","spacing")
 
 spacing_highlighting <- function(start = unit(0.2, "lines"), rate = 1.5) {
- if (!is.unit(start)) start <- unit(start, "lines")
-  function(d, condvars = NULL)
+  if (!is.unit(start)) start <- unit(start, "lines")
+  ret <- function(d, condvars = NULL)
     c(spacing_increase(start, rate)(d, condvars)[-length(d)],
       list(unit(rep(0, d[length(d)]), "lines")))
+  structure(ret, class = c("grapcon","spacing"))
 }
-class(spacing_highlighting) <- "grapcon_generator"
+class(spacing_highlighting) <- c("grapcon_generator","spacing")
 
 spacing_conditional <- function(sp = unit(0.5, "lines"),
                                 start = unit(2, "lines"), rate = 1.8) {
   condfun <- spacing_increase(start, rate)
   equalfun <- spacing_equal(sp)
   equalfun2 <- spacing_equal(start)
-  function(d, condvars) {
+  robj <- function(d, condvars) {
     if (length(d) < 3)
       return(spacing_equal(sp)(d, condvars))
     condvars <- seq(condvars)
@@ -48,5 +52,6 @@ spacing_conditional <- function(sp = unit(0.5, "lines"),
     ret[-condvars] <- equalfun(d[-condvars])
     ret
   }
+  structure(robj, class = c("grapcon","spacing"))
 }
-class(spacing_conditional) <- "grapcon_generator"
+class(spacing_conditional) <- c("grapcon_generator","spacing")

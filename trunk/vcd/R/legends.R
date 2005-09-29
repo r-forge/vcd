@@ -15,7 +15,7 @@ legend_resbased <- function(fontsize = 12,
   if(!is.unit(width)) width <- unit(width, "lines")
   if(!is.unit(height)) height <- unit(height, "npc")
   
-  function(residuals, shading, autotext) {
+  ret <- function(residuals, shading, autotext) {
     res <- as.vector(residuals)
     
     if(is.null(text)) text <- autotext
@@ -82,8 +82,9 @@ legend_resbased <- function(fontsize = 12,
                 just = c("left", "top"))
     }
   }
+  structure(ret, class = c("grapcon","legend"))
 }
-class(legend_resbased) <- "grapcon_generator"
+class(legend_resbased) <- c("grapcon_generator","legend")
 
 legend_fixed <- function(fontsize = 12,
                          x = unit(1, "lines"),
@@ -100,7 +101,7 @@ legend_fixed <- function(fontsize = 12,
   if(!is.unit(width)) width <- unit(width, "lines")
   if(!is.unit(height) && !is.null(height)) height <- unit(height, "npc")
 
-  function(residuals, shading, autotext) {
+  ret <- function(residuals, shading, autotext) {
     res <- as.vector(residuals)
 
     if(is.null(text)) text <- autotext
@@ -158,5 +159,6 @@ legend_fixed <- function(fontsize = 12,
               rot = 90
               )
   }
+  structure(ret, class = c("grapcon","legend"))
 }
-class(legend_fixed) <- "grapcon_generator"
+class(legend_fixed) <- c("grapcon_generator","legend")

@@ -69,8 +69,8 @@ assoc.default <- function(x,
 
 struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                         yspace = unit(0.5, "lines"), xscale = 0.9,
-                        gp_axis = gpar(lty = 3))
-  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
+                        gp_axis = gpar(lty = 3)) {
+  ret <- function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -169,6 +169,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                 name = paste("rect:", mnames[i], sep = "")
                 )
     }
-
   }
-class(struc_assoc) <- "grapcon_generator"
+  structure(ret, class = c("grapcon","core"))
+}
+class(struc_assoc) <- c("grapcon_generator","core")
