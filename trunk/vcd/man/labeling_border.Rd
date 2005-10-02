@@ -2,6 +2,7 @@
 \alias{labeling_border}
 \alias{labeling_conditional}
 \alias{labeling_left}
+\alias{labeling_left2}
 \alias{labeling_cboxed}
 \alias{labeling_lboxed}
 \alias{labeling_doubledecker}
@@ -23,7 +24,9 @@ labeling_border(labels = TRUE, varnames = labels,
   labbl_varnames = NULL, labels_varnames = FALSE, sep = ": ",
   abbreviate = FALSE, rep = TRUE, clip = FALSE, \dots)
 labeling_conditional(\dots)
-labeling_left(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
+labeling_left(rep = FALSE, pos_varnames = "left",
+  pos_labels = "left", just_labels = "left", \dots)
+labeling_left2(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
   pos_labels = "left", just_labels = "left", \dots)
 labeling_cboxed(tl_labels = TRUE, boxes = TRUE, clip = TRUE,
   pos_labels = "center", \dots)
@@ -129,7 +132,8 @@ labeling_doubledecker(lab_pos = c("bottom", "top"), \dots)
   derived functions, more functions are described on the help page
   for \code{\link{labeling_cells}} and \code{\link{labeling_list}}.
 
-  \code{labeling_left}, \code{labeling_cboxed}, and \code{labeling_lboxed}
+  \code{labeling_left}, \code{labeling_left2}, \code{labeling_cboxed},
+  and \code{labeling_lboxed}
   are really just wrappers to \code{labeling_border}, and good examples for
   the parameter usage.
 }
