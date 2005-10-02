@@ -15,7 +15,7 @@ strucplot(x, residuals = NULL, expected = NULL,
   core = struc_mosaic, core_args = list(),
   legend = NULL, legend_args = list(),
   main = NULL, sub = NULL, margins = unit(2.5, "lines"),
-  title_margins = NULL, legend_width = unit(5, "lines"),
+  title_margins = NULL, legend_width = NULL,
   main_gp = gpar(fontsize = 20), sub_gp = gpar(fontsize = 15),
   newpage = TRUE, pop = TRUE, keep_aspect_ratio = TRUE, \dots)
 }
@@ -104,9 +104,8 @@ strucplot(x, residuals = NULL, expected = NULL,
     may have named arguments (\samp{top} and \samp{bottom}), in which
     case the non-named argument specify the default value (recycled as
     needed), overloaded by the named arguments.}
-  \item{legend_width}{either an object of class \code{"unit"} of length
-    1, or a numeric value interpreted as proportion of the available
-    horizontal space, specifying the width of the legend (if any).}
+  \item{legend_width}{An object of class \code{"unit"} of length
+    1 specifying the width of the legend (if any). Default: 5 lines.}
   \item{pop}{logical indicating whether the generated viewport tree
     should be removed at the end of the drawing or not.}
   \item{main_gp, sub_gp}{object of class \code{"gpar"} containing the graphical

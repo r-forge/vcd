@@ -24,7 +24,7 @@
 
 \begin{document}
 
-%\VignetteIndexEntry{Labeling in Strucplots}
+%\VignetteIndexEntry{Labeling in the Strucplot Framework}
 %\VignetteDepends{vcd}
 %\VignetteKeywords{graphics, categorical data}
 %\VignettePackage{vcd}
@@ -39,28 +39,32 @@ library(vcd)
 data(Titanic)
 @
 
-\title{Labeling in the Strucplots Framework}
-\author{by David Meyer\\
-  Wirtschaftsuniversit\"at Wien, Austria\\
-\email{David.Meyer@R-project.org}
-}
+\title{Labeling in the Strucplot Framework}
+\author{by David Meyer, Achim Zeileis, and Kurt Hornik}
+\date{}
 \maketitle
 \sloppy
+
+\section{Introduction}
 
 One of the major enhancements in package \pkg{vcd} compared to
 \codefun{mosaicplot} and \codefun{assocplot} in
 base {\sf R} is the labeling in the strucplot framework which 
-offers much more features and flexibility. Like the core, 
-shading, spacing, and legend modules, labeling is now completely
-modular (see the introducing vignette for an overview on
-the strucplot framework).
+offers many more features and flexibility. 
+Like shading, spacing, and drawing of legend and core plot, 
+labeling is now carried out by specialized graphical appearance control
+(``grapcon'') functions. This renders labeling completely
+modular (see the introductory vignette: ``The Strucplot
+Framework---Visualizing Multi-way Contingency Tables'' for an overview).
 The user supplies either a labeling function, or, alternatively, 
 a generating function that parameterizes a labeling function, 
 to \codefun{strucplot} which then draws the labels (the idea behind generating
-functions is discussed in detail in the vignette on colors and shadings). 
+functions is discussed in detail in the vignette: ``Colors and
+Residual-based Shadings in the Strucplot Framework''). 
 Labeling is well-separated from the actual plotting that occurs in the
 low-level core functions. It only relies on the viewport tree produced by them, and the
-`\texttt{dimnames}' attribute of the visualized table. The drawing of the
+`\texttt{dimnames}' attribute of the visualized table. Labeling
+functions are grapcons that ``add ink to the canvas'': the drawing of the
 labels happens after the actual plot has been drawn by the core function.
 Thus, it is possible to supply one's own labeling function, or
 to combine some of the basic functions to produce a more complex labeling.
@@ -74,12 +78,12 @@ derived functions that build upon them.
 plots labels in the borders similar to the \codefun{mosaicplot}
 function in base {\sf R}, but is much more flexible: it is not limited
 to 4 dimensions, and the positioning and graphical parameters 
-of levels and variable names are quite customizable. In addition,
+of levels and variable names are customizable. In addition,
 the problem of overlapping labels can be handled in several ways. 
 
 As an example, consider the \data{Titanic} data, consisting
-of 4 categorical variables: Survived, Sex (i.e., `Gender'), Age, and
-Crew. By default, the variable names and levels are plotted `around' the
+of 4 categorical variables: survival (`survived'), gender (i.e., `sex'), age, and
+crew. By default, the variable names and levels are plotted `around' the
 plot in a counter-clockwise way (see Figure \ref{fig:defaults}):
 
 <<default>>=
@@ -91,13 +95,14 @@ mosaic(Titanic)
 <<defaultfig,fig=TRUE,echo=FALSE>>=
 <<default>>
 @
-\caption{Mosaic plot for the \data{Titanic} data.}
+\caption{Mosaic plot for the \data{Titanic} data with default settings
+  for labeling.}
 \label{fig:defaults}
 \end{center}
 \end{figure}
 
-\noindent Note that the last two levels of the `Survived' variable do
-overlap, as well as some `Adult' and `Child' labels of the `Age' Variable.
+\noindent Note that the last two levels of the `survived' variable do
+overlap, as well as some adult and child labels of the `age' Variable.
 This issue can be addressed in several ways. The `brute force'
 method is to enable clipping for these dimensions (see Figure \ref{fig:clipping}):
 
@@ -124,12 +129,12 @@ Almost all vectorized arguments in the strucplot
 framework can be abbreviated in the following way: unnamed components
 (or the defaults, if there are none) are recycled as needed, but
 overridden by the named components. Here, the default is \code{FALSE},
-and therefore clipping is enabled only for the `Survived' and `Age' dimensions.
+and therefore clipping is enabled only for the `survived' and `age' variables.
 A more sensible solution to the overlap problem is to abbreviate the 
 levels (see Figure \ref{fig:abbreviating}):
 
 <<abbreviating>>=
-mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 4)))
+mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 3)))
 @
 
 \begin{figure}[h]
@@ -146,7 +151,7 @@ mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 4)))
 integers indicating the number of significant characters the levels should be
 abbreviated to (\code{TRUE} is interpreted as 1, obviously). Abbreviation
 is performed using the \codefun{abbreviate} function in base {\sf R}. Another
-possibility is to rotate the levels (see Figure \ref{fig:rotating}):
+possibility is to rotate the levels (see Figure~\ref{fig:rotating}):
 
 <<rotate>>=
 mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0), 
@@ -180,10 +185,10 @@ mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
 \end{center}
 \end{figure}
 
-We now proceed with a few more `cosmetic' features.
+We now proceed with a few more `cosmetic' features (which do not all
+produce satisfactory results for our sample data).
 A first simple, but effectful modification is to position
-all labels and variables left-aligned, which can
-also be achieved by using \codefun{labeling\_left} (see Figure \ref{fig:left}):
+all labels and variables left-aligned:  (see Figure \ref{fig:left}):
 
 <<left>>=
 mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
@@ -200,12 +205,20 @@ mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left",
 \end{center}
 \end{figure}
 
-\noindent Note that obviously we need to change the justification to \code{"left"} as well. Next, we show how to put all levels to the
+\noindent Note that obviously we need to change the justification 
+to \code{"left"} as well. We can
+achieve the same effect by using the convenience function \codefun{labeling\_left}: 
+
+<<left2>>=
+mosaic(Titanic, labeling = labeling_left)
+@
+
+\noindent Next, we show how to put all levels to the
 bottom and right margins, and all variable names to the top and left
 margins (see Figure \ref{fig:margins}):
 
 <<margins>>=
-mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbreviate = c(Survived = 1, Age = 4)))
+mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbreviate = c(Survived = 1, Age = 3)))
 @
 
 \begin{figure}[p]
@@ -238,19 +251,28 @@ mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE,
 \end{figure}
 
 \noindent The values to \code{boxes} and \code{clip} are recycled for
-all dimensions. The result is pretty close to what the \codefun{labels\_cboxed}
-wrapper does. Another variant is to put the variable names into the
+all dimensions. The result is pretty close to what calling
+\codefun{mosaic} with the \codefun{labeling\_cboxed}
+wrapper does, except that variables and levels, by default, are put to the top and
+to the left of the plot:
+
+<<boxes2>>=
+mosaic(Titanic, labeling = labeling_cboxed)
+@ 
+
+\noindent Another variant is to put the variable names into the
 same line as the levels (see Figure \ref{fig:labbl}):
 
-<<labbll>>=
-mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, clip = TRUE, 
+<<labbl>>=
+mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE,
+       clip = c(Survived = FALSE, TRUE), 
        labbl_varnames = TRUE), margins = c(left = 4, right = 1, 3))
 @
 
 \begin{figure}[h]
 \begin{center}
-<<labbllfig,fig=TRUE,echo=FALSE>>=
-<<labbll>>
+<<labblfig,fig=TRUE,echo=FALSE>>=
+<<labbl>>
 @
 \caption{Variable names beneath levels.}
 \label{fig:labbl}
@@ -259,8 +281,15 @@ mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE, clip = TRUE
 
 \noindent \code{labbl\_varnames} (``variable names to the bottom/left of the
 labels'') is a vector of logicals indicating the side for the
-variable names. The resulting layout is basically what \codefun{labeling\_lboxed} produces,
-and a similar design is used by the \codefun{doubledecker} function.
+variable names. The resulting layout is close to what
+\codefun{labeling\_lboxed} produces, except that variables and levels,
+by default, are left-aligned and put to the bottom and to the right of the plot:
+
+<<labbl2>>=
+mosaic(Titanic, labeling = labeling_lboxed, margins = c(right = 4, left = 1, 3))
+@ 
+
+\noindent A similar design is used by the \codefun{doubledecker} function.
 
 \section{Labels in the cells: \texttt{labeling\_cells()}}
 
@@ -274,7 +303,7 @@ mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
 
 \begin{figure}[h]
 \begin{center}
-<<cellfig,fig=TRUE,echo=FALSE>>=
+<<cellfig,fig=TRUE,echo=FALSE,width=7,height=7>>=
 <<cell>>
 @
 \caption{Cell labeling for the \data{PreSex} data.}
@@ -305,7 +334,7 @@ labeling with border labeling as done by \codefun{labels\_conditional}
 (see Figure \ref{fig:conditional}):
 
 <<conditional>>=
-mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, labeling = labeling_conditional(abbreviate_varnames = TRUE, abbreviate_labels = TRUE))
+mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, labeling = labeling_conditional(abbreviate_varnames = TRUE, abbreviate_labels = TRUE, clip = FALSE))
 @
 
 \begin{figure}[h]
@@ -352,6 +381,7 @@ the last remedy could be to simply list the levels below the plot
 mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
 @
 
+\setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[h]
 \begin{center}
 <<listfig,fig=TRUE,echo=FALSE>>=

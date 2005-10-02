@@ -534,11 +534,17 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
 }
 class(labeling_doubledecker) <- c("grapcon_generator","labeling")
 
-labeling_left <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
+labeling_left <- function(rep = FALSE, pos_varnames = "left",
+                        pos_labels = "left", just_labels = "left", ...)
+  labeling_border(rep = rep, pos_varnames = pos_varnames,
+              pos_labels = pos_labels, just_labels = just_labels, ...)
+class(labeling_left) <- c("grapcon_generator","labeling")
+
+labeling_left2 <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
   labeling_border(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
-class(labeling_left) <- c("grapcon_generator","labeling")
+class(labeling_left2) <- c("grapcon_generator","labeling")
 
 labeling_cboxed <- function(tl_labels = TRUE, boxes = TRUE, clip = TRUE, pos_labels = "center", ...)
   labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
