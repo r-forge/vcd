@@ -75,7 +75,6 @@ export(
        "grid_barplot",
        "hls",
        "is.structable",
-       "mondrian",
        "independence_table",
        "mar_table", 
        "Ord_estimate",
