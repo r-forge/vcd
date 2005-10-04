@@ -1,4 +1,5 @@
-mondrian <- function() {
+library(vcd)
+
 ## shape
 foo1 <- c(3, 7, 3, 1.5)
 foo2 <- c(2, 6.5, 1.5)
@@ -20,5 +21,4 @@ mondrianMosaic <- function(x, fill)
          legend = FALSE, margins = 0,  newpage = FALSE, keep_aspect_ratio = FALSE)
 
 mondrianMosaic(foo, mondrian)
-invisible(list(table = foo, fill = mondrian))
-}
+
