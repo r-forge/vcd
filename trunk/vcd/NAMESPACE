@@ -64,6 +64,7 @@ export(
        "cotab_mosaic",
        "cotab_assoc",
        "cotab_sieve",
+       "cotab_fourfold",
        "cotab_coindep",
 
 ## `normal' functions

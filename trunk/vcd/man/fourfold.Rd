@@ -113,6 +113,7 @@ fourfold(margin.table(x, c(1, 2)))
 ## standardized to equate the margins for admission and sex.
 ## Figure 2 in Friendly (1994).
 fourfold(x)
+cotabplot(x, panel = cotab_fourfold)
 
 ## Fourfold display of x, with frequencies in each table
 ## standardized to equate the margins for admission. but not
