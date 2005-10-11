@@ -187,6 +187,17 @@ cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
 }
 class(cotab_assoc) <- "panel_generator"
 
+cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
+  function(x, condlevels) {
+    if (is.null(condlevels)) 
+      fourfold(x, newpage = FALSE, ...)
+    else
+      fourfold(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
+               newpage = FALSE, ...)
+  }
+}
+class(cotab_fourfold) <- "panel_generator"
+
 cotab_coindep <- function(x, condvars,
   test = c("max", "Chisq"), level = NULL, n = 1000,
   h = NULL, c = NULL, l = NULL, lty = 1,
