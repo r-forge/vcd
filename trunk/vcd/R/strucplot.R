@@ -108,10 +108,8 @@ strucplot <- function(## main parameters
 
   ## spacing
   if (is.function(spacing)) {
-    if (inherits(spacing, "grapcon_generator") && inherits(spacing, "spacing"))
+    if (inherits(spacing, "grapcon_generator"))
       spacing <- do.call("spacing", spacing_args)
-    if (!(inherits(spacing, "grapcon") && inherits(spacing, "spacing")))
-      stop("Spacing function does not inherit from classes 'grapcon' and 'core'.")
     spacing <- spacing(d, condvars)
   }
 
@@ -121,10 +119,8 @@ strucplot <- function(## main parameters
     if (is.function(gp)) {
       if (is.null(legend) || (is.logical(legend) && legend))
         legend <- legend_resbased
-      gpfun <- if (inherits(gp, "grapcon_generator") && inherits(gp, "shading"))
+      gpfun <- if (inherits(gp, "grapcon_generator"))
         do.call("gp", c(list(x, residuals, expected, df), as.list(gp_args))) else gp
-      if (!(inherits(gpfun, "grapcon") && inherits(gpfun, "shading")))
-        stop("Shading function does not inherit from classes 'grapcon' and 'shading'.")
       gp <- gpfun(residuals)
     } else if (!is.null(legend) && !(is.logical(legend) && !legend))
       stop("gp argument must be a shading function for drawing a legend")
@@ -161,11 +157,9 @@ strucplot <- function(## main parameters
                            legend_width = legend_width))
 
   ## legend
-  if (inherits(legend, "grapcon_generator") && inherits(legend, "legend"))
+  if (inherits(legend, "grapcon_generator"))
     legend <- do.call("legend", legend_args)
   if (shade && !is.null(legend) && !(is.logical(legend) && !legend)) {
-    if (!(inherits(legend, "grapcon") && inherits(legend, "legend")))
-      stop("Legend function does not inherit from classes 'grapcon' and 'legend'.")
     seekViewport("legend")
     residuals_type = switch(residuals_type, deviance = "deviance", ft = "Freeman-Tukey", pearson = "Pearson")
     legend(residuals, gpfun, paste(residuals_type, "residuals:", sep = "\n"))
@@ -189,11 +183,8 @@ strucplot <- function(## main parameters
   ## make plot
   seekViewport("plot")
   
-  if (inherits(core, "grapcon_generator") && inherits(core, "core"))
+  if (inherits(core, "grapcon_generator"))
     core <- do.call("core", core_args)
-  if (!(inherits(core, "grapcon") && inherits(core, "core")))
-    stop("Core function does not inherit from classes 'grapcon' and 'core'.")
-    
   core(residuals = residuals,
        observed = if (type == "observed") x else expected,
        expected = if (type == "observed") expected else x,
@@ -205,10 +196,8 @@ strucplot <- function(## main parameters
 
   ## labels
   if (!is.null(labeling)) {
-    if (inherits(labeling, "grapcon_generator") && inherits(labeling, "labeling"))
+    if (inherits(labeling, "grapcon_generator"))
       labeling <- do.call("labeling", c(labeling_args, list(...)))
-    if (!(inherits(labeling, "grapcon") && inherits(labeling, "labeling")))
-      stop("Labeling function does not inherit from classes 'grapcon' and 'labeling'.")
     labeling(dn, split_vertical, condvars)
   }
 

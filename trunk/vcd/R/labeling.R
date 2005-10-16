@@ -28,7 +28,7 @@ labeling_list <- function(gp = gpar(),
                           varnames = TRUE,
                           cols = 2,
                           ...) {
-  ret <- function(d, split_vertical, condvars) {
+  function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
     ld <- length(d)
@@ -49,12 +49,11 @@ labeling_list <- function(gp = gpar(),
                 gp = gp
                 )
   }
-  structure(ret, class = c("grapcon","labeling"))
 }
-class(labeling_list) <- c("grapcon_generator","labeling")
+class(labeling_list) <- "grapcon_generator"
 
 labeling_conditional <- function(...) {
-  ret <- function (d, split_vertical, condvars) {
+  function (d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
     v <- rep.int(TRUE, length(d))
@@ -62,9 +61,8 @@ labeling_conditional <- function(...) {
     labeling_border(labels = !v, ...)(d, split_vertical, condvars)
     labeling_cells(labels = v, ...)(d, split_vertical, condvars)
   }
-  structure(ret, class = c("grapcon","labeling"))
 }
-class(labeling_conditional) <- c("grapcon_generator","labeling")
+class(labeling_conditional) <- "grapcon_generator"
 
 labeling_cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
@@ -72,7 +70,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
                          just = "center", pos = "center", rot = 0,
                          margin = unit(0.5, "lines"), clip_cells = TRUE,
                          text = NULL, ...) {
-  ret <- function(d, split_vertical, condvars) {
+  function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
     dn <- names(d)
@@ -133,9 +131,8 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
     }
     split()
   }
-  structure(ret, class = c("grapcon","labeling"))
 }
-class(labeling_cells) <- c("grapcon_generator","labeling")
+class(labeling_cells) <- "grapcon_generator"
 
 labeling_border <- function(labels = TRUE, varnames = labels,
                             set_labels = NULL, set_varnames = NULL,
@@ -156,7 +153,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
                             abbreviate = FALSE, rep = TRUE,
                             clip = FALSE, ...
                             ) {
-  ret <- function(d, split_vertical, condvars) {
+  function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
     dn <- names(d)
@@ -506,13 +503,12 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     }
     split()
   }
-  structure(ret, class = c("grapcon","labeling"))
 }
-class(labeling_border) <- c("grapcon_generator","labeling")
+class(labeling_border) <- "grapcon_generator"
 
 labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
   lab_pos <- match.arg(lab_pos)
-  ret <- function(d, split_vertical, condvars) {
+  function(d, split_vertical, condvars) {
     if (is.table(d))
       d <- dimnames(d)
     labeling_border(boxes = c(rep.int(TRUE, length(d) - 1), FALSE),
@@ -530,26 +526,25 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"), ...) {
               x = unit(0.5, "lines"), y = unit(1, "npc"), just = c("left","top"),
               gp = gpar(fontface = 2))
   }
-  structure(ret, class = c("grapcon","labeling"))
 }
-class(labeling_doubledecker) <- c("grapcon_generator","labeling")
+class(labeling_doubledecker) <- "grapcon_generator"
 
 labeling_left <- function(rep = FALSE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
   labeling_border(rep = rep, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
-class(labeling_left) <- c("grapcon_generator","labeling")
+class(labeling_left) <- "grapcon_generator"
 
 labeling_left2 <- function(tl_labels = TRUE, clip = TRUE, pos_varnames = "left",
                         pos_labels = "left", just_labels = "left", ...)
   labeling_border(tl_labels = tl_labels, clip = clip, pos_varnames = pos_varnames,
               pos_labels = pos_labels, just_labels = just_labels, ...)
-class(labeling_left2) <- c("grapcon_generator","labeling")
+class(labeling_left2) <- "grapcon_generator"
 
 labeling_cboxed <- function(tl_labels = TRUE, boxes = TRUE, clip = TRUE, pos_labels = "center", ...)
   labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, ...)
-class(labeling_cboxed) <- c("grapcon_generator","labeling")
+class(labeling_cboxed) <- "grapcon_generator"
 
 labeling_lboxed <- function(tl_labels = FALSE, boxes = TRUE, clip = TRUE, pos_labels = "left", just_labels = "left", labbl_varnames = FALSE, ...)
   labeling_border(tl_labels = tl_labels, boxes = boxes, clip = clip, pos_labels = pos_labels, labbl_varnames = labbl_varnames, just_labels = just_labels, ...)
-class(labeling_lboxed) <- c("grapcon_generator","labeling")
+class(labeling_lboxed) <- "grapcon_generator"

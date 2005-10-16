@@ -76,8 +76,8 @@ The strucplot framework is highly modularized: Figure \ref{fig:struc}
 shows the hierarchical relationship between the various components. 
 On the lowest level, there are several groups of workhorse and 
 parameter functions that directly or indirectly influence the final
-appearance of the plot. These `graphical appearance control'
-(`grapcon') functions are created by generating functions, allowing
+appearance of the plot. These are examples of `graphical appearance control'
+(`grapcon') functions. They are created by generating functions, allowing
 flexible parameterization and extensibility. 
 The first part of their names (\code{\emph{group\_foo()}}) 
 reflects the group they belong to (strucplot core, labeling,
@@ -90,7 +90,7 @@ the parameter functions
 graphical parameters used by the others. The grapcon functions returned by 
 \code{\emph{struc\_foo()}} implement the core functionality, creating the tiles and their
 content.  On the second level of the framework, a suitable combination
-of grapcon functions (or, alternatively, corresponding generating functions)
+of the low-level grapcon functions (or, alternatively, corresponding generating functions)
 is passed as ``hyperparameters'' to \codefun{strucplot}.
 This central function 
 sets up the graphical layout using grid viewports (see Figure \ref{fig:layout}),
