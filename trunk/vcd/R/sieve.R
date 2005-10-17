@@ -114,7 +114,7 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
 
 struc_sieve <- function(sievetype = c("observed", "expected")) {
   sievetype = match.arg(sievetype)
-  ret <- function(residuals, observed, expected, spacing, gp, split_vertical) {
+  function(residuals, observed, expected, spacing, gp, split_vertical) {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -199,6 +199,5 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       grid.rect(name = paste("rect:", mnames[i], sep = ""))
     }
   }
-  structure(ret, class = c("grapcon","core"))
 }
-class(struc_sieve) <- c("grapcon_generator","core")
+class(struc_sieve) <- "grapcon_generator"
