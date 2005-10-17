@@ -1,6 +1,5 @@
 ###########################################################
 ## mosaicplot
-############################################################
 
 mosaic <- function(x, ...)
   UseMethod("mosaic")
@@ -102,8 +101,8 @@ mosaic.default <- function(x, condvars = NULL,
             ...)
 }
 
-struc_mosaic <- function(zero_size = 0.5) {
-  ret <- function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
+struc_mosaic <- function(zero_size = 0.5)
+  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
     dn <- dimnames(observed)
     dnn <- names(dn)
     dx <- dim(observed)
@@ -167,7 +166,6 @@ struc_mosaic <- function(zero_size = 0.5) {
         }
       }
     }
+
   }
-  structure(ret, class = c("grapcon","core"))
-}
-class(struc_mosaic) <- c("grapcon_generator","core")
+class(struc_mosaic) <- "grapcon_generator"
