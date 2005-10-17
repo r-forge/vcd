@@ -20,11 +20,11 @@ pairs.table <- function(x,
 {
   if (newpage) grid.newpage()
 
-  if (inherits(upper_panel, "panel_generator"))
+  if (inherits(upper_panel, "grapcon_generator"))
     upper_panel <- do.call("upper_panel", c(upper_panel_args, list(...)))
-  if (inherits(lower_panel, "panel_generator"))
+  if (inherits(lower_panel, "grapcon_generator"))
     lower_panel <- do.call("lower_panel", c(lower_panel_args, list(...)))
-  if (inherits(diag_panel, "panel_generator"))
+  if (inherits(diag_panel, "grapcon_generator"))
     diag_panel <- do.call("diag_panel", diag_panel_args)
   
   d <- length(dim(x))
@@ -62,13 +62,13 @@ pairs.structable <- function(x, ...) pairs(as.table(x), ...)
 ## upper/lower panels
 
 pairs_assoc <- function(...) pairs_strucplot(panel = assoc, ...)
-class(pairs_assoc) <- "panel_generator"
+class(pairs_assoc) <- "grapcon_generator"
 
 pairs_mosaic <- function(...) pairs_strucplot(panel = mosaic, ...)
-class(pairs_mosaic) <- "panel_generator"
+class(pairs_mosaic) <- "grapcon_generator"
 
 pairs_sieve <- function(...) pairs_strucplot(panel = sieve, ...)
-class(pairs_sieve) <- "panel_generator"
+class(pairs_sieve) <- "grapcon_generator"
 
 pairs_strucplot <- function(panel = mosaic,
                             type = c("pairwise", "total", "conditional", "joint"),
@@ -97,7 +97,7 @@ pairs_strucplot <- function(panel = mosaic,
            ...)
   }
 }
-class(pairs_strucplot) <- "panel_generator"
+class(pairs_strucplot) <- "grapcon_generator"
   
 ## diagonal panels
 
@@ -115,7 +115,7 @@ pairs_text <- function(dimnames = TRUE,
       grid.text(paste("(",paste(names(x), collapse = ","), ")", sep = ""),
                 y = 0.4, gp = gp_leveltext)
   }
-class(pairs_text) <- "panel_generator"
+class(pairs_text) <- "grapcon_generator"
 
 pairs_diagonal_text <- function(varnames = TRUE,
                                 gp_vartext = gpar(fontsize = 17, fontface = "bold"),
@@ -147,7 +147,7 @@ pairs_diagonal_text <- function(varnames = TRUE,
               gp = gp_leveltext, rot = rot)
   }
 }
-class(pairs_diagonal_text) <- "panel_generator"
+class(pairs_diagonal_text) <- "grapcon_generator"
 
 pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
                           gp_vartext = gpar(fontsize = 17),
@@ -176,6 +176,6 @@ pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
     grid.text(names(dimnames(x)), y = 1, just = just_vartext, gp = gp_vartext)
 
   }
-class(pairs_barplot) <- "panel_generator"
+class(pairs_barplot) <- "grapcon_generator"
 
 
