@@ -151,15 +151,15 @@ Conceptually, the strucplot framework offers three alternatives to
 add residual-based shading to plots:
 
 \begin{enumerate}
-\item Pre-computing the graphical parameters (e.g., fill colors),
+\item Precomputing the graphical parameters (e.g., fill colors),
   encapsulating them into an object of class
   \class{gpar} as demonstrated in the previous section, and
   passing this object to the \code{gp} argument.
 \item Providing a grapcon function to the \code{gp} argument that 
   takes residuals as input and returns an object as described in
   alternative 1.
-\item Providing a grapcon \emph{generating} function taking parameters and returning
-  a function as described in alternaive 2. 
+ \item Providing a grapcon \emph{generating} function taking parameters
+  and returning a function as described in alternative~2.
 \end{enumerate}
 
 \noindent For each of these approaches, we will demonstrate the
@@ -235,7 +235,7 @@ preprocesses them, and returns the actual shading function. This returned
 function will have access to the parameters since in {\sf R}, nested
 functions are lexically scoped. Thus, the grapcon generator
 returns (`creates') a `parameterized' shading function with the minimal standard interface
-\codefun{strucplot} requires. The follwing example shows the necessary
+\codefun{strucplot} requires. The following example shows the necessary
 extensions for our running example:
 
 <<shading3>>=
@@ -245,38 +245,37 @@ shading3a_fun <- function(col = c("lightblue", "lightsalmon")) {
 }
 @ 
 
-\noindent In the call of \codefun{mosaic} (figure not shown), 
-using the new \codefun{shading3a\_fun} function, we can now simply change the colors:
+\noindent In the call to \codefun{mosaic}, using the new
+\codefun{shading3a\_fun} function, we can now simply change the colors:
 
 <<shading4>>=
 mosaic(ucb, gp = shading3a_fun(c("red","blue")))
 @ 
 
-\noindent The procedure described so far is a rather general concept,
-applicable to a wide family of user-level \pkg{grid} graphics. Indeed, the
-customization of other components of the strucplot framework
-(labeling, spacing, legend, and core functions) follows the same idea.
-Now for the shading functions, more customization is needed. Note that
-\codefun{shading3a\_fun} needs to be evaluated by the user, even if the
-defaults shall be used. It is a better idea to let \codefun{strucplot} call
-the generating function, which, in particular, allows the passing of arguments that
-are computed by \codefun{strucplot}. Since shading
-functions can be used for visualizing significance (see Section 
-\ref{sec:overview}), it makes sense for generating functions to have access to the model,
-i.e., observed and expected values, residuals, and degrees of
-freedom. For example, the \codefun{shading\_max} generating function
-computes a permutation distribution of the maximum statistic and $p$
-values for specified significance levels 
-based on the observed table to create data-driven cut-off
-points. If this was done in the shading function itself, the
-permutation statistic would be recomputed every time the shading
-function is called, resulting in possibly severe performance loss 
-and numerical inconsistencies. Therefore, generating functions for
-shadings are required to take at least the parameters 
-\code{observed}, \code{expected}, \code{residuals}, and \code{df}
-(these are provided by the strucplot framework),
-followed by other parameters controlling the shading
-appearance (to be specified by the user):
+\noindent (figure not shown).  The procedure described so far is a
+rather general concept, applicable to a wide family of user-level
+\pkg{grid} graphics. Indeed, the customization of other components of
+the strucplot framework (labeling, spacing, legend, and core functions)
+follows the same idea.  Now for the shading functions, more
+customization is needed. Note that \codefun{shading3a\_fun} needs to be
+evaluated by the user, even if the defaults are to be used. It is a
+better idea to let \codefun{strucplot} call the generating function,
+which, in particular, allows the passing of arguments that are computed
+by \codefun{strucplot}. Since shading functions can be used for
+visualizing significance (see Section \ref{sec:overview}), it makes
+sense for generating functions to have access to the model, i.e.,
+observed and expected values, residuals, and degrees of freedom. For
+example, the \codefun{shading\_max} generating function computes a
+permutation distribution of the maximum statistic and $p$ values for
+specified significance levels based on the observed table to create
+data-driven cut-off points. If this was done in the shading function
+itself, the permutation statistic would be recomputed every time the
+shading function is called, resulting in possibly severe performance
+loss and numerical inconsistencies. Therefore, generating functions for
+shadings are required to take at least the parameters \code{observed},
+\code{expected}, \code{residuals}, and \code{df} (these are provided by
+the strucplot framework), followed by other parameters controlling the
+shading appearance (to be specified by the user):
 
 <<shading4>>=
 shading3b_fun <- function(observed = NULL, residuals = NULL, expected = NULL, 
@@ -287,7 +286,7 @@ shading3b_fun <- function(observed = NULL, residuals = NULL, expected = NULL,
 class(shading3b_fun) <- "grapcon_generator"
 @ 
 
-In some sence, generating
+In some sense, generating
 functions for shadings are parameterized both by the user and the
 strucplot framework. For shading functions that require model
 information, the user-specified parameters are 
