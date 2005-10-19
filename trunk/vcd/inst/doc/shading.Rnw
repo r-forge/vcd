@@ -158,8 +158,8 @@ add residual-based shading to plots:
 \item Providing a grapcon function to the \code{gp} argument that 
   takes residuals as input and returns an object as described in
   alternative 1.
- \item Providing a grapcon \emph{generating} function taking parameters
-  and returning a function as described in alternative~2.
+ \item Providing a grapcon \emph{generating} function (`grapcon generator') 
+  taking parameters and returning a function as described in alternative~2.
 \end{enumerate}
 
 \noindent For each of these approaches, we will demonstrate the
@@ -167,7 +167,7 @@ necessary steps to obtain a binary shading that visualizes the sign of
 the residuals by a corresponding 
 fill color (for simplicity, we will treat 0 as positive).
 
-\subsubsection*{Alternative 1: precomputed \class{gpar} object}
+\subsubsection*{Alternative 1: Precomputed \class{gpar} object}
 
 The first method is precomputing the graphical parameters ``by
 hand''. We will use `light blue' color for positive and `light salmon'
@@ -192,7 +192,7 @@ mosaic(ucb, gp = gpar(fill = shading1_obj))
 \end{center}
 \end{figure}
 
-\subsubsection*{Alternative 2: grapcon function}
+\subsubsection*{Alternative 2: Grapcon function}
 
 For implementing alternative 2, we need to create a `shading function'
 that computes \class{gpar} objects from
@@ -227,7 +227,7 @@ they are expected to take exactly one argument: a table of residuals.
 This is where generating functions (alternative 3) come
 into play. 
 
-\subsubsection*{Alternative 3: grapcon-generating function}
+\subsubsection*{Alternative 3: Grapcon generator}
 
 We simply wrap our grapcon shading function in another 
 function that takes all additional arguments it needs to use, possibly
@@ -300,7 +300,7 @@ recommended for consistency:
 mosaic(ucb, gp = shading3b_fun, gp_args = list(col = c("red","blue")))
 @
 
-\noindent This final version pretty much resembles 
+\noindent The final \codefun{shading3b\_fun} pretty much resembles 
 \codefun{shading\_binary}, one of the standard shading
 functions provided by the \pkg{vcd} package.
 
@@ -375,7 +375,7 @@ mosaic(haireye, gp = shading_hsv, gp_args = list(interpolate = 1:4))
 
 \begin{figure}[h]
 \begin{center}
-<<interpolatefig,fig=TRUE,echo=FALSE>>=
+<<interpolatefig,fig=TRUE,echo=FALSE,width=7,height=7>>=
 <<interpolate>>
 @
 \caption{Shaded residuals in the \data{HairEyeColor} data set---four cut-off points.}
