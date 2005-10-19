@@ -39,6 +39,10 @@ set.seed(1071)
 library(vcd)
 data(Titanic)
 data(HairEyeColor)
+data(PreSex)
+data(UCBAdmissions)
+art <- xtabs(~Treatment + Improved, data = Arthritis)
+options(width=70)
 @
 
 \title{The Strucplot Framework---Visualizing Multi-way Contingency Tables}
@@ -50,8 +54,8 @@ data(HairEyeColor)
 
 \section{Framework Overview}
 
-The strucplot framework in the {\sf R} package \pkg{vcd} visualizes
-multi-way contingency tables and integrates techniques such as
+The strucplot framework in the {\sf R} package \pkg{vcd}, used for visualizing
+multi-way contingency tables, integrates techniques such as
 mosaic displays, association plots, and sieve plots. The main idea is to visualize
 the tables' cells arranged in rectangular form. For multi-way tables,
 the variables are nested into rows and columns using recursive
@@ -77,18 +81,20 @@ shows the hierarchical relationship between the various components.
 On the lowest level, there are several groups of workhorse and 
 parameter functions that directly or indirectly influence the final
 appearance of the plot. These are examples of `graphical appearance control'
-(`grapcon') functions. They are created by generating functions, allowing
-flexible parameterization and extensibility. 
-The first part of their names (\code{\emph{group\_foo()}}) 
+(`grapcon') functions. They are created by generating functions
+(`grapcon generators'), allowing
+flexible parameterization and extensibility (Figure \ref{fig:struc}
+only shows the generators).
+The first part of the generator names (\code{\emph{group\_foo}()})
 reflects the group they belong to (strucplot core, labeling,
 legend, shading, or spacing). The workhorse functions (created by 
-\code{\emph{struc\_foo()}}, 
-\code{\emph{labeling\_foo()}}, and \code{\emph{legend\_foo()}}) 
+\code{struc\_\emph{foo}()}, 
+\code{labeling\_\emph{foo}()}, and \code{legend\_\emph{foo}()}) 
 directly produce graphical output (``add ink to the canvas''), whereas
 the parameter functions
-(created by \code{\emph{spacing\_foo()}} and \code{\emph{shading\_foo()}}) compute
+(created by \code{spacing\_\emph{foo}()} and \code{shading\_\emph{foo}()}) compute
 graphical parameters used by the others. The grapcon functions returned by 
-\code{\emph{struc\_foo()}} implement the core functionality, creating the tiles and their
+\code{struc\_\emph{foo}()} implement the core functionality, creating the tiles and their
 content.  On the second level of the framework, a suitable combination
 of the low-level grapcon functions (or, alternatively, corresponding generating functions)
 is passed as ``hyperparameters'' to \codefun{strucplot}.
@@ -202,6 +208,7 @@ mosaic(hec)
 mosaic(~ Sex + Eye + Hair, data = HairEyeColor)
 @
 
+\setkeys{Gin}{width=0.75\textwidth}
 \begin{figure}[p]
 \begin{center}
 <<Observedfig,fig=TRUE,echo=FALSE>>=
@@ -223,7 +230,6 @@ observed values (see Figure \ref{fig:expected}):
 mosaic(hec, type = "expected")
 @
 
-\setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
 \begin{center}
 <<Expectedfig,fig=TRUE,echo=FALSE>>=
@@ -233,6 +239,7 @@ mosaic(hec, type = "expected")
 \label{fig:expected}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
 
 \noindent In order to compare observed and expected values,
 a sieve plot \citep{vcd:riedwyl+schuepbach:1994} 
@@ -282,9 +289,18 @@ the splitting of the tiles can be controlled using the
 \code{split\_vertical} argument (default: alternating splits starting
 with a vertical one). 
 
+<<echo=FALSE>>=
+options(width=60)
+@ 
+
 <<split1>>=
-mosaic(hec, split_vertical = c(TRUE, FALSE, TRUE))
+mosaic(hec, split_vertical = c(TRUE, FALSE, TRUE), 
+labeling_args = list(abbreviate = c(Eye = 3)))
 @
+
+<<echo=FALSE>>=
+options(width=70)
+@ 
 
 \noindent For compatibility with \codefun{mosaicplot} in base {\sf R},
 the \codefun{mosaic} function also allows the use of a \code{"direction"} 
@@ -362,18 +378,18 @@ framework to visualize the two groups besides each other:
 pushViewport(viewport(layout = grid.layout(ncol = 2)))
 
 pushViewport(viewport(layout.pos.col = 1))
-mosaic(hec["Male"], margins = c(top = 2, 0), sub = "Male", newpage = FALSE)
+mosaic(hec["Male"], margins = c(left = 2.5, top = 2.5, 0), sub = "Male", newpage = FALSE)
 popViewport()
 
 pushViewport(viewport(layout.pos.col = 2))
-mosaic(hec["Female"], margins = c(top = 2, 0), sub = "Female", newpage = FALSE)
+mosaic(hec["Female"], margins = c(top = 2.5, 0), sub = "Female", newpage = FALSE)
 popViewport(2)
 @
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<Variablesfig,fig=TRUE,echo=FALSE,height=5,width=12>>=
+<<Variablesfig,fig=TRUE,echo=FALSE,height=6,width=12>>=
 <<Variables>>
 @
 \caption{Distribution of hair and eye color, given gender.}
@@ -399,6 +415,7 @@ specification of conditioning variables (see Figure \ref{fig:conditioning}):
 mosaic(~ Hair + Eye | Sex, data = hec, split_vertical = TRUE, keep_aspect_ratio = FALSE)
 @
 
+\setkeys{Gin}{width=\textwidth}
 \begin{figure}[p]
 \begin{center}
 <<Conditioningfig,fig=TRUE,echo=FALSE,width=12>>=
@@ -408,6 +425,7 @@ mosaic(~ Hair + Eye | Sex, data = hec, split_vertical = TRUE, keep_aspect_ratio 
 \label{fig:conditioning}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=0.7}
 
 \noindent The effect of using this kind of formula is that
 conditioning variables are permuted ahead of the the conditioned variables
@@ -425,7 +443,6 @@ The plot in Figure \ref{fig:cotabplot} shows hair and eye color, given sex:
 
 <<cotabplot>>=
 cotabplot(~ Hair + Eye | Sex, data = hec, panel_args = list(margins = 3), labeling = labeling_left(clip = FALSE))
-#cotabplot(~ Hair + Eye | Sex, data = hec, labeling_args = list(abbreviate = c(Eye = 2)))
 @
 
 \setkeys{Gin}{width=\textwidth}
@@ -440,8 +457,10 @@ cotabplot(~ Hair + Eye | Sex, data = hec, panel_args = list(margins = 3), labeli
 \end{figure}
 \setkeys{Gin}{width=0.7\textwidth}
 
-\noindent The \code{labeling\_args} argument ensures that `eye' levels
-are abbreviated (see the vignette on labeling for detailed information).
+\noindent The \code{labeling\_args} argument modifies the labels'
+appearance: here, to be left-aligned and unclipped
+(see the separate vignette: ``Labeling in the Strucplot Framework'' 
+for detailed information).
 
 Another high-level function for visualizing conditional independence
 models are the \codefun{pairs} methods for table and structable objects.
