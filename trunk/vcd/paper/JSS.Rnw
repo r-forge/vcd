@@ -1999,27 +1999,27 @@ The data set names in the paper are those from the \proglang{R}
 system. In the following, we give a short description of each data set.
 
 \begin{description}
+\item[Arthritis] Data from \cite{vcd:Koch+Edwards:1988} from a double-blind clinical trial
+  investigating a new treatment for rheumatoid arthritis. Available
+  in the \pkg{vcd} package.
+\item[Bundesliga] Results from the first German soccer league in the
+  years 1995/6 \citep{vcd:Knorr-Held:1999} and 2001/2 (Achim
+  Zeileis). Available in the \pkg{vcd} package.
+\item[HairEyeColor] Distribution of hair and eye color and gender in 592 statistics
+  students. The gender information is artificial. Source: \cite{vcd:Snee:1974}.
+  Available in base \proglang{R}.
+\item[PreSex]  Data from Thornes \& Collard (1979), reported in Gilbert (1981), on
+  pre- and extra-marital sex and divorce. Source: FIXME. Available
+  in the \pkg{vcd} package.
 \item[Titanic] Information on the fate of passengers on
   the fatal maiden voyage of the ocean liner `Titanic', summarized
   according to economic status (class), gender (`Sex'), age and
   survival. The data were originally collected by the British Board of Trade
   in their investigation of the sinking. Source: FIXME. Available in base \proglang{R}.
-\item[PreSex]  Data from Thornes \& Collard (1979), reported in Gilbert (1981), on
-  pre- and extra-marital sex and divorce. Source: FIXME. Available
-  in the \pkg{vcd} package.
-\item[Arthritis] Data from \cite{vcd:Koch+Edwards:1988} from a double-blind clinical trial
-  investigating a new treatment for rheumatoid arthritis. Available
-  in the \pkg{vcd} package.
 \item[UCBAdmissions] Aggregate data on applicants to graduate school at Berkeley for
   the six largest departments in 1973 classified by admission and
   gender. Source: \cite{vcd:Bickel+Hammel+O'Connell:1975}. Available
   in base \proglang{R}.
-\item[HairEyeColor] Distribution of hair and eye color and gender in 592 statistics
-  students. The gender information is artificial. Source: \cite{vcd:Snee:1974}.
-  Available in base \proglang{R}.
-\item[Bundesliga] Results from the first German soccer league in the
-  years 1995/6 \citep{vcd:Knorr-Held:1999} and 2001/2 (Achim
-  Zeileis). Available in the \pkg{vcd} package.
 \end{description}
 
 \end{appendix}
