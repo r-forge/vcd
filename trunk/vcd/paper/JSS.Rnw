@@ -4,6 +4,8 @@
 %% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{thumbpdf}
+
 %% almost as usual
 \author{David Meyer\\Wirtschaftsuniversit\"at Wien \And 
         Achim Zeileis\\Wirtschaftsuniversit\"at Wien \And 
@@ -37,9 +39,9 @@ residual-based shading, \pkg{grid}}
   sieve plots, R, categorical data, independence, 
   conditional independence, HSV, HCL, residual-based shading, grid}
 
-%\VignetteIndexEntry{The Strucplot Framework---Visualizing Multi-way Contingency Tables}
+%\VignetteIndexEntry{The Strucplot Framework: Visualizing Multi-way Contingency Tables With package vcd}
 %\VignetteDepends{vcd}
-%\VignetteKeywords{graphics, categorical data}
+%\VignetteKeywords{contingency tables, mosaic plots, association plots, sieve plots, R, categorical data, independence, conditional independence, HSV, HCL, residual-based shading, grid}
 %\VignettePackage{vcd}
 
 %% publication information
@@ -71,6 +73,7 @@ residual-based shading, \pkg{grid}}
   URL: \url{http://www.wu-wien.ac.at/cstat/hornik/}\\
 
   Wirtschaftsuniversit\"at Wien\\
+  Augasse 2--6
   1090 Wien, Austria\\
 }
 %% It is also possible to add a telephone and fax number
@@ -212,7 +215,7 @@ in the others.
 <<Arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(art, gp = shading_max, split_vertical = TRUE)
 @
-\caption{Mosaic plot for the arthritis data.}
+\caption{Mosaic plot for the \data{Arthritis} data.}
 \label{fig:arthritis}
 \end{center}
 \end{figure}
@@ -223,7 +226,7 @@ mosaic(art, gp = shading_max, split_vertical = TRUE)
 <<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
 cotabplot(UCBAdmissions, panel = cotab_assoc)
 @
-\caption{Conditional association plot for the UCB admissions data.}
+\caption{Conditional association plot for the \data{UCBAdmissions} data.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
@@ -234,7 +237,7 @@ cotabplot(UCBAdmissions, panel = cotab_assoc)
 <<PreSex,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(PreSex, condvars = c(1, 4), shade = TRUE)
 @
-\caption{Mosaic plot for the pre- and extramarital sex data.}
+\caption{Mosaic plot for the \data{PreSex} data.}
 \label{fig:presex}
 \end{center}
 \end{figure}
@@ -246,7 +249,7 @@ mosaic(PreSex, condvars = c(1, 4), shade = TRUE)
 doubledecker(Survived ~ ., data = Titanic, labeling_args = 
              list(set_varnames = c(Sex = "Gender")))
 @
-\caption{Double-decker plot for the survival on the Titanic data.}
+\caption{Double-decker plot for the \data{Titanic} data.}
 \label{fig:titanic}
 \end{center}
 \end{figure}
@@ -285,10 +288,10 @@ Sections \ref{sec:labeling} and \ref{sec:spacing} discuss in detail the labeling
 and spacing features, respectively. Section \ref{sec:conclusion}
 finally concludes the work.
 
-\section[The Strucplot Framework]{The Strucplot Framework}
+\section[The strucplot framework]{The strucplot framework}
 \label{sec:strucplot}
 
-The strucplot framework in the {\sf R} package \pkg{vcd}, used for visualizing
+The strucplot framework in the \proglang{R} package \pkg{vcd}, used for visualizing
 multi-way contingency tables, integrates techniques such as
 mosaic displays, association plots, and sieve plots. The main idea is to visualize
 the tables' cells arranged in rectangular form. For multi-way tables,
@@ -407,14 +410,14 @@ framework into more complex displays (e.g., by means of panel functions).
 \end{figure}
 \setkeys{Gin}{width=0.7\textwidth}
 
-\subsection{Mosaic, Association, and Sieve Plots}
+\subsection{Mosaic, association, and sieve plots}
 
 As an example, consider the \data{HairEyeColor} 
 data containing two polytomous variables (hair and eye color), 
 as well as one (artificial) dichotomous variable (sex, i.e., gender). The
 `flattened' contingency table can be obtained using the
 \codefun{structable} function (quite similar to \codefun{ftable} in
-base {\sf R}, but allowing the specification of split directions):
+base \proglang{R}, but allowing the specification of split directions):
 
 <<structable,results=verbatim>>=
 (hec <- structable(Eye ~ Sex + Hair, data = HairEyeColor))
@@ -452,7 +455,7 @@ mosaic(~ Sex + Eye + Hair, data = HairEyeColor)
 
 \noindent The small bullets indicate zero entries in the corresponding
 cell. Note that in contrast to, e.g.,  \codefun{mosaicplot} in base
-{\sf R}, the default split direction and level ordering in all strucplot
+\proglang{R}, the default split direction and level ordering in all strucplot
 displays correspond to the textual representation.
 It is also possible to visualize the expected values instead of the
 observed values (see Figure \ref{fig:expected}):
@@ -495,7 +498,7 @@ sieve(hec)
 The Pearson residuals (standardized deviations of observed from expected values) 
 are preferably visualized using association
 plots \citep{vcd:Cohen:1980}. In contrast to \codefun{assocplot} in
-base {\sf R}, \pkg{vcd}'s \codefun{assoc}
+base \proglang{R}, \pkg{vcd}'s \codefun{assoc}
 function scales to more than two variables (see Figure \ref{fig:residuals}):
 
 <<Residuals>>=
@@ -533,7 +536,7 @@ labeling_args = list(abbreviate = c(Eye = 3)))
 options(width=70)
 @ 
 
-\noindent For compatibility with \codefun{mosaicplot} in base {\sf R},
+\noindent For compatibility with \codefun{mosaicplot} in base \proglang{R},
 the \codefun{mosaic} function also allows the use of a \code{"direction"} 
 argument taking a vector of \code{"h"} and
 \code{"v"} characters (see Figure \ref{fig:split}):
@@ -818,11 +821,11 @@ assoc(tab, gp = gpar(fill = x))
 \end{figure}
 
 
-\section{Residual-based Shadings}
+\section{Residual-based shadings}
 \label{sec:shading}
 
 
-Unlike other graphics functions in base {\sf R}, the strucplot framework 
+Unlike other graphics functions in base \proglang{R}, the strucplot framework 
 allows almost full control over the graphical parameters of all plot elements. In
 particular, in association plots, mosaic plots, and sieve plots, 
 the user can modify the graphical appearance of each tile individually. 
@@ -1002,7 +1005,7 @@ into play.
 We simply wrap our grapcon shading function in another 
 function that takes all additional arguments it needs to use, possibly
 preprocesses them, and returns the actual shading function. This returned
-function will have access to the parameters since in {\sf R}, nested
+function will have access to the parameters since in \proglang{R}, nested
 functions are lexically scoped. Thus, the grapcon generator
 returns (`creates') a `parameterized' shading function with the minimal standard interface
 \codefun{strucplot} requires. The following example shows the necessary
@@ -1250,7 +1253,7 @@ mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
 
 \noindent (The \code{zero\_size = 0} argument removes the bullets indicating zero 
 observed values. This feature is not provided
-in the original {\sf SAS} implementation of the Friendly mosaic plots.)
+in the original \proglang{SAS} implementation of the Friendly mosaic plots.)
 
 As introduced before, the default shading scheme is not
 \codefun{shading\_hsv} but \codefun{shading\_hcl} due to the better
@@ -1539,12 +1542,12 @@ maximum of the absolute Pearson residuals, \emph{each} colored
 residual violates the null hypotheses of independence, and thus, the
 `culprits' can immediately be identified.
 
-\section[Flexible Labeling]{Flexible Labeling}
+\section[Flexible labeling]{Flexible labeling}
 \label{sec:labeling}
 
 One of the major enhancements in package \pkg{vcd} compared to
 \codefun{mosaicplot} and \codefun{assocplot} in
-base {\sf R} is the labeling in the strucplot framework which 
+base \proglang{R} is the labeling in the strucplot framework which 
 offers many more features and flexibility. 
 Like shading, spacing, and drawing of legend and core plot, 
 labeling is now carried out by grapcon functions, rendering labeling completely
@@ -1567,7 +1570,7 @@ derived functions that build upon them.
 
 \codefun{labeling\_text} is the default for all strucplot displays. It
 plots labels in the borders similar to the \codefun{mosaicplot}
-function in base {\sf R}, but is much more flexible: it is not limited
+function in base \proglang{R}, but is much more flexible: it is not limited
 to 4 dimensions, and the positioning and graphical parameters 
 of levels and variable names are customizable. In addition,
 the problem of overlapping labels can be handled in several ways. 
@@ -1641,7 +1644,7 @@ mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 3)))
 \noindent The \code{abbreviate} argument takes a vector of
 integers indicating the number of significant characters the levels should be
 abbreviated to (\code{TRUE} is interpreted as 1, obviously). Abbreviation
-is performed using the \codefun{abbreviate} function in base {\sf R}. Another
+is performed using the \codefun{abbreviate} function in base \proglang{R}. Another
 possibility is to rotate the levels (see Figure~\ref{fig:rotating}):
 
 <<rotate>>=
@@ -1885,14 +1888,14 @@ mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
 
 \noindent The number of columns can be specified.
 
-\section{Customizable Spacing}
+\section{Customizable spacing}
 \label{sec:spacing}
 
 Spacing of strucplot displays is customizable in a similar way than shading. The
 \code{spacing} argument of the \codefun{strucplot} function takes a
 list of \class{unit} vectors, one for each dimension, specifying the
 space between the tiles corresponding to the levels. As an example,
-consider the introductory example of the \data{arthritis} data 
+consider the introductory example of the \data{Arthritis} data 
 (Figure \ref{fig:arthritis}). Since we are interested in the effect of
 the medicament in the placebo and treatment groups, a mosaic plot is
 certainly appropriate to visualize the three levels of `Improved' in
@@ -1916,7 +1919,7 @@ mosaic(art, spacing = my_spacing, gp = my_colors)
 <<artspinefig,echo=FALSE,fig=TRUE>>=
 <<artspine>>
 @ 
-\caption{Spine plot for the \data{arthritis} data using the strucplot framework.}
+\caption{Spine plot for the \data{Arthritis} data using the strucplot framework.}
 \label{fig:artspine}
 \end{center}
 \end{figure}
@@ -1988,5 +1991,37 @@ the \pkg{vcd} package freely available from the
 Comprehensive \proglang{R} Archive Network (CRAN).
 
 \bibliography{vcd}
+
+\begin{appendix}
+\section{Data sets}
+
+The data set names in the paper are those from the \proglang{R}
+system. In the following, we give a short description of each data set.
+
+\begin{description}
+\item[Titanic] Information on the fate of passengers on
+  the fatal maiden voyage of the ocean liner `Titanic', summarized
+  according to economic status (class), gender (`Sex'), age and
+  survival. The data were originally collected by the British Board of Trade
+  in their investigation of the sinking. Source: FIXME. Available in base \proglang{R}.
+\item[PreSex]  Data from Thornes \& Collard (1979), reported in Gilbert (1981), on
+  pre- and extra-marital sex and divorce. Source: FIXME. Available
+  in the \pkg{vcd} package.
+\item[Arthritis] Data from \cite{vcd:Koch+Edwards:1988} from a double-blind clinical trial
+  investigating a new treatment for rheumatoid arthritis. Available
+  in the \pkg{vcd} package.
+\item[UCBAdmissions] Aggregate data on applicants to graduate school at Berkeley for
+  the six largest departments in 1973 classified by admission and
+  gender. Source: \cite{vcd:Bickel+Hammel+O'Connell:1975}. Available
+  in base \proglang{R}.
+\item[HairEyeColor] Distribution of hair and eye color and gender in 592 statistics
+  students. The gender information is artificial. Source: \cite{vcd:Snee:1974}.
+  Available in base \proglang{R}.
+\item[Bundesliga] Results from the first German soccer league in the
+  years 1995/6 \citep{vcd:Knorr-Held:1999} and 2001/2 (Achim
+  Zeileis). Available in the \pkg{vcd} package.
+\end{description}
+
+\end{appendix}
 
 \end{document}
