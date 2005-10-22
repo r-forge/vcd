@@ -2008,14 +2008,15 @@ system. In the following, we give a short description of each data set.
 \item[HairEyeColor] Distribution of hair and eye color and gender in 592 statistics
   students. The gender information is artificial. Source: \cite{vcd:Snee:1974}.
   Available in base \proglang{R}.
-\item[PreSex]  Data from Thornes \& Collard (1979), reported in Gilbert (1981), on
-  pre- and extra-marital sex and divorce. Source: FIXME. Available
+\item[PreSex]  Data from \cite{vcd:thornes+collard:1979} reported in 
+  \cite{vcd:gilbert:1981}, on pre- and extra-marital sex and divorce. Available
   in the \pkg{vcd} package.
 \item[Titanic] Information on the fate of passengers on
   the fatal maiden voyage of the ocean liner `Titanic', summarized
   according to economic status (class), gender (`Sex'), age and
-  survival. The data were originally collected by the British Board of Trade
-  in their investigation of the sinking. Source: FIXME. Available in base \proglang{R}.
+  survival.  Source: \cite{vcd:dawson:1995} (Data 
+  originally collected by the British Board of Trade
+  in their investigation of the sinking). Available in base \proglang{R}.
 \item[UCBAdmissions] Aggregate data on applicants to graduate school at Berkeley for
   the six largest departments in 1973 classified by admission and
   gender. Source: \cite{vcd:Bickel+Hammel+O'Connell:1975}. Available
