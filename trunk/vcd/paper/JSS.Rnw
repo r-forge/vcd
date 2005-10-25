@@ -316,7 +316,8 @@ The strucplot framework is highly modularized: Figure \ref{fig:struc}
 shows the hierarchical relationship between the various components. 
 On the lowest level, there are several groups of workhorse and 
 parameter functions that directly or indirectly influence the final
-appearance of the plot. These are examples of `graphical appearance control'
+appearance of the plot (see Table \ref{tab:grapcons} for an overview). 
+These are examples of `\underline{gr}aphical \underline{ap}pearance \underline{con}trol'
 (`grapcon') functions. They are created by generating functions
 (`grapcon generators'), allowing
 flexible parameterization and extensibility (Figure \ref{fig:struc}
@@ -347,6 +348,55 @@ level, there are `related' \pkg{vcd} functions (such as \codefun{cotabplot}
 and the \codefun{pairs} methods for table objects) 
 arranging collections of plots of the strucplot 
 framework into more complex displays (e.g., by means of panel functions).
+
+\begin{table}
+  \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Group} & \textbf{Grapcon generator} & \textbf{Description}\\\hline
+    strucplot & \codefun{struc\_mosaic} & core function for mosaic plots\\
+    core          & \codefun{struc\_assoc} & core function for association plots\\
+              & \codefun{struc\_sieve} & core function for sieve plots\\\hline\hline
+     labeling & \codefun{labeling\_border} & border labels\\
+              & \codefun{labeling\_cells} & cell labels\\
+              & \codefun{labeling\_conditional} & border labels
+              for conditioning variables\\
+              && and cell labels for conditioned variables.\\
+              & \codefun{labeling\_list} & draws a list of labels
+              under the plot\\
+              & \codefun{labeling\_doubledecker} & draws labels for
+              doubledecker plot\\
+              & \codefun{labeling\_left} & left-aligned border labels\\
+              & \codefun{labeling\_left2} & left-aligned border
+              labels, all labels on top and left border\\
+              & \codefun{labeling\_lboxed} & left-aligned labels with boxes.\\
+              & \codefun{labeling\_cboxed} & centered labels with
+              boxes, all labels clipped,\\
+              && and on top and left border\\\hline\hline
+     shading  & \codefun{shading\_hsv} & shading based on HSV-colors\\
+              & \codefun{shading\_Friendly} & implements Friendly-like
+              shading (based on HSV-colors)\\
+              & \codefun{shading\_hcl} & shading based on HCL-colors\\
+              & \codefun{shading\_max} & shading visualizing the
+              maximum test statistic\\ && (based on HCL-colors)\\
+              & \codefun{shading\_binary} & visualizes the sign of the
+              residuals\\\hline\hline
+     spacing  & \codefun{spacing\_equal} & equal spacing for all dimensions\\
+              & \codefun{spacing\_dimequal} & equal spacing for each dimension\\
+              & \codefun{spacing\_increase} & increasing spacing\\
+              & \codefun{spacing\_highlighting} & increasing spacing,
+              last dimension set to zero\\
+              & \codefun{spacing\_conditional} & increasing spacing
+              for conditioning variables,\\&& equal spacing for
+              conditioned variables.\\\hline\hline
+     legend   & \codefun{legend\_resbased} & suitable for an
+     arbitrary number of bins\\&& (also for continuous shadings)\\
+              & \codefun{legend\_fixed} & creates a fixed number of
+              bins (similar to \codefun{mosaicplot})\\\hline
+
+  \end{tabular}
+  \caption{Available grapcon generators in the strucplot framework}
+  \label{tab:grapcons}
+\end{table}
 
 \begin{figure}[h]
   \begin{center}
