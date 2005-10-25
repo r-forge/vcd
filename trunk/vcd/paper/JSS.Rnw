@@ -1909,8 +1909,8 @@ mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
 Spacing of strucplot displays is customizable in a similar way than shading. The
 \code{spacing} argument of the \codefun{strucplot} function takes a
 list of \class{unit} vectors, one for each dimension, specifying the
-space between the tiles corresponding to the levels. As an example,
-consider the introductory example of the \data{Arthritis} data 
+space between the tiles corresponding to the levels. 
+Consider again the introductory example of the \data{Arthritis} data 
 (Figure \ref{fig:arthritis}). Since we are interested in the effect of
 the medicament in the placebo and treatment groups, a mosaic plot is
 certainly appropriate to visualize the three levels of `Improved' in
