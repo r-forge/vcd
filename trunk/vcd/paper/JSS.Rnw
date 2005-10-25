@@ -24,7 +24,7 @@ multi-way contingency tables. Strucplot displays include hierarchical
 conditional plots such as mosaic, association, and sieve plots, and
 can be combined into more complex, specialized plots for visualizing
 conditional independence, GLMs, and the results of
-independence tests. The frameworks' modular design allows
+independence tests. The framework's modular design allows
 flexible customization of the plots' graphical appearance, including 
 shading, labeling, spacing, and legend, by means of \underline{gr}aphical
 \underline{ap}pearance \underline{con}trol (`grapcon') functions. 
@@ -127,26 +127,25 @@ art <- xtabs(~Treatment + Improved, data = Arthritis)
 In order to explain multi-dimensional categorical data, statisticians
 typically look for (conditional) independence structures. Whether the
 task is purely exploratory or model-based, techniques such as mosaic and
-association plots offer good support for visualization. Both have been
-extended over the last two decades, and implementations exist in many
-statistical environments. 
-Both graphical methods visualize aspects of (possibly higher-dimensional)
-contingency tables. A \emph{mosaic plot} \citep{vcd:Hartigan+Kleiner:1984} is basically 
-an area-proportional visualization of (typically, observed) frequencies, composed
-of tiles (corresponding to the cells) created by recursive
+association plots offer good support for visualization.  Both visualize
+aspects of (possibly higher-dimensional) contingency tables, with
+several extensions introduced over the last two decades, and
+implementations available in many statistical environments.  A
+\emph{mosaic plot} \citep{vcd:Hartigan+Kleiner:1984} is basically an
+area-proportional visualization of (typically, observed) frequencies,
+composed of tiles (corresponding to the cells) created by recursive
 vertical and horizontal splits of a square. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
-dimensions of previous splits. An \emph{association plot} \citep{vcd:Cohen:1980}
-visualizes the standardized deviations of observed frequencies from
-those expected under a certain independence hypothesis.
-Each cell is represented by a rectangle that has
-(signed) height proportional to the residual and width proportional
-to the square root of the expected counts, 
-so that the area of the box is proportional
+dimensions of previous splits. An \emph{association plot}
+\citep{vcd:Cohen:1980} visualizes the standardized deviations of
+observed frequencies from those expected under a certain independence
+hypothesis.  Each cell is represented by a rectangle that has (signed)
+height proportional to the residual and width proportional to the square
+root of the expected counts, so that the area of the box is proportional
 to the difference in observed and expected frequencies.
 
-Over the years, extensions to these techniques were mainly focused on
-five aspects:
+Extensions to these techniques have mainly focused on the following
+aspects.
 
 \begin{enumerate}
 \item Varying the shape of bar plots and mosaic displays to yield, e.g.,
@@ -188,7 +187,7 @@ Table \ref{tab:compare} gives an overview of the available functionality in thes
 \end{table}
 
 Figures \ref{fig:arthritis} to \ref{fig:titanic} illustrate some of these
-extensions (the code is shown in Appendix \ref{sec:code}). 
+extensions (the code is given in Appendix \ref{sec:code}). 
 Figure \ref{fig:arthritis} shows the results from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, using an
 extended mosaic plot with residual-based shading based on the
@@ -258,25 +257,24 @@ doubledecker(Survived ~ ., data = Titanic, labeling_args =
 \end{center}
 \end{figure}
 
-This paper describes the strucplot framework provided by the \pkg{vcd} package
-for the \proglang{R} system and environment for statistical computing
-and graphics, available from the Comprehensive \proglang{R} Archive Network (\url{http://cran.r-project.org/}).
-The framework integrates displays such as mosaic, association, and
-sieve plots by their unifying property of being 
-flat representations of contingency tables.
-These basic plots, as well as specialized displays for conditional
-independence, can be used both for exploratory visualization and
-model-based analysis. Exploratory techniques include specialized displays for
-the bivariate case, as well as pairs and trellis plot-like displays for
-higher-dimensional tables. Model-based tools include 
-methods suitable for the visualization of 
-conditional independence tests (including permutation tests), as well
-as for the visualization of particular GLMs (logistic regression,
-log-linear models). Additionally, two of the frameworks' further strengths are its
-flexibility and extensibility: graphical appearance aspects such as shading,
-labeling, and spacing are modularized by means of `graphical
-appearance functions', allowing fine-granular customization and
-user-level extensions.
+This paper describes the strucplot framework provided by the \pkg{vcd}
+package for the \proglang{R} environment for statistical computing and
+graphics, available from the Comprehensive \proglang{R} Archive Network
+(\url{http://cran.r-project.org/}).  The framework integrates displays
+such as mosaic, association, and sieve plots by their unifying property
+of being flat representations of contingency tables.  These basic plots,
+as well as specialized displays for conditional independence, can be
+used both for exploratory visualization and model-based analysis.
+Exploratory techniques include specialized displays for the bivariate
+case, as well as pairs and trellis plot-like displays for
+higher-dimensional tables. Model-based tools include methods suitable
+for the visualization of conditional independence tests (including
+permutation tests), as well as for the visualization of particular GLMs
+(logistic regression, log-linear models). Additionally, two of the
+framework's further strengths are its flexibility and extensibility:
+graphical appearance aspects such as shading, labeling, and spacing are
+modularized by means of `graphical appearance functions', allowing
+fine-granular customization and user-level extensions.
 
 The remainder of the paper is organized as follows. In
 Section \ref{sec:strucplot}, we give an overview of the strucplot
@@ -2002,7 +2000,7 @@ Additionally, these core strucplot displays can be combined into more complex,
 specialized plots, such as pairs and trellis-like displays for visualizing
 conditional independence. Residual-based shadings permit the
 visualization of log-linear models and the results of independence tests.
-The frameworks' modular design allows
+The framework's modular design allows
 flexible customization of the plots' graphical appearance, including 
 shading, labeling, spacing, and legend, by means of graphical
 appearance control (`grapcon') functions. These `graphical
