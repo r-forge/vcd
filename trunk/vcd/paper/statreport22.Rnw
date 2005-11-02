@@ -1,28 +1,18 @@
 \documentclass[notitle]{Z}
-
 \usepackage{thumbpdf}
 \usepackage{statreport}
 
-\title{The Strucplot Framework:\\ Visualizing Multi-way Contingency
-  Tables with \pkg{vcd}}
-
-\author{
-  \hfill David Meyer \hfill Achim Zeileis \hfill Kurt Hornik \hfill
-  \\
-  Wirtschaftsuniversit\"at Wien
-  }
-
-%\VignetteIndexEntry{The Strucplot Framework: Visualizing Multi-way Contingency Tables With package vcd}
-%\VignetteDepends{vcd}
-%\VignetteKeywords{contingency tables, mosaic plots, association plots, sieve plots, R, categorical data, independence, conditional independence, HSV, HCL, residual-based shading, grid}
-%\VignettePackage{vcd}
-
-%% need no \usepackage{Sweave.sty}
-
+%% need no \usepackage{Sweave}
 \SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
 \setkeys{Gin}{width=0.7\textwidth}
 
+
+\title{The Strucplot Framework:\\ Visualizing Multi-way Contingency
+  Tables with \pkg{vcd}}
+\author{David Meyer \hspace{2cm} Achim Zeileis \hspace{2cm} Kurt Hornik\\
+  Wirtschaftsuniversit\"at Wien}
 \Plainauthor{David Meyer, Achim Zeileis, Kurt Hornik}
+\Plaintitle{The Strucplot Framework: Visualizing Multi-way Contingency Tables with vcd}
 
 \Abstract{
 This paper describes the `strucplot' framework for the visualization of
@@ -39,7 +29,10 @@ The framework is provided by the \proglang{R} package \pkg{vcd}.
 
 \Keywords{contingency tables, mosaic plots, association plots, sieve plots, 
 categorical data, independence, conditional independence, HSV, HCL,
-residual-based shading, \texttt{grid}, \textsf{R}}
+residual-based shading, \pkg{grid}, \textsf{R}}
+\Plainkeywords{contingency tables, mosaic plots, association plots, sieve plots, 
+categorical data, independence, conditional independence, HSV, HCL,
+residual-based shading, grid, R}
 
 \sloppy{}
 
