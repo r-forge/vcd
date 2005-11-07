@@ -1,0 +1,955 @@
+
+% RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{svmult}
+
+% choose options for [] as required from the list
+% in the Reference Guide, Sect. 2.2
+
+\usepackage{Sweave,hyperref,color,graphicx} 
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+
+\definecolor{Red}{rgb}{0.7,0,0}
+\definecolor{Blue}{rgb}{0,0,0.8}
+\definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
+\setkeys{Gin}{width=0.7\textwidth}
+
+
+<<preliminaries,echo=FALSE,results=hide>>=
+set.seed(1071)
+library(vcd)
+library(scatterplot3d)
+library(xtable)
+data(Arthritis)
+data(Titanic)
+data(PreSex)
+data(UCBAdmissions)
+hospital <- as.table(matrix(c(43,16,3,6,11,10,9,18,16), c(3,3), byrow = TRUE, 
+dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"), 
+"Length of stay" = c("2-9","10-19","20+"))))
+art <- xtabs(~Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+@
+
+%\newcommand{\data}[1]{`\texttt{#1}'}
+\newcommand{\data}[1]{#1}
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title*{Visualizing Multi-Way Contingency Tables}
+% Use \titlerunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\author{David Meyer\inst{1}\and
+Achim Zeileis\inst{2}\and
+Kurt Hornik\inst{2}}
+% Use \authorrunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\institute{Department of Information Systems and Process Management
+\and Department of Statistics and Mathematics\\Wirtschaftsuniversität
+Wien\\Augasse 2--6, 1090 Vienna, Austria
+\texttt{\{David.Meyer,Achim.Zeileis,Kurt.Hornik\}@wu-wien.ac.at}}
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Categorical data analysis is typically based on two- or
+higher-dimensional contingency tables, cross-tabulating the
+co-occurences of levels of nominal and/or ordinal data. 
+In order to explain these, statisticians
+typically look for (conditional) independence structures using common
+statistical methods such as independence tests and
+log-linear models. The analysis quickly 
+becomes complex with increasing dimensionality.
+One idea of visualization techniques is to
+use the human visual system to detect structures in the data that
+possibly are not obvious from solely numeric output (e.g., test
+statistics). Whether the
+task is purely exploratory or model based, techniques such as mosaic, sieve, and
+association plots offer good support for visualization. All three have been
+extended over the last two decades, and implementations exist in many
+statistical environments.
+
+All three graphical methods visualize aspects of (possibly higher-dimensional)
+contingency tables. A \emph{mosaic plot} \cite{vcd:Hartigan+Kleiner:1984} is basically 
+an area-proportional visualization of (typically observed) frequencies, composed
+of tiles (corresponding to the cells) created by recursive
+vertical and horizontal splits of a square. Thus, the area of each tile
+is proportional to the corresponding cell entry \emph{given} the
+dimensions of previous splits. 
+\emph{Sieve plot} are similar to mosaic plots, but the area of each
+tile is proportional to the \emph{expected} cell entry, and each tile
+is filled with a number of rectangles corresponding to the observed value.
+An \emph{association plot} \cite{vcd:Cohen:1980}
+visualizes the standardized deviations of observed frequencies from
+those expected under a certain independence hypothesis.
+Each cell is represented by a rectangle that has
+(signed) height proportional to the residual and width proportional
+to the square root of the expected counts, 
+so that the area of the box is proportional
+to the difference in observed and expected frequencies.
+
+Over the years, extensions to these techniques were mainly focused on
+five aspects:
+
+\begin{enumerate}
+\item Varying the shape of bar plots and mosaic displays to yield, e.g.,
+  double-decker plots \cite{vcd:hofmann:2001}, spine 
+  plots \cite{vcd:riedwyl+schuepbach:1994}, or spinograms.
+\item Using residual-based shadings to visualize log-linear models
+  \cite{vcd:Friendly:1994,vcd:Friendly:2000} and significance of
+  statistical tests \cite{vcd:Meyer+Zeileis+Hornik:2003}.
+\item Using pairs plots and trellis-like layouts for marginal, conditional and
+  partial views \cite{vcd:Friendly:1999}.
+\item Adding direct user interaction, allowing quick exploration and
+  modification of the visualized models \cite{vcd:Unwin+Hawkins+Hofmann:1996,vcd:Theus:2003}.
+\item Providing a modular and flexible implementation to easily allow
+  user extensions \cite{vcd:Meyer+Zeileis+Hornik:2005a}.
+\end{enumerate}
+
+\noindent Current implementations of mosaic displays can be found,
+e.g., for \proglang{SAS} \cite{vcd:SAS:2005}, \pkg{ViSta} \cite{vcd:young:1996}, 
+\pkg{MANET} \cite{vcd:Unwin+Hawkins+Hofmann:1996},
+\pkg{Mondrian} \cite{vcd:Theus:2003},
+\proglang{R} \cite{vcd:R:2005}, and \proglang{S-PLUS} \cite{vcd:SPLUS:2005}. 
+Table \ref{tab:compare} gives an overview of the available functionality in these systems.
+The figures in this chapter have all been produced using the
+\proglang{R} system, using the extension packages \pkg{vcd} 
+\cite{vcd:Meyer+Zeileis+Hornik:2005} and
+\pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
+(Fig.~\ref{fig:threedee} only), all freely available from the
+Comprehensive \proglang{R} Archive Network (\url{http://cran.r-project.org/}).
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
+                             & SAS & S-PLUS & R & ViSta & MANET/Mondrian\\\hline
+    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$\\
+    Shape                    &     &        & $\times$ &       & $\times$\\
+    Residual-based shadings  &  $\times$  &        & $\times$ &   $\times$   & ($\times$)\\
+    Conditional Views        &  $\times$  &        & $\times$ &       & $\times$\\
+    Interaction              &     &        &   &   $\times$   & $\times$\\
+    Extensible Design        &     &        & $\times$ &       &  \\\hline
+  \end{tabular}
+  \caption{Comparison of current software environments.}
+  \label{tab:compare}
+\end{table}
+
+Our contribution will give an overview of the state of the art 
+of mosaic, sieve, and association plots, both for exploratory visualization and
+model-based analysis. Exploratory techniques will include specialized displays for
+the bivariate case, as well as pairs plot-like displays for
+higher-dimensional tables. As for the model-based tools, particular
+emphasis will be given to methods suitable for the visualization of 
+conditional independence tests (including permutation tests), as well
+as for the visualization of particular GLMs (such as log-linear models). 
+In Sect.~\ref{sec:twoway}, we start with the
+simple bivariate case.  Section \ref{sec:extensions} explains how the use of color
+in residual-based shadings can support data exploration, and
+even promotes the methods to diagnostic and model-based tools
+by visualizing test statistics and residuals of independence models.
+In Sect.~\ref{sec:multiway}, we show how the
+basically bivariate methods straightforwardly extend to the multivariate case by using
+`flat' representations of the multi-way tables. In this section, we
+also introduce specialized displays for conditional independence
+structures. Sect.~\ref{sec:concl} concludes the chapter.
+
+\section{Two-way Tables}
+\label{sec:twoway}
+
+Throughout these section, our examples will be based on
+the \data{hospital} data \cite{vcd:haberman:1974} (see Tab.~\ref{tab:hospital}).
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|l||rrr|r|}
+\hline
+ & Length of stay &&&\\
+ & 2--9 days & 10--19 days & more than 20 days & TOTAL \\
+\hline\hline
+Visit frequency &&&&\\
+Regular & 43 & 16 & 3 & 62 \\
+Less than monthly & 6 & 11 & 10 & 27 \\
+Never & 9 & 18 & 16 & 43 \\\hline
+TOTAL & 58 & 45 & 29 & 132 \\
+\hline
+\end{tabular}
+\caption{The \data{hospital} data.}
+\label{tab:hospital}
+\end{center}
+\end{table}
+
+\noindent The table relates the length of stay (in days) in hospital and
+the visit freqency for mental patients, 
+giving evidence to the fact that the longer the length of 
+stay in hospital, the less frequent the visits.
+
+Although far from optimal, contingency tables are frequently visualized using
+grouped bar charts (see Fig.~\ref{fig:grouped}) 
+or even by means of 3D-bar charts (see Fig.~\ref{fig:threedee}). It seems hard
+to detect the aforementioned pattern in these, especially in the 3D
+plot where the perspective view tends to distort the true proportions
+of the bars. In the following, we
+will introduce three graphical methods that are better suited for
+contingency tables.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<grouped,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+barplot(hospital, legend = rownames(hospital), beside = TRUE, 
+        xlab = "Length of stay", ylab = "Number of patients")
+@
+\caption{Barplot for the \data{hospital} data.}
+\label{fig:grouped}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<threedeebars,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+myhospital = t(hospital)[,3:1]
+mydat = data.frame("Length of stay" = as.vector(row(myhospital)), 
+                   "Visit frequency" = as.vector(col(myhospital)), 
+                   "Number of patients" = as.vector(myhospital))
+scatterplot3d(mydat, type = "h", pch = " ", lwd = 10, 
+x.ticklabs = c("2-9","","10-19","","20+"), 
+              y.ticklabs = c("Regular","","Less than monthly","","Never"), 
+              xlab = "Length of stay", ylab = "Visit frequency", zlab = "Number of patients",
+              y.margin.add = 0.2,
+              color = "black", box = F)
+@
+\caption{3D-barplot for the \data{hospital} data.}
+\label{fig:threedee}
+\end{center}
+\end{figure}
+
+\subsection{Mosaic Displays}
+\label{sec:mosaic}
+
+Mosaic displays have been introduced by 
+\cite{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984} and
+extended, e.g., by \cite{vcd:Friendly:1994,vcd:Friendly:1999,vcd:Friendly:2000}. 
+They visualize the observed values of a contingency table by
+area-proportional tiles, arranged in a squared mosaic. The tiles are
+obtained by recursive partitioning splits of a square. Since 
+chapter XXX in this book \emph{\bf (Reference to the contribution of Heike Hofmann)} 
+is entirely devoted to mosaic plots, in the following we only describe
+the main idea. Consider our
+example of the hospital data from above. Step 1 consists of splitting a square
+according to the marginals of one of the variables. To be consistent with the textual
+representation, we choose `Length of stay' with vertical splits 
+(see Fig.~\ref{fig:mosaic1fig}). 
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<mosaic1,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(margin.table(hospital, 2), split = TRUE)
+@ 
+\caption{Construction of a mosaic plot for a two-way table, step 1.}
+\label{fig:mosaic1fig}
+\end{center}
+\end{figure}
+
+\noindent The
+result is similar to a bar plot where not the height, but the width is
+adapted to visualize the counts for each level, which some authors \cite{vcd:hummel:1996}
+call a \emph{spine plot}. From this plot, we see that the number of patients 
+decreases with the length of stay. Step 2 now is to add further splits in the
+other direction, i.e., horizontal splits, for the second
+variable. This means that each vertical bar is split according to the
+marginals of the second variable, \emph{given} the first variable (see
+Fig.~\ref{fig:mosaic2fig}). The resulting plot visualizes the 
+contingency table where each cell has a size proportional to the
+corresponding table entry.
+We can still depict the marginal distribution of `Length of stay', %'
+and additionally, the visit frequency \emph{given} each category of `Length of stay'. %'
+As we will see in the next section, the grid would be regular
+if the two variables were independent. Clearly, compared
+to a length of stay of 10--19 days, more patients get regular visits for stays from 2--9 
+days, and conversely, less patients get regular visits for stays for more than 20 days.
+For patients that get no visits, the pattern is inversed.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<mosaic2,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(t(hospital), split = TRUE, mar = c(left = 3.5),
+       labeling_args = list(offset_labels = c(left = 0.5), 
+         offset_varnames = c(left = 1, top = 0.5), set_labels = 
+         list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))))
+@ 
+\caption{Construction of a mosaic plot for a two-way table, step 2.}
+\label{fig:mosaic2fig}
+\end{center}
+\end{figure}
+
+Since mosaic plots are asymmetric by construction, the choice of the
+variable order matters, as the first splitting variable dominates the 
+plot. In our example, if we use `Visit frequency' %'
+as the first splitting variable, the impression is very different compared to the previous
+mosaic (see Fig.~\ref{fig:mosaic3fig}). 
+In this alternative display, we see the marginal distribution of `Visit frequency' %'
+in the rows: about half of the patients get visited regularly. This
+group is dominated by patients staying between 2 and 9 days.
+It seems apparent that the distribution of `Length of stay' %'
+is similar for monthly and never visited patients, so this two categories actually
+represent one homogenous group (patients visited only casually).
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<mosaic3,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(hospital)
+@ 
+\caption{Mosaic plot for the hospital data, using `Visit frequency' %'
+as first splitting variable.}
+\label{fig:mosaic3fig}
+\end{center}
+\end{figure}
+
+\subsection{Sieve Plots}
+\label{sec:sieve}
+
+When we try to explain data, we suppose the validity of a certain
+model for the generating process. In the case of two-way contingency
+tables, the two most common hypotheses are 
+
+\begin{enumerate}
+\item independence of the two variables, and
+\item homogeneity of one variable among the strata defined by
+the second.
+\end{enumerate}
+
+\noindent It is easy to compute the \emph{expected} table under either
+of these hypotheses. Consider a 
+2-way contingency table with $I$ rows and $J$ columns,
+cell frequencies $\{n_{ij}\}$ for
+$i = 1, \dots, I$ and $j = 1, \dots, J$, and row and column sums
+$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$, respectively. For
+convenience, the number of observations is denoted $n = n_{++}$.
+Given an underlying distribution with theoretical cell probabilities
+$\pi_{ij}$, the null hypothesis of independence of the two categorical
+variables can be formulated as
+\begin{equation} \label{eq:H0}
+H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
+\end{equation}
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|l||rrr|r|}
+\hline
+ & Length of stay &&&\\
+ & 2--9 & 10--19 & 20+ & TOTAL \\
+\hline\hline
+Visit frequency &&&&\\
+Regular & 27.24 & 21.14 & 13.62 & 62 \\
+Less than monthly & 11.86 & 9.20 & 5.93 & 27 \\
+Never & 18.89 & 14.66 & 9.45 & 43 \\\hline
+TOTAL & 58.00 & 45.00 & 29.00 & 132 \\
+\hline
+\end{tabular}
+\caption{The \data{hospital} data---expected values.}
+\label{tab:hospital2}
+\end{center}
+\end{table}
+
+Now, the expected cell frequencies in this model are simply
+$\hat n_{ij} = n_{i+}n_{+j}/n$.
+The expected table for our sample data is given in Tab.~\ref{tab:hospital2}.
+It could again be visualized using a mosaic plot, this
+time applied to the table of expected frequencies. In
+Fig.~\ref{fig:sieve1fig}, we can see such a plot in which,
+additionally, a number of squares equal to the corresponding cell entry has
+been added to each tile. We see that the grid formed by the tiles is completely
+regular. The added rectangles in the tiles become more useful when they 
+are not based on the expected but the observed values
+instead (see Fig.~\ref{fig:sieve2fig}). Such a \emph{sieve plot} implicitly compares
+expected and observed values since the density of the grid will
+increase with the deviation of the observed from the expected
+values. This allows the detection of general association patterns (for
+nominal variables) and of linear association (for ordinal variables),
+the latter producing tiles of either very high or very low density 
+along one of the diagonals.
+In the case of our data, the plot reveals indeed a negative association of 
+the two variables since the density of the rectangles is marked along the secondary
+diagonal, giving evidence to the fact that for these patients,
+visit frequency decreases with the length of stay.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<sieve1fig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+sieve(t(hospital), split = TRUE, sievetype = "expected", pop = FALSE)
+labeling_cells(text = round(independence_table(t(hospital)),2), clip = FALSE, gp = gpar(fontface = 2, fontsize = 15))(t(hospital))
+@ 
+\caption{Expected values for the \data{hospital} data.}
+\label{fig:sieve1fig}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<sieve2fig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+sieve(t(hospital), split = TRUE, pop = FALSE, gp = gpar(lty =
+"dotted", col = "dark gray"))
+labeling_cells(text = t(hospital), clip = FALSE, gp = gpar(fontface = 2, fontsize = 15))(t(hospital))
+@ 
+\caption{Sieve plot for the \data{hospital} data.}
+\label{fig:sieve2fig}
+\end{center}
+\end{figure}
+
+\subsection{Association Plots}
+\label{sec:assoc}
+
+In the last section, we have seen how to compare observed and expected
+values of a contingency table using sieve plots. We can do this
+more straightforwardly by using a plot that directly visualizes the residuals. The
+most widely known residuals are the Pearson residuals
+
+\begin{equation} \label{eq:Pearson}
+r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
+\end{equation}
+
+\noindent that are standardized raw residuals. They are best visualized by
+association plots \cite{vcd:Cohen:1980}:
+each cell is represented by a rectangle that has (signed) height
+proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
+square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
+the raw residuals $n_{ij} - \hat n_{ij}$. In available
+implementations, the sign of a residual is often redundantly
+coded, e.g., by the rectangle's color (see Sect.~\ref{sec:shadings}) %'
+and its position relative to the baseline. Figure \ref{fig:assoc}
+shows the association plot for the hospital data. 
+Consistent with the corresponding mosaic and sieve plots, 
+we clearly see that too many (too less) patients that stay from 
+2 to 9 (more than 20) days get visited regularly
+than would be expected under the null of independence, and that this pattern is 
+reversed for patients never visited.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<assoc,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+assoc(t(hospital), split = TRUE)
+@ 
+\caption{Association plot for the \data{hospital} data.}
+\label{fig:assoc}
+\end{center}
+\end{figure}
+
+\section{Residual-based Shadings}
+\label{sec:extensions}
+
+As introduced in the previous section for association plots, the
+investigation of residuals from a posited independence model is of
+major interest in analyzing contingency tables. In the following, we
+will demonstrate how the use of colors can greatly facilitate the
+detection of interesting patterns.
+
+\subsection{Using Colors for Residuals}
+\label{sec:shadings}
+
+All plots introduced in the previous section can be improved using colors,
+either by adding additional information, or by redundantly coding information
+already visualized by the `raw' plot to support our perceptual system. %'
+
+First, we consider the sieve plots. The density 
+of the grid in the raw version implicitly gives us an 
+idea of the residuals' %'
+size, but since the plot does not include the density corresponding to zero
+residuals (the null model) for comparison, we 
+cannot easily assess whether there are more, of less counts in a cell 
+than expected under the null hypothesis. It would help if we knew the 
+sign of the residuals. 
+Using color, we can add this information, for example using blue for
+positive, red for negative, and gray for zero residuals. Figure \ref{fig:colorsieve} 
+demonstrates the effect of applying such a color shading to a sieve plot for the 
+\data{hospital} data. Color clearly emphasizes the linear association
+pattern in this data.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<sievecolor,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+sieve(t(hospital), split = TRUE, shade = TRUE)
+@ 
+\caption{Sieve plot with color coding of the residuals.}
+\label{fig:colorsieve}
+\end{center}
+\end{figure}
+
+Mosaic plots in their initial version are monochrome
+displays. Friendly \cite{vcd:Friendly:1994} introduced a
+residual-based shading of the tiles to additionally visualize the
+residuals from a given independence model fitted to the table. 
+The idea is to use a color coding for the mosaic tiles that visualizes the
+sign and absolute size of each residual $r_{ij}$: Cells corresponding to small
+residuals ($|r_{ij}| < 2$) are shaded white. Cells with medium sized residuals
+($2 \le |r_{ij}| < 4$) are shaded light blue and light red for positive and negative
+residuals, respectively. Cells with large residuals ($|r_{ij}| \ge 4$) are shaded
+with a fully saturated blue and red, respectively. 
+The heuristic for choosing the cut offs $2$ and $4$ is that the Pearson residuals
+are asymptotically standard normal which implies that the highlighted cells are those with
+residuals \emph{individually} significant at approximately the $\alpha
+= 0.05$ and $\alpha = 0.0001$ levels. However, the main purpose of the
+Friendly shading is not to visualize significance but the \emph{pattern} of
+deviation from independence \cite{vcd:Friendly:2000}. 
+In addition to the shading of the rectangles themselves, the Friendly shading also
+encompasses a choice of line type and line color of the rectangle borders
+with similar ideas as described above. 
+
+In Fig.~\ref{fig:Friendly}, we again show the mosaic for the \data{hospital}
+data, this time using the Friendly color coding.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(t(hospital), split = TRUE, shade = TRUE, gp = shading_Friendly,
+       legend = legend_fixed, mar = c(left = 3.5),
+       labeling_args = list(offset_labels = c(left = 0.5), 
+         offset_varnames = c(left = 1, top = 0.5), set_labels = 
+         list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))))
+@ 
+\caption{Mosaic display with Friendly color coding of the residuals.}
+\label{fig:Friendly}
+\end{center}
+\end{figure}
+
+\noindent Clearly, the asymmetry for regular and never visited students,
+and the pattern inversion for lengths of stay of 2--9 and more than 20
+days are emphasized using the color shading.
+
+For association plots, residual-based shadings are redundant since all relevant
+information is already contained in the plot by construction. But using one of the
+shadings discussed above will nevertheless 
+support the analysis process and is therefore recommended.
+For example, applying the Friendly shading in Fig.~\ref{fig:colorassoc} 
+facilitates the discrimination between
+positive and negative residuals, and therefore to get a quick overview on the
+discussed deviation pattern.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<assoccolor,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+assoc(t(hospital), split = TRUE, shade = TRUE, keep = TRUE,
+gp = shading_Friendly, legend = legend_fixed)
+@ 
+\caption{Association plot with Friendly color coding of the residuals.}
+\label{fig:colorassoc}
+\end{center}
+\end{figure}
+
+\subsection{A Note on Color Palettes}
+\label{sec:colors} 
+
+The color shading introduced in the previous section but can still be
+improved. One of the issues is the suboptimal color palette used in
+the Friendly shading. Implementations are often based on so-called
+Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Saturation 
+color scheme). Both spaces are rather similar transformations of RGB (Red-Green-Blue) space
+\cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
+colors in many computer packages \cite{vcd:Moretti+Lyons:2002} making the generation
+of the Friendly shading very simple. Each color in this space is
+represented by three dimensions: the hue, the saturation (`colorfulness'), and 
+the value (`lightness', amount of gray). But HSV colors have several disadvantages.
+Most importantly, HSV colors are not perceptually
+uniform because the three HSV dimensions map only poorly to the three
+perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihaka:2003}.
+Consequently, the HSV dimensions are confounded, e.g., saturation
+is not uniform across different hues.
+For example, see Fig.~\ref{fig:colors}, left-hand side, 
+showing a qualitative color palette in the HSV
+space: although saturation and value are fixed, the fully saturated blue is
+perceived much darker than the fully saturated red or green. 
+This makes it more difficult for the human eye to judge the size of shaded areas
+and can therefore lead to color-caused optical illusions when used in statistical graphs
+\cite{vcd:Cleveland+McGill:1983}. Furthermore, flashy fully saturated HSV colors are
+good for drawing attention to a plot, 
+but hard to look at for a longer time \cite{vcd:Ihaka:2003}
+which makes HSV-shaded graphics harder to interpret. 
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}
+\begin{center}
+<<colorfig,fig=TRUE,echo=FALSE,height=3,width=7,results=hide>>=
+par(mfrow = c(1,2), mar = c(1,1,1,1), oma = c(0,0,0,0))
+pie(rep(1,9), radius = 1, col = hsv(seq(0,1,length=10))[-1])
+pie(rep(1,9), radius = 1, col = hcl(seq(0,360,length=10))[-1])
+@ 
+\caption{Qualitative color palette for the HSV (left hand side) 
+         and HCL (right hand side) spaces.}
+\label{fig:colors}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.7\textwidth}
+
+The use of colors that are more `in harmony' go back to Munsell 
+\cite{vcd:Munsell:1905} %'
+who introduced a color notation for balanced colors. Based on those,
+tools producing better palettes for specific tasks have been developed 
+\cite{vcd:Harrower+Brewer:2003}. Other perceptually-based color
+spaces, especially suited for displays, are the CIELAB and CIELUV
+spaces \cite{vcd:CIE:2004} from which qualitative palettes for
+statistical graphics have been derived \cite{vcd:Ihaka:2003}. A
+transformation of the CIELUV space leads to the HCL (Hue-Chroma-Luminance) space.
+HCL colors with fixed chroma and luminance are always balanced towards the same grey 
+and thus do not have the problem of varying saturations as the HSV
+colors (see Fig.~\ref{fig:colors}, right hand side). 
+Similarly, diverging color palettes can be derived that are
+suited for visualizing residuals in a similar way than the Friendly
+shading \cite{vcd:Zeileis+Meyer+Hornik:2005}.
+Figure \ref{fig:hclmosaic} shows again the mosaic plot for the \data{hospital} data, 
+this time using HCL colors and an alternative legend, showing the whole range of residuals.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<hclmosaicfig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(t(hospital), split = TRUE, mar = c(left = 3.5), shade = TRUE,
+       labeling_args = list(offset_labels = c(left = 0.5), 
+         offset_varnames = c(left = 1, top = 0.5), set_labels = 
+         list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))))
+@ 
+\caption{Mosaic display with HCL shading of the residuals.}
+\label{fig:hclmosaic}
+\end{center}
+\end{figure}
+
+\subsection{Visualizing Test Statistics}
+\label{sec:test}
+
+Figure \ref{fig:hclmosaic} includes the $p$ value of a $\chi^2$ test
+of independence, frequently used to assess the significance of the
+hypothesis of independence (or homogeneity for stratified data) in
+two-way tables. The test statistic is just the sum of the squared
+Pearson residuals
+
+\begin{equation} \label{eq:ChiSquare}
+X^2 \quad = \quad \sum_{i, j}r_{ij}^2~,
+\end{equation}
+
+\noindent known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
+degrees of freedom under the null hypothesis.
+Since the HCL space is three-dimensional and we only
+used two dimensions so far for coding information (hue for the sign and
+colorfulness for the size of the residuals), we can use the third dimension
+(lightness) for visualizing the significance of some specified test statistic,
+for example the $\chi^2$ test statistic, 
+using darker (`uninteresting') colors for non-significant results.
+The following example using the \data{Bundesliga} data \cite{vcd:Knorr-Held:1999}
+shows the relationship of home goals and away
+goals of Germany's premier soccer league in 1995: although there are two
+``larger'' residuals (one greater than 2, one less then $-2$), the
+$\chi^2$ test does not reject the null hypothesis of
+independence on a significance level of $95\%$ since the $p$ value is $0.12133$. 
+Consequently, the employed shading uses a darker overall color scheme
+(see Fig.~\ref{fig:bundesliga}). 
+
+\begin{figure}[p]
+\begin{center}
+<<bundesligafig,fig=TRUE,echo=FALSE,height=6,width=7>>=
+bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
+mosaic(bl, shade = TRUE)
+@
+\caption{Mosaic plot for part of the \data{Bundesliga}, using a $\chi^2$ test and
+fixed cut-off points for the residuals.}
+\label{fig:bundesliga}
+\end{center}
+\end{figure}
+
+The previous example shows that the heuristic for choosing the cut-off points 
+in the Friendly shading may lead to wrong conclusions: the test of
+independence is not significant even though some of the residuals are
+``large''. The reason here is that the cut-off points are really
+data-dependent. Another example where the Friendly-shading may trap
+the rush statistician is the case of the \data{arthritis} data 
+\cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
+investigating a new treatment for rheumatoid arthritis, stratified by gender.
+Figure \ref{fig:arthritis} visualizes the results for the female
+patients, again by means of a mosaic display. Clearly, the hypothesis
+of independence is rejected by the $\chi^2$ test even on a $99\%$ level ($p=0.0035$), but
+since all residuals are in the $[-1.72,1.87]$ interval, the tiles
+remain uncolored. A solution to this issue is to use a different
+test statistic, for example the maximum of the absolute values of the
+Pearson residuals \cite{vcd:Meyer+Zeileis+Hornik:2003} instead of the
+sum of squares:
+
+\begin{equation} \label{eq:MaxAbs}
+M \quad = \quad \max_{i, j} |r_{ij}|~.
+\end{equation}
+
+\noindent Given a critical value $c_\alpha$ for this test statistic, all residuals whose
+absolute value exceeds $c_\alpha$ violate the hypothesis of indendence at level
+$\alpha$ \cite[ch. 7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells giving
+evidence for the rejection of the independence hypothesis can easily be identified.
+The distribution of this test statistic under the null can be obtained
+by simulation, sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
+using the Patefield algorithm \cite{vcd:Patefield:1981} 
+and computing the maximum statistic for each of these tables.
+In Figs.~\ref{fig:bundesliga2} and \ref{fig:arthritis2}, we again
+visualize the \data{Bundesliga} and the \data{arthritis} data, this
+time using the maximum test statistic. We see that for the
+\data{Bundesliga} data no cell is colored, and we now can indeed conclude
+from the visualization that neither of the home and away teams seems advantaged. 
+On the other hand, for the \data{arthritis} data, the shading of the
+tiles clearly shows that the treatment is effective: too many patients
+in the treatment group exhibit marked improvement than would be
+expected under independence.
+
+\begin{figure}[p]
+\begin{center}
+<<bundesliga2fig,fig=TRUE,echo=FALSE,height=6,width=7>>=
+bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
+mosaic(bl, gp = shading_max)
+@
+\caption{Mosaic plot for part of the \data{Bundesliga}, using the maximum statistic
+and data-driven cut-off points for the residuals.}
+\label{fig:bundesliga2}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<Arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(art, shade = TRUE)
+@
+\caption{Mosaic plot for the \data{Arthritis} data, using the $\chi^2$ test 
+and fixed cut-off points for the shading.}
+\label{fig:arthritis}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<Arthritis2fig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(art, gp = shading_max)
+@
+\caption{Mosaic plot for the \data{Arthritis} data, using the maximum test and 
+data-driven cut-off points for the residuals.}
+\label{fig:arthritis2}
+\end{center}
+\end{figure}
+
+\section{Multi-way Tables}
+\label{sec:multiway}
+
+In Sect.~\ref{sec:twoway}, we have presented basic visualization methods
+for two-way tables. In this section, we will show how these methods
+extend to multi-way tables by applying them to `flat' representations,
+and we will treat specialized displays for conditional independence models.
+
+\subsection{Visualize Flat-Tables}
+\label{sec:flat}
+
+The main idea of the mosaic, sieve, and association plots presented
+in the previous sections is to visualize information on 
+the tables' cells, arranged in rectangular form. For multi-way tables,
+mosaic plots can directly be used by simply adding further splits for each 
+additional variable. For sieve and association plots,
+we apply the basic idea of mosaic plots to the table itself,
+i.e., simply nest the variables into rows and columns using recursive
+conditional splits, given the margins. The result is a 
+`flat' representation of the multi-way table that can be visualized in %'
+ways similar to a two-dimensional table.
+As an example, consider the \data{HairEyeColor} 
+data containing two polytomous variables (hair and eye color), 
+as well as one (artificial) dichotomous variable (gender). 
+A `flattened' contingency table, putting eye color in the columns %'
+and hair color---nested in gender---in the rows, is given by Tab.~\ref{tab:hec}.
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|ll||rrrr|}
+\hline
+ & & EYE &&&\\
+ & & Brown & Blue & Hazel & Green\\\hline\hline
+GENDER & HAIR &&&&\\
+Male & Black & 32 & 11 & 10 & 3 \\
+& Brown & 38 & 50 & 25 & 15 \\
+& Red & 10 & 10 & 7 & 7 \\
+& Blond & 3 & 30 & 5 & 8 \\
+Female & Black & 36 & 9 & 5 & 2 \\
+& Brown & 81 & 34 & 29 & 14 \\
+& Red & 16 & 7 & 7 & 7 \\
+& Blond & 4 & 64 & 5 & 8 \\
+\hline
+\end{tabular}
+\caption{The \data{HairEyeColor} data, in flat representation.}
+\label{tab:hec}
+\end{center}
+\end{table}
+
+\noindent The corresponding mosaic, sieve, and association plots are shown in
+Figs.~\ref{fig:hecmosaic}--\ref{fig:hecassoc}. Note that with three variables, we have the
+choice of four kinds of independence models that can be fitted to the table:
+partial, joint, and conditional independence, as well as 
+the model of no three-way interaction. For demonstration purposes,
+the shadings in these plots visualize
+the model of hair and eye color being \emph{jointly} independent from gender.
+The model fits better than others, but still is significant at the
+$95\%$ level.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<hecmosaic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
+mosaic(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4)), 
+       mar = c(left = 4), shade = TRUE, expected = ~ Hair * Eye + Sex)
+@
+\caption{Mosaic plot for the \data{HairEyeColor} data.}
+\label{fig:hecmosaic}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<hecsieve,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
+sieve(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4)), 
+       mar = c(left = 4), shade = TRUE, expected = ~ Hair * Eye + Sex)
+@
+\caption{Sieve plot for the \data{HairEyeColor} data.}
+\label{fig:hecsieve}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<hecassoc,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
+assoc(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4)), 
+      mar = c(left = 4), shade = TRUE, expected = ~ Hair * Eye + Sex)
+@
+\caption{Association plot for the \data{HairEyeColor} data.}
+\label{fig:hecassoc}
+\end{center}
+\end{figure}
+
+\subsection{Displays for Conditional Independence}
+\label{sec:condind}
+
+Apart from the generic approach to the visualization of multi-way tables outlined in 
+the previous section, there are modifications 
+and specialized displays designed for the
+visualization of conditional independence structures. A first approach
+is to modify the spacing of the standard mosaic display---which already 
+is a conditional plot by construction---to better distinguish conditional
+from conditioned variables. Figure \ref{fig:presex}
+illustrates the conditional independence of premarital and
+extramarital sex, given gender and marital status, in the \data{PreSex} 
+data \cite{vcd:thornes+collard:1979,vcd:gilbert:1981}. The $\chi^2$
+test of independence rejects the null hypothesis: possibly, because
+too many men who had premarital sex also had extramarital sex? For the conditioned
+variables premarital and extramarital sex, we use a fixed spacing, whereas for 
+the conditioning variables gender and marital status, the spacing is increasing.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<PreSex,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(PreSex, condvars = c(1, 4), shade = TRUE)
+@
+\caption{Mosaic plot for the pre- and extramarital sex data.}
+\label{fig:presex}
+\end{center}
+\end{figure}
+
+Another possibility is to use trellis-like layouts for visualizing partial tables for 
+given strata, defined by the conditioning variables.
+Figure \ref{fig:ucbadmissions} visualizes the well-known UCB admissions data
+\cite{vcd:Bickel+Hammel+O'Connell:1975} by the means of a conditional 
+association plot. The panels show the
+residuals from a conditional independence model (independence of gender
+and admission, given department), stratified by department. Clearly,
+the situation in department A (more women/less men accepted than
+would be expected under the null) causes the rejection of the
+hypothesis of conditional independence, indicating that female
+students are more successful in that department than their male colleagues.
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}
+\begin{center}
+<<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
+cotabplot(UCBAdmissions, panel = cotab_assoc, shade = TRUE, legend = FALSE)
+@
+\caption{Conditional association plot for the UCB admissions data.}
+\label{fig:ucbadmissions}
+\end{center}
+\end{figure}
+
+Finally, it is possible for all basic plots to create pairwise displays,
+arranged in in a matrix similar to scatterplots in a pairs plot.
+The diagonal cells contain the variable names, optionally with
+univariate statistics, whereas the off-diagonal cells contain plots whose
+variables are implicitly specified by the cells' position in the matrix. %'
+More formally, each cell $a_{ij}$ in such a matrix defines two
+variables $i$ and $j$ that can be used to specify the model visualized
+in that cell. Typical hypotheses are: Variables $i$ ad $j$ are
+marginally independent; variables $i$ and $j$ are conditionally
+independent, given all others; variables $i$ and $j$ are jointly
+independent from all others, etc.
+Figure \ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
+independence in the upper triangle,
+sieve plots for the same in the lower triangle, and bar charts in the diagonal.
+Immediately, we can detect the independence of hair and gender and eye and gender from the
+non-colored cells in the corresponding mosaic plots. Thus, the associational pattern
+present in the sieve plots are not significant. On the other hand, hair and eye color 
+clearly are not independent.
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}
+\begin{center}
+<<pairs,fig=TRUE,echo=FALSE,height=8,width=8,results=hide>>=
+pairs(t(hec), lower_panel = pairs_sieve, space = 0.3, shade = TRUE,
+      diag_panel_args = list(rot = -45, just_leveltext = c("left","bottom")))
+@
+\caption{Pairs plot for the \data{HairEyeColor} data.}
+\label{fig:pairs}
+\end{center}
+\end{figure}
+
+\section{Conclusion}
+\label{sec:concl}
+
+This chapter reviews several alternatives for the visualization of
+multi-way contingency tables. For two-way tables, mosaic, sieve, and
+association plots are suitable for the visualization of observed and
+expected values and the Pearson residuals, respectively. This basic
+methods are enhanced by using residual-based shadings, preferably
+based on perceptual color palettes such as those derived from the HCL
+space. Residual-based shadings can be used to visualize sign and size
+of the residuals, as well as the significance of test statistics such
+as the $\chi^2$ or the maximum test statistic. The latter has the
+advantage of detecting residuals causing the rejection of the hypothesis
+of independence. The methods directly extend to the multi-way case by
+using `flat' representations of the multi-way tables, and specialized
+displays for conditional independence such as trellis layouts of
+partial tables and pairs plots. 
+
+\bibliographystyle{plain}
+\bibliography{vcd}
+
+\end{document}
+
+
+
+
+
