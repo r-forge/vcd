@@ -18,21 +18,49 @@
 \SweaveOpts{engine=R,eps=TRUE,height=6,width=7,results=hide,fig=FALSE,echo=TRUE}
 \setkeys{Gin}{width=0.7\textwidth}
 
+%% Hyperref
+\hypersetup{%
+  pdftitle = {Residual-based Shadings for Visualizing (Conditional) Independence},
+  pdfsubject = {Residual-based Shadings},
+  pdfkeywords = {association plots, conditional inference, contingency tables, HCL colors, HSV colors, mosaic plots},
+  pdfauthor = {Achim Zeileis, David Meyer, Kurt Hornik},
+  %% change colorlinks to false for pretty printing
+  colorlinks = {false},
+  linkcolor = {Blue},
+  citecolor = {Blue},
+  urlcolor = {Red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
 
 <<preliminaries,echo=FALSE,results=hide>>=
-set.seed(1071)
+myseed <- 4711
+set.seed(myseed)
 library(vcd)
 library(scatterplot3d)
 library(xtable)
 data(Arthritis)
-data(Titanic)
-data(PreSex)
 data(UCBAdmissions)
 hospital <- as.table(matrix(c(43,16,3,6,11,10,9,18,16), c(3,3), byrow = TRUE, 
 dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"), 
 "Length of stay" = c("2-9","10-19","20+"))))
 art <- xtabs(~Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+
+set.seed(myseed)
+art_max <- coindep_test(art, n = 5000)
+set.seed(myseed)
+art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
+
+set.seed(myseed)
+hos_chisq <- coindep_test(hospital, n = 5000, indepfun = function(x) sum(x^2))
+
+set.seed(myseed)
+hec_max <- coindep_test(HairEyeColor, "Sex", n = 5000)
+
 @
+
+
 
 %\newcommand{\data}[1]{`\texttt{#1}'}
 \newcommand{\data}[1]{#1}
@@ -160,7 +188,7 @@ In Sect.~\ref{sec:multiway}, we show how the
 basically bivariate methods straightforwardly extend to the multivariate case by using
 `flat' representations of the multi-way tables. In this section, we
 also introduce specialized displays for conditional independence
-structures. Sect.~\ref{sec:concl} concludes the chapter.
+structures. Section~\ref{sec:concl} concludes the chapter.
 
 \section{Two-way Tables}
 \label{sec:twoway}
@@ -217,7 +245,7 @@ $\Sigma$ & 1.00 & 1.00 & 1.00 \\
 
 \noindent In addition, \cite{vcd:haberman:1974} notes that this pattern is not
 significantly different in the ``less than monthly'' and ``never''
-strata. From the row-standardized table (see Tab~.\ref{tab:rowhospital}), 
+strata. From the row-standardized table (see Tab.~\ref{tab:rowhospital}), 
 it seems indeed that LOS were homogeneous with respect to these two visit frequency strata.
 
 \begin{table}[h]
@@ -309,7 +337,7 @@ and additionally, the visit frequency \emph{given} each category of LOS. %'
 If the two variables were independent, the grid would be regular. Clearly, compared
 to a length of stay of 10--19 years, more patients get regular visits for stays from 2--9 
 years, and conversely, less patients get regular visits for stays for more than 19 years.
-For patients that get no visits, the pattern is inversed.
+For patients that get no visits, the pattern is reversed.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
@@ -431,7 +459,7 @@ visit frequency decreases with the length of stay.
 \begin{center}
 <<sievefig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 sieve(t(hospital), split = TRUE, pop = FALSE, gp = gpar(lty =
-"dotted", col = "dark gray"))
+"dotted", col = "black"))
 labeling_cells(text = t(hospital), clip = FALSE, gp = gpar(fontface = 2, fontsize = 15))(t(hospital))
 @ 
 \caption{Sieve plot for the \data{hospital} data.}
@@ -492,7 +520,7 @@ non-standardized deviations of observed from expected frequencies,
 respectively. These plots should be used if the diagnostics of
 independence models is of primary concern.
 
-\section{Using colors for Residual-based Shadings}
+\section{Using Colors for Residual-based Shadings}
 \label{sec:extensions}
 
 As introduced in the previous section for association plots, the
@@ -512,27 +540,38 @@ mosaic and sieve plots, or residuals as visualized by association
 plots. When using color for these tiles, it is imperative
 to choose the right color palettes, derived from suitable color
 spaces. Apart from esthetic considerations, wrongly chosen colors
-might serously affect the analysis: For example, 
+might serously affect the analysis. For example, 
 
 \begin{itemize}
 \item Using high-chroma colors for large
   areas tend to produce after-image effects which can be
   distracting \cite{vcd:Ihaka:2003}.
 \item Lighter colors tend to make areas look larger than darker
-  colors, therefore using colors with unequal luminance values  make it
+  colors, therefore using colors with unequal luminance values  makes it
   difficult to compare area sizes \cite{vcd:Cleveland+McGill:1983}.
 \item Color palettes derived from
   non-uniform color spaces may contain unbalanced colors with respect to
-  their colorfulness or lightness. When tiles are shaded using such a
+  their colorfulness or brightness. When tiles are shaded using such a
   palette, some of them might appear more important than others in an
   uncontrolled way.
 \end{itemize}
 
-% gamma correction for displays.
+\noindent 
+Due to the three-dimensional nature of human color
+perception \cite{vcd:Mollon:1995}, 
+it has been common to specify colors using the three primaries
+red, green, and blue (RGB colors), especially for computer devices. 
+The appearance of the on-screen colors is affected by the device
+characteristics: For example, the intensity $I$ of a primary 
+on a particular device follows the rule $I=L^\gamma$, with $L$
+the value for the primary color, and $\gamma$ device-dependent 
+(but typically close to 2.2). Therefore, a first caveat is that if colors are to
+appear identical on different devices, their gamma characteristics
+have to be taken into account.
 
-\noindent Implementations are often based on so-called
+Now, software implementations are often based on the more convenient
 Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Saturation 
-color scheme). Both spaces are rather similar transformations of RGB (Red-Green-Blue) space
+color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
 colors in many computer packages \cite{vcd:Moretti+Lyons:2002}. Each color in this space is
 represented by three dimensions: the hue (dominant wavelength in the spectrum), 
@@ -557,7 +596,7 @@ bipolar scales containing colors ranging between two very distinct colors.
 The upper part of Fig.~\ref{fig:diverging} shows a diverging
 palette in the HSV space with colors ranging from a saturated red over a neutral white
 to a saturated blue. Although the palette should be balanced with
-respect to colorfulness and lightness, the red colors are perceived
+respect to colorfulness and brightness, the red colors are perceived
 to be more more intense and flashy than the corresponding blue
 colors. 
 
@@ -624,7 +663,7 @@ diverging palette, we could hold constant
 the luminance and only vary the chroma to get the different colors. 
 However, it turns out that the resulting colors 
 are too similar to be used for discriminating shaded
-objects. Better contrasting effects can be achieved by \emph{simultaneously}
+objects. Better contrasting can be achieved by \emph{simultaneously}
 varying chroma and luminance, for example by choosing two points in
 the chroma/luminance plane for a given hue and interpolating
 linearly. For each half of the diverging palette, 
@@ -632,16 +671,45 @@ one of these points should be a ``neutral'' color,
 and the other correspond to the ending part of the scale. 
 The lower part of Fig.~\ref{fig:diverging} shows a diverging
 palette using HCL colors. In contrast to the HSV counterpart, matching
-colors are balanced to the same gray, and thus get the same perceptual
-``weight''.
+colors (light red/blue and dark red/blue) 
+are balanced to the same gray, and thus get the same perceptual ``weight''.
 
-\subsection{Using Colors for Residuals}
+\subsection{Highlighting and Color-based Shadings}
 \label{sec:shadings}
 
-All plots introduced in Section~\ref{sec:twoway} can be improved using colors,
+All plots introduced in Sect.~\ref{sec:twoway} are composed of empty
+tiles. It seems intuitive to used filled tiles to highlight information
+of interest. Consider again the hospital example: in Fig.~\ref{fig:highlight},
+we mark tiles for patients never or seldom visited to visualize their proportion in
+the LOS strata. For optical clarity, we set the
+spacing between the visit frequency tiles to 0. Clearly, the
+proportion of these patients increases with LOS. In fact, such a
+``stacked'' plot can also be interpreted as spine plot with highlighting
+\cite{vcd:hummel:1996}, particularly useful in analyzing causal relationships in
+categorical data with a binary dependent variable. More variations on
+this theme, such as doubledecker plots, are treated in chapter XXX
+(\textbf{REFERENCE TO OTHER CHAPTER(S)}).
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<highlight,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mosaic(t(hospital), 
+       mar = c(left = 3.5), 
+       labeling_args = list(offset_labels = c(left = 0.5), 
+         offset_varnames = c(left = 1, top = 0.5), set_labels = 
+         list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))),
+       split = TRUE, spacing = spacing_highlighting, 
+       gp = gpar(fill = c("gray","black","black")))
+@ 
+\caption{Spine plot with highlighting for the hospital data.}
+\label{fig:highlight}
+\end{center}
+\end{figure}
+
+Using colors, even more complementary information can be visualized,
 either by adding additional information, or by redundantly coding information
 already visualized by the `raw' plot to support our perceptual system. %'
-
 First, we consider the sieve plots. The density 
 of the grid in the raw version implicitly gives us an 
 idea of the residuals' %'
@@ -680,7 +748,7 @@ residuals ($|r_{ij}| < 2$) have no color. Cells with medium sized residuals
 ($2 \le |r_{ij}| < 4$) are shaded light blue and light red for positive and negative
 residuals, respectively. Cells with large residuals ($|r_{ij}| \ge 4$) are shaded
 with a fully saturated blue and red, respectively. 
-The heuristic for choosing the cut offs $2$ and $4$ is that the Pearson residuals
+The heuristic for choosing the cut-offs $2$ and $4$ is that the Pearson residuals
 are asymptotically standard normal which implies that the highlighted cells are those with
 residuals \emph{individually} significant at approximately the $\alpha
 = 0.05$ and $\alpha = 0.0001$ levels. However, the main purpose of the
@@ -691,7 +759,7 @@ encompasses a choice of line type and line color of the rectangle borders
 with similar ideas as described above, useful when no color can be used.
 
 In Fig.~\ref{fig:Friendly}, we again show the mosaic for the \data{hospital}
-data, this time using a Friendly-like color coding (with HCL
+data, this time using a Friendly-like color shading (with HCL
 instead of HSV colors, and no line type coding).
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -699,7 +767,8 @@ instead of HSV colors, and no line type coding).
 \begin{center}
 <<friendly,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(t(hospital), split = TRUE, shade = TRUE, 
-       mar = c(left = 3.5),
+       mar = c(left = 3.5), 
+       gp_args = list(p.value = hos_chisq$p.value),
        labeling_args = list(offset_labels = c(left = 0.5), 
          offset_varnames = c(left = 1, top = 0.5), set_labels = 
          list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))))
@@ -727,7 +796,8 @@ supports the detection of the pattern.
 \begin{figure}
 \begin{center}
 <<assoccolor,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-assoc(t(hospital), split = TRUE, shade = TRUE, keep = TRUE)
+assoc(t(hospital), split = TRUE, shade = TRUE, keep = TRUE,
+      gp_args = list(p.value = hos_chisq$p.value))
 @ 
 \caption{Association plot with Friendly-like color coding of the residuals.}
 \label{fig:colorassoc}
@@ -737,7 +807,8 @@ assoc(t(hospital), split = TRUE, shade = TRUE, keep = TRUE)
 \subsection{Visualizing Test Statistics}
 \label{sec:test}
 
-Figure~\ref{fig:Friendly} includes the $p$ value of a $\chi^2$ test
+Figures~\ref{fig:Friendly} and \ref{fig:colorassoc} 
+include the (same) $p$ value of a $\chi^2$ test
 of independence, frequently used to assess the significance of the
 hypothesis of independence (or homogeneity for stratified data) in
 two-way tables. The test statistic is just the sum of the squared
@@ -749,14 +820,29 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2~,
 
 \noindent known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
+An important reason for using the unconditional limiting distribution
+for the $X^2$ statistic from Equ.~\ref{eq:ChiSquare} was the closed form result
+for the distribution. Recently, with the improving perfomance of computers,
+conditional inference (or permutation tests)---carried out either by simulation
+or by computation of the (asymptotic) permutation distribution---have been receiving
+increasing attention \cite{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
+For testing the independence hypothesis from Equation~\ref{eq:H0},
+using a permutation test is particularly intuitive due to the 
+permutation invariance (given row and column sums) of this problem.
+Consequently, all results in this paper are based on conditional inference performed
+by simulating the permutation distribution of test statistics of type
+$\lambda([r_{ij}])$.
+
 Since the HCL space is three-dimensional and we only
 used two `degrees of freedom' so far for coding information %'
 (hue for the sign and a linear combination of chroma and luminance 
 for the size of the residuals), we can add a third information to the plot.
 For example, we can visualize the significance of some specified test statistic
 (e.g., the $\chi^2$ test statistic) 
-using darker (`uninteresting') colors for non-significant results by
-restricting the luminance range used for interpolating the colors.
+using darker (`uninteresting') colors for non-significant
+results. These can again be derived using the interpolation procedure
+described in the Sect.~\ref{sec:colors} by
+restricting the luminance to a shorter range, ending with a ``darker'' value.
 
 % The following example using the \data{Bundesliga} data \cite{vcd:Knorr-Held:1999}
 % shows the relationship of home goals and away
@@ -788,7 +874,7 @@ though the residuals are ``small''. In fact, the cut-off points are really
 data-dependent. Consider the case of the \data{arthritis} data 
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, stratified by
-gender (see Tab.~\ref{tab:arthritis}):
+gender (see Tab.~\ref{tab:arthritis} for the female patients):
 
 \begin{table}[h]
 \begin{center}
@@ -809,12 +895,13 @@ $\Sigma$ & 25 & 12 & 22 & 59 \\
 
 \noindent Figure~\ref{fig:arthritis} visualizes the results for the female
 patients, again by means of a mosaic display. Clearly, the hypothesis
-of independence is rejected by the $\chi^2$ test even on a $99\%$ level ($p=0.0035$), but
-since all residuals are in the $[-1.72,1.87]$ interval, the tiles
-remain uncolored. A solution to this issue is to use a different
+of independence is rejected by the $\chi^2$ test even on a $99\%$ level 
+($p=\Sexpr{round(art_chisq$p.value,4)}$), but
+since all residuals are in the 
+$[\Sexpr{round(min(chisq.test(art)$residuals),4)},\Sexpr{round(max(chisq.test(art)$residuals),4)}]$ %$
+interval, the tiles remain uncolored. A solution to this issue is to use a different
 test statistic, for example the maximum of the absolute values of the
-Pearson residuals \cite{vcd:Meyer+Zeileis+Hornik:2003} instead of the
-sum of squares:
+Pearson residuals \cite{vcd:Meyer+Zeileis+Hornik:2003} instead of the sum of squares:
 
 \begin{equation} \label{eq:MaxAbs}
 M \quad = \quad \max_{i, j} |r_{ij}|~.
@@ -824,9 +911,10 @@ M \quad = \quad \max_{i, j} |r_{ij}|~.
 absolute value exceeds $c_\alpha$ violate the hypothesis of indendence at level
 $\alpha$ \cite[ch. 7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells giving
 evidence for the rejection of the independence hypothesis can easily be identified.
-The conditional distribution of this test statistic under the null can be obtained
+As explained above, 
+the conditional distribution of this test statistic under the null can be obtained
 by simulation, sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
-using the Patefield algorithm \cite{vcd:Patefield:1981} 
+using, e.g., the Patefield algorithm \cite{vcd:Patefield:1981} 
 and computing the maximum statistic for each of these tables.
 In Fig.~\ref{fig:arthritis2}, we again
 visualize the \data{arthritis} data, this
@@ -839,7 +927,7 @@ expected under independence.
 \begin{figure}[p]
 \begin{center}
 <<Arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(art, shade = TRUE)
+mosaic(art, shade = TRUE, gp_args = list(p.value = art_chisq$p.value))
 @
 \caption{Mosaic plot for the \data{Arthritis} data, using the $\chi^2$ test 
 and fixed cut-off points for the shading.}
@@ -858,6 +946,21 @@ data-driven cut-off points for the residuals.}
 \label{fig:arthritis2}
 \end{center}
 \end{figure}
+
+\subsection{Summary}
+
+Especially for the visualization of areas, 
+use perceptually uniform colors and color palettes, derived from,
+e.g., the HCL color space. Shadings can be used to add 
+information to the basic plots and to support the
+analysis. Highlighting of tiles can support the analysis of causal relationships.
+Residual-based shadings can be used for model diagnostics, e.g.,
+by using the hue to code the sign of a residual, and a linear
+combination of chroma and luminance for the size. In addition, the
+significance of test statistics can be visualized through overall 
+darker color palettes. Using the maximum instead of the $\chi^2$ test
+statistic to aggregate the residuals allows precise diagnostics when
+the null hypothesis of independence is rejected.
 
 \section{Selected Methods for Multi-way Tables}
 \label{sec:multiway}
@@ -918,6 +1021,7 @@ Female & Black & 36 & 9 & 5 & 2 \\
 \begin{center}
 <<hecmosaic,fig=TRUE,echo=FALSE,height=12,width=7,results=hide>>=
 mosaic(~ Hair + Eye | Sex, data = HairEyeColor,
+       gp_args = list(p.value = hec_max$p.value, interpolate = hec_max$qdist(c(0.9,0.99))),
        labeling_args = list(tl_labels = c(Hair = TRUE), set_varnames = c(Sex = "Gender")), 
        legend_args = list(y = 0.3, height = 0.4),
        mar = c(left = 4), shade = TRUE, keep = FALSE)
@@ -949,6 +1053,7 @@ set_varnames = c(Sex = "Gender")), spacing = spacing_conditional, condvars = 1,
 hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
 assoc(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4),
              set_varnames = c(Sex = "Gender")), 
+      gp_args = list(p.value = hec_max$p.value, interpolate = hec_max$qdist(c(0.9,0.99))),
       legend_args = list(y = 0.3, height = 0.4),
       spacing = spacing_conditional(sp = 0, start = 4),
       mar = c(left = 4), shade = TRUE, expected = ~ Hair * Sex + Eye * Sex, keep = FALSE)
@@ -989,9 +1094,11 @@ at the intersection of hair and eye is the less colored one. Its shading
 represents the model of hair and eye color being jointly independent from
 gender, i.e., their association being homogeneous over the gender
 strata. It is the model that fits best, although still rejected at the
-95\% level ($p=0.0161$): possibly, because too many brown-haired male
-students have blue eyes, and too few of them have brown eyes than expected under
-the null model.
+95\% level 
+($p=\Sexpr{round(summary(loglm(~ Hair * Eye + Sex, data = HairEyeColor))$tests[2,3],4)}$): %$
+possibly, because too many brown-haired male
+students have blue eyes, and too few of them have brown eyes, than expected under
+the null model?
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
@@ -1053,11 +1160,12 @@ Since mosaic displays are conditional plots by construction, we can use them
 for stratified data by using the conditioning variables as first splitting variables. 
 The mosaic in Fig.~\ref{fig:hecmosaic} shows the distribution of hair
 and eye color for both male and female students. A larger spacing for
-the gender variable simplifies the distinction between the two
+the gender variable has been used to simplify the distinction between the two
 groups. However, using a single plot, the strata are not corrected for the
 marginal distribution of the conditioning variable(s). Especially for
-very unevenly distributed marginals, the strata can become very distorted.
-Another possibility is to use trellis-like layouts for visualizing \emph{partial}
+very unevenly distributed marginals, the strata can become very
+distorted, and the tiles, along with their shading, inscrutable.
+An alternative is to use trellis-like layouts for visualizing \emph{partial}
 tables for given strata, defined by the conditioning variables. 
 All subtables are corrected for the marginals and thus, all
 corresponding mosaics in the panels have the same size. 
@@ -1077,8 +1185,8 @@ residuals from the corresponding conditional independence model (independence of
 and admission, given department), stratified by department. Clearly,
 the situation in department A (more women/less men accepted than
 would be expected under the null) causes the rejection of the
-hypothesis of conditional independence. The overall deviation pattern indicates that 
-in contrast to the impression given by the aggregated table, male
+hypothesis of conditional independence. The overall deviation pattern
+thus indicates that in contrast to the impression given by the aggregated table, male
 students were not advantaged, and that in department A,
 \emph{female} students were even more successful than their male colleagues.
 
@@ -1103,12 +1211,21 @@ Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
 \begin{figure}
 \begin{center}
 <<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
-cotabplot(UCBAdmissions, panel = cotab_mosaic, shade = TRUE, legend = FALSE)
+cotabplot(UCBAdmissions, panel = cotab_mosaic, shade = TRUE, legend = FALSE, 
+          margins = c(3,1,1,3))
 @
 \caption{Conditional mosaic plot for the UCB admissions data.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
+
+\subsection{Summary}
+
+Mosaic, association, and sieve plots can be used for multi-way tables
+by applying them to flat representations. In addition, these basic
+plots are leveraged by specialized frameworks 
+for exploratory model search (pairs plots) and stratified
+analysis (conditional plots).
 
 \section{Conclusion}
 \label{sec:concl}
