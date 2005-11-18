@@ -539,7 +539,7 @@ contingency tables---observed and expected frequencies in the case of
 mosaic and sieve plots, or residuals as visualized by association
 plots. When using color for these tiles, it is imperative
 to choose the right color palettes, derived from suitable color
-spaces. Apart from esthetic considerations, wrongly chosen colors
+spaces. Apart from aesthetic considerations, wrongly chosen colors
 might serously affect the analysis. For example, 
 
 \begin{itemize}
@@ -574,9 +574,11 @@ Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Saturation
 color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
 colors in many computer packages \cite{vcd:Moretti+Lyons:2002}. Each color in this space is
-represented by three dimensions: the hue (dominant wavelength in the spectrum), 
-the saturation (`colorfulness' or `pureness'), and 
-the value (`brightness', amount of gray). These intuitive dimensions
+represented by three dimensions $(H, S, V)$: the hue $H$ (dominant wavelength in the spectrum, in $[0, 360]$), 
+the saturation $S$ (`colorfulness' or `pureness', in $[0, 100]$), and 
+the value $V$ (`brightness', amount of gray, in $[0, 100]$).\footnote{In many implementations,
+all three dimensions are scaled to the unit interval instead of the coordinates used here.}
+These intuitive dimensions
 make HSV colors easyier to specifiy than, e.g, RGB colors. 
 But HSV colors have several disadvantages.
 Most importantly, HSV colors are not perceptually
@@ -585,7 +587,7 @@ perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihak
 One important issue here is that HSV dimensions are confounded, e.g., saturation
 is not uniform across different hues.
 As an example, see Fig.~\ref{fig:colors} (left) 
-showing a qualitative color palette in the HSV
+showing a qualitative color palette (colors $(H, 100, 100)$ for varying hues $H$) in the HSV
 space: although saturation and value are fixed, the fully saturated blue is
 perceived much darker than the fully saturated red or green,
 making it difficult to judge the size of shaded areas.
@@ -594,8 +596,9 @@ to look at for a longer time. For similar reasons, it is equally difficult
 to derive acceptable diverging palettes from the HSV space, i.e.,
 bipolar scales containing colors ranging between two very distinct colors.
 The upper part of Fig.~\ref{fig:diverging} shows a diverging
-palette in the HSV space with colors ranging from a saturated red over a neutral white
-to a saturated blue. Although the palette should be balanced with
+palette in the HSV space with colors ranging from a saturated red $(0, 100, 100)$
+over a neutral white $(H, 0, 100)$ to a saturated blue $(240, 100, 100)$.
+Although the palette should be balanced with
 respect to colorfulness and brightness, the red colors are perceived
 to be more more intense and flashy than the corresponding blue
 colors. 
@@ -609,7 +612,8 @@ pie(rep(1,9), radius = 1, col = rainbow(9), labels = 360 * 0:8/9)
 pie(rep(1,9), radius = 1, col = rainbow_hcl(9), labels = 360 * 0:8/9)
 @ 
 \caption{Qualitative color palette for the HSV (left) 
-         and HCL (right) spaces.}
+         and HCL (right) spaces. The HSV colors are $(H, 100, 100)$ and
+	 the HCL colors $(H, 50, 70)$ for the same hues $H$.}
 \label{fig:colors}
 \end{center}
 \end{figure}
@@ -636,7 +640,7 @@ text(c(1:5/5 - 0.1), 0.91, c("(240, 100, 100)", "(240, 50, 100)", "(H, 0, 100)",
 \end{center}
 \end{figure}
 
-The use of colors that are more `in harmony' go back to Munsell 
+The use of colors that are more `in harmony' goes back to Munsell 
 \cite{vcd:Munsell:1905} %'
 who introduced a notation for balanced colors. Based on those,
 tools producing better palettes for specific tasks have been developed 
@@ -645,40 +649,35 @@ spaces, especially suited for computer displays, are the CIELAB and CIELUV
 spaces \cite{vcd:CIE:2004} from which qualitative palettes for
 statistical graphics have been derived \cite{vcd:Ihaka:2003}. A
 transformation of the CIELUV space leads to the HCL (Hue-Chroma-Luminance) space.
-Chroma loosely corresponds to colorfulness and luminance to
+These colors are again specified by triplets $(H, C, L)$:
+chroma $C$ loosely corresponds to colorfulness and luminance $L$ to
 brightness, but in contrast to HSV colors, chroma is an
 \emph{absolute} measure valid for all hues, and luminance can be
 varied independently from the other two dimensions.
 Qualitative color palettes can easily be obtained by holding constant
-chroma and luminance, and dividing the hue range in equally-sized intervals. 
-HCL colors with fixed chroma and luminance 
+chroma and luminance, and using varying hues. HCL colors with fixed chroma and luminance 
 are always balanced towards the same grey 
 and thus do not have the problem of varying saturations as the HSV
 colors (see Fig.~\ref{fig:colors}, right). 
-Similarly, diverging color palettes can be derived
-\cite{vcd:Zeileis+Meyer+Hornik:2005} that are
-suited, e.g., for visualizing residuals as we will see in the next
-section. In principle, for each of the two bipolar hues of the
-diverging palette, we could hold constant 
-the luminance and only vary the chroma to get the different colors. 
-However, it turns out that the resulting colors 
-are too similar to be used for discriminating shaded
-objects. Better contrasting can be achieved by \emph{simultaneously}
-varying chroma and luminance, for example by choosing two points in
-the chroma/luminance plane for a given hue and interpolating
-linearly. For each half of the diverging palette, 
-one of these points should be a ``neutral'' color,
-and the other correspond to the ending part of the scale. 
-The lower part of Fig.~\ref{fig:diverging} shows a diverging
-palette using HCL colors. In contrast to the HSV counterpart, matching
+Similarly, diverging HCL color palettes can be derived
+\cite{vcd:Zeileis+Meyer+Hornik:2005} by interpolating again between a
+neutral color such as $(H, 0, 90)$ and two colors with full chroma
+such as blue $(260, 100, 50)$ and red $(0, 100, 50)$. The resulting
+palette is shown in the lower part of Fig.~\ref{fig:diverging}. 
+In contrast to the HSV counterpart, matching
 colors (light red/blue and dark red/blue) 
-are balanced to the same gray, and thus get the same perceptual ``weight''.
+are balanced to the same gray, and thus receive the same perceptual ``weight''.
+Note, that this varies chroma and luminance are varied simultaneously, i.e.,
+the full chroma colors are also darker than the neutral color. Of course,
+it would also be possible to choose a darker neutral color (or lighter 
+full chroma colors), however, by varying both chroma and luminace better 
+contrasts can be achieved.
 
 \subsection{Highlighting and Color-based Shadings}
 \label{sec:shadings}
 
 All plots introduced in Sect.~\ref{sec:twoway} are composed of empty
-tiles. It seems intuitive to used filled tiles to highlight information
+tiles. It seems intuitive to use filled tiles to highlight information
 of interest. Consider again the hospital example: in Fig.~\ref{fig:highlight},
 we mark tiles for patients never or seldom visited to visualize their proportion in
 the LOS strata. For optical clarity, we set the
@@ -700,7 +699,7 @@ mosaic(t(hospital),
          offset_varnames = c(left = 1, top = 0.5), set_labels = 
          list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))),
        split = TRUE, spacing = spacing_highlighting, 
-       gp = gpar(fill = c("gray","black","black")))
+       gp = gpar(fill = rep(grey.colors(2)[2:1], 1:2)))
 @ 
 \caption{Spine plot with highlighting for the hospital data.}
 \label{fig:highlight}
