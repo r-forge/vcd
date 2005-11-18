@@ -20,10 +20,10 @@
 
 %% Hyperref
 \hypersetup{%
-  pdftitle = {Residual-based Shadings for Visualizing (Conditional) Independence},
+  pdftitle = {Visualizing Multi-way Contingency Tables},
   pdfsubject = {Residual-based Shadings},
   pdfkeywords = {association plots, conditional inference, contingency tables, HCL colors, HSV colors, mosaic plots},
-  pdfauthor = {Achim Zeileis, David Meyer, Kurt Hornik},
+  pdfauthor = {David Meyer, Achim Zeileis, Kurt Hornik},
   %% change colorlinks to false for pretty printing
   colorlinks = {false},
   linkcolor = {Blue},
@@ -32,7 +32,6 @@
   hyperindex = {true},
   linktocpage = {true},
 }
-
 
 <<preliminaries,echo=FALSE,results=hide>>=
 myseed <- 4711
@@ -667,7 +666,7 @@ palette is shown in the lower part of Fig.~\ref{fig:diverging}.
 In contrast to the HSV counterpart, matching
 colors (light red/blue and dark red/blue) 
 are balanced to the same gray, and thus receive the same perceptual ``weight''.
-Note, that this varies chroma and luminance are varied simultaneously, i.e.,
+Note, that chroma and luminance are varied simultaneously, i.e.,
 the full chroma colors are also darker than the neutral color. Of course,
 it would also be possible to choose a darker neutral color (or lighter 
 full chroma colors), however, by varying both chroma and luminace better 
