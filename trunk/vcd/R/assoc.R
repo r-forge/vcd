@@ -107,7 +107,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     split <- function(res, sexp, i, name, row, col) {
       v <- split_vertical[i]
       splitbase <- if (v) sexp else res
-      splittab <- lapply(seq(dx[i]), function(j) splitbase[j])
+      splittab <- lapply(seq(dx[i]), function(j) splitbase[[j]])
       len <- sapply(splittab, function(x) sum(unclass(x)[1,] - unclass(x)[2,]))
 
       d <- dx[i]
