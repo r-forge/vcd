@@ -354,7 +354,7 @@ doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
 
 So far, we have visualized full tables. Subtables can be selected in a
 similar way than for objects of class \class{table} using
-indexing. Note, however, that subsetting of \code{"structable"} objects 
+indexing. Note, however, that subsetting of \class{structable} objects 
 is more restrictive because of their inherent conditional structure. Since the variables
 on both the row and the columns side are nested, 
 subsetting is only possible ``outside-in'', that is, indexing operates
@@ -369,7 +369,7 @@ hec["Male", c("Brown","Green")]
 \noindent \emph{Conditioning} on levels (i.e., choosing a table subset for fixed levels
 of the conditioning variable(s)) is done using the \code{[[} operator. %]]
 Here again, the sequence of conditioning levels is restricted by the
-hierarchical structure of the \class{"structable"} object:
+hierarchical structure of the \class{structable} object:
 
 <<conditioning,results=verbatim>>=
 hec[["Male",]]
@@ -473,7 +473,7 @@ appearance: here, to be left-aligned and unclipped
 for detailed information).
 
 Another high-level function for visualizing conditional independence
-models are the \codefun{pairs} methods for table and structable objects.
+models are the \codefun{pairs} methods for \class{table} and \class{structable} objects.
 In contrast to \codefun{cotabplot} which conditions on variables,
 the \codefun{pairs} methods create pairwise views of the table. 
 The function produces, by default, a plot matrix 
