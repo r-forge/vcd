@@ -49,7 +49,7 @@ struc_mosaic(zero_size = 0.5)
   190--200.
   \url{http://www.math.yorku.ca/SCS/sugi/sugi17-paper.html}
 }
-\example{
+\examples{
 ## Titanic data
 data(Titanic)
 ## mosaic plot with large zeros
