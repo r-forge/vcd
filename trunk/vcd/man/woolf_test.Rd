@@ -28,6 +28,10 @@ woolf_test(x)
 \seealso{
   \code{\link{mantelhaen.test}}
 }
+\references{
+Woolf, B. 1955. On estimating the relation between blood group and 
+disease. \emph{Ann. Human Genet.} (London) \bold{19}, 251-253.
+}
 \examples{
 data(CoalMiners)
 woolf_test(CoalMiners)
