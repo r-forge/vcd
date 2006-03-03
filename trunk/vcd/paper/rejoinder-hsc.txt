@@ -122,3 +122,37 @@ p17 the the
 p19 being conditionally independent
 
 p20 barcharts on the diagonal (not in)
+
+
+%Z% 4-way data: Ovary Cancer
+%Z% model: xray * operation * stage + survival * stage
+%Z% interpretation: treat xray, operation, stage as fixed margins,
+%Z%   the survival depends on stage, but not xray and operation.
+tab <- xtabs(Freq ~ xray + survival + stage + operation, data = OvaryCancer)
+ftable(tab, col.vars = "survival", row.vars = c("stage", "operation", "xray"))
+doubledecker(survival ~ stage + operation + xray, data = tab, col = rev(grey.colors(2)))
+mosaic(~ stage + operation + xray + survival,
+  split = c(FALSE, TRUE, TRUE, FALSE), data = tab, keep = FALSE,
+  expected = ~ xray * operation * stage + survival*stage)
+mosaic(~ stage + operation + xray + survival,
+  split = c(FALSE, TRUE, TRUE, FALSE), data = tab, keep = FALSE,
+  gp = gpar(fill = rev(grey.colors(2))))
+
+%Z% a bit more interesting, but also a bit more difficult
+%Z% 4-way data: Punishment
+%Z% model: (memory + attitude) * age * education
+tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+tab_test <- coindep_test(tab, margin = c(3, 4))
+mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+  expected = ~ (memory + attitude) * education * age,
+  gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))))
+
+%Z% other
+tab <- xtabs(Freq ~ period + collision + light + parked, data = Trucks)
+loglm(~ (collision + period) * parked * light, data = tab)
+doubledecker(collision ~ parked + light + period, data = tab)
+cotabplot(tab, panel = cotab_coindep)
+%Z%
+tab <- xtabs(Freq ~ gender + opinion + grade + year, data = JointSports)
+doubledecker(opinion ~ gender + year + grade, data = tab, col = grey.colors(5))
+loglm(~ opinion* (gender + grade+ year) + gender*year*grade, data = tab)
