@@ -1,0 +1,124 @@
+1.      When you will submit a revision? (The deadline is April 10, 2006)
+%Z% 2006-04-10 then, probably...
+
+2.      Who will come to the CSC conference?
+%Z% ...probably the first author?
+
+Answers to these points MUST be final since we are going into  
+production mode both for the book and for the conference.
+%Z% good for us :-)
+
+The title of this paper promises a lot, but the paper sadly does not  
+deliver.  It is not until p20 that multi-way tables are discussed.  A  
+lot of the earlier material should be dispensed with and replaced by  
+deeper analysis of a real multi-way example.
+%Z% Maybe we should change the title to `Visualizing Contingency Tables'?
+
+On p2 it says "Section 3 explains how the use of color in residual- 
+based shadings can support data exploration, and even promotes the  
+methods to diagnostic and model- based tools by visualizing test  
+statistics and residuals of independence models."  That would be  
+great if Section 3 did show that, but it only discusses two-way  
+tables.  Why is there no discussion of using visualization to support  
+more complicated modelling?
+%Z% ok, a 4-way or maybe 5-way example would be good, will check Andersen.
+
+The name association plots implies they can only be used for  
+association.  In generalised form they are a structured residual plot  
+and could be used to display residual patterns from more complex  
+models.  It could be good to make this more explicit and to give  
+examples.  Friendly, Hofmann and Theus have all published material on  
+various ways of using mosaic plots to display residuals and to  
+support modelling.  There should be more discussion of this work too.
+%Z% some references and a few comments will have to do here
+
+The authors' insistence that sieve plots are helpful is surprising.   
+They are difficult to interpret and appear to have no advantages over  
+the other two graphics used.  All the material on sieve plots could  
+be dropped.  The advice on p10, repeated in the conclusions, as to  
+when each of the three plots is useful is an assertion, for which the  
+authors provide no evidence.
+%Z% Oh my, I do not think we have to provide evidence, we're giving a
+%Z% survey only. Maybe we can shorten the sieve plots section and add
+%Z% a critical remark that sieve plots are not always a good choice.
+
+The discussion on colour (§3.1) is interesting, but very general, and  
+the claims made are not backed up by any scientific evidence.  Since  
+no colour printing is available for the book, this section should  
+probably be shortened.
+%Z% Not having color is plain ridiculous, of course. Could also be
+%Z% an argument for sieve plots which do not depend as heavily on
+%Z% on shading :-)
+%Z% Honestly: Not having color is a problem!
+
+The first example is a strange choice.  It is very old, the data have  
+been arbitrarily discretised (which would probably not be done  
+nowadays), and, of course, both variables are ordinal.  On top of  
+that it is not fully explained.  What is meant by a visit and what  
+does regular mean?  The authors should use a more interesting and up- 
+to-date example and treat it more briefly.
+%Z% I think this kind of data will still be encountered in practice
+%Z% and shows some of the pitfalls. Another sentence of explanation
+%Z% will probably do here.
+
+The hair/eye colour example introduces an extra variable, gender.   
+The authors say this variable is artificial.  Why use artificial  
+examples when there are so many real and interesting ones around?
+%Z% The referee has a point here, maybe we can find something better.
+
+p16-18 §3.3 is interesting on using permutation tests.  Linking  
+graphics and statistical tests closely is a good idea.  An example  
+showing how this generalises to multi-way tables would be very nice.
+%Z% as above: will try to find a 4-way example.
+
+p17-18 Of course, fixed cut-off points are only crude guidelines.
+%Z% not! Work much better than continuous shadings.
+
+p19 §3.4 Doesn't recommending perceptually uniform colours speak  
+against sieve plots?
+%Z% ...or against publishing in a book on visualization that comes
+%Z% in grey shades only?
+
+p19 §3.4 Very strong claims are made here based on one simple 2x2  
+table.  A more complicated table should be analysed.
+%Z% Can't the referee count? It was 2x3 the last time I checked.
+%Z% More seriously: The claims are made based on theory, the graphic
+%Z% is an illustration only.
+
+p25 An alternative to Figure 20 would be a Double Decker Plot of  
+department by gender with accepted highlighted.  For a binary  
+dependent variable, highlighting is always better than adding the  
+dimension to a mosaic plot.
+%Z% Very strong claims are made based on a simple 2x2x6 table...
+
+Not making clear that the Berkeley depts have different sizes can be  
+misleading.  The argument here is weak.
+%Z% Yawn...
+
+
+Specific remarks:
+
+p1 not necessarily a square, a rectangle  (see also p5)
+
+p2 Section not Sect.
+
+p3 Table 3 should have equal spacing
+
+p4 Fig 1 is unfair, since a grouped barchart by rows would have shown  
+the information
+
+p5 Not necessarily a squared mosaic, not splits of a square
+
+p10 tends to produce not tend
+
+p11 break up HLS so that the text does not overrun the margin
+
+p17 add a third piece of information to the plot
+
+p17 in Section 3.1 (not in the Sect.)
+
+p17 the the
+
+p19 being conditionally independent
+
+p20 barcharts on the diagonal (not in)
