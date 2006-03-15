@@ -124,6 +124,15 @@ p19 being conditionally independent
 p20 barcharts on the diagonal (not in)
 
 
+%Z% UCB extensions
+%Z% exploratory view
+mosaic(aperm(UCBAdmissions), gp = gpar(fill = rev(grey.colors(2))),
+  spacing = spacing_highlighting, split = TRUE, keep = FALSE)
+doubledecker(aperm(UCBAdmissions), col = rev(grey.colors(2)))
+%Z% model-based view
+cotabplot(aperm(UCBAdmissions, c(2, 1, 3)), panel = cotab_coindep)
+cotabplot(aperm(UCBAdmissions, c(2, 1, 3)), panel = cotab_coindep, panel_args = list(type = "assoc"))
+
 %Z% 4-way data: Ovary Cancer
 %Z% model: xray * operation * stage + survival * stage
 %Z% interpretation: treat xray, operation, stage as fixed margins,
