@@ -133,6 +133,20 @@ doubledecker(aperm(UCBAdmissions), col = rev(grey.colors(2)))
 cotabplot(aperm(UCBAdmissions, c(2, 1, 3)), panel = cotab_coindep)
 cotabplot(aperm(UCBAdmissions, c(2, 1, 3)), panel = cotab_coindep, panel_args = list(type = "assoc"))
 
+%Z% a bit more interesting, but also a bit more difficult
+%Z% 4-way data: Punishment
+%Z% model: (memory + attitude) * age * education
+tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+tab_test <- coindep_test(tab, margin = c(3, 4))
+mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+  gp = gpar(fill = grey.colors(2)), spacing = spacing_highlighting)
+mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+  expected = ~ (memory + attitude) * education * age,
+  gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))))
+cotabplot(tab, panel = cotab_coindep, panel_args = list(margin = c(2.5, 0, 0.5, 0)))
+
+
+
 %Z% 4-way data: Ovary Cancer
 %Z% model: xray * operation * stage + survival * stage
 %Z% interpretation: treat xray, operation, stage as fixed margins,
@@ -146,15 +160,6 @@ mosaic(~ stage + operation + xray + survival,
 mosaic(~ stage + operation + xray + survival,
   split = c(FALSE, TRUE, TRUE, FALSE), data = tab, keep = FALSE,
   gp = gpar(fill = rev(grey.colors(2))))
-
-%Z% a bit more interesting, but also a bit more difficult
-%Z% 4-way data: Punishment
-%Z% model: (memory + attitude) * age * education
-tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
-tab_test <- coindep_test(tab, margin = c(3, 4))
-mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
-  expected = ~ (memory + attitude) * education * age,
-  gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))))
 
 %Z% other
 tab <- xtabs(Freq ~ period + collision + light + parked, data = Trucks)
