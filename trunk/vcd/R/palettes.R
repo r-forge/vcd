@@ -45,5 +45,8 @@ heat_hcl <- function(n, h = c(0, 90), c = 100, l = c(50, 90), correct = 5, ...)
   return(rval)
 }
 
+terrain_hcl <- function(n, h = c(130, 0), c = 80, l = c(60, 100), correct = 10, ...)
+  heat_hcl(n, h = h, c = c, l = l, correct = correct, ...)
+
 decrease_hcl <- function(n, h = 260, c = 100, l = c(50, 90), ...)
   heat_hcl(n = n, h = h, c = c, l = l, correct = 1, ...)
