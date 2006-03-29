@@ -240,38 +240,3 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
   rval
 }
 class(shading_binary) <- "grapcon_generator"
-
-
-
-## color palettes
-
-rainbow_hcl <- function(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, ...)
-{
-  if(n > 0) hcl(seq(start, end, length = n), c = c, l = l, ...)
-    else character(0)
-}
-
-diverge_hcl <- function(n, h = c(260, 0), c = 100, l = c(90, 50), ...)
-{
-  if(n < 1) return(character(0))
-  h <- rep(h, length.out = 2)
-  c <- c[1]
-  l <- rep(l, length.out = 2)
-  rval <- seq(1, -1, length = n)
-  rval <- hcl(h = ifelse(rval > 0, h[1], h[2]),
-              c = c * abs(rval),
-              l = l[1] + diff(l) * abs(rval),
-              ...)
-  return(rval)
-}
-
-diverge_hsv <- function(n, h = c(2/3, 0), s = 1, v = 1, ...)
-{
-  if(n < 1) return(character(0))
-  h <- rep(h, length.out = 2)
-  s <- s[1]
-  v <- v[1]
-  rval <- seq(-s, s, length = n)
-  rval <- hsv(h = ifelse(rval > 0, h[2], h[1]), s = abs(rval), v = v, ...)
-  return(rval)
-}
