@@ -54,6 +54,7 @@ export(
        "diverge_hcl",
        "diverge_hsv",
        "heat_hcl",
+       "terrain_hcl",
        "decrease_hcl",
        
 ## panel functions
