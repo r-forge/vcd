@@ -2,6 +2,8 @@
 \alias{rainbow_hcl}
 \alias{diverge_hcl}
 \alias{diverge_hsv}
+\alias{heat_hcl}
+\alias{decrease_hcl}
 \title{HCL and HSV Color Palettes}
 \description{
   Color palettes based on the HCL and HSV color spaces.
@@ -10,7 +12,10 @@
 rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, \dots)
 
 diverge_hcl(n, h = c(260, 0), c = 100, l = c(90, 50), \dots)
-diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)  
+diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, \dots)  
+
+heat_hcl(n, h = c(0, 90), c = 100, l = c(50, 90), correct = 5, \dots)
+decrease_hcl(n, h = 260, c = 100, l = c(50, 90), \dots)
 }
 \arguments{
   \item{n}{the number of colors (\deqn{\ge 1}{>= 1}) to be in the palette.}
@@ -22,11 +27,13 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
     in [0, 360] for HCL and in [0, 1] for HSV colors.}
   \item{s}{saturation value in the HSV color description.}
   \item{v}{value value in the HSV color description.}
+  \item{correct}{control parameter for \code{heat_hcl} determining,
+    how slowly colors should fade out.}
   \item{\dots}{Other arguments passed to \code{\link[colorspace]{hcl}}
     or \code{\link{hsv}}, respectively.}
 }
 \details{
-  All three functions compute palettes based on either the HCL or
+  All functions compute palettes based on either the HCL or
   the HSV color space. \code{rainbow_hcl} computes a rainbow of colors
   defined by different hues given a single value of each chroma and luminance.
   It corresponds to \code{\link{rainbow}} which computes a rainbow in
@@ -43,6 +50,14 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, ...)
   The colors are then created by linear interpolation between the 
   neutral color (with zero chroma and luminance \code{l[1]}) and 
   the full color (with chroma \code{c} and luminance \code{l[2]}).
+
+  The palette \code{heat_hcl} gives an implementation of \code{\link{heat.colors}}
+  in HCL space. By default, it goes from a red to a yellow hue, while
+  simultaneously going to lighter colors (i.e., increasing luminance)
+  and reducing the amount of color (i.e., decreasing chroma). Similarly,
+  \code{decrease_hcl} gives a palette that goes from a fully saturated
+  color (blue by default) to a lighter grey. This is essentially one branch
+  of the \code{diverge_hcl} palettes.
 
   The diverging palettes are used for choosing the colors for mosaic 
   displays in \code{\link{mosaic}}.
@@ -68,5 +83,9 @@ pie(rep(1, 7), col = diverge_hcl(7, h = c(180, 70), c = 70, l = c(95, 90)))
 pie(rep(1, 7), col = diverge_hcl(7, h = c(180, 330), c = 59, l = c(95, 75)))
 pie(rep(1, 7), col = diverge_hcl(7, h = c(128, 330), c = 98, l = c(90, 65)))
 pie(rep(1, 7), col = diverge_hcl(7, h = c(255, 330)))
+
+## sequential palettes
+pie(rep(1, 12), col = decrease_hcl(12))
+pie(rep(1, 12), col = heat_hcl(12))
 }
 \keyword{hplot}

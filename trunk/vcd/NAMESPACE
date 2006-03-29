@@ -53,6 +53,8 @@ export(
        "rainbow_hcl",
        "diverge_hcl",
        "diverge_hsv",
+       "heat_hcl",
+       "decrease_hcl",
        
 ## panel functions
        "pairs_barplot",
