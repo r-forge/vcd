@@ -20,9 +20,9 @@
 
 %% Hyperref
 \hypersetup{%
-  pdftitle = {Visualizing Multi-way Contingency Tables},
-  pdfsubject = {Residual-based Shadings},
-  pdfkeywords = {association plots, conditional inference, contingency tables, HCL colors, HSV colors, mosaic plots},
+  pdftitle = {Visualizing Contingency Tables},
+  pdfsubject = {Handbook of Statistical Computing},
+  pdfkeywords = {association plots, contingency tables, HCL colors, HSV colors, mosaic plots, sieve plots},
   pdfauthor = {David Meyer, Achim Zeileis, Kurt Hornik},
   %% change colorlinks to false for pretty printing
   colorlinks = {false},
@@ -34,7 +34,7 @@
 }
 
 <<preliminaries,echo=FALSE,results=hide>>=
-myseed <- 4711
+myseed <- 1071
 set.seed(myseed)
 library(vcd)
 library(scatterplot3d)
@@ -47,8 +47,10 @@ dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"),
 art <- xtabs(~Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
 set.seed(myseed)
-#art_max <- coindep_test(art, n = 5000)
-uc_max <- coindep_test(aperm(UCBAdmissions, c(3,2,1)), margin = "Dept", n = 5000)
+art_max <- coindep_test(art, n = 5000)
+
+set.seed(myseed)
+ucb_max <- coindep_test(aperm(UCBAdmissions, c(3,2,1)), margin = "Dept", n = 5000)
 
 set.seed(myseed)
 art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
@@ -126,7 +128,7 @@ the following aspects:
 \begin{itemize}
   \item Varying the shape of mosaic plots (as well as bar plots) to yield, e.g.,
   double-decker plots \cite{vcd:Hofmann:2001}, spine 
-  plots \cite{vcd:riedwyl+schuepbach:1994}, or spinograms.
+  plots \cite{vcd:riedwyl+schuepbach:1994}, or spinograms \cite{vcd:hofmann+theus}.
 \item Using residual-based shadings to visualize log-linear models
   \cite{vcd:Friendly:1994,vcd:Friendly:2000} and significance of
   statistical tests \cite{vcd:Meyer+Zeileis+Hornik:2003}.
@@ -158,7 +160,7 @@ Comprehensive \proglang{R} Archive Network (\url{http://CRAN.R-project.org/}).
   \centering
   \begin{tabular}{|l|c|c|c|c|c|}
     \hline
-                             & SAS & S-PLUS & R & ViSta & MANET/Mondrian\\\hline
+                             & \proglang{SAS} & \proglang{S-PLUS} & \proglang{R} & \pkg{ViSta} & \pkg{MANET}/\pkg{Mondrian}\\\hline
     Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$\\
     Shape                    &     &        & $\times$ &       & $\times$\\
     Residual-based shadings  &  $\times$  &        & $\times$ &   $\times$   & ($\times$)\\
@@ -169,6 +171,8 @@ Comprehensive \proglang{R} Archive Network (\url{http://CRAN.R-project.org/}).
   \caption{Comparison of current software environments.}
   \label{tab:compare}
 \end{table}
+%FIXME% For the JSS paper there was criticism about haven MANET and Mondrian in the
+%FIXME% same column, how did we decide ro resolve this? Different columns, I suppose...?!
 
 This chapter will give an overview of the state of the art 
 of mosaic, sieve, and association plots, both for exploratory visualization and
@@ -193,7 +197,7 @@ structures. Section~\ref{sec:concl} concludes the chapter.
 \label{sec:twoway}
 
 Throughout this section, our examples will be based on
-the \data{hospital} data \cite{vcd:wing:1962} (see Tab.~\ref{tab:hospital}).
+the \data{hospital} data \cite{vcd:wing:1962} given in Tab.~\ref{tab:hospital}.
 
 \begin{table}[h]
 \begin{center}
@@ -247,7 +251,7 @@ $\Sigma$ & 1.00 & 1.00 & 1.00 \\
 \noindent In addition, \cite{vcd:haberman:1974} notes that this pattern is not
 significantly different in the ``less than monthly'' and ``never''
 strata. From the row-standardized table (see Tab.~\ref{tab:rowhospital}), 
-it seems indeed that LOS were homogeneous with respect to these two visit frequency strata.
+it seems indeed that LOS is homogeneous with respect to these two visit frequency strata.
 
 \begin{table}[h]
 \begin{center}
@@ -377,7 +381,8 @@ It seems apparent that the distribution of LOS %'
 is similar for monthly and never visited patients, so this two categories actually
 represent one homogenous group (patients visited only casually). Since
 the first splitting variable dominates the plot, it should be chosen
-as to be the explanatory variable in (hypothesized) causal relationships.
+as to be the explanatory variable.
+%FIXME% causality is not needed, hence omitted: in (hypothesized) causal relationships.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -393,6 +398,9 @@ as first splitting variable.}
 
 \subsection{Sieve Plots}
 \label{sec:sieve}
+
+%FIXME% Maybe formulate the following theory a bit more like:
+%FIXME% "To fix notations, ...", "It is well-known that..."
 
 When we try to explain data, we assume the validity of a certain
 model for the generating process. In the case of two-way contingency
@@ -474,7 +482,7 @@ labeling_cells(text = t(hospital), clip = FALSE, gp = gpar(fontface = 2, fontsiz
 In the last section, we have seen how to compare observed and expected
 values of a contingency table using sieve plots. We can do this
 more straightforwardly by using a plot that directly visualizes the residuals. The
-most widely known residuals are the Pearson residuals
+most widely used residuals are the Pearson residuals
 
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
@@ -509,19 +517,22 @@ assoc(t(hospital), split = TRUE)
 \subsection{Summary}
 
 Mosaic plots are an instrument to visualize the \emph{observed} frequencies
-of a contingency table by recursive conditional splits. If causal
-relationships between the variables are assumed, the determining variables
-should be used first for splitting since they will dominate the
-plot. Sieve plots basically visualize the table of \emph{expected} frequencies, and
+of a contingency table by recursive conditional splits. If the variables can be
+separated into explanatory and dependent variable(s), the explanatory variable(s)
+should be be used first for splitting to display the conditional distribution of
+the dependent variable(s) given the explanatory variable(s). %FIXME% causality removed again
+Sieve plots basically visualize the table of \emph{expected} frequencies, and
 in addition the deviations from the observed frequencies by the density of a
 grid added to each tile. They complement mosaic plots in detecting dependency
-patterns for ordinal variables. However, for nominal variables, mosaic plots are
-a better choice, especially when residual-based 
-shadings are used (see next section), Association plots directly
+patterns for ordinal variables. An alternative way of enhancing mosaic plots
+to display deviations from expected frequencies is to use
+residual-based shadings (see next section) which are typically more intellegible
+than sieve plots, in particular for nominal variables.
+Association plots directly
 visualize Pearson and raw residuals, i.e., standardized and
 non-standardized deviations of observed from expected frequencies,
 respectively. These plots should be used if the diagnostics of
-independence models is of primary concern.
+independence models is of primary interest.
 
 \section{Using Colors for Residual-based Shadings}
 \label{sec:extensions}
@@ -535,6 +546,14 @@ remarks on colors and color palettes.
 
 \subsection[A Note on Colors and Color Palettes]{A Note on Colors and Color Palettes\footnote{The electronic version of this article uses colors.}}
 \label{sec:colors} 
+%FIXME% Maybe extend the footnote and say that the printed version is monochrome,
+%FIXME% and that the electronic version uses color.
+%FIXME% We can already say earlier that the R code for reproducing the figures
+%FIXME% is available from a Web page. And then we can say here that the colored versions
+%FIXME% can also be obtained from the Web page.
+%FIXME% Where do we want to set up the URL? I would suggest
+%FIXME%   http://statmath.wu-wien.ac.at/projects/vcd/
+
 
 The plots introduced in the previous section are basically composed of
 tiles whose areas represent characteristics derived from the
@@ -572,18 +591,19 @@ the value for the primary color, and $\gamma$ device-dependent
 appear identical on different devices, their gamma characteristics
 have to be taken into account.
 
-Now, software implementations are often based on the more convenient
+Choosing colors and color palettes in RGB space can be a bit inconvenient
+and hence software implementations are often based on
 Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Satu\-ration 
 color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
-colors in many computer packages \cite{vcd:Moretti+Lyons:2002}. Each color in this space is
+colors in many computer packages \cite{vcd:Moretti+Lyons:2002}. Each color in HSV space is
 represented by three dimensions $(H, S, V)$: the hue $H$ (dominant wavelength in the spectrum, in $[0, 360]$), 
 the saturation $S$ (`colorfulness' or `pureness', in $[0, 100]$), and 
 the value $V$ (`brightness', amount of gray, in $[0, 100]$).\footnote{In many implementations,
 all three dimensions are scaled to the unit interval instead of the coordinates used here.}
 These intuitive dimensions
 make HSV colors easyier to specifiy than, e.g, RGB colors. 
-But HSV colors have several disadvantages.
+However, HSV colors have several disadvantages.
 Most importantly, HSV colors are not perceptually
 uniform because the three HSV dimensions map only poorly to the three
 perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihaka:2003}.
@@ -618,7 +638,7 @@ pie(rep(1,9), radius = 1, col = rainbow_hcl(9), labels = 360 * 0:8/9)
          and HCL (right) spaces. The HSV colors are $(H, 100, 100)$ and
 	 the HCL colors $(H, 50, 70)$ for the same hues $H$. Note that
          in a monochrome version of this paper, all pies in the right
-         wheel will be shaded with the same gray, i.e. appear identical.}
+         wheel will be shaded with the same gray, i.e., appear identical.}
 \label{fig:colors}
 \end{center}
 \end{figure}
@@ -662,7 +682,7 @@ brightness, but in contrast to HSV colors, chroma is an
 \emph{absolute} measure valid for all hues, and luminance can be
 varied independently from the other two dimensions.
 Qualitative color palettes can easily be obtained by holding constant
-chroma and luminance, and using varying hues. HCL colors with fixed chroma and luminance 
+chroma and luminance, and using varying hues. HCL colors with fixed luminance 
 are always balanced towards the same grey 
 and thus do not have the problem of varying saturations as the HSV
 colors (see Fig.~\ref{fig:colors}, right). 
@@ -691,7 +711,7 @@ the LOS strata. For optical clarity, we set the
 spacing between the visit frequency tiles to 0. Clearly, the
 proportion of these patients increases with LOS. In fact, such a
 ``stacked'' plot can also be interpreted as spine plot with highlighting
-\cite{vcd:hummel:1996}, particularly useful in analyzing causal relationships in
+\cite{vcd:hummel:1996}, particularly useful in analyzing relationships among
 categorical data with a binary dependent variable. More variations on
 this theme, such as doubledecker plots, are treated in chapter XXX
 (\textbf{REFERENCE TO OTHER CHAPTER(S)}).
@@ -766,7 +786,7 @@ In addition to the shading of the rectangles themselves, the Friendly shading al
 encompasses a choice of line type and line color of the rectangle borders
 with similar ideas as described above, useful when no color can be used.
 
-In Fig.~\ref{fig:Friendly}, we again show the mosaic for the \data{hospital}
+In Fig.~\ref{fig:Friendly}, we show again the mosaic for the \data{hospital}
 data, this time using a Friendly-like color shading (with HCL
 instead of HSV colors, and no line type coding).
 \setkeys{Gin}{width=0.7\textwidth}
@@ -789,9 +809,8 @@ and the pattern inversion for lengths of stay of 2--9 and more than 19
 years are emphasized using the color shading.
 
 For association plots, residual-based shadings are redundant since all relevant
-information is already contained in the plot by construction. But using one of the
-shadings discussed above will nevertheless 
-support the analysis process and is therefore recommended.
+information is already contained in the plot by construction. Nevertheless, using one of the
+shadings discussed above will support the analysis process and is therefore recommended.
 For example, applying the Friendly shading in Fig.~\ref{fig:colorassoc} 
 on the one hand facilitates the discrimination between
 positive and negative residuals, and on the other, more importantly,
@@ -845,17 +864,17 @@ used two `degrees of freedom' so far for coding information %'
 for the size of the residuals), we can add a third piece of information to the plot.
 For example, we can visualize the significance of some specified test statistic
 (e.g., the $\chi^2$ test statistic) 
-using darker (`uninteresting') colors for non-significant
-results. These can again be derived using the interpolation procedure
-described in Sect.~\ref{sec:colors} by
-restricting the luminance to a shorter range, ending with a ``darker'' value.
+using less colorful (`uninteresting') colors for non-significant
+results. These can again be derived using the same procedure
+described in Sect.~\ref{sec:colors} but using a smaller amount of color, i.e.,
+a smaller maximal chroma (e.g., 20 instead of 100).
 
 % The following example using the \data{Bundesliga} data \cite{vcd:Knorr-Held:1999}
 % shows the relationship of home goals and away
 % goals of Germany's premier soccer league in 1995: although there are two
 % ``larger'' residuals (one greater than 2, one less then $-2$), the
 % $\chi^2$ test does not reject the null hypothesis of
-% independence on a significance level of $95\%$ since the $p$ value is $0.1213$. 
+% independence on a significance level of $5\%$ since the $p$ value is $0.1213$. 
 % Consequently, the employed shading uses a darker overall color scheme
 % (see Fig.~\ref{fig:bundesliga}). 
 
@@ -901,7 +920,7 @@ $\Sigma$ & 25 & 12 & 22 & 59 \\
 
 \noindent Figure~\ref{fig:arthritis} visualizes the results for the female
 patients, again by means of a mosaic display. Clearly, the hypothesis
-of independence is rejected by the $\chi^2$ test even on a $99\%$ level 
+of independence is rejected by the $\chi^2$ test even on a $1\%$ level 
 ($p=\Sexpr{round(art_chisq$p.value,4)}$), but
 since all residuals are in the 
 $[\Sexpr{round(min(chisq.test(art)$residuals),4)},\Sexpr{round(max(chisq.test(art)$residuals),4)}]$ %$
@@ -922,9 +941,9 @@ the conditional distribution of this test statistic under the null can be obtain
 by simulation, sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
 using, e.g., the Patefield algorithm \cite{vcd:Patefield:1981} 
 and computing the maximum statistic for each of these tables.
-In Fig.~\ref{fig:arthritis2}, we again
-visualize the \data{arthritis} data, this
-time using the maximum test statistic. The shading of the
+In Fig.~\ref{fig:arthritis2}, we visualize again the \data{arthritis} data, this
+time using the maximum test statistic and its 10\% and 1% critical values at cut-off points.
+The shading of the
 tiles now clearly shows that the treatment is effective: significantly more patients
 in the treatment group exhibit marked improvement than would be
 expected under independence.
@@ -935,7 +954,7 @@ expected under independence.
 <<Arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(art, shade = TRUE, gp_args = list(p.value = art_chisq$p.value))
 @
-\caption{Mosaic plot for the \data{Arthritis} data, using the $\chi^2$ test 
+\caption{Mosaic plot for the \data{arthritis} data, using the $\chi^2$ test 
 and fixed cut-off points for the shading.}
 \label{fig:arthritis}
 \end{center}
@@ -945,9 +964,10 @@ and fixed cut-off points for the shading.}
 \begin{figure}[p]
 \begin{center}
 <<Arthritis2fig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-mosaic(art, gp = shading_max)
+set.seed(myseed)
+mosaic(art, gp = shading_max, gp_args = list(n = 5000))
 @
-\caption{Mosaic plot for the \data{Arthritis} data, using the maximum test and 
+\caption{Mosaic plot for the \data{arthritis} data, using the maximum test and 
 data-driven cut-off points for the residuals.}
 \label{fig:arthritis2}
 \end{center}
@@ -955,18 +975,17 @@ data-driven cut-off points for the residuals.}
 
 \subsection{Summary}
 
-Especially for the visualization of areas, 
-use perceptually uniform colors and color palettes, derived from,
-e.g., the HCL color space. Shadings can be used to add 
-information to the basic plots and to support the
-analysis. Highlighting of tiles can support the analysis of causal relationships.
-Residual-based shadings can be used for model diagnostics, e.g.,
-by using the hue to code the sign of a residual, and a linear
-combination of chroma and luminance for the size. In addition, the
-significance of test statistics can be visualized through overall 
-darker color palettes. Using the maximum instead of the $\chi^2$ test
-statistic to aggregate the residuals allows precise diagnostics when
-the null hypothesis of independence is rejected.
+For the visualization of areas perceptually uniform colors and color palettes
+should always be used and HCL color space provides a convenient way to do so.
+Shadings can be used to add information to the basic plots and to support the
+analysis. Highlighting of tiles can support the analysis relationships with a 
+single dependent variable. Residual-based shadings can be used for model diagnostics, e.g.,
+by using diverging color palettes to code the sign and size of a residual.
+In addition, the significance of test statistics can be visualized by using 
+overall less colorful palettes. Using the maximum instead of the $\chi^2$ (or other) test
+statistic(s) allows for data-driven cut-offs in the diverging palettes and
+precise diagnostic identification of the cells in conflict with the
+null hypothesis of independence.
 
 \section{Selected Methods for Multi-way Tables}
 \label{sec:multiway}
@@ -1027,7 +1046,8 @@ variables are implicitly specified by the cells' position in the matrix. %'
 In Fig.~\ref{fig:pairs}, the diagonal cells show bar plots for the
 distribution of the variables, and the off-diagonal cells mosaic plots
 for the corresponding pair of variables. The plots suggest that
-admission differs between male and female students, and also varies given department.
+admission differs between male and female students, and between the departments,
+and that the proportion of male and female students varies across the departments.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
@@ -1035,10 +1055,24 @@ admission differs between male and female students, and also varies given depart
 <<pairs,fig=TRUE,echo=FALSE,height=8,width=8,results=hide>>=
 pairs(UCBAdmissions)
 @
-\caption{Pairs plot for the \data{HairEyeColor} data.}
+\caption{Pairs plot for the \data{UCB admissions} data.}
 \label{fig:pairs}
 \end{center}
 \end{figure}
+
+%FIXME% Didn't we decide to use fewer plots in the paper and simply
+%FIXME% point out that other combinations could also be used?
+%FIXME% I would use for UCB:
+%FIXME%   o explorative: highlighted doubledecker (currently Fig. 17)
+%FIXME%   o model-based: conidtional shaded assoc (currently Fig. 20)
+%FIXME% For Punishment:
+%FIXME%   o explorative: highlighted mosaic( currently Fig. 21)
+%FIXME%   o model-based: conditional shaded mosaic (currently Fig. 23)
+%FIXME% The others should be omitted (I think) and the space gained should
+%FIXME% be used for making the individual graphs larger. Preferably, we
+%FIXME% should have the explorative and model-based plots for the same data
+%FIXME% set on the same page, emphasizing that different aspects of the data
+%FIXME% are brought out by the graphs.
 
 The next step is to investigate three-way interactions among the variables.
 In this example, we have a binary variable of interest (admission)
@@ -1063,7 +1097,7 @@ difference of admission rates in department A is more marked.
 mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
    spacing = spacing_highlighting, split = TRUE, keep = FALSE, rep = FALSE)
 @
-\caption{Mosaic plot with highlighting for the \data{UCBAdmissions} data.}
+\caption{Mosaic plot with highlighting for the \data{UCB admissions} data.}
 \label{fig:ucbhighlight}
 \end{center}
 \end{figure}
@@ -1072,10 +1106,11 @@ mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
+%FIXME% right margin labels get clipped
 <<doubleucb,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-doubledecker(aperm(UCBAdmissions), col = grey.colors(2))
+doubledecker(aperm(UCBAdmissions), col = rev(grey.colors(2)))
 @
-\caption{Dobledecker plot for the \data{UCBAdmissions} data.}
+\caption{Dobledecker plot for the \data{UCB admissions} data.}
 \label{fig:doubleucb}
 \end{center}
 \end{figure}
@@ -1110,7 +1145,7 @@ independent from all others, etc.
 % represents the model of hair and eye color being jointly independent from
 % gender, i.e., their association being homogeneous over the gender
 % strata. It is the model that fits best, although still rejected at the
-% 95\% level 
+% 5\% level 
 % ($p=\Sexpr{round(summary(loglm(~ Hair * Eye + Sex, data = HairEyeColor))$tests[2,3],4)}$): %$
 % possibly, because too many brown-haired male
 % students have blue eyes, and too few of them have brown eyes, than expected under
@@ -1141,10 +1176,10 @@ residual-based shading added to the mosaic plot.
 \begin{center}
 <<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
-shade = TRUE, keep = FALSE, residuals = uc_max$residuals,
-gp_args = list(p.value = uc_max$p.value)) 
+shade = TRUE, keep = FALSE, residuals = ucb_max$residuals,
+gp_args = list(p.value = ucb_max$p.value)) 
 @
-\caption{Mosaic plot for the \data{UCBAdmissions} data.}
+\caption{Mosaic plot for the \data{UCB admissions} data.}
 \label{fig:ucbmosaic}
 \end{center}
 \end{figure}
@@ -1154,10 +1189,10 @@ gp_args = list(p.value = uc_max$p.value))
 \begin{center}
 <<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
-residuals_type = "Pearson", residuals = uc_max$residuals,
-gp_args = list(p.value = uc_max$p.value))
+residuals_type = "Pearson", residuals = ucb_max$residuals,
+gp_args = list(p.value = ucb_max$p.value))
 @
-\caption{Association plot for the \data{UCBAdmissions} data.}
+\caption{Association plot for the \data{UCB admissions} data.}
 \label{fig:ucbassoc}
 \end{center}
 \end{figure}
@@ -1229,8 +1264,8 @@ an association plot corresponding to the partial (fourfold) table of admission
 and gender. Accordingly, the shading visualizes the
 residuals from the corresponding conditional independence model (independence of gender
 and admission, given department), stratified by department. Clearly,
-the situation in department A (more women/less men accepted than
-would be expected under the null) causes the rejection of the
+the situation in department A (more women/less men admitted than
+expected under the null hypothesis) causes the rejection of the
 hypothesis of conditional independence. 
 % The overall deviation pattern
 % thus indicates that in contrast to the impression given by the aggregated table, male
@@ -1244,7 +1279,7 @@ hypothesis of conditional independence.
 cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE, 
           legend = FALSE, margins = c(3,1,1,3), panel_args = list(type = "assoc"))
 @
-\caption{Conditional mosaic plot for the \data{UCBAdmissions} data.}
+\caption{Conditional mosaic plot for the \data{UCB admissions} data.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
@@ -1256,11 +1291,11 @@ from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
 punishment of children (see Tab.~\ref{tab:punish}).      
 The data consists of four variables: Attitude is a binary variable
-indicating whether a person has no or moderate attitude towards punishment of children.
+indicating whether a person approves no or moderate punishment of children.
 Memory indicates whether the person has got memories of 
 corporal punishment as a child. Education indicates the
 highest level of education (elementary, secondary, high). Finally, 
-Age indicates the age group in years (15--24, 25--39, $40+$).
+age indicates the age group in years (15--24, 25--39, $40+$).
 
 \begin{table}[ht]
 \begin{center}
@@ -1276,10 +1311,30 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
       & Moderate && 1 & 19 & 4 &26&8&17 \\
 \hline
 \end{tabular}
-\caption{The \data{Punishment} data, in flat representation.}
+\caption{The \data{punishment} data.}
 \label{tab:punish}
 \end{center}
 \end{table}
+
+%FIXME% Better structure:
+%FIXME%   o dependent variable: attitude
+%FIXME%   o dependence on age and education is rather clear
+%FIXME%     (approval of moderate punishment increases with age and
+%FIXME%     decreases with education)
+%FIXME%   o question is conditional independence of attitude and
+%FIXME%     memory given the other margins
+%FIXME%   o hence for exploratory analysis: split in conditioning
+%FIXME%     variables (age, education) first, then explanatory variable (memory),
+%FIXME%     then dependent variable (attitude) for which highlighting is used.
+%FIXME%   o for model-based view: suppress marginal distribution of
+%FIXME%     conditioning variables (and their interaction), split first
+%FIXME%     in explanatory variable in each cell, use shading based on
+%FIXME%     residuals in conditional independence model.
+%FIXME%   o advantage of exploratory view: joint distribution of all variables
+%FIXME%     can be seen. disadvantage: visualization strongly influence
+%FIXME%     by the marginal distribution of education over age (in particular
+%FIXME%     the large proportion of 40+ people with elementary education)
+%FIXME%     which is not of interest in the conditional independence problem.
 
 To get an overview, we first plot a mosicplot of memory, age, and
 education, and highlight attitude (see Fig.~\ref{fig:punishhigh}).
@@ -1305,7 +1360,7 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
        rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
        set_labels = list(age = c("15-24","25-39","40+")))
 @
-\caption{Mosaic plot with highlighting for the \data{Punishment} data.}
+\caption{Mosaic plot with highlighting for the \data{punishment} data.}
 \label{fig:punishhigh}
 \end{center}
 \end{figure}
@@ -1332,7 +1387,7 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
        rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
        set_labels = list(age = c("15-24","25-39","40+")))
 @
-\caption{Mosaic plot for the \data{Punishment} data.}
+\caption{Mosaic plot for the \data{punishment} data.}
 \label{fig:punishmosaic}
 \end{center}
 \end{figure}
@@ -1344,7 +1399,7 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
 <<punishcotab,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
 cotabplot(tab, panel = cotab_coindep, panel_args = list(margin = c(2.5, 0, 0.5, 0)))
 @
-\caption{Conditional mosaic plot for the \data{Punishment} data.}
+\caption{Conditional mosaic plot for the \data{punishment} data.}
 \label{fig:punishcotab}
 \end{center}
 \end{figure}
