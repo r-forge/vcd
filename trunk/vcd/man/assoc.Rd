@@ -12,9 +12,9 @@
 \method{assoc}{default}(x, row_vars = NULL, col_vars = NULL, compress = TRUE,
   xlim = NULL, ylim = NULL,
   spacing = spacing_conditional(sp = 0), spacing_args = list(),
-  split_vertical = NULL, keep_aspect_ratio = FALSE, residuals_type = "Pearson",
+  split_vertical = NULL, keep_aspect_ratio = FALSE, 
   xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, sub = NULL,
-  \dots, gp_axis = gpar(lty = 3))
+  \dots, residuals_type = "Pearson", gp_axis = gpar(lty = 3))
 \method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots,
   main = NULL, sub = NULL)
 }

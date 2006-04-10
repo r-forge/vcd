@@ -47,15 +47,15 @@ dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"),
 art <- xtabs(~Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
 set.seed(myseed)
-art_max <- coindep_test(art, n = 5000)
+#art_max <- coindep_test(art, n = 5000)
+uc_max <- coindep_test(aperm(UCBAdmissions, c(3,2,1)), margin = "Dept", n = 5000)
+
 set.seed(myseed)
 art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
 
 set.seed(myseed)
 hos_chisq <- coindep_test(hospital, n = 5000, indepfun = function(x) sum(x^2))
 
-set.seed(myseed)
-hec_max <- coindep_test(HairEyeColor, "Sex", n = 5000)
 
 @
 
@@ -68,7 +68,7 @@ hec_max <- coindep_test(HairEyeColor, "Sex", n = 5000)
 
 \begin{document}
 
-\title*{Visualizing Multi-way Contingency Tables}
+\title*{Visualizing Contingency Tables}
 % Use \titlerunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
 \author{David Meyer\inst{1}\and
@@ -76,7 +76,7 @@ Achim Zeileis\inst{2}\and
 Kurt Hornik\inst{2}}
 % Use \authorrunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
-\institute{Department of Information Systems and Process Management
+\institute{Department of Information Systems and Operations
 \and Department of Statistics and Mathematics\\Wirtschaftsuniversität
 Wien\\Augasse 2--6, 1090 Vienna, Austria
 \texttt{\{David.Meyer,Achim.Zeileis,Kurt.Hornik\}@wu-wien.ac.at}}
@@ -104,7 +104,7 @@ All three graphical methods visualize aspects of (possibly higher-dimensional)
 contingency tables. A \emph{mosaic plot} \cite{vcd:Hartigan+Kleiner:1984} is basically 
 an area-proportional visualization of (typically, observed) frequencies, composed
 of tiles (corresponding to the cells) created by recursive
-vertical and horizontal splits of a square. Thus, the area of each tile
+vertical and horizontal splits of a rectangle. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
 dimensions of previous splits. 
 \emph{Sieve plots} \cite{vcd:riedwyl+schuepbach:1994} 
@@ -125,7 +125,7 @@ the following aspects:
 
 \begin{itemize}
   \item Varying the shape of mosaic plots (as well as bar plots) to yield, e.g.,
-  double-decker plots \cite{vcd:hofmann:2001}, spine 
+  double-decker plots \cite{vcd:Hofmann:2001}, spine 
   plots \cite{vcd:riedwyl+schuepbach:1994}, or spinograms.
 \item Using residual-based shadings to visualize log-linear models
   \cite{vcd:Friendly:1994,vcd:Friendly:2000} and significance of
@@ -215,9 +215,11 @@ $\Sigma$ & 58 & 45 & 29 & 132 \\
 
 \noindent The table relates the length of stay (in years) of 132
 long-term schizophrenic patients in two London mental hospitals with
-the freqency of visits. The length of stay (LOS) has been categorized into
+the frequency of visits (from relatives or friends). 
+The length of stay (LOS) has been categorized into
 2--9 years, 10--19 years, and more than 19 years. There are also three
 categories for the visit frequency: regular (including
+%FIXME: lookup regular in Wing-paper.
 patients that were allowed to go home), less than monthly, and never.
 Wing \cite{vcd:wing:1962} concludes from this data 
 that the longer the length of stay in hospital, the less frequent the
@@ -229,7 +231,7 @@ visits, which can be seen from the column-standardized table
 \begin{tabular}{|l|rrr|}
 \hline
  & \multicolumn{3}{l|}{\textbf{Length of stay (in years)}}\\
-\textbf{Visit frequency} &~~2--9 & ~~10--19 & ~~20+ \\
+\textbf{Visit frequency} &~~2--9 & ~~~~~~10--19 & ~~20+ \\
 \hline
 Regular & 0.74 & 0.36 & 0.10  \\
 Less than monthly & 0.10 & 0.24 & 0.35  \\
@@ -295,7 +297,7 @@ mydat = data.frame("Length of stay" = as.vector(row(myhospital)),
                    "Number of patients" = as.vector(myhospital))
 scatterplot3d(mydat, type = "h", pch = " ", lwd = 10, 
 x.ticklabs = c("2-9","","10-19","","20+"), 
-              y.ticklabs = c("Regular","","Less than monthly","","Never"), 
+              y.ticklabs = c("Never","","Less than monthly","","Regular"), 
               xlab = "Length of stay (years)", ylab = "Visit frequency", zlab = "Number of patients",
               y.margin.add = 0.2,
               color = "black", box = F)
@@ -312,8 +314,8 @@ Mosaic displays have been introduced by
 \cite{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984} and
 extended, e.g., by \cite{vcd:Friendly:1994,vcd:Friendly:1999,vcd:Friendly:2000}. 
 They visualize the observed values of a contingency table by
-area-proportional tiles, arranged in a squared mosaic. The tiles are
-obtained by recursive partitioning splits of a square.
+area-proportional tiles, arranged in a rectangular mosaic. The tiles are
+obtained by recursive partitioning splits of a rectangle.
 In the following, we describe the main idea of mosaic plots, 
 chapter XXX in this book \emph{\bf (Reference to other contributions)} 
 provides more detailed information. Consider our
@@ -512,8 +514,10 @@ relationships between the variables are assumed, the determining variables
 should be used first for splitting since they will dominate the
 plot. Sieve plots basically visualize the table of \emph{expected} frequencies, and
 in addition the deviations from the observed frequencies by the density of a
-grid added to each tile. They are best used to detect dependency
-patterns, especially for ordinal variables. Association plots directly
+grid added to each tile. They complement mosaic plots in detecting dependency
+patterns for ordinal variables. However, for nominal variables, mosaic plots are
+a better choice, especially when residual-based 
+shadings are used (see next section), Association plots directly
 visualize Pearson and raw residuals, i.e., standardized and
 non-standardized deviations of observed from expected frequencies,
 respectively. These plots should be used if the diagnostics of
@@ -529,7 +533,7 @@ will demonstrate how the use of colors can greatly facilitate the
 detection of interesting patterns. Before, we start with some general 
 remarks on colors and color palettes.
 
-\subsection{A Note on Colors and Color Palettes}
+\subsection[A Note on Colors and Color Palettes]{A Note on Colors and Color Palettes\footnote{The electronic version of this article uses colors.}}
 \label{sec:colors} 
 
 The plots introduced in the previous section are basically composed of
@@ -543,7 +547,7 @@ might serously affect the analysis. For example,
 
 \begin{itemize}
 \item Using high-chroma colors for large
-  areas tend to produce after-image effects which can be
+  areas tends to produce after-image effects which can be
   distracting \cite{vcd:Ihaka:2003}.
 \item Lighter colors tend to make areas look larger than darker
   colors, therefore using colors with unequal luminance values  makes it
@@ -569,7 +573,7 @@ appear identical on different devices, their gamma characteristics
 have to be taken into account.
 
 Now, software implementations are often based on the more convenient
-Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Saturation 
+Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Satu\-ration 
 color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
 colors in many computer packages \cite{vcd:Moretti+Lyons:2002}. Each color in this space is
@@ -612,7 +616,9 @@ pie(rep(1,9), radius = 1, col = rainbow_hcl(9), labels = 360 * 0:8/9)
 @ 
 \caption{Qualitative color palette for the HSV (left) 
          and HCL (right) spaces. The HSV colors are $(H, 100, 100)$ and
-	 the HCL colors $(H, 50, 70)$ for the same hues $H$.}
+	 the HCL colors $(H, 50, 70)$ for the same hues $H$. Note that
+         in a monochrome version of this paper, all pies in the right
+         wheel will be shaded with the same gray, i.e. appear identical.}
 \label{fig:colors}
 \end{center}
 \end{figure}
@@ -634,7 +640,9 @@ text(c(1:5/5 - 0.1), 0.91, c("(240, 100, 100)", "(240, 50, 100)", "(H, 0, 100)",
   the HCL space (lower part), ranging from blue over a neutral color to
   red. The triples indicate the settings for 
   the three dimensions: (Hue, Saturation, Value)
-  in the upper part, and (Hue, Chroma, Luminance) in the lower part.}
+  in the upper part, and (Hue, Chroma, Luminance) in the lower part.
+  In a monochrome version of the paper, the right and left hand
+  sides of the HCL colors palette appear identical. }
 \label{fig:diverging}
 \end{center}
 \end{figure}
@@ -714,27 +722,29 @@ idea of the residuals' %'
 size, but since the plot does not include the density corresponding to zero
 residuals (the null model) for comparison, we 
 cannot easily assess whether there are more, of less counts in a cell 
-than expected under the null hypothesis. It would help if we knew the 
-sign of the residuals. 
-Using color, we can add this information, for example using blue for
-positive, red for negative, and gray for zero residuals. Figure~\ref{fig:colorsieve} 
-demonstrates the effect of applying such a color shading to a sieve plot for the 
-\data{hospital} data. Color clearly emphasizes the linear association
-pattern in this data: Patients with a LOS from 2--9 years are
-associated with regular visits, whereas patients with a LOS from
-10--19 and more than 19 years are associated with a visit frequency
-of less than monthly and no visits.
+than expected under the null hypothesis. 
+%It would help if we knew the sign of the residuals. 
+Using color, we can add the sign information, for example using blue for
+positive, red for negative, and gray for zero residuals. 
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<sievecolor,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-sieve(t(hospital), split = TRUE, shade = TRUE)
-@ 
-\caption{Sieve plot with color coding of the residuals.}
-\label{fig:colorsieve}
-\end{center}
-\end{figure}
+% Figure~\ref{fig:colorsieve} 
+% demonstrates the effect of applying such a color shading to a sieve plot for the 
+% \data{hospital} data. Color clearly emphasizes the linear association
+% pattern in this data: Patients with a LOS from 2--9 years are
+% associated with regular visits, whereas patients with a LOS from
+% 10--19 and more than 19 years are associated with a visit frequency
+% of less than monthly and no visits.
+
+% \setkeys{Gin}{width=0.7\textwidth}
+% \begin{figure}
+% \begin{center}
+% <<sievecolor,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+% sieve(t(hospital), split = TRUE, shade = TRUE)
+% @ 
+% \caption{Sieve plot with color coding of the residuals.}
+% \label{fig:colorsieve}
+% \end{center}
+% \end{figure}
 
 Mosaic plots in their initial version are monochrome
 displays. Friendly \cite{vcd:Friendly:1994} introduced a
@@ -759,7 +769,6 @@ with similar ideas as described above, useful when no color can be used.
 In Fig.~\ref{fig:Friendly}, we again show the mosaic for the \data{hospital}
 data, this time using a Friendly-like color shading (with HCL
 instead of HSV colors, and no line type coding).
-
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
@@ -775,8 +784,7 @@ mosaic(t(hospital), split = TRUE, shade = TRUE,
 \label{fig:Friendly}
 \end{center}
 \end{figure}
-
-\noindent Clearly, the asymmetry for regular and never visited students,
+Clearly, the asymmetry for regular and never visited students,
 and the pattern inversion for lengths of stay of 2--9 and more than 19
 years are emphasized using the color shading.
 
@@ -819,12 +827,12 @@ X^2 \quad = \quad \sum_{i, j}r_{ij}^2~,
 \noindent known to have a limiting $\chi^2$ distribution with $(I-1)(J-1)$
 degrees of freedom under the null hypothesis.
 An important reason for using the unconditional limiting distribution
-for the $X^2$ statistic from Equ.~\ref{eq:ChiSquare} was the closed form result
+for the $X^2$ statistic from (\ref{eq:ChiSquare}) was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
 conditional inference (or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \cite{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
-For testing the independence hypothesis from Equation~\ref{eq:H0},
+For testing the independence hypothesis from (\ref{eq:H0}),
 using a permutation test is particularly intuitive due to the 
 permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
@@ -834,12 +842,12 @@ $\lambda([r_{ij}])$.
 Since the HCL space is three-dimensional and we only
 used two `degrees of freedom' so far for coding information %'
 (hue for the sign and a linear combination of chroma and luminance 
-for the size of the residuals), we can add a third information to the plot.
+for the size of the residuals), we can add a third piece of information to the plot.
 For example, we can visualize the significance of some specified test statistic
 (e.g., the $\chi^2$ test statistic) 
 using darker (`uninteresting') colors for non-significant
 results. These can again be derived using the interpolation procedure
-described in the Sect.~\ref{sec:colors} by
+described in Sect.~\ref{sec:colors} by
 restricting the luminance to a shorter range, ending with a ``darker'' value.
 
 % The following example using the \data{Bundesliga} data \cite{vcd:Knorr-Held:1999}
@@ -867,7 +875,7 @@ The heuristic for choosing the cut-off points
 in the Friendly shading may lead to wrong conclusions: especially in
 large tables, the test of
 independence may not be significant even though some of the residuals are
-``large''. On the the other hand, the test might be significant even
+``large''. On the other hand, the test might be significant even
 though the residuals are ``small''. In fact, the cut-off points are really
 data-dependent. Consider the case of the \data{arthritis} data 
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
@@ -963,16 +971,8 @@ the null hypothesis of independence is rejected.
 \section{Selected Methods for Multi-way Tables}
 \label{sec:multiway}
 
-In Sect.~\ref{sec:twoway}, we have presented basic visualization methods
-for two-way tables. In this section, we will show how these methods
-extend to multi-way tables by applying them to `flat' representations,
-and we will treat specialized displays for conditional independence models.
-
-\subsection{Visualizing Flat-Tables}
-\label{sec:flat}
-
-The main idea of the mosaic, sieve, and association plots presented
-in the previous sections is to visualize information on 
+In Sect.~\ref{sec:twoway}, we have presented basic displays
+for two-way tables, based on the visualization of information on 
 the tables' cells, arranged in rectangular form. For multi-way tables,
 mosaic plots can directly be used by simply adding further splits for each 
 additional variable. For sieve and association plots,
@@ -981,135 +981,186 @@ i.e., simply nest the variables into rows and columns using recursive
 conditional splits, given the margins. The result is a 
 `flat' representation of the multi-way table that can be visualized in %'
 ways similar to a two-dimensional table.
-As an example, consider the \data{HairEyeColor} 
-data containing two polytomous variables (hair and eye color), 
-as well as one (artificial) dichotomous variable (gender). 
-A `flattened' contingency table, putting eye color in the columns %'
-and hair color---nested in gender---in the rows, is given by Tab.~\ref{tab:hec}.
-The corresponding mosaic, sieve, and association plots are shown in
-Figs.~\ref{fig:hecmosaic}--\ref{fig:hecassoc}. 
-The shadings in these plots visualize
-the model of hair and eye color being \emph{conditional} independent,
-given gender. As we can see from the shading (many tiles are colored) 
-and the $p$ value for the test statistic, this model fits only poorly.
+
+In the following, we will first treat specialized displays for
+explorative purposes, followed by model-based methods for
+conditional independence models.
+
+\subsection{Explorative Visualization Techniques}
+\label{sec:flat}
+
+As an example, consider the well-known UCB admissions data 
+\cite{vcd:Bickel+Hammel+O'Connell:1975}
+on applicants to graduate school at the University of California in Berkeley for
+the six largest departments in 1973 classified by admission and
+gender. The `flattened' contingency table, putting department into the
+columns and admit---nested in gender---into the rows, is given by
+Tab.~\ref{tab:ucb}. The table aggregated over all
+departments gives wrong evidence of gender bias, 
+i.e., higher admission rates for male students. 
 
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{|ll|rrrr|}
+\begin{tabular}{|ll|rrrrrr|}
 \hline
- & & \multicolumn{4}{c|}{\textbf{Eye}} \\
-\textbf{Gender} & \textbf{Hair} & Brown & Blue & Hazel & Green\\\hline
-Male & Black & 32 & 11 & 10 & 3 \\
-& Brown & 38 & 50 & 25 & 15 \\
-& Red & 10 & 10 & 7 & 7 \\
-& Blond & 3 & 30 & 5 & 8 \\
-Female & Black & 36 & 9 & 5 & 2 \\
-& Brown & 81 & 34 & 29 & 14 \\
-& Red & 16 & 7 & 7 & 7 \\
-& Blond & 4 & 64 & 5 & 8 \\
+ & & \multicolumn{6}{c|}{\textbf{Department}} \\
+\textbf{Gender} & \textbf{Admit} & A & B & C & D & E & F\\\hline
+Male   & Admitted & 512 & 353 & 120 & 138 & 53 & 22\\
+       & Rejected & 313 & 207 & 205 & 279 & 138 & 351\\
+Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
+       & Rejected & 19 & 8 & 391 & 244 & 299 & 317 \\
 \hline
 \end{tabular}
-\caption{The \data{HairEyeColor} data, in flat representation.}
-\label{tab:hec}
+\caption{The \data{UCB admissions} data, in flat representation.}
+\label{tab:ucb}
 \end{center}
 \end{table}
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<hecmosaic,fig=TRUE,echo=FALSE,height=12,width=7,results=hide>>=
-mosaic(~ Hair + Eye | Sex, data = HairEyeColor,
-       gp_args = list(p.value = hec_max$p.value, interpolate = hec_max$qdist(c(0.9,0.99))),
-       labeling_args = list(tl_labels = c(Hair = TRUE), set_varnames = c(Sex = "Gender")), 
-       legend_args = list(y = 0.3, height = 0.4),
-       mar = c(left = 4), shade = TRUE, keep = FALSE)
-@
-\caption{Mosaic plot for the \data{HairEyeColor} data.}
-\label{fig:hecmosaic}
-\end{center}
-\end{figure}
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<hecsieve,fig=TRUE,echo=FALSE,height=12,width=7,results=hide>>=
-hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
-sieve(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4),
-set_varnames = c(Sex = "Gender")), spacing = spacing_conditional, condvars = 1,
-      legend_args = list(y = 0.3, height = 0.4),
-      mar = c(left = 4), shade = TRUE, expected = ~ Hair * Sex + Eye * Sex, keep = FALSE)
-@
-\caption{Sieve plot for the \data{HairEyeColor} data.}
-\label{fig:hecsieve}
-\end{center}
-\end{figure}
-
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<hecassoc,fig=TRUE,echo=FALSE,height=12,width=7,results=hide>>=
-hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
-assoc(hec, labeling_args = list(tl_labels = c(Hair = TRUE), abbreviate = c(Hair = 4),
-             set_varnames = c(Sex = "Gender")), 
-      gp_args = list(p.value = hec_max$p.value, interpolate = hec_max$qdist(c(0.9,0.99))),
-      legend_args = list(y = 0.3, height = 0.4),
-      spacing = spacing_conditional(sp = 0, start = 4),
-      mar = c(left = 4), shade = TRUE, expected = ~ Hair * Sex + Eye * Sex, keep = FALSE)
-@
-\caption{Association plot for the \data{HairEyeColor} data.}
-\label{fig:hecassoc}
-\end{center}
-\end{figure}
-
-\subsection{Displays for Conditional Independence}
-\label{sec:condind}
-
-In addition to the generic approach to the visualization of multi-way tables outlined in 
-the previous section, there are specialized displays 
-designed for the visualization of conditional independence structures. 
-
-A first step in the analysis of more complex tables is to find a
-suitable model that fits the data. All basic plots can be combined in pairwise displays,
+A first step in the explorative analysis of more complex tables is to
+get a quick overview on the data. For that, 
+all basic plots can be combined in pairwise displays,
 arranged in in a matrix similar to scatterplots in a pairs plot.
 The diagonal cells contain the variable names, optionally with
 univariate statistics, whereas the off-diagonal cells contain plots whose
 variables are implicitly specified by the cells' position in the matrix. %'
-More formally, each cell $a_{ij}$ in such a matrix defines two
-variables $i$ and $j$ that can be used to specify the model visualized
-in that cell. Typical hypotheses are: Variables $i$ and $j$ are
-marginally independent; variables $i$ and $j$ are conditionally
-independent, given all others; variables $i$ and $j$ are jointly
-independent from all others, etc.
-Figure~\ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
-independence in the upper triangle, 
-mosaics for \emph{joint} independence 
-in the lower triangle, and bar charts in the diagonal.
-In the upper part of the matrix, we can immediately 
-detect the independence of hair and gender, and eye and gender from the
-non-colored cells in the corresponding mosaic plots. On the other hand, hair and eye color 
-clearly are associated. In the lower part of the matrix, the mosaic
-at the intersection of hair and eye is the less colored one. Its shading
-represents the model of hair and eye color being jointly independent from
-gender, i.e., their association being homogeneous over the gender
-strata. It is the model that fits best, although still rejected at the
-95\% level 
-($p=\Sexpr{round(summary(loglm(~ Hair * Eye + Sex, data = HairEyeColor))$tests[2,3],4)}$): %$
-possibly, because too many brown-haired male
-students have blue eyes, and too few of them have brown eyes, than expected under
-the null model?
+In Fig.~\ref{fig:pairs}, the diagonal cells show bar plots for the
+distribution of the variables, and the off-diagonal cells mosaic plots
+for the corresponding pair of variables. The plots suggest that
+admission differs between male and female students, and also varies given department.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
 <<pairs,fig=TRUE,echo=FALSE,height=8,width=8,results=hide>>=
-pairs(hec, lower_panel = pairs_mosaic(type = "joint"), space = 0.3, shade = TRUE,
-      diag_panel_args = list(rot = -45, just_leveltext = c("left","bottom")))
+pairs(UCBAdmissions)
 @
 \caption{Pairs plot for the \data{HairEyeColor} data.}
 \label{fig:pairs}
 \end{center}
 \end{figure}
 
+The next step is to investigate three-way interactions among the variables.
+In this example, we have a binary variable of interest (admission)
+that shall be ``explained'' by the others. 
+A possible way of representing such a three-way table is 
+to draw a mosaic plot of gender and
+department and to highlight admission in the tiles (see Fig.~\ref{fig:ucbhighlight}).
+From the widths of the tiles it can be seen that an
+unequal number of students apply for the six
+departments, and from the highlighting we see that the admission rates differ as
+well among the departments. The rates 
+are equal for male and female students, except for department A where
+\textit{more} female than male students are admitted. This result
+is even better depicted by a doubledecker plot of admission, explained
+by gender given department (see Fig.~\ref{fig:doubleucb}): here, the
+difference of admission rates in department A is more marked.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<ucbhighlight,fig=TRUE,echo=FALSE,height=6,width=9,results=hide>>=
+mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
+   spacing = spacing_highlighting, split = TRUE, keep = FALSE, rep = FALSE)
+@
+\caption{Mosaic plot with highlighting for the \data{UCBAdmissions} data.}
+\label{fig:ucbhighlight}
+\end{center}
+\end{figure}
+
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<doubleucb,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+doubledecker(aperm(UCBAdmissions), col = grey.colors(2))
+@
+\caption{Dobledecker plot for the \data{UCBAdmissions} data.}
+\label{fig:doubleucb}
+\end{center}
+\end{figure}
+
+\subsection{Model-based Displays for Conditional Independence Models}
+\label{sec:condind}
+
+In addition to the explorative approaches 
+to the visualization of multi-way tables outlined in 
+the previous section, there are specialized displays 
+designed for the visualization of conditional independence structures. 
+
+A first approach is to use pairs plots for model search:
+we can use the position of the cells in the pairs matrix to select an
+independence model and add a corresponding shading to the tiles to
+visualize the residuals.
+More precisely, each cell $a_{ij}$ in such a matrix defines two
+variables $i$ and $j$ that can be used to specify the model visualized
+in that cell. Typical hypotheses are: Variables $i$ and $j$ are
+marginally independent; variables $i$ and $j$ are conditionally
+independent, given all others; variables $i$ and $j$ are jointly
+independent from all others, etc.
+% Figure~\ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
+% independence in the upper triangle, 
+% mosaics for \emph{joint} independence 
+% in the lower triangle, and bar charts on the diagonal.
+% In the upper part of the matrix, we can immediately 
+% detect the independence of hair and gender, and eye and gender from the
+% non-colored cells in the corresponding mosaic plots. On the other hand, hair and eye color 
+% clearly are associated. In the lower part of the matrix, the mosaic
+% at the intersection of hair and eye is the less colored one. Its shading
+% represents the model of hair and eye color being jointly independent from
+% gender, i.e., their association being homogeneous over the gender
+% strata. It is the model that fits best, although still rejected at the
+% 95\% level 
+% ($p=\Sexpr{round(summary(loglm(~ Hair * Eye + Sex, data = HairEyeColor))$tests[2,3],4)}$): %$
+% possibly, because too many brown-haired male
+% students have blue eyes, and too few of them have brown eyes, than expected under
+% the null model?
+
+In our example, from the explorative analysis, we already suspect that
+admission and gender are independent, given department, except for
+department A. 
+Therefore, a sensible way of representing the table is to 
+nest admission into department instead of gender to get a stratified view.
+The corresponding mosaic and association plots are shown
+in Figs.~\ref{fig:ucbmosaic}--\ref{fig:ucbassoc}. The shading visualizes the 
+model of admission and gender being conditionally independent, given department. Clearly,
+there is no gender bias in the departments except for department A: here, 
+significantly \textit{more} female students are admitted then expected under independence.
+Mosaic displays are recognized as an excellent
+visualization tool for log-linear models 
+\cite{vcd:Friendly:1999,vcd:Theus+Lauer:1999,vcd:Hofmann:2001}.
+Using the flat table representation, the association plot similarly extends from
+the simple two-way case to a structured residual plot usable for 
+the diagnostics of log-linear models. Especially if a
+mosaic display contains very small or empty cells, the corresponding association plot
+might provide an easier way to detect deviation patterns than the
+residual-based shading added to the mosaic plot.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
+shade = TRUE, keep = FALSE, residuals = uc_max$residuals,
+gp_args = list(p.value = uc_max$p.value)) 
+@
+\caption{Mosaic plot for the \data{UCBAdmissions} data.}
+\label{fig:ucbmosaic}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
+residuals_type = "Pearson", residuals = uc_max$residuals,
+gp_args = list(p.value = uc_max$p.value))
+@
+\caption{Association plot for the \data{UCBAdmissions} data.}
+\label{fig:ucbassoc}
+\end{center}
+\end{figure}
 
 % As an example, consider the \data{PreSex} data
 % \cite{vcd:thornes+collard:1979,vcd:gilbert:1981} on
@@ -1154,13 +1205,16 @@ pairs(hec, lower_panel = pairs_mosaic(type = "joint"), space = 0.3, shade = TRUE
 % \end{center}
 % \end{figure}
 
-Since mosaic displays are conditional plots by construction, we can use them
-for stratified data by using the conditioning variables as first splitting variables. 
-The mosaic in Fig.~\ref{fig:hecmosaic} shows the distribution of hair
-and eye color for both male and female students. A larger spacing for
-the gender variable has been used to simplify the distinction between the two
-groups. However, using a single plot, the strata are not corrected for the
-marginal distribution of the conditioning variable(s). Especially for
+% Since mosaic displays are conditional plots by construction, we can use them
+% for stratified data by using the conditioning variables as first splitting variables. 
+% The mosaic in Fig.~\ref{fig:ucbmosaic} shows the distribution of admission
+% and gender for all departments. A larger spacing for
+% the department variable has been used to simplify the distinction between the 
+% groups. 
+As we have seen, we can use all plots for the analysis of stratified
+data by using the conditioning variables first for splitting.
+However, using a single plot, the strata are not corrected for the
+marginal distribution of the stratifying variables. Especially for
 very unevenly distributed marginals, the strata can become very
 distorted, and the tiles, along with their shading, inscrutable.
 An alternative is to use trellis-like layouts for visualizing \emph{partial}
@@ -1168,62 +1222,141 @@ tables for given strata, defined by the conditioning variables.
 All subtables are corrected for the marginals and thus, all
 corresponding mosaics in the panels have the same size. 
 In addition, trellis layouts help reducing the complexity of bigger tables. 
-As an example, consider the well-known UCB admissions data 
-\cite{vcd:Bickel+Hammel+O'Connell:1975}
-on applicants to graduate school at the University of California in Berkeley for
-the six largest departments in 1973 classified by admission and
-gender (see Tab.~\ref{tab:ucb}). The table aggregated over all
-departments gives wrong evidence of gender bias, 
-i.e., higher admission rates for male students. Figure~\ref{fig:ucbadmissions} 
+Figure~\ref{fig:ucbadmissions} 
 visualizes the data by means of a conditional 
-mosaic plot. Each panel corresponds to a department, and contains
-a mosaic corresponding to the partial (fourfold) table of admission
+association plot. Each panel corresponds to a department, and contains
+an association plot corresponding to the partial (fourfold) table of admission
 and gender. Accordingly, the shading visualizes the
 residuals from the corresponding conditional independence model (independence of gender
 and admission, given department), stratified by department. Clearly,
 the situation in department A (more women/less men accepted than
 would be expected under the null) causes the rejection of the
-hypothesis of conditional independence. The overall deviation pattern
-thus indicates that in contrast to the impression given by the aggregated table, male
-students were not advantaged, and that in department A,
-\emph{female} students were even more successful than their male colleagues.
-
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{|ll|rrrrrr|}
-\hline
- & & \multicolumn{6}{c|}{\textbf{Department}} \\
-\textbf{Gender} & \textbf{Admit} & A & B & C & D & E & F\\\hline
-Male   & Admitted & 512 & 353 & 120 & 138 & 53 & 22\\
-       & Rejected & 313 & 207 & 205 & 279 & 138 & 351\\
-Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
-       & Rejected & 19 & 8 & 391 & 244 & 299 & 317 \\
-\hline
-\end{tabular}
-\caption{The \data{UCB admissions} data, in flat representation.}
-\label{tab:ucb}
-\end{center}
-\end{table}
+hypothesis of conditional independence. 
+% The overall deviation pattern
+% thus indicates that in contrast to the impression given by the aggregated table, male
+% students were not advantaged, and that in department A,
+% \emph{female} students were even more successful than their male colleagues.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
 <<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
-cotabplot(UCBAdmissions, panel = cotab_mosaic, shade = TRUE, legend = FALSE, 
-          margins = c(3,1,1,3))
+cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE, 
+          legend = FALSE, margins = c(3,1,1,3), panel_args = list(type = "assoc"))
 @
-\caption{Conditional mosaic plot for the UCB admissions data.}
+\caption{Conditional mosaic plot for the \data{UCBAdmissions} data.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
+
+\subsection{A four-way example}
+
+As a four-way example, we use the punishment data \cite{vcd:andersen:1991} 
+from a study of the Gallup Institute in Denmark in 1979 about
+the attitude of a random sample of 783 persons towards corporal
+punishment of children (see Tab.~\ref{tab:punish}).      
+The data consists of four variables: Attitude is a binary variable
+indicating whether a person has no or moderate attitude towards punishment of children.
+Memory indicates whether the person has got memories of 
+corporal punishment as a child. Education indicates the
+highest level of education (elementary, secondary, high). Finally, 
+Age indicates the age group in years (15--24, 25--39, $40+$).
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|ll|rrrrrrr|}
+\hline
+ & & \textbf{Age} & \multicolumn{2}{c}{15--24} & \multicolumn{2}{c}{25--39} & \multicolumn{2}{c|}{40+}  \\
+\textbf{Education} & \textbf{Attitude} & \textbf{Memory} & Yes & No & Yes & No & Yes & No\\\hline
+ Elementary & No && 1 & 26 &  3 & 46&20&109 \\
+     & Moderate  && 21 &93 & 41 &119&143&324 \\
+Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
+     & Moderate  && 5 & 45 & 20 &84&20&56 \\
+     High   & No && 2 & 26 & 6 & 24&1&13 \\
+      & Moderate && 1 & 19 & 4 &26&8&17 \\
+\hline
+\end{tabular}
+\caption{The \data{Punishment} data, in flat representation.}
+\label{tab:punish}
+\end{center}
+\end{table}
+
+To get an overview, we first plot a mosicplot of memory, age, and
+education, and highlight attitude (see Fig.~\ref{fig:punishhigh}).
+We can see that half of the people have more than 40 years of
+age. Most people in this group have only completed elementay
+school. For people over 25, a majority has completed secondary
+school. Among the younger people, fewer have memories of having been
+punished as a child than among the older ones. But sad enough, 
+for people with elementary or secondary school education,
+a higher proportion \emph{with} memories tends to
+have a moderate attitude to punishment than those without.
+However, for people under 40, the proportion with
+no attitude to punishment increases with the educational level.
+
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<punishhigh,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+       gp = gpar(fill = grey.colors(2)), spacing = spacing_highlighting, 
+       rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
+       set_labels = list(age = c("15-24","25-39","40+")))
+@
+\caption{Mosaic plot with highlighting for the \data{Punishment} data.}
+\label{fig:punishhigh}
+\end{center}
+\end{figure}
+
+So both age and education seem to matter here. Is there any influence
+of memory on attitude to punishment apart from that? To answer this
+question, we test the hypothesis of memory and attitude being
+conditionally independent, given age and education, and visualize the
+model using an extended mosaic plot (see Fig.~\ref{fig:punishmosaic}). 
+We can see that the model fits rather good, except for people over 25
+with elementary school education: under the null, more people should
+say ``no'' to physical punishment of children. This pattern can again also
+be visualized using a trellis layout, this time using partial mosaic
+plots (see Fig.~\ref{fig:punishmosaic}).
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}
+\begin{center}
+<<punishmosaic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+tab_test <- coindep_test(tab, margin = c(3, 4))
+mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+       expected = ~ (memory + attitude) * education * age,
+       gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))), 
+       rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
+       set_labels = list(age = c("15-24","25-39","40+")))
+@
+\caption{Mosaic plot for the \data{Punishment} data.}
+\label{fig:punishmosaic}
+\end{center}
+\end{figure}
+
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}
+\begin{center}
+<<punishcotab,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
+cotabplot(tab, panel = cotab_coindep, panel_args = list(margin = c(2.5, 0, 0.5, 0)))
+@
+\caption{Conditional mosaic plot for the \data{Punishment} data.}
+\label{fig:punishcotab}
+\end{center}
+\end{figure}
+
 
 \subsection{Summary}
 
 Mosaic, association, and sieve plots can be used for multi-way tables
 by applying them to flat representations. In addition, these basic
 plots are leveraged by specialized frameworks 
-for exploratory model search (pairs plots) and stratified
-analysis (conditional plots).
+for exploratory model search (pairs plots, highlighting, doubledecker plots) 
+and stratified analysis (conditional plots).
 
 \section{Conclusion}
 \label{sec:concl}
