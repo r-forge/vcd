@@ -22,11 +22,11 @@ assoc.default <- function(x,
                           spacing_args = list(),
                           split_vertical = NULL,
                           keep_aspect_ratio = FALSE,
-			  residuals_type = "Pearson",
                           xscale = 0.9, yspace = unit(0.5, "lines"),
                           main = NULL,
                           sub = NULL,
                           ...,
+			  residuals_type = "Pearson",
                           gp_axis = gpar(lty = 3)
                           ) {
 
