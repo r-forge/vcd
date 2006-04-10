@@ -154,25 +154,25 @@ The figures in this chapter have all been produced using the
 \cite{vcd:Meyer+Zeileis+Hornik:2005} and
 \pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
 (Fig.~\ref{fig:threedee} only), all freely available from the
-Comprehensive \proglang{R} Archive Network (\url{http://CRAN.R-project.org/}).
+Comprehensive \proglang{R} Archive Network
+(\url{http://CRAN.R-project.org/}). The \proglang{R} code used for the
+figures is available from \url{http://statmath.wu-wien.ac.at/projects/vcd/}.
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{|l|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|c|}
     \hline
-                             & \proglang{SAS} & \proglang{S-PLUS} & \proglang{R} & \pkg{ViSta} & \pkg{MANET}/\pkg{Mondrian}\\\hline
-    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$\\
-    Shape                    &     &        & $\times$ &       & $\times$\\
-    Residual-based shadings  &  $\times$  &        & $\times$ &   $\times$   & ($\times$)\\
-    Conditional Views        &  $\times$  &        & $\times$ &       & $\times$\\
-    Interaction              &     &        &   &   $\times$   & $\times$\\
-    Extensible Design        &     &        & $\times$ &       &  \\\hline
+ & \proglang{SAS} & \proglang{S-PLUS} & \proglang{R} & \pkg{ViSta} & \pkg{MANET} & \pkg{Mondrian}\\\hline
+    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$& $\times$\\
+    Shape                    &     &        & $\times$ &       & $\times$& $\times$\\
+    Residual-based shadings  &  $\times$  &        & $\times$ &   $\times$   & ($\times$)& ($\times$)\\
+    Conditional Views        &  $\times$  &        & $\times$ &       & $\times$& $\times$\\
+    Interaction              &     &        &   &   $\times$   & $\times$& $\times$\\
+    Extensible Design        &     &        & $\times$ &       &  &\\\hline
   \end{tabular}
   \caption{Comparison of current software environments.}
   \label{tab:compare}
 \end{table}
-%FIXME% For the JSS paper there was criticism about haven MANET and Mondrian in the
-%FIXME% same column, how did we decide ro resolve this? Different columns, I suppose...?!
 
 This chapter will give an overview of the state of the art 
 of mosaic, sieve, and association plots, both for exploratory visualization and
@@ -382,7 +382,6 @@ is similar for monthly and never visited patients, so this two categories actual
 represent one homogenous group (patients visited only casually). Since
 the first splitting variable dominates the plot, it should be chosen
 as to be the explanatory variable.
-%FIXME% causality is not needed, hence omitted: in (hypothesized) causal relationships.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -399,12 +398,9 @@ as first splitting variable.}
 \subsection{Sieve Plots}
 \label{sec:sieve}
 
-%FIXME% Maybe formulate the following theory a bit more like:
-%FIXME% "To fix notations, ...", "It is well-known that..."
-
 When we try to explain data, we assume the validity of a certain
 model for the generating process. In the case of two-way contingency
-tables, the two most common hypotheses \cite{vcd:Agresti:2002} are 
+tables, the two most common and well-known hypotheses \cite{vcd:Agresti:2002} are 
 
 \begin{enumerate}
 \item independence of the two variables
@@ -413,7 +409,7 @@ the second.
 \end{enumerate}
 
 \noindent It is easy to compute the \emph{expected} table under either
-of these hypotheses. Consider a 
+of these hypotheses. To fix notations, in the following we consider a 
 2-way contingency table with $I$ rows and $J$ columns,
 cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$, and row and column sums
@@ -520,7 +516,7 @@ Mosaic plots are an instrument to visualize the \emph{observed} frequencies
 of a contingency table by recursive conditional splits. If the variables can be
 separated into explanatory and dependent variable(s), the explanatory variable(s)
 should be be used first for splitting to display the conditional distribution of
-the dependent variable(s) given the explanatory variable(s). %FIXME% causality removed again
+the dependent variable(s) given the explanatory variable(s). 
 Sieve plots basically visualize the table of \emph{expected} frequencies, and
 in addition the deviations from the observed frequencies by the density of a
 grid added to each tile. They complement mosaic plots in detecting dependency
@@ -544,16 +540,12 @@ will demonstrate how the use of colors can greatly facilitate the
 detection of interesting patterns. Before, we start with some general 
 remarks on colors and color palettes.
 
-\subsection[A Note on Colors and Color Palettes]{A Note on Colors and Color Palettes\footnote{The electronic version of this article uses colors.}}
+\subsection[A Note on Colors and Color Palettes]{A Note on Colors and
+  Color Palettes\footnote{The printed version of the article is
+    monochrome, but the electronic version uses colors. The colored
+    versions of the plots are available from the code web page 
+    (\url{http://statmath.wu-wien.ac.at/projects/vcd/}).}}
 \label{sec:colors} 
-%FIXME% Maybe extend the footnote and say that the printed version is monochrome,
-%FIXME% and that the electronic version uses color.
-%FIXME% We can already say earlier that the R code for reproducing the figures
-%FIXME% is available from a Web page. And then we can say here that the colored versions
-%FIXME% can also be obtained from the Web page.
-%FIXME% Where do we want to set up the URL? I would suggest
-%FIXME%   http://statmath.wu-wien.ac.at/projects/vcd/
-
 
 The plots introduced in the previous section are basically composed of
 tiles whose areas represent characteristics derived from the
@@ -900,7 +892,6 @@ data-dependent. Consider the case of the \data{arthritis} data
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, stratified by
 gender (see Tab.~\ref{tab:arthritis} for the female patients):
-
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{|l|rrr|r|}
@@ -917,8 +908,7 @@ $\Sigma$ & 25 & 12 & 22 & 59 \\
 \label{tab:arthritis}
 \end{center}
 \end{table}
-
-\noindent Figure~\ref{fig:arthritis} visualizes the results for the female
+Figure~\ref{fig:arthritis} visualizes the results for the female
 patients, again by means of a mosaic display. Clearly, the hypothesis
 of independence is rejected by the $\chi^2$ test even on a $1\%$ level 
 ($p=\Sexpr{round(art_chisq$p.value,4)}$), but
@@ -1077,30 +1067,27 @@ pairs(UCBAdmissions)
 The next step is to investigate three-way interactions among the variables.
 In this example, we have a binary variable of interest (admission)
 that shall be ``explained'' by the others. 
-A possible way of representing such a three-way table is 
-to draw a mosaic plot of gender and
-department and to highlight admission in the tiles (see Fig.~\ref{fig:ucbhighlight}).
+A natural way of representing such a three-way table is 
+to draw a doubledecker plot nesting gender in
+department and highlighting admission in the tiles (see Fig.~\ref{fig:doubleucb}).
 From the widths of the tiles it can be seen that an
 unequal number of students apply for the six
 departments, and from the highlighting we see that the admission rates differ as
-well among the departments. The rates 
+well among the departments (roughly speaking, they decrease from A to F). The rates 
 are equal for male and female students, except for department A where
-\textit{more} female than male students are admitted. This result
-is even better depicted by a doubledecker plot of admission, explained
-by gender given department (see Fig.~\ref{fig:doubleucb}): here, the
-difference of admission rates in department A is more marked.
+\textit{more} female than male students are admitted. 
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<ucbhighlight,fig=TRUE,echo=FALSE,height=6,width=9,results=hide>>=
-mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
-   spacing = spacing_highlighting, split = TRUE, keep = FALSE, rep = FALSE)
-@
-\caption{Mosaic plot with highlighting for the \data{UCB admissions} data.}
-\label{fig:ucbhighlight}
-\end{center}
-\end{figure}
+% \setkeys{Gin}{width=0.7\textwidth}
+% \begin{figure}
+% \begin{center}
+% <<ucbhighlight,fig=TRUE,echo=FALSE,height=6,width=9,results=hide>>=
+% mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
+%    spacing = spacing_highlighting, split = TRUE, keep = FALSE, rep = FALSE)
+% @
+% \caption{Mosaic plot with highlighting for the \data{UCB admissions} data.}
+% \label{fig:ucbhighlight}
+% \end{center}
+% \end{figure}
 
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -1108,9 +1095,9 @@ mosaic(aperm(UCBAdmissions), gp = gpar(fill = grey.colors(2)),
 \begin{center}
 %FIXME% right margin labels get clipped
 <<doubleucb,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-doubledecker(aperm(UCBAdmissions), col = rev(grey.colors(2)))
+doubledecker(aperm(aperm(UCBAdmissions, c(1,3,2))[2:1,,], c(2,3,1)), margins = c(left = 0, right = 5),col = rev(grey.colors(2)))
 @
-\caption{Dobledecker plot for the \data{UCB admissions} data.}
+\caption{Doubledecker plot for the \data{UCBAdmissions} data.}
 \label{fig:doubleucb}
 \end{center}
 \end{figure}
@@ -1161,7 +1148,7 @@ in Figs.~\ref{fig:ucbmosaic}--\ref{fig:ucbassoc}. The shading visualizes the
 model of admission and gender being conditionally independent, given department. Clearly,
 there is no gender bias in the departments except for department A: here, 
 significantly \textit{more} female students are admitted then expected under independence.
-Mosaic displays are recognized as an excellent
+Mosaic displays are already recognized as an excellent
 visualization tool for log-linear models 
 \cite{vcd:Friendly:1999,vcd:Theus+Lauer:1999,vcd:Hofmann:2001}.
 Using the flat table representation, the association plot similarly extends from
@@ -1255,7 +1242,7 @@ distorted, and the tiles, along with their shading, inscrutable.
 An alternative is to use trellis-like layouts for visualizing \emph{partial}
 tables for given strata, defined by the conditioning variables. 
 All subtables are corrected for the marginals and thus, all
-corresponding mosaics in the panels have the same size. 
+corresponding plots in the panels have the same size. 
 In addition, trellis layouts help reducing the complexity of bigger tables. 
 Figure~\ref{fig:ucbadmissions} 
 visualizes the data by means of a conditional 
@@ -1336,8 +1323,17 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
 %FIXME%     the large proportion of 40+ people with elementary education)
 %FIXME%     which is not of interest in the conditional independence problem.
 
-To get an overview, we first plot a mosicplot of memory, age, and
-education, and highlight attitude (see Fig.~\ref{fig:punishhigh}).
+We first create a mosaic plot to get an overview on the data:
+Attitude towards punishment clearly is the dependent variable 
+here and should be used last for splitting. Furthermore, we might 
+expect Age and Education to have stratifying influence on the results, so they should
+be used first for splitting.
+In fact, the question is whether memory has some influence on attitude, given 
+age and education. We choose to create a three-way mosaic plot of the 
+hypothesized explanatory variables (first splitting horizontically by age, 
+then vertically by education, and finally horizontically again by memory), 
+and to have attitude, the dependent variable, 
+highlighted in the tiles (see Fig.~\ref{fig:punishhigh}).
 We can see that half of the people have more than 40 years of
 age. Most people in this group have only completed elementay
 school. For people over 25, a majority has completed secondary
@@ -1365,33 +1361,44 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
 \end{center}
 \end{figure}
 
-So both age and education seem to matter here. Is there any influence
-of memory on attitude to punishment apart from that? To answer this
-question, we test the hypothesis of memory and attitude being
-conditionally independent, given age and education, and visualize the
-model using an extended mosaic plot (see Fig.~\ref{fig:punishmosaic}). 
-We can see that the model fits rather good, except for people over 25
-with elementary school education: under the null, more people should
-say ``no'' to physical punishment of children. This pattern can again also
-be visualized using a trellis layout, this time using partial mosaic
-plots (see Fig.~\ref{fig:punishmosaic}).
+So both age and education seem to matter here. But is there really any influence
+of memory on attitude to punishment apart from that? Or, rephrased as a hypothesis:
+are memory and attitude conditionally independent, given age and education?
+We can visualize the model by means of a trellis layout, this time using partial mosaic
+plots (see Fig.~\ref{fig:punishcotab}) for the strata defined by all factorial 
+combinations of the age and education levels. In each panel, we plot mosaic plots of 
+memory and attitude, where again the explanatory variable (memory) is used first 
+for splitting.
+The shading tells us the model seems to be consistent with the data, 
+except for people over 25
+with elementary school education: under the null, more people should have had
+no attitude to physical punishment of children than actually had.
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
-\begin{center}
-<<punishmosaic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-tab_test <- coindep_test(tab, margin = c(3, 4))
-mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
-       expected = ~ (memory + attitude) * education * age,
-       gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))), 
-       rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
-       set_labels = list(age = c("15-24","25-39","40+")))
-@
-\caption{Mosaic plot for the \data{punishment} data.}
-\label{fig:punishmosaic}
-\end{center}
-\end{figure}
 
+% ## \setkeys{Gin}{width=0.7\textwidth}
+% ## \begin{figure}
+% ## \begin{center}
+% ## <<punishmosaic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+% ## tab_test <- coindep_test(tab, margin = c(3, 4))
+% ## mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+% ##        expected = ~ (memory + attitude) * education * age,
+% ##        gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))), 
+% ##        rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
+% ##        set_labels = list(age = c("15-24","25-39","40+")))
+% ## 
+% ## \caption{Mosaic plot for the \data{punishment} data.}
+% ## \label{fig:punishmosaic}
+% ## \end{center}
+% ## \end{figure}
+
+The advantage of the exploratory view 
+is to visualize the joint distribution of all variables.
+On the other hand, the visualization might be 
+strongly influenced by the marginal distribution of education over age (in particular
+    the large proportion of 40+ people with elementary education)
+ which is not of interest in the conditional independence problem. The
+ conditional mosaic plot suppresses the effect of all stratifying
+ variables (and their interactions).
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
