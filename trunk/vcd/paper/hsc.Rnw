@@ -98,9 +98,9 @@ use the human visual system to detect structures in the data that
 possibly are not obvious from solely numeric output (e.g., test
 statistics). Whether the
 task is purely exploratory or model based, techniques such as mosaic, sieve, and
-association plots offer good support for visualization. They have been
-extended over the last two decades, and implementations exist in many
-statistical environments.
+association plots offer good support for visualization. Especially
+mosaic and sieve plots have been extended over the last two decades, 
+and implementations exist in many statistical environments.
 
 All three graphical methods visualize aspects of (possibly higher-dimensional)
 contingency tables. A \emph{mosaic plot} \cite{vcd:Hartigan+Kleiner:1984} is basically 
@@ -127,8 +127,9 @@ the following aspects:
 
 \begin{itemize}
   \item Varying the shape of mosaic plots (as well as bar plots) to yield, e.g.,
-  double-decker plots \cite{vcd:Hofmann:2001}, spine 
-  plots \cite{vcd:riedwyl+schuepbach:1994}, or spinograms \cite{vcd:hofmann+theus}.
+  double-decker plots \cite{vcd:Hofmann:2001} or spine 
+  plots \cite{vcd:riedwyl+schuepbach:1994}.
+%% or spinograms \cite{vcd:hofmann+theus}.
 \item Using residual-based shadings to visualize log-linear models
   \cite{vcd:Friendly:1994,vcd:Friendly:2000} and significance of
   statistical tests \cite{vcd:Meyer+Zeileis+Hornik:2003}.
@@ -153,7 +154,7 @@ The figures in this chapter have all been produced using the
 \proglang{R} system, using the extension packages \pkg{vcd} 
 \cite{vcd:Meyer+Zeileis+Hornik:2005} and
 \pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
-(Fig.~\ref{fig:threedee} only), all freely available from the
+(Figure~\ref{fig:threedee} only), all freely available from the
 Comprehensive \proglang{R} Archive Network
 (\url{http://CRAN.R-project.org/}). The \proglang{R} code used for the
 figures is available from \url{http://statmath.wu-wien.ac.at/projects/vcd/}.
@@ -175,7 +176,7 @@ figures is available from \url{http://statmath.wu-wien.ac.at/projects/vcd/}.
 \end{table}
 
 This chapter will give an overview of the state of the art 
-of mosaic, sieve, and association plots, both for exploratory visualization and
+of mosaic and association plots, both for exploratory visualization and
 model-based analysis. Exploratory techniques will include specialized displays for
 the bivariate case, as well as pairs plot-like displays for
 higher-dimensional tables. As for the model-based tools, particular
@@ -191,7 +192,8 @@ In Sect.~\ref{sec:multiway}, we show how the
 basically bivariate methods straightforwardly extend to the multivariate case by using
 `flat' representations of the multi-way tables. In this section, we
 also introduce specialized displays for conditional independence
-structures. Section~\ref{sec:concl} concludes the chapter.
+structures. The techniques are illustrated using three- and four-way tables.
+Section~\ref{sec:concl} concludes the chapter.
 
 \section{Two-way Tables}
 \label{sec:twoway}
@@ -271,8 +273,8 @@ Never & 0.21 & 0.42 & 0.37 & 1.00 \\
 \end{table}
 
 Although far from optimal, contingency tables are frequently visualized using
-grouped bar plots (see Fig.~\ref{fig:grouped}) 
-or even by means of 3D-bar charts (see Fig.~\ref{fig:threedee}). It seems hard
+grouped bar plots (see Figure~\ref{fig:grouped}) 
+or even by means of 3D-bar charts (see Figure~\ref{fig:threedee}). It seems hard
 to detect the aforementioned pattern in these, especially in the 3D
 plot where the perspective view tends to distort the true proportions
 of the bars. In the following, we
@@ -325,7 +327,7 @@ chapter XXX in this book \emph{\bf (Reference to other contributions)}
 provides more detailed information. Consider our
 example of the hospital data from above. Step 1 consists of splitting a square
 according to the marginals of one of the variables. To be consistent with the textual
-representation, we choose LOS with vertical splits (see Fig.~\ref{fig:mosaic1fig}). 
+representation, we choose LOS with vertical splits (see Figure~\ref{fig:mosaic1fig}). 
 The result is similar to a bar plot where not the height, but the width is
 adapted to visualize the counts for each level, which is also 
 called a \emph{spine plot} \cite{vcd:hummel:1996}. From this plot, we see that 
@@ -334,7 +336,7 @@ decreases with the length of stay. Step 2 now is to add further splits in the
 other direction, i.e., horizontal splits, for the second
 variable. This means that each vertical bar is split according to the
 marginals of the second variable, \emph{given} the first variable (see
-Fig.~\ref{fig:mosaic2fig}). The resulting plot visualizes the 
+Figure~\ref{fig:mosaic2fig}). The resulting plot visualizes the 
 contingency table where each cell has a size proportional to the
 corresponding table entry.
 We can still see the marginal distribution of LOS, %'
@@ -373,7 +375,7 @@ Since mosaic plots are asymmetric by construction, the choice of the
 variable order matters, as the first splitting variable dominates the 
 plot. In our example, if we use `Visit frequency' %'
 as the first splitting variable, the impression is very different compared to the previous
-mosaic (see Fig.~\ref{fig:mosaic3fig}). 
+mosaic (see Figure~\ref{fig:mosaic3fig}). 
 In this alternative display, we see the marginal distribution of `Visit frequency' %'
 in the rows: about half of the patients get visited regularly. This
 group is dominated by patients staying between 2 and 9 years.
@@ -447,7 +449,7 @@ It could again be visualized using a mosaic plot, this
 time applied to the table of expected frequencies. 
 If we cross-tabulate each tile to fill it with a number of squares equal to
 the corresponding number of \emph{observed} frequencies, we get a \emph{sieve plot}
-(see Fig.~\ref{fig:sievefig}). It implicitly compares
+(see Figure~\ref{fig:sievefig}). It implicitly compares
 expected and observed values since the density of the grid will
 increase with the deviation of the observed from the expected
 values. This allows the detection of general association patterns (for
@@ -513,10 +515,9 @@ assoc(t(hospital), split = TRUE)
 \subsection{Summary}
 
 Mosaic plots are an instrument to visualize the \emph{observed} frequencies
-of a contingency table by recursive conditional splits. If the variables can be
-separated into explanatory and dependent variable(s), the explanatory variable(s)
-should be be used first for splitting to display the conditional distribution of
-the dependent variable(s) given the explanatory variable(s). 
+of a contingency table by recursive conditional splits. If one variable is
+explanatory, it should be be used first for splitting: thus, the display shows
+the conditional distribution of the dependent variable given the explanatory one.
 Sieve plots basically visualize the table of \emph{expected} frequencies, and
 in addition the deviations from the observed frequencies by the density of a
 grid added to each tile. They complement mosaic plots in detecting dependency
@@ -528,7 +529,7 @@ Association plots directly
 visualize Pearson and raw residuals, i.e., standardized and
 non-standardized deviations of observed from expected frequencies,
 respectively. These plots should be used if the diagnostics of
-independence models is of primary interest.
+independence models are of primary interest.
 
 \section{Using Colors for Residual-based Shadings}
 \label{sec:extensions}
@@ -601,7 +602,7 @@ uniform because the three HSV dimensions map only poorly to the three
 perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihaka:2003}.
 One important issue here is that HSV dimensions are confounded, e.g., saturation
 is not uniform across different hues.
-As an example, see Fig.~\ref{fig:colors} (left) 
+As an example, see Figure~\ref{fig:colors} (left) 
 showing a qualitative color palette (colors $(H, 100, 100)$ for varying hues $H$) in the HSV
 space: although saturation and value are fixed, the fully saturated blue is
 perceived much darker than the fully saturated red or green,
@@ -610,7 +611,7 @@ Furthermore, the flashy fully saturated HSV colors are hard
 to look at for a longer time. For similar reasons, it is equally difficult
 to derive acceptable diverging palettes from the HSV space, i.e.,
 bipolar scales containing colors ranging between two very distinct colors.
-The upper part of Fig.~\ref{fig:diverging} shows a diverging
+The upper part of Figure~\ref{fig:diverging} shows a diverging
 palette in the HSV space with colors ranging from a saturated red $(0, 100, 100)$
 over a neutral white $(H, 0, 100)$ to a saturated blue $(240, 100, 100)$.
 Although the palette should be balanced with
@@ -677,19 +678,19 @@ Qualitative color palettes can easily be obtained by holding constant
 chroma and luminance, and using varying hues. HCL colors with fixed luminance 
 are always balanced towards the same grey 
 and thus do not have the problem of varying saturations as the HSV
-colors (see Fig.~\ref{fig:colors}, right). 
+colors (see Figure~\ref{fig:colors}, right). 
 Similarly, diverging HCL color palettes can be derived
 \cite{vcd:Zeileis+Meyer+Hornik:2005} by interpolating again between a
 neutral color such as $(H, 0, 90)$ and two colors with full chroma
 such as blue $(260, 100, 50)$ and red $(0, 100, 50)$. The resulting
-palette is shown in the lower part of Fig.~\ref{fig:diverging}. 
+palette is shown in the lower part of Figure~\ref{fig:diverging}. 
 In contrast to the HSV counterpart, matching
 colors (light red/blue and dark red/blue) 
 are balanced to the same gray, and thus receive the same perceptual ``weight''.
 Note, that chroma and luminance are varied simultaneously, i.e.,
 the full chroma colors are also darker than the neutral color. Of course,
 it would also be possible to choose a darker neutral color (or lighter 
-full chroma colors), however, by varying both chroma and luminace better 
+full chroma colors), however, by varying both chroma and luminance better 
 contrasts can be achieved.
 
 \subsection{Highlighting and Color-based Shadings}
@@ -697,7 +698,7 @@ contrasts can be achieved.
 
 All plots introduced in Sect.~\ref{sec:twoway} are composed of empty
 tiles. It seems intuitive to use filled tiles to highlight information
-of interest. Consider again the hospital example: in Fig.~\ref{fig:highlight},
+of interest. Consider again the hospital example: in Figure~\ref{fig:highlight},
 we mark tiles for patients never or seldom visited to visualize their proportion in
 the LOS strata. For optical clarity, we set the
 spacing between the visit frequency tiles to 0. Clearly, the
@@ -778,7 +779,7 @@ In addition to the shading of the rectangles themselves, the Friendly shading al
 encompasses a choice of line type and line color of the rectangle borders
 with similar ideas as described above, useful when no color can be used.
 
-In Fig.~\ref{fig:Friendly}, we show again the mosaic for the \data{hospital}
+In Figure~\ref{fig:Friendly}, we show again the mosaic for the \data{hospital}
 data, this time using a Friendly-like color shading (with HCL
 instead of HSV colors, and no line type coding).
 \setkeys{Gin}{width=0.7\textwidth}
@@ -803,7 +804,7 @@ years are emphasized using the color shading.
 For association plots, residual-based shadings are redundant since all relevant
 information is already contained in the plot by construction. Nevertheless, using one of the
 shadings discussed above will support the analysis process and is therefore recommended.
-For example, applying the Friendly shading in Fig.~\ref{fig:colorassoc} 
+For example, applying the Friendly shading in Figure~\ref{fig:colorassoc} 
 on the one hand facilitates the discrimination between
 positive and negative residuals, and on the other, more importantly,
 allows an easier comparison of the tiles' sizes. Thus, the shading
@@ -931,8 +932,9 @@ the conditional distribution of this test statistic under the null can be obtain
 by simulation, sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
 using, e.g., the Patefield algorithm \cite{vcd:Patefield:1981} 
 and computing the maximum statistic for each of these tables.
-In Fig.~\ref{fig:arthritis2}, we visualize again the \data{arthritis} data, this
-time using the maximum test statistic and its 10\% and 1% critical values at cut-off points.
+In Figure~\ref{fig:arthritis2}, we visualize again the \data{arthritis} data, this
+time using the maximum test statistic and its 10\% and 
+1\% critical values as cut-off points.
 The shading of the
 tiles now clearly shows that the treatment is effective: significantly more patients
 in the treatment group exhibit marked improvement than would be
@@ -1029,11 +1031,11 @@ Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
 A first step in the explorative analysis of more complex tables is to
 get a quick overview on the data. For that, 
 all basic plots can be combined in pairwise displays,
-arranged in in a matrix similar to scatterplots in a pairs plot.
+arranged in a matrix similar to scatterplots in a pairs plot.
 The diagonal cells contain the variable names, optionally with
 univariate statistics, whereas the off-diagonal cells contain plots whose
 variables are implicitly specified by the cells' position in the matrix. %'
-In Fig.~\ref{fig:pairs}, the diagonal cells show bar plots for the
+In Figure~\ref{fig:pairs}, the diagonal cells show bar plots for the
 distribution of the variables, and the off-diagonal cells mosaic plots
 for the corresponding pair of variables. The plots suggest that
 admission differs between male and female students, and between the departments,
@@ -1069,7 +1071,7 @@ In this example, we have a binary variable of interest (admission)
 that shall be ``explained'' by the others. 
 A natural way of representing such a three-way table is 
 to draw a doubledecker plot nesting gender in
-department and highlighting admission in the tiles (see Fig.~\ref{fig:doubleucb}).
+department and highlighting admission in the tiles (see Figure~\ref{fig:doubleucb}).
 From the widths of the tiles it can be seen that an
 unequal number of students apply for the six
 departments, and from the highlighting we see that the admission rates differ as
@@ -1119,7 +1121,7 @@ variables $i$ and $j$ that can be used to specify the model visualized
 in that cell. Typical hypotheses are: Variables $i$ and $j$ are
 marginally independent; variables $i$ and $j$ are conditionally
 independent, given all others; variables $i$ and $j$ are jointly
-independent from all others, etc.
+independent from all others.
 % Figure~\ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
 % independence in the upper triangle, 
 % mosaics for \emph{joint} independence 
@@ -1144,7 +1146,7 @@ department A.
 Therefore, a sensible way of representing the table is to 
 nest admission into department instead of gender to get a stratified view.
 The corresponding mosaic and association plots are shown
-in Figs.~\ref{fig:ucbmosaic}--\ref{fig:ucbassoc}. The shading visualizes the 
+in Figures~\ref{fig:ucbmosaic}--\ref{fig:ucbassoc}. The shading visualizes the 
 model of admission and gender being conditionally independent, given department. Clearly,
 there is no gender bias in the departments except for department A: here, 
 significantly \textit{more} female students are admitted then expected under independence.
@@ -1243,7 +1245,7 @@ An alternative is to use trellis-like layouts for visualizing \emph{partial}
 tables for given strata, defined by the conditioning variables. 
 All subtables are corrected for the marginals and thus, all
 corresponding plots in the panels have the same size. 
-In addition, trellis layouts help reducing the complexity of bigger tables. 
+In addition, trellis layouts help reduce the complexity of bigger tables. 
 Figure~\ref{fig:ucbadmissions} 
 visualizes the data by means of a conditional 
 association plot. Each panel corresponds to a department, and contains
@@ -1277,10 +1279,11 @@ As a four-way example, we use the punishment data \cite{vcd:andersen:1991}
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
 punishment of children (see Tab.~\ref{tab:punish}).      
-The data consists of four variables: Attitude is a binary variable
-indicating whether a person approves no or moderate punishment of children.
-Memory indicates whether the person has got memories of 
-corporal punishment as a child. Education indicates the
+The data consist of four variables: Attitude is a binary variable
+indicating whether a person approves moderate punishment of children
+(``moderate''), or refuses any punishment of children (``no'').
+Memory indicates whether the person recalls having been
+punished as a child. Education indicates the
 highest level of education (elementary, secondary, high). Finally, 
 age indicates the age group in years (15--24, 25--39, $40+$).
 
@@ -1323,27 +1326,32 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
 %FIXME%     the large proportion of 40+ people with elementary education)
 %FIXME%     which is not of interest in the conditional independence problem.
 
-We first create a mosaic plot to get an overview on the data:
+We first create a mosaic plot to get an overview of the data:
 Attitude towards punishment clearly is the dependent variable 
 here and should be used last for splitting. Furthermore, we might 
-expect Age and Education to have stratifying influence on the results, so they should
+expect age and education to have stratifying influence on the results, so they should
 be used first for splitting.
 In fact, the question is whether memory has some influence on attitude, given 
 age and education. We choose to create a three-way mosaic plot of the 
 hypothesized explanatory variables (first splitting horizontically by age, 
 then vertically by education, and finally horizontically again by memory), 
 and to have attitude, the dependent variable, 
-highlighted in the tiles (see Fig.~\ref{fig:punishhigh}).
+highlighted in the tiles (see Figure~\ref{fig:punishhigh}).
 We can see that half of the people have more than 40 years of
-age. Most people in this group have only completed elementay
+age. Most people in this group have only completed elementary
 school. For people over 25, a majority has completed secondary
-school. Among the younger people, fewer have memories of having been
-punished as a child than among the older ones. But sad enough, 
+school. 
+%% FIXME: additional plot?
+Among the younger people, fewer have memories of having been
+punished as a child than among the older ones. 
+%%
+But surprisingly enough,
 for people with elementary or secondary school education,
 a higher proportion \emph{with} memories tends to
-have a moderate attitude to punishment than those without.
+accept moderate punishment of children than those without: 
+experienced violence seems to engender violence again.
 However, for people under 40, the proportion with
-no attitude to punishment increases with the educational level.
+people refusing punishment increases with the educational level.
 
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -1362,17 +1370,18 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
 \end{figure}
 
 So both age and education seem to matter here. But is there really any influence
-of memory on attitude to punishment apart from that? Or, rephrased as a hypothesis:
+of memory on the attitude towards 
+punishment apart from that? Or, rephrased as a hypothesis:
 are memory and attitude conditionally independent, given age and education?
 We can visualize the model by means of a trellis layout, this time using partial mosaic
-plots (see Fig.~\ref{fig:punishcotab}) for the strata defined by all factorial 
+plots (see Figure~\ref{fig:punishcotab}) for the strata defined by all factorial 
 combinations of the age and education levels. In each panel, we plot mosaic plots of 
 memory and attitude, where again the explanatory variable (memory) is used first 
 for splitting.
 The shading tells us the model seems to be consistent with the data, 
 except for people over 25
-with elementary school education: under the null, more people should have had
-no attitude to physical punishment of children than actually had.
+with elementary school education: under the null, more people should
+have refused physical punishment of children than actually did.
 
 
 % ## \setkeys{Gin}{width=0.7\textwidth}
