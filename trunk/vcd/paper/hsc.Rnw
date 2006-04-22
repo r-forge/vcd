@@ -323,7 +323,7 @@ They visualize the observed values of a contingency table by
 area-proportional tiles, arranged in a rectangular mosaic. The tiles are
 obtained by recursive partitioning splits of a rectangle.
 In the following, we describe the main idea of mosaic plots, 
-chapter XXX in this book \emph{\bf (Reference to other contributions)} 
+Chapter XXX in this book \emph{\bf (Reference to other contributions)} 
 provides more detailed information. Consider our
 example of the hospital data from above. Step 1 consists of splitting a square
 according to the marginals of one of the variables. To be consistent with the textual
@@ -706,7 +706,7 @@ proportion of these patients increases with LOS. In fact, such a
 ``stacked'' plot can also be interpreted as spine plot with highlighting
 \cite{vcd:hummel:1996}, particularly useful in analyzing relationships among
 categorical data with a binary dependent variable. More variations on
-this theme, such as doubledecker plots, are treated in chapter XXX
+this theme, such as doubledecker plots, are treated in Chapter XXX
 (\textbf{REFERENCE TO OTHER CHAPTER(S)}).
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -1095,7 +1095,6 @@ are equal for male and female students, except for department A where
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
-%FIXME% right margin labels get clipped
 <<doubleucb,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 doubledecker(aperm(aperm(UCBAdmissions, c(1,3,2))[2:1,,], c(2,3,1)), margins = c(left = 0, right = 5),col = rev(grey.colors(2)))
 @
@@ -1166,7 +1165,7 @@ residual-based shading added to the mosaic plot.
 <<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
 shade = TRUE, keep = FALSE, residuals = ucb_max$residuals,
-gp_args = list(p.value = ucb_max$p.value)) 
+gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE)) 
 @
 \caption{Mosaic plot for the \data{UCB admissions} data.}
 \label{fig:ucbmosaic}
@@ -1179,7 +1178,7 @@ gp_args = list(p.value = ucb_max$p.value))
 <<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
 residuals_type = "Pearson", residuals = ucb_max$residuals,
-gp_args = list(p.value = ucb_max$p.value))
+gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
 @
 \caption{Association plot for the \data{UCB admissions} data.}
 \label{fig:ucbassoc}
@@ -1266,9 +1265,12 @@ hypothesis of conditional independence.
 \begin{center}
 <<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
 cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE, 
-          legend = FALSE, margins = c(3,1,1,3), panel_args = list(type = "assoc"))
+          legend = FALSE, 
+          panel_args = list(type = "assoc", margins = c(2,1,1,2), varnames = FALSE))
 @
-\caption{Conditional mosaic plot for the \data{UCB admissions} data.}
+\caption{Conditional association plot for the \data{UCB admissions}
+  data. For each individual association plot, gender is in the rows
+  and admit is in the columns.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
@@ -1412,10 +1414,13 @@ strongly influenced by the marginal distribution of education over age (in parti
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
-<<punishcotab,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
-cotabplot(tab, panel = cotab_coindep, panel_args = list(margin = c(2.5, 0, 0.5, 0)))
+<<punishcotab,fig=TRUE,echo=FALSE,height=10,width=10,results=hide>>=
+cotabplot(tab, panel = cotab_coindep, panel_args = list(varnames = FALSE, 
+margins = c(2, 1, 1, 2)))
 @
-\caption{Conditional mosaic plot for the \data{punishment} data.}
+\caption{Conditional mosaic plot for the \data{punishment} data. For
+  each mosaic plot, memory is in the rows (first split) and attitude
+  in the columns (second split).}
 \label{fig:punishcotab}
 \end{center}
 \end{figure}
@@ -1447,7 +1452,7 @@ using `flat' representations of the multi-way tables, and specialized
 displays for conditional independence such as trellis layouts of
 partial tables and pairs plots. 
 
-\bibliographystyle{plain}
+\bibliographystyle{abbrv}
 \bibliography{vcd}
 
 \end{document}
