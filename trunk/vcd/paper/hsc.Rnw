@@ -994,10 +994,10 @@ conditional splits, given the margins. The result is a
 ways similar to a two-dimensional table.
 
 In the following, we will first treat specialized displays for
-explorative purposes, followed by model-based methods for
+exploratory purposes, followed by model-based methods for
 conditional independence models.
 
-\subsection{Explorative Visualization Techniques}
+\subsection{Exploratory Visualization Techniques}
 \label{sec:flat}
 
 As an example, consider the well-known UCB admissions data 
@@ -1028,7 +1028,7 @@ Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
 \end{table}
 
 
-A first step in the explorative analysis of more complex tables is to
+A first step in the exploratory analysis of more complex tables is to
 get a quick overview on the data. For that, 
 all basic plots can be combined in pairwise displays,
 arranged in a matrix similar to scatterplots in a pairs plot.
@@ -1040,6 +1040,8 @@ distribution of the variables, and the off-diagonal cells mosaic plots
 for the corresponding pair of variables. The plots suggest that
 admission differs between male and female students, and between the departments,
 and that the proportion of male and female students varies across the departments.
+In particular, departments A and B have a higher proportion of male students
+and a lower rejection rate compared to the other departments.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
@@ -1052,30 +1054,19 @@ pairs(UCBAdmissions)
 \end{center}
 \end{figure}
 
-%FIXME% Didn't we decide to use fewer plots in the paper and simply
-%FIXME% point out that other combinations could also be used?
-%FIXME% I would use for UCB:
-%FIXME%   o explorative: highlighted doubledecker (currently Fig. 17)
-%FIXME%   o model-based: conidtional shaded assoc (currently Fig. 20)
-%FIXME% For Punishment:
-%FIXME%   o explorative: highlighted mosaic( currently Fig. 21)
-%FIXME%   o model-based: conditional shaded mosaic (currently Fig. 23)
-%FIXME% The others should be omitted (I think) and the space gained should
-%FIXME% be used for making the individual graphs larger. Preferably, we
-%FIXME% should have the explorative and model-based plots for the same data
-%FIXME% set on the same page, emphasizing that different aspects of the data
-%FIXME% are brought out by the graphs.
-
 The next step is to investigate three-way interactions among the variables.
 In this example, we have a binary variable of interest (admission)
 that shall be ``explained'' by the others. 
-A natural way of representing such a three-way table is 
-to draw a doubledecker plot nesting gender in
-department and highlighting admission in the tiles (see Figure~\ref{fig:doubleucb}).
-From the widths of the tiles it can be seen that an
-unequal number of students apply for the six
-departments, and from the highlighting we see that the admission rates differ as
-well among the departments (roughly speaking, they decrease from A to F). The rates 
+A natural way of representing such a three-way table is use a mosaic display
+splitting first in the explanatory variables department and gender and highlighting
+the resulting mosaic with respect to the dependent variable admissions. Here, we
+use the vertical splits for both explanatory variables, resulting in the 
+doubledecker plot in Figure~\ref{fig:doubleucb}. From the widths of the tiles it can be seen that an
+unequal number of students apply for the six departments (with a particularly small
+number of females in departments A and B),
+and from the highlighting we see again that the admission rates differ
+among the departments (roughly speaking, the admission rate is high for A and B,
+low for F and in between for C to E). The rates 
 are equal for male and female students, except for department A where
 \textit{more} female than male students are admitted. 
 
@@ -1106,12 +1097,12 @@ doubledecker(aperm(aperm(UCBAdmissions, c(1,3,2))[2:1,,], c(2,3,1)), margins = c
 \subsection{Model-based Displays for Conditional Independence Models}
 \label{sec:condind}
 
-In addition to the explorative approaches 
+In addition to the exploratory approaches 
 to the visualization of multi-way tables outlined in 
 the previous section, there are specialized displays 
 designed for the visualization of conditional independence structures. 
 
-A first approach is to use pairs plots for model search:
+A first approach is to use pairs plots (such as that in Figure~\ref{fig:pairs}) for model search:
 we can use the position of the cells in the pairs matrix to select an
 independence model and add a corresponding shading to the tiles to
 visualize the residuals.
@@ -1139,13 +1130,20 @@ independent from all others.
 % students have blue eyes, and too few of them have brown eyes, than expected under
 % the null model?
 
-In our example, from the explorative analysis, we already suspect that
+Another approach is to visualize (the deviations from) a particular fitted model 
+with similar ideas as in Section~\ref{sec:extensions}. Thus, mosaic displays can
+be extended from purely explorative views to model-based views on the data by
+residual-based shadings and association plots can directly visualize deviations
+from a given model. Typically, the models considered are log-linear models, however
+residual-based shadings are also conceivable for other types of models such as logistic
+regression. %FIXME% mention this?
+In our example, from the exploratory analysis, we already suspect that
 admission and gender are independent, given department, except for
 department A. 
 Therefore, a sensible way of representing the table is to 
 nest admission into department instead of gender to get a stratified view.
 The corresponding mosaic and association plots are shown
-in Figures~\ref{fig:ucbmosaic}--\ref{fig:ucbassoc}. The shading visualizes the 
+in Figures~\ref{fig:ucbmosaic} and \ref{fig:ucbassoc}. The shading visualizes the 
 model of admission and gender being conditionally independent, given department. Clearly,
 there is no gender bias in the departments except for department A: here, 
 significantly \textit{more} female students are admitted then expected under independence.
@@ -1159,8 +1157,8 @@ mosaic display contains very small or empty cells, the corresponding association
 might provide an easier way to detect deviation patterns than the
 residual-based shading added to the mosaic plot.
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
 \begin{center}
 <<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
@@ -1172,8 +1170,8 @@ gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
 \end{center}
 \end{figure}
 
-\setkeys{Gin}{width=0.7\textwidth}
-\begin{figure}
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
 \begin{center}
 <<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
 assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
@@ -1236,17 +1234,18 @@ gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
 % groups. 
 As we have seen, we can use all plots for the analysis of stratified
 data by using the conditioning variables first for splitting.
-However, using a single plot, the strata are not corrected for the
-marginal distribution of the stratifying variables. Especially for
+However, this also displays the marginal distribution of the conditioning variables
+which might make it more difficult to interpret the dependent variables of
+interest. Especially for
 very unevenly distributed marginals, the strata can become very
 distorted, and the tiles, along with their shading, inscrutable.
-An alternative is to use trellis-like layouts for visualizing \emph{partial}
-tables for given strata, defined by the conditioning variables. 
+An alternative is to complement the conditioning in the model by
+a conditioning in the plot, i.e., to use trellis-like layouts for
+visualizing \emph{partial} tables as defined by the conditioning variables. 
 All subtables are corrected for the marginals and thus, all
 corresponding plots in the panels have the same size. 
-In addition, trellis layouts help reduce the complexity of bigger tables. 
-Figure~\ref{fig:ucbadmissions} 
-visualizes the data by means of a conditional 
+In addition, trellis layouts help to reduce the complexity of bigger tables. 
+Figure~\ref{fig:ucbadmissions} visualizes the data by means of a conditional 
 association plot. Each panel corresponds to a department, and contains
 an association plot corresponding to the partial (fourfold) table of admission
 and gender. Accordingly, the shading visualizes the
@@ -1254,7 +1253,11 @@ residuals from the corresponding conditional independence model (independence of
 and admission, given department), stratified by department. Clearly,
 the situation in department A (more women/less men admitted than
 expected under the null hypothesis) causes the rejection of the
-hypothesis of conditional independence. 
+hypothesis of conditional independence. In Figure~\ref{fig:ucbadmissions},
+data-driven cut-offs (derived from the maximum test for conditional independence)
+are used, resulting in a more colorful shading than the fixed cut-offs in
+Figure~\ref{fig:ucbmosaic} and \ref{fig:ucbassoc}.
+
 % The overall deviation pattern
 % thus indicates that in contrast to the impression given by the aggregated table, male
 % students were not advantaged, and that in department A,
@@ -1328,63 +1331,59 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
 %FIXME%     the large proportion of 40+ people with elementary education)
 %FIXME%     which is not of interest in the conditional independence problem.
 
-We first create a mosaic plot to get an overview of the data:
+In a first step, we create a mosaic plot for an exploratory view on the data:
 Attitude towards punishment clearly is the dependent variable 
-here and should be used last for splitting. Furthermore, we might 
-expect age and education to have stratifying influence on the results, so they should
-be used first for splitting.
-In fact, the question is whether memory has some influence on attitude, given 
+here and should be used as the last split via highlighting. 
+Furthermore, we expect age and education to have an influence on both the memory
+and the attitude, hence they should be used first for splitting as stratifying
+variables. In fact, the question is whether memory has some influence on attitude, given 
 age and education. We choose to create a three-way mosaic plot of the 
 hypothesized explanatory variables (first splitting horizontically by age, 
 then vertically by education, and finally horizontically again by memory), 
 and to have attitude, the dependent variable, 
 highlighted in the tiles (see Figure~\ref{fig:punishhigh}).
 We can see that half of the people have more than 40 years of
-age. Most people in this group have only completed elementary
-school. For people over 25, a majority has completed secondary
-school. 
-%% FIXME: additional plot?
-Among the younger people, fewer have memories of having been
-punished as a child than among the older ones. 
-%%
-But surprisingly enough,
-for people with elementary or secondary school education,
+age, most of which of only completed elementary school (much more than 
+in the other age groups). Furthermore, it can be seen that the proportion
+of people with memories of punishments increases with age and that
+the approval rate decreases with education. As for the question whether
+attitude depends on memory, the plot suggests quite clearly (and somewhat
+surprisingly) that for those people with elementary school education,
 a higher proportion \emph{with} memories tends to
 accept moderate punishment of children than those without: 
 experienced violence seems to engender violence again.
-However, for people under 40, the proportion with
-people refusing punishment increases with the educational level.
-
+For the other education groups, the picture is less clear: some cells 
+indicate the same association while others do not.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
 <<punishhigh,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+dimnames(tab)[[3]][3] <- "40+"
 mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
        gp = gpar(fill = grey.colors(2)), spacing = spacing_highlighting, 
-       rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
-       set_labels = list(age = c("15-24","25-39","40+")))
+       rep = c(attitude = FALSE))
 @
 \caption{Mosaic plot with highlighting for the \data{punishment} data.}
 \label{fig:punishhigh}
 \end{center}
 \end{figure}
 
-So both age and education seem to matter here. But is there really any influence
-of memory on the attitude towards 
+In summary, both age and education clearly matter here.
+But is there really any significant influence of memory on the attitude towards 
 punishment apart from that? Or, rephrased as a hypothesis:
-are memory and attitude conditionally independent, given age and education?
-We can visualize the model by means of a trellis layout, this time using partial mosaic
-plots (see Figure~\ref{fig:punishcotab}) for the strata defined by all factorial 
-combinations of the age and education levels. In each panel, we plot mosaic plots of 
-memory and attitude, where again the explanatory variable (memory) is used first 
-for splitting.
-The shading tells us the model seems to be consistent with the data, 
-except for people over 25
-with elementary school education: under the null, more people should
-have refused physical punishment of children than actually did.
-
+Are memory and attitude conditionally independent, given age and education?
+To focus on this question, we will take another model-based view on the data.
+To reduce the complexity of the information to the question of interest, we employ
+partial mosaic plots in a trellis layout (conditioning on age and education) with
+residual-based shading and data-driven cut-offs (see Figure~\ref{fig:punishcotab}).
+This visualization brings out much more clearly that the increased approval rate
+among people with memories of punishments is present mainly in the elementary education
+column and, to a lesser degree, in the age 40+ row. Moreover, this association is
+only significant in two cells (the two older age groups with elementary education)
+where fewer people without memories do not approve punishment than expected under
+(conditional) independence.
 
 % ## \setkeys{Gin}{width=0.7\textwidth}
 % ## \begin{figure}
@@ -1406,17 +1405,16 @@ The advantage of the exploratory view
 is to visualize the joint distribution of all variables.
 On the other hand, the visualization might be 
 strongly influenced by the marginal distribution of education over age (in particular
-    the large proportion of 40+ people with elementary education)
- which is not of interest in the conditional independence problem. The
- conditional mosaic plot suppresses the effect of all stratifying
- variables (and their interactions).
+the large proportion of 40+ people with elementary education)
+which is not of interest in the conditional independence problem. The
+partial mosaic plot suppresses this effect by complementing the 
+conditioning in the model with conditioning in the visualization.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
 <<punishcotab,fig=TRUE,echo=FALSE,height=10,width=10,results=hide>>=
-cotabplot(tab, panel = cotab_coindep, panel_args = list(varnames = FALSE, 
-margins = c(2, 1, 1, 2)))
+cotabplot(tab, panel = cotab_coindep, panel_args = list(varnames = FALSE, margins = c(2, 1, 1, 2)))
 @
 \caption{Conditional mosaic plot for the \data{punishment} data. For
   each mosaic plot, memory is in the rows (first split) and attitude
@@ -1428,11 +1426,13 @@ margins = c(2, 1, 1, 2)))
 
 \subsection{Summary}
 
-Mosaic, association, and sieve plots can be used for multi-way tables
-by applying them to flat representations. In addition, these basic
-plots are leveraged by specialized frameworks 
-for exploratory model search (pairs plots, highlighting, doubledecker plots) 
-and stratified analysis (conditional plots).
+Mosaic, association, and sieve plots can be used for visualizing multi-way tables
+by applying them to flat representations. Mosaic plots are particularly useful
+for exploratory analysis whereas the other two require specification of a certain
+independence model for which deviations should be brought out. In addition, specialized
+`flavours' of the plots can leverage the
+exploratory (pairs plots, highlighting, doubledecker plots) 
+or model-based analysis (residual-based shading, conditional plots).
 
 \section{Conclusion}
 \label{sec:concl}
