@@ -323,8 +323,7 @@ They visualize the observed values of a contingency table by
 area-proportional tiles, arranged in a rectangular mosaic. The tiles are
 obtained by recursive partitioning splits of a rectangle.
 In the following, we describe the main idea of mosaic plots, 
-Chapter XXX in this book \emph{\bf (Reference to other contributions)} 
-provides more detailed information. Consider our
+Chapter III-12 in this book provides more detailed information. Consider our
 example of the hospital data from above. Step 1 consists of splitting a square
 according to the marginals of one of the variables. To be consistent with the textual
 representation, we choose LOS with vertical splits (see Figure~\ref{fig:mosaic1fig}). 
@@ -706,8 +705,7 @@ proportion of these patients increases with LOS. In fact, such a
 ``stacked'' plot can also be interpreted as spine plot with highlighting
 \cite{vcd:hummel:1996}, particularly useful in analyzing relationships among
 categorical data with a binary dependent variable. More variations on
-this theme, such as doubledecker plots, are treated in Chapter XXX
-(\textbf{REFERENCE TO OTHER CHAPTER(S)}).
+this theme, such as doubledecker plots, are treated in Chapter III-12.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -1155,7 +1153,10 @@ the simple two-way case to a structured residual plot usable for
 the diagnostics of log-linear models. Especially if a
 mosaic display contains very small or empty cells, the corresponding association plot
 might provide an easier way to detect deviation patterns than the
-residual-based shading added to the mosaic plot.
+residual-based shading added to the mosaic plot. Yet another approach
+is to plot a mosaic plot of the \emph{expected} frequencies and to highlight
+the (relative) residuals in the cells, using different colors for
+positive and negative residuals \cite{vcd:Theus+Lauer:1999}.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[t!]
@@ -1346,7 +1347,8 @@ We can see that half of the people have more than 40 years of
 age, most of which of only completed elementary school (much more than 
 in the other age groups). Furthermore, it can be seen that the proportion
 of people with memories of punishments increases with age and that
-the approval rate decreases with education. As for the question whether
+the approval rate decreases with education (this, however, is better shown in 
+Figure~\ref{fig:punishcotab} described below). As for the question whether
 attitude depends on memory, the plot suggests quite clearly (and somewhat
 surprisingly) that for those people with elementary school education,
 a higher proportion \emph{with} memories tends to
@@ -1374,16 +1376,22 @@ In summary, both age and education clearly matter here.
 But is there really any significant influence of memory on the attitude towards 
 punishment apart from that? Or, rephrased as a hypothesis:
 Are memory and attitude conditionally independent, given age and education?
-To focus on this question, we will take another model-based view on the data.
-To reduce the complexity of the information to the question of interest, we employ
+To focus on this question, we will take another model-based view on the data
+that avoids the distracting influence of the marginal variables (age
+and education): We employ
 partial mosaic plots in a trellis layout (conditioning on age and education) with
 residual-based shading and data-driven cut-offs (see Figure~\ref{fig:punishcotab}).
 This visualization brings out much more clearly that the increased approval rate
 among people with memories of punishments is present mainly in the elementary education
-column and, to a lesser degree, in the age 40+ row. Moreover, this association is
+column and, to a lesser degree, in the age 40+ row. Using, e.g., a 
+permutation test similar to the one discussed in Section \ref{sec:test}, 
+model statistics reveal that the hypothesis is rejected at a significance level of 
+1\%, but the shading clearly shows that this association is
 only significant in two cells (the two older age groups with elementary education)
 where fewer people without memories do not approve punishment than expected under
-(conditional) independence.
+(conditional) independence. In the group of people with age between
+25--39, the lighter shading indicates that here,
+the association is only significant at the 10\% level.
 
 % ## \setkeys{Gin}{width=0.7\textwidth}
 % ## \begin{figure}
