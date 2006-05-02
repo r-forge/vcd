@@ -5,7 +5,8 @@ mosaic <- function(x, ...)
   UseMethod("mosaic")
 
 mosaic.formula <-
-function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
+function(formula, data = NULL, highlighting = NULL,
+         ..., main = NULL, sub = NULL, subset = NULL)
 {
   if (is.logical(main) && main)
     main <- deparse(substitute(data))
@@ -18,7 +19,15 @@ function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
   fstr <- strsplit(paste(deparse(formula), collapse = ""), "~")
   vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
   varnames <- vars[[1]]
+
+  dep <- gsub(" ", "", fstr[[1]][1])
+  if (is.null(highlighting) && (!dep %in% c("","Freq"))) {
+    varnames <- c(dep, varnames)
+    highlighting <- 1
+  }
+    
   condnames <- if (length(vars) > 1) vars[[2]] else NULL
+  
 
   if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
     condind <- NULL
@@ -36,7 +45,7 @@ function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
       }
       dat <- margin.table(dat, ind)
     }
-    mosaic.default(dat, main = main, sub = sub,
+    mosaic.default(dat, main = main, sub = sub, highlighting = highlighting,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
       m <- m[c(1, match(c("formula", "data", "subset"), names(m), 0))]
@@ -53,6 +62,10 @@ function(formula, data = NULL, ..., main = NULL, sub = NULL, subset = NULL)
 mosaic.default <- function(x, condvars = NULL,
                            split_vertical = NULL, direction = NULL,
                            spacing = NULL, spacing_args = list(),
+                           gp = NULL,
+                           highlighting = NULL, 
+                           highlighting_fill = grey.colors,
+                           highlighting_direction = NULL,
                            zero_size = 0.5, main = NULL, sub = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
@@ -81,21 +94,50 @@ mosaic.default <- function(x, condvars = NULL,
   if (!is.null(condvars)) {
     if (is.character(condvars))
       condvars <- match(condvars, names(dimnames(x)))
-    x <- aperm(x, c(condvars, seq(dl)[-condvars]))
+    if (length(condvars) < 2)
+      x <- aperm(x, c(condvars, seq(dl)[-condvars]))
+    else
+      
     if (is.null(spacing))
       spacing <- spacing_conditional
+  }
+  
+  ## highlighting
+  if (!is.null(highlighting) && is.null(condvars)) {
+    if (is.character(highlighting))
+      highlighting <- match(highlighting, names(dimnames(x)))
+    x <- aperm(x, c(seq(dl)[-highlighting], highlighting))
+    if (is.null(spacing))
+      spacing <- spacing_highlighting
+    if (is.null(gp))
+      gp <- gpar(fill = rev(highlighting_fill(dim(x)[dl])))
+    if (!is.null(highlighting_direction)) {
+      split_vertical[dl] <- highlighting_direction %in% c("left", "right")
+      if (highlighting_direction %in% c("left", "top")) {
+        ## ugly:
+        tmp <- as.data.frame.table(x)
+        tmp[,dl] <- factor(tmp[,dl], rev(levels(tmp[,dl])))
+        x <- xtabs(Freq ~ ., data = tmp)
+        gp <- gpar(fill = highlighting_fill(dim(x)[dl]))
+      }
+    }
+    
+  
+      
+      
   }
   
   ## spacing argument
   if (is.null(spacing))
     spacing <- if (dl < 3) spacing_equal else spacing_increase
-
+  
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
             core = struc_mosaic(zero_size = zero_size),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
+            gp = gp,
             main = main,
             sub = sub,
             ...)
