@@ -183,12 +183,12 @@ higher-dimensional tables. As for the model-based tools, particular
 emphasis will be given to methods suitable for the visualization of 
 conditional independence tests (including permutation tests), as well
 as for the visualization of particular GLMs (such as log-linear models). 
-In Sect.~\ref{sec:twoway}, we start with the
+In Section~\ref{sec:twoway}, we start with the
 simple bivariate case.  Section~\ref{sec:extensions} explains how the use of color
 in residual-based shadings can support data exploration, and
 even promotes the methods to diagnostic and model-based tools
 by visualizing test statistics and residuals of independence models.
-In Sect.~\ref{sec:multiway}, we show how the
+In Section~\ref{sec:multiway}, we show how the
 basically bivariate methods straightforwardly extend to the multivariate case by using
 `flat' representations of the multi-way tables. In this section, we
 also introduce specialized displays for conditional independence
@@ -199,7 +199,7 @@ Section~\ref{sec:concl} concludes the chapter.
 \label{sec:twoway}
 
 Throughout this section, our examples will be based on
-the \data{hospital} data \cite{vcd:wing:1962} given in Tab.~\ref{tab:hospital}.
+the \data{hospital} data \cite{vcd:wing:1962} given in Table~\ref{tab:hospital}.
 
 \begin{table}[h]
 \begin{center}
@@ -230,7 +230,7 @@ patients that were allowed to go home), less than monthly, and never.
 Wing \cite{vcd:wing:1962} concludes from this data 
 that the longer the length of stay in hospital, the less frequent the
 visits, which can be seen from the column-standardized table 
-(see Tab.~\ref{tab:colhospital}).
+(see Table~\ref{tab:colhospital}).
 
 \begin{table}[h]
 \begin{center}
@@ -252,7 +252,7 @@ $\Sigma$ & 1.00 & 1.00 & 1.00 \\
 
 \noindent In addition, \cite{vcd:haberman:1974} notes that this pattern is not
 significantly different in the ``less than monthly'' and ``never''
-strata. From the row-standardized table (see Tab.~\ref{tab:rowhospital}), 
+strata. From the row-standardized table (see Table~\ref{tab:rowhospital}), 
 it seems indeed that LOS is homogeneous with respect to these two visit frequency strata.
 
 \begin{table}[h]
@@ -443,7 +443,7 @@ $\Sigma$ & 58.00 & 45.00 & 29.00 & 132 \\
 
 Now, the expected cell frequencies in this model are simply
 $\hat n_{ij} = n_{i+}n_{+j}/n$.
-The expected table for our sample data is given in Tab.~\ref{tab:hospital2}.
+The expected table for our sample data is given in Table~\ref{tab:hospital2}.
 It could again be visualized using a mosaic plot, this
 time applied to the table of expected frequencies. 
 If we cross-tabulate each tile to fill it with a number of squares equal to
@@ -543,8 +543,8 @@ remarks on colors and color palettes.
 \subsection[A Note on Colors and Color Palettes]{A Note on Colors and
   Color Palettes\footnote{The printed version of the article is
     monochrome, but the electronic version uses colors. The colored
-    versions of the plots are available from the code web page 
-    (\url{http://statmath.wu-wien.ac.at/projects/vcd/}).}}
+    versions of the plots are available from the Web page 
+    \url{http://statmath.wu-wien.ac.at/projects/vcd/}.}}
 \label{sec:colors} 
 
 The plots introduced in the previous section are basically composed of
@@ -695,7 +695,7 @@ contrasts can be achieved.
 \subsection{Highlighting and Color-based Shadings}
 \label{sec:shadings}
 
-All plots introduced in Sect.~\ref{sec:twoway} are composed of empty
+All plots introduced in Section~\ref{sec:twoway} are composed of empty
 tiles. It seems intuitive to use filled tiles to highlight information
 of interest. Consider again the hospital example: in Figure~\ref{fig:highlight},
 we mark tiles for patients never or seldom visited to visualize their proportion in
@@ -857,7 +857,7 @@ For example, we can visualize the significance of some specified test statistic
 (e.g., the $\chi^2$ test statistic) 
 using less colorful (`uninteresting') colors for non-significant
 results. These can again be derived using the same procedure
-described in Sect.~\ref{sec:colors} but using a smaller amount of color, i.e.,
+described in Section~\ref{sec:colors} but using a smaller amount of color, i.e.,
 a smaller maximal chroma (e.g., 20 instead of 100).
 
 % The following example using the \data{Bundesliga} data \cite{vcd:Knorr-Held:1999}
@@ -890,7 +890,7 @@ though the residuals are ``small''. In fact, the cut-off points are really
 data-dependent. Consider the case of the \data{arthritis} data 
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, stratified by
-gender (see Tab.~\ref{tab:arthritis} for the female patients):
+gender (see Table~\ref{tab:arthritis} for the female patients):
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{|l|rrr|r|}
@@ -968,7 +968,7 @@ data-driven cut-off points for the residuals.}
 For the visualization of areas perceptually uniform colors and color palettes
 should always be used and HCL color space provides a convenient way to do so.
 Shadings can be used to add information to the basic plots and to support the
-analysis. Highlighting of tiles can support the analysis relationships with a 
+analysis. Highlighting of tiles can support the analysis of relationships with a 
 single dependent variable. Residual-based shadings can be used for model diagnostics, e.g.,
 by using diverging color palettes to code the sign and size of a residual.
 In addition, the significance of test statistics can be visualized by using 
@@ -980,7 +980,7 @@ null hypothesis of independence.
 \section{Selected Methods for Multi-way Tables}
 \label{sec:multiway}
 
-In Sect.~\ref{sec:twoway}, we have presented basic displays
+In Section~\ref{sec:twoway}, we have presented basic displays
 for two-way tables, based on the visualization of information on 
 the tables' cells, arranged in rectangular form. For multi-way tables,
 mosaic plots can directly be used by simply adding further splits for each 
@@ -1004,7 +1004,7 @@ on applicants to graduate school at the University of California in Berkeley for
 the six largest departments in 1973 classified by admission and
 gender. The `flattened' contingency table, putting department into the
 columns and admit---nested in gender---into the rows, is given by
-Tab.~\ref{tab:ucb}. The table aggregated over all
+Table~\ref{tab:ucb}. The table aggregated over all
 departments gives wrong evidence of gender bias, 
 i.e., higher admission rates for male students. 
 
@@ -1134,7 +1134,7 @@ be extended from purely explorative views to model-based views on the data by
 residual-based shadings and association plots can directly visualize deviations
 from a given model. Typically, the models considered are log-linear models, however
 residual-based shadings are also conceivable for other types of models such as logistic
-regression. %FIXME% mention this?
+regression.
 In our example, from the exploratory analysis, we already suspect that
 admission and gender are independent, given department, except for
 department A. 
@@ -1188,7 +1188,7 @@ gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
 % \cite{vcd:thornes+collard:1979,vcd:gilbert:1981} on
 % pre- and extra-marital sex and divorce: 494 divorced and 542 married
 % people (willing to divorce) were asked two questions about their pre- and
-% extramarital sexual experiences, resulting in Tab.~\ref{tab:presex}.
+% extramarital sexual experiences, resulting in Table~\ref{tab:presex}.
 
 
 % \begin{table}[ht]
@@ -1284,7 +1284,7 @@ cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE,
 As a four-way example, we use the punishment data \cite{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
-punishment of children (see Tab.~\ref{tab:punish}).      
+punishment of children (see Table~\ref{tab:punish}).      
 The data consist of four variables: Attitude is a binary variable
 indicating whether a person approves moderate punishment of children
 (``moderate''), or refuses any punishment of children (``no'').
@@ -1422,6 +1422,7 @@ conditioning in the model with conditioning in the visualization.
 \begin{figure}
 \begin{center}
 <<punishcotab,fig=TRUE,echo=FALSE,height=10,width=10,results=hide>>=
+set.seed(123)
 cotabplot(tab, panel = cotab_coindep, panel_args = list(varnames = FALSE, margins = c(2, 1, 1, 2)))
 @
 \caption{Conditional mosaic plot for the \data{punishment} data. For
