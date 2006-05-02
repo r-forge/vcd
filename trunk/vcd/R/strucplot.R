@@ -36,7 +36,7 @@ strucplot <- function(## main parameters
                       sub_gp = gpar(fontsize = 15),
                       newpage = TRUE,
                       pop = TRUE,
-                      keep_aspect_ratio = TRUE,
+                      keep_aspect_ratio = NULL,
                       ...
                       ) {
   ## default behaviour of shade
@@ -106,6 +106,9 @@ strucplot <- function(## main parameters
   if (length(split_vertical) == 1)
     split_vertical <- rep(c(split_vertical, !split_vertical), length.out = dl)
 
+  if (is.null(keep_aspect_ratio))
+    keep_aspect_ratio <- dl < 3
+  
   ## spacing
   if (is.function(spacing)) {
     if (inherits(spacing, "grapcon_generator"))

@@ -9,8 +9,11 @@
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
   split_vertical = NULL, direction = NULL, spacing = NULL,
-  spacing_args = list(), zero_size = 0.5, main = NULL, sub = NULL, \dots)
-\method{mosaic}{formula}(formula, data, \dots, main = NULL, sub = NULL, subset = NULL)
+  spacing_args = list(), gp = NULL, highlighting = NULL,
+  highlighting_fill = grey.colors, highlighting_direction = NULL,
+  zero_size = 0.5, main = NULL, sub = NULL, \dots)
+\method{mosaic}{formula}(formula, data, highlighting = NULL,
+  \dots, main = NULL, sub = NULL, subset = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -22,8 +25,8 @@
   \item{formula}{a formula specifying the variables used to create a 
     contingency table from \code{data}.  For convenience, conditioning
     formulas can be specified; the conditioning variables will then be
-    used first for splitting.  Formulas for mosaic displays (unlike
-    those for doubledecker plots) have no response variable.}
+    used first for splitting. If any, a specified response variable will be
+    highlighted in the cells.}
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
   \item{subset}{an optional vector specifying a subset of observations to be used.}
@@ -47,6 +50,17 @@
     and  \code{spacing_increase} for more dimensions.}
   \item{spacing_args}{list of arguments for the generating function, if
     specified (see \code{\link{strucplot}} for more information).}
+  \item{gp}{object of class \code{"gpar"}, shading function or a
+    corresponding generating function (see details and
+    \code{\link{shadings}}). Components of \code{"gpar"}
+    objects are recycled as needed along the last splitting dimension.
+    Ignored if \code{shade = FALSE}.}
+  \item{highlighting}{character vector or integer specifying a variable
+    to be highlighted in the cells.}
+  \item{highlighting_fill}{palette used for a highlighted variable, if any.}
+  \item{highlighting_direction}{Either \code{"left"}, \code{"right"},
+    \code{"top"}, or \code{"bottom"} specifying the direction of
+    highlighting in the cells.}
   \item{main, sub}{either a logical, or a character string used for plotting
     the main (sub) title.  If logical and \code{TRUE}, the
     name of the \code{data} object is used.}
