@@ -34,31 +34,43 @@
 }
 
 <<preliminaries,echo=FALSE,results=hide>>=
+## random seed
 myseed <- 1071
 set.seed(myseed)
-library(vcd)
-library(scatterplot3d)
-library(xtable)
-data(Arthritis)
-data(UCBAdmissions)
-hospital <- as.table(matrix(c(43,16,3,6,11,10,9,18,16), c(3,3), byrow = TRUE, 
-dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"), 
-"Length of stay" = c("2-9","10-19","20+"))))
-art <- xtabs(~Treatment + Improved, data = Arthritis, subset = Sex == "Female")
 
+## packages
+library("vcd")
+library("scatterplot3d")
+library("xtable")
+
+## data
+hospital <- as.table(matrix(c(43,16,3,6,11,10,9,18,16), c(3,3), byrow = TRUE, 
+  dimnames = list("Visit frequency" = c("Regular","Less than monthly","Never"), 
+                  "Length of stay" = c("2-9","10-19","20+"))))
+
+data("Arthritis")
+art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+names(dimnames(art))[2] <- "Improvement"
+
+data("UCBAdmissions")
+names(dimnames(UCBAdmissions)) <- c("Admission", "Gender", "Department")
+
+data("Punishment")
+punish <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+dimnames(punish)[[3]][3] <- "40+"
+
+## inference
 set.seed(myseed)
 art_max <- coindep_test(art, n = 5000)
 
 set.seed(myseed)
-ucb_max <- coindep_test(aperm(UCBAdmissions, c(3,2,1)), margin = "Dept", n = 5000)
+ucb_max <- coindep_test(aperm(UCBAdmissions, c(3,2,1)), margin = "Department", n = 5000)
 
 set.seed(myseed)
 art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
 
 set.seed(myseed)
 hos_chisq <- coindep_test(hospital, n = 5000, indepfun = function(x) sum(x^2))
-
-
 @
 
 
@@ -154,7 +166,7 @@ The figures in this chapter have all been produced using the
 \proglang{R} system, using the extension packages \pkg{vcd} 
 \cite{vcd:Meyer+Zeileis+Hornik:2005} and
 \pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
-(Figure~\ref{fig:threedee} only), all freely available from the
+(Figure~\ref{fig:bars3d} only), all freely available from the
 Comprehensive \proglang{R} Archive Network
 (\url{http://CRAN.R-project.org/}). The \proglang{R} code used for the
 figures is available from \url{http://statmath.wu-wien.ac.at/projects/vcd/}.
@@ -272,31 +284,22 @@ Never & 0.21 & 0.42 & 0.37 & 1.00 \\
 \end{center}
 \end{table}
 
-Although far from optimal, contingency tables are frequently visualized using
-grouped bar plots (see Figure~\ref{fig:grouped}) 
-or even by means of 3D-bar charts (see Figure~\ref{fig:threedee}). It seems hard
-to detect the aforementioned pattern in these, especially in the 3D
-plot where the perspective view tends to distort the true proportions
-of the bars. In the following, we
-will introduce three graphical methods that are better suited for
-contingency tables.
-
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<grouped,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<barsgrouped,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 barplot(hospital, legend = rownames(hospital), beside = TRUE, 
-        xlab = "Length of stay (years)", ylab = "Number of patients")
+        xlab = "Length of stay", ylab = "Number of patients")
 @
 \caption{Bar plot for the \data{hospital} data.}
-\label{fig:grouped}
+\label{fig:barsgrouped}
 \end{center}
 \end{figure}
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<threedeebars,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<bars3d,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 myhospital = t(hospital)[,3:1]
 mydat = data.frame("Length of stay" = as.vector(row(myhospital)), 
                    "Visit frequency" = as.vector(col(myhospital)), 
@@ -304,14 +307,23 @@ mydat = data.frame("Length of stay" = as.vector(row(myhospital)),
 scatterplot3d(mydat, type = "h", pch = " ", lwd = 10, 
 x.ticklabs = c("2-9","","10-19","","20+"), 
               y.ticklabs = c("Never","","Less than monthly","","Regular"), 
-              xlab = "Length of stay (years)", ylab = "Visit frequency", zlab = "Number of patients",
+              xlab = "Length of stay", ylab = "Visit frequency", zlab = "Number of patients",
               y.margin.add = 0.2,
               color = "black", box = F)
 @
 \caption{3D-bar chart for the \data{hospital} data.}
-\label{fig:threedee}
+\label{fig:bars3d}
 \end{center}
 \end{figure}
+
+Although far from optimal, contingency tables are frequently visualized using
+grouped bar plots (see Figure~\ref{fig:barsgrouped}) 
+or even by means of 3D-bar charts (see Figure~\ref{fig:bars3d}). It seems hard
+to detect the aforementioned pattern in these, especially in the 3D
+plot where the perspective view tends to distort the true proportions
+of the bars. In the following, we
+will introduce three graphical methods that are better suited for
+contingency tables.
 
 \subsection{Mosaic Displays}
 \label{sec:mosaic}
@@ -448,7 +460,7 @@ It could again be visualized using a mosaic plot, this
 time applied to the table of expected frequencies. 
 If we cross-tabulate each tile to fill it with a number of squares equal to
 the corresponding number of \emph{observed} frequencies, we get a \emph{sieve plot}
-(see Figure~\ref{fig:sievefig}). It implicitly compares
+(see Figure~\ref{fig:sieve}). It implicitly compares
 expected and observed values since the density of the grid will
 increase with the deviation of the observed from the expected
 values. This allows the detection of general association patterns (for
@@ -463,13 +475,13 @@ visit frequency decreases with the length of stay.
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
-<<sievefig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<sieve,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 sieve(t(hospital), split = TRUE, pop = FALSE, gp = gpar(lty =
 "dotted", col = "black"))
 labeling_cells(text = t(hospital), clip = FALSE, gp = gpar(fontface = 2, fontsize = 15))(t(hospital))
 @ 
 \caption{Sieve plot for the \data{hospital} data.}
-\label{fig:sievefig}
+\label{fig:sieve}
 \end{center}
 \end{figure}
 
@@ -621,7 +633,7 @@ colors.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
-<<colorfig,fig=TRUE,echo=FALSE,height=3,width=7,results=hide>>=
+<<color,fig=TRUE,echo=FALSE,height=3,width=7,results=hide>>=
 par(mfrow = c(1,2), mar = c(1,1,1,1), oma = c(0,0,0,0))
 pie(rep(1,9), radius = 1, col = rainbow(9), labels = 360 * 0:8/9)
 pie(rep(1,9), radius = 1, col = rainbow_hcl(9), labels = 360 * 0:8/9)
@@ -895,7 +907,7 @@ gender (see Table~\ref{tab:arthritis} for the female patients):
 \begin{center}
 \begin{tabular}{|l|rrr|r|}
 \hline
- & \multicolumn{4}{c|}{\textbf{Improved}}\\
+ & \multicolumn{4}{c|}{\textbf{Improvement}}\\
 \textbf{Treatment} & None & Some & Marked & $\Sigma$ \\
 \hline
 Placebo & 19 & 7 & 6 & 32 \\
@@ -941,7 +953,7 @@ expected under independence.
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<Arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<arthritis,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 mosaic(art, shade = TRUE, gp_args = list(p.value = art_chisq$p.value))
 @
 \caption{Mosaic plot for the \data{arthritis} data, using the $\chi^2$ test 
@@ -953,7 +965,7 @@ and fixed cut-off points for the shading.}
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<Arthritis2fig,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<arthritis2,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 set.seed(myseed)
 mosaic(art, gp = shading_max, gp_args = list(n = 5000))
 @
@@ -1003,7 +1015,7 @@ As an example, consider the well-known UCB admissions data
 admission and gender, to graduate school at the University of California
 in Berkeley for the six largest departments in 1973. The `flattened'
 contingency table, putting department into the columns and
-admit---nested in gender---into the rows, is given by
+admission---nested in gender---into the rows, is given by
 Table~\ref{tab:ucb}. The table aggregated over all departments gives
 wrong evidence of gender bias, i.e., higher admission rates for male
 students.
@@ -1013,7 +1025,7 @@ students.
 \begin{tabular}{|ll|rrrrrr|}
 \hline
  & & \multicolumn{6}{c|}{\textbf{Department}} \\
-\textbf{Gender} & \textbf{Admit} & A & B & C & D & E & F\\\hline
+\textbf{Gender} & \textbf{Admission} & A & B & C & D & E & F\\\hline
 Male   & Admitted & 512 & 353 & 120 & 138 & 53 & 22\\
        & Rejected & 313 & 207 & 205 & 279 & 138 & 351\\
 Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
@@ -1086,7 +1098,7 @@ are equal for male and female students, except for department A where
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
 \begin{center}
-<<doubleucb,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+<<ucbhigh,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 doubledecker(aperm(aperm(UCBAdmissions, c(1,3,2))[2:1,,], c(2,3,1)), margins = c(left = 0, right = 5),col = rev(grey.colors(2)))
 @
 \caption{Doubledecker plot for the \data{UCBAdmissions} data.}
@@ -1144,8 +1156,32 @@ Therefore, a sensible way of representing the table is to
 nest admission into department instead of gender to obtain a stratified view.
 The corresponding mosaic and association plots are shown
 in Figures~\ref{fig:ucbmosaic} and \ref{fig:ucbassoc}. The shading visualizes the 
-model of admission and gender being conditionally independent, given department. Clearly,
-there is no gender bias in the departments except for department A: here, 
+model of admission and gender being conditionally independent, given department.
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
+shade = TRUE, keep = FALSE, residuals = ucb_max$residuals,
+gp_args = list(p.value = ucb_max$p.value), rep = c(Admission = FALSE)) 
+@
+\caption{Mosaic plot for the \data{UCB admissions} data.}
+\label{fig:ucbmosaic}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
+assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
+residuals_type = "Pearson", residuals = ucb_max$residuals,
+gp_args = list(p.value = ucb_max$p.value), rep = c(Admission = FALSE))
+@
+\caption{Association plot for the \data{UCB admissions} data.}
+\label{fig:ucbassoc}
+\end{center}
+\end{figure}
+Clearly, there is no gender bias in the departments except for department A: here, 
 significantly \textit{more} female students are admitted then expected under independence.
 Mosaic displays are already recognized as an excellent
 visualization tool for log-linear models 
@@ -1159,32 +1195,6 @@ residual-based shading added to the mosaic plot. Yet another approach
 is to plot a mosaic plot of the \emph{expected} frequencies and to highlight
 the (relative) residuals in the cells, using different colors for
 positive and negative residuals \cite{vcd:Theus+Lauer:1999}.
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[t!]
-\begin{center}
-<<ucbmosaic,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
-mosaic(aperm(UCBAdmissions, c(3,2,1)), data = UCBAdmissions, split = TRUE,
-shade = TRUE, keep = FALSE, residuals = ucb_max$residuals,
-gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE)) 
-@
-\caption{Mosaic plot for the \data{UCB admissions} data.}
-\label{fig:ucbmosaic}
-\end{center}
-\end{figure}
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[t!]
-\begin{center}
-<<ucbassoc,fig=TRUE,echo=FALSE,height=6,width=12,results=hide>>=
-assoc(aperm(UCBAdmissions, c(3,2,1)), split = c(TRUE,FALSE,TRUE), shade = TRUE, 
-residuals_type = "Pearson", residuals = ucb_max$residuals,
-gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
-@
-\caption{Association plot for the \data{UCB admissions} data.}
-\label{fig:ucbassoc}
-\end{center}
-\end{figure}
 
 % As an example, consider the \data{PreSex} data
 % \cite{vcd:thornes+collard:1979,vcd:gilbert:1981} on
@@ -1269,14 +1279,14 @@ Figure~\ref{fig:ucbmosaic} and \ref{fig:ucbassoc}.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}
 \begin{center}
-<<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
+<<ucbcotab,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
 cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE, 
           legend = FALSE, 
           panel_args = list(type = "assoc", margins = c(2,1,1,2), varnames = FALSE))
 @
 \caption{Conditional association plot for the \data{UCB admissions}
   data. For each individual association plot, gender is in the rows
-  and admit is in the columns.}
+  and admission is in the columns.}
 \label{fig:ucbadmissions}
 \end{center}
 \end{figure}
@@ -1314,26 +1324,6 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
 \end{center}
 \end{table}
 
-%FIXME% Better structure:
-%FIXME%   o dependent variable: attitude
-%FIXME%   o dependence on age and education is rather clear
-%FIXME%     (approval of moderate punishment increases with age and
-%FIXME%     decreases with education)
-%FIXME%   o question is conditional independence of attitude and
-%FIXME%     memory given the other margins
-%FIXME%   o hence for exploratory analysis: split in conditioning
-%FIXME%     variables (age, education) first, then explanatory variable (memory),
-%FIXME%     then dependent variable (attitude) for which highlighting is used.
-%FIXME%   o for model-based view: suppress marginal distribution of
-%FIXME%     conditioning variables (and their interaction), split first
-%FIXME%     in explanatory variable in each cell, use shading based on
-%FIXME%     residuals in conditional independence model.
-%FIXME%   o advantage of exploratory view: joint distribution of all variables
-%FIXME%     can be seen. disadvantage: visualization strongly influence
-%FIXME%     by the marginal distribution of education over age (in particular
-%FIXME%     the large proportion of 40+ people with elementary education)
-%FIXME%     which is not of interest in the conditional independence problem.
-
 In a first step, we create a mosaic plot for an exploratory view on the data:
 Attitude towards punishment clearly is the dependent variable 
 here and should be used as the last split via highlighting. 
@@ -1363,9 +1353,7 @@ indicate the same association while others do not.
 \begin{figure}
 \begin{center}
 <<punishhigh,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-tab <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
-dimnames(tab)[[3]][3] <- "40+"
-mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+mosaic(~ age + education + memory + attitude, data = punish, keep = FALSE,
        gp = gpar(fill = grey.colors(2)), spacing = spacing_highlighting, 
        rep = c(attitude = FALSE))
 @
@@ -1399,10 +1387,10 @@ the association is only significant at the 10\% level.
 % ## \begin{figure}
 % ## \begin{center}
 % ## <<punishmosaic,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
-% ## tab_test <- coindep_test(tab, margin = c(3, 4))
-% ## mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
+% ## punish_test <- coindep_test(punish, margin = c(3, 4))
+% ## mosaic(~ age + education + memory + attitude, data = punish, keep = FALSE,
 % ##        expected = ~ (memory + attitude) * education * age,
-% ##        gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))), 
+% ##        gp_args = list(interpolate = punish_test$qdist(c(0.9, 0.99))), 
 % ##        rep = c(attitude = F), set_varnames = c(attitude = "attitude to punishment"),
 % ##        set_labels = list(age = c("15-24","25-39","40+")))
 % ## 
@@ -1425,7 +1413,7 @@ conditioning in the model with conditioning in the visualization.
 \begin{center}
 <<punishcotab,fig=TRUE,echo=FALSE,height=10,width=10,results=hide>>=
 set.seed(123)
-cotabplot(tab, panel = cotab_coindep, panel_args = list(varnames = FALSE, margins = c(2, 1, 1, 2)))
+cotabplot(punish, panel = cotab_coindep, panel_args = list(varnames = FALSE, margins = c(2, 1, 1, 2)))
 @
 \caption{Conditional mosaic plot for the \data{punishment} data. For
   each mosaic plot, memory is in the rows (first split) and attitude
