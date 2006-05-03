@@ -998,15 +998,15 @@ conditional independence models.
 \subsection{Exploratory Visualization Techniques}
 \label{sec:flat}
 
-As an example, consider the well-known UCB admissions data 
-\cite{vcd:Bickel+Hammel+O'Connell:1975}
-on applicants to graduate school at the University of California in Berkeley for
-the six largest departments in 1973 classified by admission and
-gender. The `flattened' contingency table, putting department into the
-columns and admit---nested in gender---into the rows, is given by
-Table~\ref{tab:ucb}. The table aggregated over all
-departments gives wrong evidence of gender bias, 
-i.e., higher admission rates for male students. 
+As an example, consider the well-known UCB admissions data
+\cite{vcd:Bickel+Hammel+O'Connell:1975} on applicants, classified by
+admission and gender, to graduate school at the University of California
+in Berkeley for the six largest departments in 1973. The `flattened'
+contingency table, putting department into the columns and
+admit---nested in gender---into the rows, is given by
+Table~\ref{tab:ucb}. The table aggregated over all departments gives
+wrong evidence of gender bias, i.e., higher admission rates for male
+students.
 
 \begin{table}[ht]
 \begin{center}
@@ -1027,11 +1027,11 @@ Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
 
 
 A first step in the exploratory analysis of more complex tables is to
-get a quick overview on the data. For that, 
+get a quick overview on the data. For this, 
 all basic plots can be combined in pairwise displays,
 arranged in a matrix similar to scatterplots in a pairs plot.
 The diagonal cells contain the variable names, optionally with
-univariate statistics, whereas the off-diagonal cells contain plots whose
+univariate statistics, whereas the off-diagonal cells feature plots whose
 variables are implicitly specified by the cells' position in the matrix. %'
 In Figure~\ref{fig:pairs}, the diagonal cells show bar plots for the
 distribution of the variables, and the off-diagonal cells mosaic plots
@@ -1055,13 +1055,15 @@ pairs(UCBAdmissions)
 The next step is to investigate three-way interactions among the variables.
 In this example, we have a binary variable of interest (admission)
 that shall be ``explained'' by the others. 
-A natural way of representing such a three-way table is use a mosaic display
+A natural way of representing such a three-way table is to use a mosaic
+display, 
 splitting first in the explanatory variables department and gender and highlighting
 the resulting mosaic with respect to the dependent variable admissions. Here, we
 use the vertical splits for both explanatory variables, resulting in the 
-doubledecker plot in Figure~\ref{fig:doubleucb}. From the widths of the tiles it can be seen that an
-unequal number of students apply for the six departments (with a particularly small
-number of females in departments A and B),
+doubledecker plot in Figure~\ref{fig:doubleucb}. From the widths of the
+tiles it can be seen that students apply to the six departments in
+unequal numbers (with a particularly small
+number of females in departments~A and B),
 and from the highlighting we see again that the admission rates differ
 among the departments (roughly speaking, the admission rate is high for A and B,
 low for F and in between for C to E). The rates 
@@ -1100,7 +1102,7 @@ to the visualization of multi-way tables outlined in
 the previous section, there are specialized displays 
 designed for the visualization of conditional independence structures. 
 
-A first approach is to use pairs plots (such as that in Figure~\ref{fig:pairs}) for model search:
+One approach is employing pairs plots (such as that in Figure~\ref{fig:pairs}) for model search:
 we can use the position of the cells in the pairs matrix to select an
 independence model and add a corresponding shading to the tiles to
 visualize the residuals.
@@ -1139,7 +1141,7 @@ In our example, from the exploratory analysis, we already suspect that
 admission and gender are independent, given department, except for
 department A. 
 Therefore, a sensible way of representing the table is to 
-nest admission into department instead of gender to get a stratified view.
+nest admission into department instead of gender to obtain a stratified view.
 The corresponding mosaic and association plots are shown
 in Figures~\ref{fig:ucbmosaic} and \ref{fig:ucbassoc}. The shading visualizes the 
 model of admission and gender being conditionally independent, given department. Clearly,
@@ -1234,8 +1236,8 @@ gp_args = list(p.value = ucb_max$p.value), rep = c(Admit = FALSE))
 % the department variable has been used to simplify the distinction between the 
 % groups. 
 As we have seen, we can use all plots for the analysis of stratified
-data by using the conditioning variables first for splitting.
-However, this also displays the marginal distribution of the conditioning variables
+data by  first using the conditioning variables for splitting.
+However, this also displays the marginal distributions of the conditioning variables
 which might make it more difficult to interpret the dependent variables of
 interest. Especially for
 very unevenly distributed marginals, the strata can become very
@@ -1376,8 +1378,8 @@ In summary, both age and education clearly matter here.
 But is there really any significant influence of memory on the attitude towards 
 punishment apart from that? Or, rephrased as a hypothesis:
 Are memory and attitude conditionally independent, given age and education?
-To focus on this question, we will take another model-based view on the data
-that avoids the distracting influence of the marginal variables (age
+To focus on this question, we take another model-based view on the data
+which avoids the distracting influence of the marginal variables (age
 and education): We employ
 partial mosaic plots in a trellis layout (conditioning on age and education) with
 residual-based shading and data-driven cut-offs (see Figure~\ref{fig:punishcotab}).
@@ -1449,7 +1451,7 @@ or model-based analysis (residual-based shading, conditional plots).
 This chapter reviews several alternatives for the visualization of
 multi-way contingency tables. For two-way tables, mosaic, sieve, and
 association plots are suitable for the visualization of observed and
-expected values and the Pearson residuals, respectively. This basic
+expected values and the Pearson residuals, respectively. These basic
 methods can be enhanced by using residual-based shadings, preferably
 based on perceptual color palettes such as those derived from the HCL
 space. Residual-based shadings can be used to visualize sign and size
