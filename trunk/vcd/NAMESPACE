@@ -55,7 +55,7 @@ export(
        "diverge_hsv",
        "heat_hcl",
        "terrain_hcl",
-       "decrease_hcl",
+       "sequential_hcl",
        
 ## panel functions
        "pairs_barplot",
