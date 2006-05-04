@@ -3,7 +3,7 @@
 \alias{diverge_hcl}
 \alias{diverge_hsv}
 \alias{heat_hcl}
-\alias{decrease_hcl}
+\alias{sequential_hcl}
 \alias{terrain_hcl}
 \title{HCL and HSV Color Palettes}
 \description{
@@ -17,7 +17,7 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, \dots)
 
 heat_hcl(n, h = c(0, 90), c = 100, l = c(50, 90), correct = 5, \dots)
 terrain_hcl(n, h = c(130, 0), c = 80, l = c(60, 100), correct = 10, \dots)
-decrease_hcl(n, h = 260, c = 100, l = c(50, 90), \dots)
+sequential_hcl(n, h = 260, c = 100, l = c(50, 90), gamma = 1, \dots)
 }
 \arguments{
   \item{n}{the number of colors (\deqn{\ge 1}{>= 1}) to be in the palette.}
@@ -30,7 +30,9 @@ decrease_hcl(n, h = 260, c = 100, l = c(50, 90), \dots)
   \item{s}{saturation value in the HSV color description.}
   \item{v}{value value in the HSV color description.}
   \item{correct}{control parameter for \code{heat_hcl} and \code{terrain_hcl}
-    determining, how slowly colors should fade out.}
+    determining how slowly chroma should fade out.}
+  \item{gamma}{control parameter for gamma correction in \code{sequential_hcl},
+    i.e., this determins how quickly luminance decreases.}
   \item{\dots}{Other arguments passed to \code{\link[colorspace]{hcl}}
     or \code{\link{hsv}}, respectively.}
 }
@@ -57,7 +59,7 @@ decrease_hcl(n, h = 260, c = 100, l = c(50, 90), \dots)
   in HCL space. By default, it goes from a red to a yellow hue, while
   simultaneously going to lighter colors (i.e., increasing luminance)
   and reducing the amount of color (i.e., decreasing chroma). Similarly,
-  \code{decrease_hcl} gives a palette that goes from a fully saturated
+  \code{sequential_hcl} gives a palette that goes from a fully saturated
   color (blue by default) to a lighter grey. This is essentially one branch
   of the \code{diverge_hcl} palettes.
 
@@ -101,7 +103,7 @@ pal(diverge_hcl(7, h = c(128, 330), c = 98, l = c(90, 65)))
 pal(diverge_hcl(7, h = c(255, 330)))
 
 ## sequential palettes
-pal(decrease_hcl(12))
+pal(sequential_hcl(12))
 pal(heat_hcl(12))
 pal(heat_hcl(12, h = c(0, -100), l = c(50, 80), correct = 3))
 
