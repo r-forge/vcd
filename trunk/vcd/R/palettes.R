@@ -6,55 +6,62 @@ rainbow_hcl <- function(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, ...)
     else character(0)
 }
 
-diverge_hcl <- function(n, h = c(260, 0), c = 100, l = c(90, 50), ...)
+diverge_hcl <- function(n, h = c(260, 0), c = 80, l = c(30, 90), increase = 1.5, ...)
 {
   if(n < 1) return(character(0))
   h <- rep(h, length.out = 2)
   c <- c[1]
   l <- rep(l, length.out = 2)
+  increase <- rep(increase, length.out = 2)
   rval <- seq(1, -1, length = n)
   rval <- hcl(h = ifelse(rval > 0, h[1], h[2]),
-              c = c * abs(rval),
-              l = l[1] + diff(l) * abs(rval),
+              c = c * abs(rval)^increase[1],
+              l = l[2] - diff(l) * abs(rval)^increase[2],
               ...)
   return(rval)
 }
 
-diverge_hsv <- function(n, h = c(2/3, 0), s = 1, v = 1, ...)
+diverge_hsv <- function(n, h = c(2/3, 0), s = 1, v = 1, increase = 1, ...)
 {
   if(n < 1) return(character(0))
   h <- rep(h, length.out = 2)
   s <- s[1]
   v <- v[1]
+  increase <- increase[1]
   rval <- seq(-s, s, length = n)
-  rval <- hsv(h = ifelse(rval > 0, h[2], h[1]), s = abs(rval), v = v, ...)
+  rval <- hsv(h = ifelse(rval > 0, h[2], h[1]), s = abs(rval)^increase, v = v, ...)
   return(rval)
 }
 
-sequential_hcl <- function(n, h = 260, c = 100, l = c(50, 90), gamma = 1, ...)
+sequential_hcl <- function(n, h = 260, c. = c(80, 0), l = c(30, 90), increase = 1.5, ...)
 {
   if(n < 1) return(character(0))
-  l <- rep(l, length.out = 2)/100
+  c <- rep(c., length.out = 2)
+  l <- rep(l, length.out = 2)
+  increase <- rep(increase, length.out = 2)
+  rval <- seq(1, 0, length = n)
   rval <- hcl(h = h[1],
-              c = seq(c[1], 0, length = n),
-              l = seq(l[1]^gamma, l[2]^gamma, length = n)^(1/gamma) * 100,
+              c = c[2] - diff(c) * rval^increase[1],
+              l = l[2] - diff(l) * rval^increase[2],
               ...)
   return(rval)
 }
 
-heat_hcl <- function(n, h = c(0, 90), c = 100, l = c(50, 90), correct = 5, ...)
+heat_hcl <- function(n, h = c(0, 90), c. = c(100, 30), l = c(50, 90),
+  increase = c(1/5, 1), ...)
 {
   if(n < 1) return(character(0))
   h <- rep(h, length.out = 2)
-  c <- c[1]
+  c <- rep(c., length.out = 2)
   l <- rep(l, length.out = 2)
-  rval <- seq(0, 1, length = n)
-  rval <- hcl(h = h[1] + diff(h) * rval,
-              c = c * rev(rval)^(1/correct),
-              l = l[1] + diff(l) * rval,
+  increase <- rep(increase, length.out = 2)
+  rval <- seq(1, 0, length = n)
+  rval <- hcl(h = h[2] - diff(h) * rval,
+              c = c[2] - diff(c) * rval^increase[1],
+              l = l[2] - diff(l) * rval^increase[2],
               ...)
   return(rval)
 }
 
-terrain_hcl <- function(n, h = c(130, 0), c = 80, l = c(60, 95), correct = 10, ...)
-  heat_hcl(n, h = h, c = c, l = l, correct = correct, ...)
+terrain_hcl <- function(n, h = c(130, 0), c. = c(80, 0), l = c(60, 95), increase = c(1/10, 1), ...)
+  heat_hcl(n, h = h, c. = c., l = l, increase = increase, ...)

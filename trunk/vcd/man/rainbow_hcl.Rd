@@ -12,16 +12,16 @@
 \usage{
 rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, \dots)
 
-diverge_hcl(n, h = c(260, 0), c = 100, l = c(90, 50), \dots)
-diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, \dots)  
+sequential_hcl(n, h = 260, c. = c(80, 0), l = c(30, 90), increase = 1.5, \dots)
+heat_hcl(n, h = c(0, 90), c. = c(100, 30), l = c(50, 90), increase = c(1/5, 1), \dots)
+terrain_hcl(n, h = c(130, 0), c. = c(80, 0), l = c(60, 95), increase = c(1/10, 1), \dots)
 
-heat_hcl(n, h = c(0, 90), c = 100, l = c(50, 90), correct = 5, \dots)
-terrain_hcl(n, h = c(130, 0), c = 80, l = c(60, 100), correct = 10, \dots)
-sequential_hcl(n, h = 260, c = 100, l = c(50, 90), gamma = 1, \dots)
+diverge_hcl(n, h = c(260, 0), c = 80, l = c(30, 90), increase = 1.5, \dots)
+diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, increase = 1, \dots)  
 }
 \arguments{
   \item{n}{the number of colors (\deqn{\ge 1}{>= 1}) to be in the palette.}
-  \item{c}{chroma value in the HCL color description.}
+  \item{c, c.}{chroma value in the HCL color description.}
   \item{l}{luminance value in the HCL color description.}
   \item{start}{the hue at which the rainbow begins.}
   \item{end}{the hue at which the rainbow ends.}
@@ -29,10 +29,8 @@ sequential_hcl(n, h = 260, c = 100, l = c(50, 90), gamma = 1, \dots)
     in [0, 360] for HCL and in [0, 1] for HSV colors.}
   \item{s}{saturation value in the HSV color description.}
   \item{v}{value value in the HSV color description.}
-  \item{correct}{control parameter for \code{heat_hcl} and \code{terrain_hcl}
-    determining how slowly chroma should fade out.}
-  \item{gamma}{control parameter for gamma correction in \code{sequential_hcl},
-    i.e., this determins how quickly luminance decreases.}
+  \item{increase}{control parameter determining how chroma
+    and luminance should be increased (1 = linear, 2 = quadratic, etc.).}
   \item{\dots}{Other arguments passed to \code{\link[colorspace]{hcl}}
     or \code{\link{hsv}}, respectively.}
 }
@@ -42,27 +40,27 @@ sequential_hcl(n, h = 260, c = 100, l = c(50, 90), gamma = 1, \dots)
   defined by different hues given a single value of each chroma and luminance.
   It corresponds to \code{\link{rainbow}} which computes a rainbow in
   HSV space.
+
+  \code{sequential_hcl} gives a sequential palette starting at the full
+  color \code{hcl(h, c[1], l[1])} through to a light color
+  \code{hcl(h, c[2], l[2])} by interpolation.
   
-  Both functions, \code{diverge_hcl} and \code{diverge_hsv}, compute 
+  \code{diverge_hcl} and \code{diverge_hsv}, compute 
   a set of colors diverging from a neutral center (grey or white, without
   color) to two different extreme colors (blue and red by default). This
   is similar to \code{\link{cm.colors}}. For the diverging HSV colors,
   two hues \code{h} are needed, a maximal saturation \code{s} and a
   fixed value \code{v}. The saturation is then varied to obtain the
   diverging colors. For the diverging HCL colors, again two hues \code{h}
-  are needed, a maximal chroma \code{chroma} and two luminances \code{l}.
-  The colors are then created by linear interpolation between the 
-  neutral color (with zero chroma and luminance \code{l[1]}) and 
-  the full color (with chroma \code{c} and luminance \code{l[2]}).
+  are needed, a maximal chroma \code{c} and two luminances \code{l}.
+  The colors are then created by an interpolation between the 
+  full color \code{hcl(h[1], c, l[1])}, a neutral color \code{hcl(h, 0, l[2])}
+  and the other full color \code{hcl(h[2], c, l[1])}.
 
   The palette \code{heat_hcl} gives an implementation of \code{\link{heat.colors}}
   in HCL space. By default, it goes from a red to a yellow hue, while
   simultaneously going to lighter colors (i.e., increasing luminance)
-  and reducing the amount of color (i.e., decreasing chroma). Similarly,
-  \code{sequential_hcl} gives a palette that goes from a fully saturated
-  color (blue by default) to a lighter grey. This is essentially one branch
-  of the \code{diverge_hcl} palettes.
-
+  and reducing the amount of color (i.e., decreasing chroma).
   The \code{terrain_hcl} palette simply calls \code{heat_hcl} with different
   parameters, providing colors similar in spirit to \code{terrain.colors}.
   The lighter colors are not strictly HCL colors, though.
@@ -94,24 +92,27 @@ pal <- function(col, border = "light gray")
 wheel(rainbow_hcl(12))
 
 ## a few useful diverging HCL palettes
+par(mar = rep(0, 4), mfrow = c(4, 1))
 pal(diverge_hcl(7))
-pal(diverge_hcl(7, h = c(246, 40), c = 96, l = c(90, 65)))
-pal(diverge_hcl(7, h = c(130, 43), c = 100, l = c(90, 70)))
-pal(diverge_hcl(7, h = c(180, 70), c = 70, l = c(95, 90)))
-pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(95, 75)))
-pal(diverge_hcl(7, h = c(128, 330), c = 98, l = c(90, 65)))
-pal(diverge_hcl(7, h = c(255, 330)))
+pal(diverge_hcl(7, h = c(246, 40), c = 96, l = c(65, 90)))
+pal(diverge_hcl(7, h = c(130, 43), c = 100, l = c(70, 90)))
+pal(diverge_hcl(7, h = c(180, 70), c = 70, l = c(90, 95)))
+pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
+pal(diverge_hcl(7, h = c(128, 330), c = 98, l = c(65, 90)))
+pal(diverge_hcl(7, h = c(255, 330), l = c(40, 90)))
+pal(diverge_hcl(7, c = 100, l = c(50, 90), increase = 1))
 
 ## sequential palettes
 pal(sequential_hcl(12))
-pal(heat_hcl(12))
-pal(heat_hcl(12, h = c(0, -100), l = c(50, 80), correct = 3))
+pal(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), increase = 1))
+pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), increase = c(1/3, 1.5)))
+pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), increase = c(1/5, 1.5)))
 
 ## compare base and vcd palettes
 par(mfrow = c(2, 1))
 wheel(rainbow(12));wheel(rainbow_hcl(12))
-pal(diverge_hcl(7));pal(diverge_hsv(7))
-pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(95, 75)));pal(cm.colors(7))
+pal(diverge_hcl(7, c = 100, l = c(50, 90)));pal(diverge_hsv(7))
+pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)));pal(cm.colors(7))
 pal(heat_hcl(12));pal(heat.colors(12))
 pal(terrain_hcl(12));pal(terrain.colors(12))
 }
