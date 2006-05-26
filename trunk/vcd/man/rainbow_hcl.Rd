@@ -12,12 +12,12 @@
 \usage{
 rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, \dots)
 
-sequential_hcl(n, h = 260, c. = c(80, 0), l = c(30, 90), increase = 1.5, \dots)
-heat_hcl(n, h = c(0, 90), c. = c(100, 30), l = c(50, 90), increase = c(1/5, 1), \dots)
-terrain_hcl(n, h = c(130, 0), c. = c(80, 0), l = c(60, 95), increase = c(1/10, 1), \dots)
+sequential_hcl(n, h = 260, c. = c(80, 0), l = c(30, 90), power = 1.5, \dots)
+heat_hcl(n, h = c(0, 90), c. = c(100, 30), l = c(50, 90), power = c(1/5, 1), \dots)
+terrain_hcl(n, h = c(130, 0), c. = c(80, 0), l = c(60, 95), power = c(1/10, 1), \dots)
 
-diverge_hcl(n, h = c(260, 0), c = 80, l = c(30, 90), increase = 1.5, \dots)
-diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, increase = 1, \dots)  
+diverge_hcl(n, h = c(260, 0), c = 80, l = c(30, 90), power = 1.5, \dots)
+diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, power = 1, \dots)  
 }
 \arguments{
   \item{n}{the number of colors (\deqn{\ge 1}{>= 1}) to be in the palette.}
@@ -29,7 +29,7 @@ diverge_hsv(n, h = c(2/3, 0), s = 1, v = 1, increase = 1, \dots)
     in [0, 360] for HCL and in [0, 1] for HSV colors.}
   \item{s}{saturation value in the HSV color description.}
   \item{v}{value value in the HSV color description.}
-  \item{increase}{control parameter determining how chroma
+  \item{power}{control parameter determining how chroma
     and luminance should be increased (1 = linear, 2 = quadratic, etc.).}
   \item{\dots}{Other arguments passed to \code{\link[colorspace]{hcl}}
     or \code{\link{hsv}}, respectively.}
@@ -100,13 +100,13 @@ pal(diverge_hcl(7, h = c(180, 70), c = 70, l = c(90, 95)))
 pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
 pal(diverge_hcl(7, h = c(128, 330), c = 98, l = c(65, 90)))
 pal(diverge_hcl(7, h = c(255, 330), l = c(40, 90)))
-pal(diverge_hcl(7, c = 100, l = c(50, 90), increase = 1))
+pal(diverge_hcl(7, c = 100, l = c(50, 90), power = 1))
 
 ## sequential palettes
 pal(sequential_hcl(12))
-pal(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), increase = 1))
-pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), increase = c(1/3, 1.5)))
-pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), increase = c(1/5, 1.5)))
+pal(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), power = 1))
+pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), power = c(1/3, 1.5)))
+pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), power = c(1/5, 1.5)))
 
 ## compare base and vcd palettes
 par(mfrow = c(2, 1))

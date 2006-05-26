@@ -1,0 +1,209 @@
+\documentclass{Z}
+%% need no \usepackage{Sweave}
+\SweaveOpts{engine=R, eps=FALSE, echo=FALSE, results=hide}
+
+\title{Choosing Color Palettes for Statistical Graphics}
+\author{Achim Zeileis and Kurt Hornik\\Wirtschaftsuniversit\"at Wien}
+\Plainauthor{Achim Zeileis, Kurt Hornik}
+\Keywords{qualitative palette, sequential palette, diverging palette, HCL colors, HSV colors, perceptual-based color space}
+
+\Abstract{
+  Statistical graphs are often augmented by the use of color
+  coding information contained in some variable. When this involves
+  the shading of areas (and not only points or lines)---e.g., as in barplots, pie charts,
+  mosaic displays or heatmaps---it is important that the colors are perceptual-based
+  and do not introduce optical illusions or systematic bias. Here, we discuss
+  how the perceptual based HCL color space can be used for deriving suitable
+  color palettes for coding categorical data (qualitative palettes) and numerical
+  variables (sequential and diverging palettes).
+}
+
+\begin{document}
+
+<<preliminaries>>=
+library("vcd")
+source("functions.R")
+generate_png <- TRUE
+@
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[p]
+\begin{center}
+<<hsv-hcl>>=
+if(generate_png) {
+  files <- c("hcl-dcone", "hsv-cylinder")
+  PNG <- function(x) paste(x, ".png", sep = "")
+
+  png(file = PNG(files[1]), height = 480, width = 720)
+  hcl.wheel(luminance = seq(5, 95, length = 6))
+  dev.off()
+  png(file = PNG(files[2]), height = 480, width = 720)
+  hsv.wheel(value = seq(0, 1, length = 6), cone = FALSE)
+  dev.off()
+}
+@
+\includegraphics{hsv-cylinder}
+
+\vspace*{2.5cm}
+
+\includegraphics{hcl-dcone}
+\caption{\label{fig:hcl-hsv} HSV and HCL space}
+\end{center}
+\end{figure}
+
+\begin{figure}[p]
+\begin{center}
+<<hsv-hcl-gray>>=
+if(generate_png) {
+  for(i in files) {
+    file.copy(PNG(i), PNG(paste(i, "-gray", sep = "")), overwrite = TRUE)
+    system(paste("mogrify -type Grayscale", PNG(paste(i, "-gray", sep = ""))))
+  }
+}
+@
+\includegraphics{hsv-cylinder-gray}
+
+\vspace*{2.5cm}
+
+\includegraphics{hcl-dcone-gray}
+\caption{\label{fig:hcl-hsv-gray} HSV and HCL space (in gray levels)}
+\end{center}
+\end{figure}
+
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-q-construct>>=
+if(generate_png) {
+  png(file = "pal-q-construct.png", height = 480, width = 480)
+  hcl.wheel(luminance = 70, do.label = FALSE, inner.circle = TRUE)
+  rect(0.45, -0.05, 0.55, 0.05, col = hcl(0, 50, 70))
+  rect(-cos(pi/3)/2-0.05, sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, sin(pi/3)/2+0.05, col = hcl(120, 50, 70))
+  rect(-cos(pi/3)/2-0.05, -sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, -sin(pi/3)/2+0.05, col = hcl(240, 50, 70))
+  dev.off()
+}
+@
+\includegraphics{pal-q-construct}
+\caption{\label{fig:pal-q-construct} Constructing qualitative palettes}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=.8\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-s-construct>>=
+if(generate_png) {
+  png(file = "pal-s-construct.png", height = 480, width = 400)
+  hue.slice(260, grid.n = 301)
+  lines(c(0, 100), c(90, 50), lty = 2)
+  lines(c(0, 80), c(90, 30), lty = 2)
+  lines(c(2.5, 2.5), c(90, 30), lty = 2)
+  rect(0, 87.5, 5, 92.5, col = hcl(260, 0, 90))
+  rect(47.5, 67.5, 52.5, 72.5, col = hcl(260, 50, 70))
+  rect(95, 47.5, 100, 52.5, col = hcl(260, 100, 50))
+  rect(37.5, 57.5, 42.5, 62.5, col = hcl(260, 40, 60))
+  rect(77.5, 27.5, 82.5, 32.5, col = hcl(260, 80, 30))
+  rect(0, 57.5, 5, 62.5, col = hcl(260, 0, 60))
+  rect(0, 27.5, 5, 32.5, col = hcl(260, 0, 30))
+  dev.off()
+}
+@
+\includegraphics{pal-s-construct}
+\caption{\label{fig:pal-s-construct} Constructing sequential palettes}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-d-construct>>=
+if(generate_png) {
+  png(file = "pal-d-construct.png", height = 480, width = 480)
+  hue260 <- hue.slice(260, grid.n = 301, plot = FALSE)
+  hue360 <- hue.slice(360, grid.n = 301, plot = FALSE)
+  mychroma <- as.numeric(colnames(hue260))
+  luminance <- as.numeric(rownames(hue260))
+  nc <- ncol(hue260)
+  nl <- nrow(hue260)
+  plot(0.5, 0.5, xlim = c(-100, 100), ylim = c(0, 100), type = "n", axes = FALSE,
+       xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
+  for(i in 1:(nc-1)) {
+    rect(mychroma[i], luminance[-nl], mychroma[i] + 100/(nc-1), luminance[-1], border = hue260[,i+1], col = hue260[,i+1])
+  }
+  for(i in 1:(nc-1)) {
+    rect(-mychroma[i], luminance[-nl], -(mychroma[i] + 100/(nc-1)), luminance[-1], border = hue360[,i+1], col = hue360[,i+1])
+  }
+  axis(1, labels = FALSE, at = c(-100, 0, 100))
+  axis(2, at = c(0, 50, 70, 90, 100), labels = c(0, 50, 70, 90, 100))
+  axis(3, at = -4:4*25, labels=c(4:0*25, 1:4*25))
+  axis(4, at = c(0, 50, 70, 90, 100), labels = c(0, 50, 70, 90, 100))
+  mtext(c("hue = 0", "hue = 260"), side = 3, at = c(-50, 50), line = 3, cex = 1.2)
+  mtext("chroma", side = 3, at = 0, line = 2)
+  mtext("luminance", side = 2, at = 50, line = 2)
+  mtext("luminance", side = 4, at = 50, line = 2)
+  lines(c(-100, 0, 100), c(50, 90, 50), lty = 2)
+  rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
+  rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
+  rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))
+  rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
+  rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
+  lines(c(-80, 0, 80), c(30, 90, 30), lty = 2)
+  rect(-85, 27.5, -75, 32.5, col = hcl(0, 80, 30))
+  rect(-45, 57.5, -35, 62.5, col = hcl(0, 40, 60))
+  rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))
+  rect(35, 57.5, 45, 62.5, col = hcl(260, 40, 60))
+  rect(75, 27.5, 85, 32.5, col = hcl(260, 80, 30))
+  dev.off()
+}
+@
+\includegraphics{pal-d-construct}
+\caption{\label{fig:pal-d-construct} Constructing diverging palettes}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-q-examples, fig=TRUE, height=6, width=6>>=
+par(mfrow = c(2, 2), mar = c(0, 0, 3, 0))
+pal(rainbow_hcl(4, start = 30, end = 300), main = "dynamic (360 deg)")
+pal(rainbow_hcl(4, start = 60, end = 240), main = "harmonic (180 deg)")
+pal(rainbow_hcl(4, start = 270, end = 150), main = "cold (120 deg)")
+pal(rainbow_hcl(4, start = 90, end = -30), main = "warm (120 deg)")
+@
+\caption{\label{fig:pal-q-examples} Examples for qualitative palettes}
+\end{center}
+\end{figure}
+
+
+\setkeys{Gin}{width=.8\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-s-examples, fig=TRUE, height=9, width=6>>=
+par(mfrow = c(5, 1), mar = c(0, 0, 0, 0))
+pal(sequential_hcl(12, c = 0, increase = 2.2))
+pal(sequential_hcl(12, increase = 2.2))
+pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), increase = c(1/3, 1.5)))
+pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), increase = c(1/5, 1.5)))
+pal(rev(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), increase = 1)))
+@
+\caption{\label{fig:pal-s-examples} Examples for sequential palettes}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=.8\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<pal-d-examples, fig=TRUE, height=8, width=6>>=
+par(mfrow = c(4, 1), mar = c(0, 0, 0, 0))
+pal(diverge_hcl(7))
+pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
+pal(diverge_hcl(7, h = c(130, 43), c = 100, l = c(70, 90)))
+pal(diverge_hcl(7, c = 100, l = c(50, 90), increase = 1))
+@
+\caption{\label{fig:pal-d-examples} Examples for diverging palettes}
+\end{center}
+\end{figure}
+
+\end{document}
