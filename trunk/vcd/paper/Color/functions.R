@@ -7,7 +7,7 @@ pal <- function(col, border = "light gray", ...)
 
 hsv.wheel <-
     function(value = c(0:2, 4:6, 8:10)/10, saturation = 0:100/100, hues = 0:300/300, asp = 1,
-             p.cex = 0.6, do.label = FALSE, cone = TRUE)
+             p.cex = 0.6, do.label = FALSE, cone = TRUE, cex = 1.5)
 {
     stopifnot(is.numeric(saturation), saturation >= 0, saturation <= 1,
               is.numeric(hues), hues >= 0, hues <= 1,
@@ -19,7 +19,7 @@ hsv.wheel <-
     }
     for(i.c in 1:nch) {
         plot(-1:1,-1:1, type="n", axes = FALSE, xlab="",ylab="", asp = asp)
-        text(0.4, 0.99, paste("value =", format(value[i.c])), adj = 0, font = 4)
+        text(0.4, 0.99, paste("v =", format(100 * value[i.c])), adj = 0, font = 4, cex = cex)
 	l.s <- if(cone) saturation * value[i.c] else saturation
         for(ang in hues) {
             a. <- ang * 2 * pi
@@ -35,7 +35,7 @@ hsv.wheel <-
 
 hcl.wheel <-
     function(luminance = 1:9*10, chroma = 0:100, hues = 1:360, asp = 1,
-             p.cex = 0.6, do.label = c(TRUE, FALSE), fixup = FALSE, inner.circle = FALSE)
+             p.cex = 0.6, do.label = c(TRUE, FALSE), fixup = FALSE, inner.circle = FALSE, cex = 1.5)
 {
     do.label <- rep(do.label, length.out = 2)
     stopifnot(is.numeric(chroma), chroma >= 0, chroma <= 100,
@@ -48,7 +48,7 @@ hcl.wheel <-
     }
     for(i.c in 1:nch) {
         plot(-1:1,-1:1, type="n", axes = FALSE, xlab="",ylab="", asp = asp)
-        if(do.label[1]) text(0.4, 0.99, paste("luminance =", format(luminance[i.c])), adj = 0, font = 4)
+        if(do.label[1]) text(0.4, 0.99, paste("l =", format(luminance[i.c])), adj = 0, font = 4, cex = cex)
         l.s <- chroma / 100
         for(ang in hues) { # could do all this using outer() instead of for()...
             a. <- ang * pi/180
