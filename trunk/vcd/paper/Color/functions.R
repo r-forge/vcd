@@ -93,4 +93,3 @@ hue.slice <- function(hue, grid.n = 251, plot = TRUE, fixup = FALSE)
   class(color.slice) <- "slice"
   invisible(color.slice)
 }
-
