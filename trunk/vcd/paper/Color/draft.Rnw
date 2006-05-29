@@ -463,7 +463,7 @@ pie(seats, clockwise = TRUE, col = hcl(c(240, 60, 300, 120, 0), 60, 75), radius 
 \begin{center}
 <<votes, fig=TRUE, height=9, width=11>>=
 votes <- votes[c(1, 3, 4, 5, 9, 11, 13, 14, 15, 16, 2, 6, 7, 8, 10, 12),]
-votes <- votes[,c(2, 4, 1, 3, 5)]
+votes <- votes[,c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]
 votes <- as.table(as.matrix(votes))
 names(dimnames(votes)) <- c("", "")
 
@@ -481,7 +481,7 @@ To illustrate qualitative palettes, data from the 2005 election for the German p
 are employed. In that election, five parties were able to obtain enough votes to enter the
 Bundestag---the distribution of seats is depicted in a pie chart in Figure~\ref{fig:seats}.
 The colors used are rough metaphors for the political parties, using a red hue $H = 0$ for the
-social democrats SPD, a blue hue $H = 240$ for the conservative CDU, a yellow hue $H = 60$
+social democrats SPD, a blue hue $H = 240$ for the conservative CDU/CSU, a yellow hue $H = 60$
 for the liberal FDP, a green hue $H = 120$ for the green party `Die Gruenen' and a purple 
 hue $H = 300$ for the leftist party `Die Linke'. All colors use the same chroma $C = 60$ and
 luminance $L = 75$. The pie chart clearly shows that neither the governing coalition of SPD
