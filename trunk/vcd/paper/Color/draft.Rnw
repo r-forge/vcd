@@ -462,12 +462,10 @@ pie(seats, clockwise = TRUE, col = hcl(c(240, 60, 300, 120, 0), 60, 75), radius 
 \begin{figure}[p]
 \begin{center}
 <<votes, fig=TRUE, height=9, width=11>>=
-votes <- votes[c(1, 3, 4, 5, 9, 11, 13, 14, 15, 16, 2, 6, 7, 8, 10, 12),]
-votes <- votes[,c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]
-votes <- as.table(as.matrix(votes))
-names(dimnames(votes)) <- c("", "")
+Votes <- as.table(as.matrix(votes[c(1, 3, 4, 5, 9, 11, 13, 14, 15, 16, 2, 6, 7, 8, 10, 12),c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]))
+names(dimnames(Votes)) <- c("", "")
 
-mosaic(votes, labeling_args = list(rot_labels = c(0, 90, 0, 0), pos_labels = "center",
+mosaic(Votes, labeling_args = list(rot_labels = c(0, 90, 0, 0), pos_labels = "center",
   just_labels = c("center", "center", "center", "right")),
   gp = gpar(fill = hcl(c(240, 60, 0, 120, 300), 60, 75)),
   spacing = spacing_highlighting, labeling = labeling_left,
