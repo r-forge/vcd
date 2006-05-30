@@ -226,14 +226,14 @@ to visualize an intensity or interestingness $i \in [0, 1]$. A typical applicati
 in statistics are heatmaps (see Figure~\ref{fig:bkde}).
 
 The simplest solution to this task is to employ light/dark contrasts, i.e., employ the
-oldest and simples perceptual axis. The interestingness is thus coded
+oldest and simplest perceptual axis. The interestingness is thus coded
 by an increasing amount of gray (i.e., decreasing luminance) 
   \[ (H, 0, 90 - i \cdot 60), \]
 where the hue $H$ used does not matter, chroma is set to 0 (i.e., no color), and 
 luminance ranges in $[30, 90]$ avoiding the extreme colors white ($L = 100$) and 
 black ($L = 0$). Instead of going linearly from light to dark gray, luminance
 could also be increased nonlinearly, e.g., by some function $f(i)$ that
-controls wether intensity/luminance is increased quickly or not. We found $f(i) = i^p$ 
+controls whether intensity/luminance is increased quickly or not. We found $f(i) = i^p$ 
 to be a convenient transformation where the power $p$ can be varied to achieve
 different degrees of non-linearity.
 
@@ -415,7 +415,7 @@ whereas the others use larger ranges on the chroma axis.
 
 In this section, we show a few examples for the various types of palettes applied
 to statistical graphics. The first illustration is visualization of a bivariate
-density estimation for the Old Faithful geyser eruptions data. Figure\~ref{fig:bkde}
+density estimation for the Old Faithful geyser eruptions data. Figure~\ref{fig:bkde}
 shows heatmaps of a bivariate kernel density estimate of waiting times between
 and duration of geyser eruptions in Yellowstone National Park. Both use a sequential
 palette as derived in Section~\ref{sec:sequential} balanced towards the same gray levels
@@ -503,7 +503,7 @@ in blue, negative residuals in red. Light colors signal significance at 10\% lev
 significance at 1\% level. Hence, it can be concluded that there are significantly more
 marked improvements in the treated group and significantly fewer in the placebo group than
 would be expected under independence between treatment and improvement. More details can
-be found in \citep{vcd:Zeileis+Meyer+Hornik:2005}.
+be found in \cite{vcd:Zeileis+Meyer+Hornik:2005}.
 
 Figure~\ref{fig:class} shows the fit of a support vector machine (SVM) to an artificial 
 2-class supervised learning example: a mixture of two bivariate normal distributions.
