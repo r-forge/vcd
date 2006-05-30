@@ -206,10 +206,10 @@ if(generate_png) {
 \begin{center}
 <<pal-q-examples, fig=TRUE, height=4, width=6>>=
 par(mfrow = c(2, 2), mar = c(0, 0, 3, 0))
-pal(rainbow_hcl(4, start = 30, end = 300), main = "dynamic (30 - 300)")
-pal(rainbow_hcl(4, start = 60, end = 240), main = "harmonic (60 - 240)")
-pal(rainbow_hcl(4, start = 270, end = 150), main = "cold (270 - 150)")
-pal(rainbow_hcl(4, start = 90, end = -30), main = "warm (90 - -30)")
+pal(rainbow_hcl(4, start = 30, end = 300), main = "dynamic [30, 300]")
+pal(rainbow_hcl(4, start = 60, end = 240), main = "harmonic [60, 240]")
+pal(rainbow_hcl(4, start = 270, end = 150), main = "cold [270, 150]")
+pal(rainbow_hcl(4, start = 90, end = -30), main = "warm [90, -30]")
 @
 \caption{\label{fig:pal-q-examples} Examples for qualitative palettes}
 \end{center}
