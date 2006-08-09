@@ -33,7 +33,7 @@ library("KernSmooth")
 source("functions.R")
 load("Bundestagswahl2005.rda")
 
-generate_png <- FALSE
+generate_png <- TRUE
 @
 
 First, we motivate why HCL colors \citep{vcd:Ihaka:2003} are suitable for choosing color palettes
