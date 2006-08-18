@@ -1,0 +1,120 @@
+			  Referee Report on
+ Residual -based Shadings for Visualizing (Conditional) Independence
+			      JCGS 05117
+
+The paper makes two points: emphases produced by cutoffs should be
+related to variability under the hypothesized distribution, and HCL
+colors are a better basis for color-coding departures.  The first
+point is fairly intuitive but worth making since it is not followed in
+common practice.  The second point is more subtle and may not yet be
+made quite as forcefully as it could be.
+
+On the first point, I am not sure that I am persuaded that the maximum
+approach is the only approach that can be handled in the spirit of the
+paper.  If you are willing to work with, say, a 0.05 cutoff c_0.05 for
+X^2 based on either the asymptotic or randomization distribution, then
+you could use a strategy in which for a table with X^2 > c_0.05 the
+cells are colored according to their relative contribution to X^2.  It
+may make sense to only use color for those cells where r_ij^2 >
+c_0.05/df or something along those lines, and it may be useful to map,
+say, intensity onto the p-value.  Some experimentation will be needed
+to see what works best or at least reasonably well.  This sort of
+approach should be possible whenever one of your \lambda functions is
+\sum.
+
+With respect to the superiority of HCL you in a number of places you
+claim that HCL is clearly superior but you do not provide much
+concrete support.  The only side by side comparison of HCL and HSV is
+Figure 2 and I at least find this setting too abstract to be useful.
+I would prefer a much reduced version of this figure (or eliminate
+it?) and adding a number of pairs of concrete figures (e.g. mosaic
+plots) comparing the two approaches you are contrasting.  That way
+each claim you make would be illustrated by a concrete example.
+
+One general perceptual question you might consider briefly is whether
+strategies appropriate for single plots are equally appropriate for
+ensembles of plots. Figure 4 is essentially a trellis display, and one
+can also imagine using Mosaic plots in a trellis display.  It would
+seem that the lack of color in the right plot in Figure 3 is less
+important if this is a stand-alone plot than if it is part of a
+collection like Figure 4.
+
+Some details:
+
+abstract, last line: replace 'problems' by 'models'
+
+page 2, line 5: you are visualizing dependence, not independence
+
+page 2, line 13: This sentence is unclear--what is being attributed to
+Ihaka?
+
+page 3, line 12" 'expected cell frequencies' is not the right term
+here since they are data based. Some qualification is needed
+(estimated, under conditional distribution, something like that).
+
+page 4, line 1: 'sum of their squares' not 'squared sum'
+
+page 4, line 3: what is an unconditional limiting distribution?
+
+page 4, line 13: replace 'value exceeds' by 'values exceed'
+
+page 4, line -4: say what you are conditioning on
+
+pages 4-5: independence isn't really the right term for this example
+except artificially if the treatment assignment is randomized: this is
+really a comparison of distributions or test of homogeneity.
+
+page 5, line 3: Standard errors for your p-values?
+
+page 5, line 11: again 'expected table [\hat{n}_ij] is
+contradictory--qualify the 'expected' in some way.
+
+page 8, line 7: I don't understand what 'originally' means here
+
+page 8, line 8: better: 'wheels around a white center'
+
+page 9, it might help to point out that the
+significant/non-significant rows will be explained later (and say
+where).
+
+page 10, line: better: 'goes back until at least Munsell'
+
+page 10, line -9: better: 'saturations that the HSV colors have'
+
+page 11, line 6: what does "most similar" mean?
+
+page 11, line 15: this is one example of the cases where comparative
+illustrations would help.
+
+page 11, line -4: replace 'is not' by 'are not'
+
+page 11, line -2: significant according to what measure?
+
+page 12, line -6 to -4: It would seem to me that a continuous
+scale within the ranges above 1.24 and below -1.24 would work well and
+be a good fit to the HCL scheme.  If this is not true an example would
+help.
+
+page 13, line 4-4: the sentences 'This can easily ... This is
+equivalent ...'  are superfluous.
+
+page 14, top paragraph: again, well chosen illustrative plots should
+help make this case.
+
+page 14, lines 12-14: I do not understand the sentence 'Problems
+... computed.'
+
+page 14, line -6: It is not clear to me what you mean by
+sum-of-squares shading.  I think I can guess but should not have to.
+The problem is that I don't think you labeled what you mean explicitly
+by this term when you described it.
+
+page 17, Figure 4: one troubling aspect about this and the description
+as the deviations in the female group being identified is that within
+Department A there is only one degree of freedom associated with
+deviation from independence.  This is less of an issue when there are
+more categories but is an issue in the 2 x 2 case.
+
+page 18, lines -11, -10, -9: the sentence 'Both ... dimensions' is
+awkward.
+

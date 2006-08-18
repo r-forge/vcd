@@ -1,0 +1,14 @@
+Both reviewers feel that the paper makes valuable contributions but
+that it could be strengthened to make its points more clearly.  Both
+reviewers feel that additional examples are needed to illustrate the
+points made.  I agree with the second reviewer that side-by-side
+graphs illustrating each of the main points you make would greatly
+enhance the paper.  These could be based on a single data set or
+several data sets.  I also agree with the first reviewer that the UCB
+data set is not an ideal illustration.  The amount of fine detail that
+the Department A panel seems to suggest can be extracted from one
+degree of freedom troubles me as well.
+
+If you choose to undertake a revision, please include detailed
+comments to the reviewers indicating the changes you have made, as
+well as changes you have not undertaken (with brief justification).
