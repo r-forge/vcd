@@ -142,7 +142,7 @@ mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
   gp = gpar(fill = grey.colors(2)), spacing = spacing_highlighting)
 mosaic(~ age + education + memory + attitude, data = tab, keep = FALSE,
   expected = ~ (memory + attitude) * education * age,
-  gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99))))
+  gp_args = list(interpolate = tab_test$qdist(c(0.9, 0.99)), p.value = tab_test$p.value))
 cotabplot(tab, panel = cotab_coindep, panel_args = list(margin = c(2.5, 0, 0.5, 0)))
 
 
