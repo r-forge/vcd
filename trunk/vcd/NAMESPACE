@@ -42,7 +42,7 @@ export(
        "shading_hsv",
        "shading_max",
        "shading_Friendly",
-       "shading_Friendly2",
+       "shading_sieve",
 
 # core functions
        "struc_mosaic",
@@ -96,8 +96,13 @@ S3method("[", "structable")
 S3method("[[", "structable")
 S3method("[<-", "structable")
 S3method("[[<-", "structable")
-S3method("rbind", "structable")
-S3method("cbind", "structable")
+## We cannot do the following:
+## S3method("rbind", "structable")
+## S3method("cbind", "structable")
+## Instead, we have to use:
+export("rbind.structable")
+export("cbind.structable")
+
 S3method("is.na", "structable")
 S3method("length", "structable")
 S3method("as.table", "structable")

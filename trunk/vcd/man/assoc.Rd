@@ -15,8 +15,7 @@
   split_vertical = NULL, keep_aspect_ratio = FALSE, 
   xscale = 0.9, yspace = unit(0.5, "lines"), main = NULL, sub = NULL,
   \dots, residuals_type = "Pearson", gp_axis = gpar(lty = 3))
-\method{assoc}{formula}(formula, data = NULL, subset, na.action, \dots,
-  main = NULL, sub = NULL)
+\method{assoc}{formula}(formula, data = NULL, \dots, subset = NULL, na.action = NULL, main = NULL, sub = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form with optional category
@@ -74,16 +73,14 @@
     space separating the rows.}
   \item{gp_axis}{object of class \code{"gpar"} specifying the visual
     aspects of the tiles' baseline.}
-  \item{formula}{ a formula object with both left and right hand sides
-    specifying the column and row variables of the flat table.}
+  \item{formula}{a formula object with possibly both left and right hand
+    sides specifying the column and row variables of the flat table.}
   \item{data}{a data frame, list or environment containing the variables
-    to be cross-tabulated, or a contingency table (see below).}
+    to be cross-tabulated, or an object inheriting from class \code{table}.}
   \item{subset}{an optional vector specifying a subset of observations
-    to be used.
-    Ignored if \code{data} is a contingency table.}
-  \item{na.action}{a function which indicates what should happen when
-    the data contain \code{NA}s.
-    Ignored if \code{data} is a contingency table.}
+    to be used. Ignored if \code{data} is a contingency table.}
+  \item{na.action}{an optional function which indicates what should happen when
+    the data contain \code{NA}s. Ignored if \code{data} is a contingency table.}
   \item{main, sub}{either a logical, or a character string used for plotting
     the main (sub) title.  If logical and \code{TRUE}, the
     name of the \code{data} object is used.}

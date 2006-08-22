@@ -63,9 +63,9 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
   sievetype = match.arg(sievetype)
   if (is.logical(shade) && shade && is.null(gp))
     gp <- if (sievetype == "observed")
-      shading_Friendly2(interpolate = 0, lty = c("longdash", "solid"))
+      shading_sieve(interpolate = 0, lty = c("longdash", "solid"))
     else
-      shading_Friendly2(interpolate = 0, line_col = "darkgray", eps = Inf, lty = "dotted")
+      shading_sieve(interpolate = 0, line_col = "darkgray", eps = Inf, lty = "dotted")
 
   if (is.structable(x)) {
     if (is.null(direction) && is.null(split_vertical))
@@ -96,7 +96,7 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
   
   ## spacing argument
   if (is.null(spacing))
-    spacing <- if (dl < 3) spacing_equal else spacing_increase
+    spacing <- if (dl < 3) spacing_equal(sp = 0) else spacing_increase
 
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),

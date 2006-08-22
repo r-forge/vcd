@@ -6,7 +6,7 @@ mosaic <- function(x, ...)
 
 mosaic.formula <-
 function(formula, data = NULL, highlighting = NULL,
-         ..., main = NULL, sub = NULL, subset = NULL)
+         ..., main = NULL, sub = NULL, subset = NULL, na.action = NULL)
 {
   if (is.logical(main) && main)
     main <- deparse(substitute(data))
@@ -20,13 +20,22 @@ function(formula, data = NULL, highlighting = NULL,
   vars <- strsplit(strsplit(gsub(" ", "", fstr[[1]][2]), "\\|")[[1]], "\\+")
   varnames <- vars[[1]]
 
+  condnames <- if (length(vars) > 1) vars[[2]] else NULL
+  
   dep <- gsub(" ", "", fstr[[1]][1])
   if (is.null(highlighting) && (!dep %in% c("","Freq"))) {
-    varnames <- c(dep, varnames)
-    highlighting <- 1
+     if (all(varnames == ".")) {
+       varnames <- if (is.data.frame(data))
+         colnames(data)
+       else
+         names(dimnames(as.table(data)))
+       varnames <- varnames[-which(varnames %in% dep)]
+     }
+                     
+    varnames <- c(varnames, dep)
+    highlighting <- length(varnames) + length(condnames)
   }
     
-  condnames <- if (length(vars) > 1) vars[[2]] else NULL
   
 
   if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
@@ -48,14 +57,14 @@ function(formula, data = NULL, highlighting = NULL,
     mosaic.default(dat, main = main, sub = sub, highlighting = highlighting,
                    condvars = if (is.null(condind)) NULL else match(condnames, names(dimnames(dat))), ...)
   } else {
-      m <- m[c(1, match(c("formula", "data", "subset"), names(m), 0))]
+      m <- m[c(1, match(c("formula", "data", "subset", "na.action"), names(m), 0))]
       m[[1]] <- as.name("xtabs")
       m$formula <-
           formula(paste(if("Freq" %in% colnames(data)) "Freq",
                         "~",
                         paste(c(condnames, varnames), collapse = "+")))
       tab <- eval(m, parent.frame())
-      mosaic.default(tab, main = main, sub = sub, ...)  
+      mosaic.default(tab, main = main, sub = sub, highlighting = highlighting, ...)  
   }
 }
 
@@ -90,41 +99,43 @@ mosaic.default <- function(x, condvars = NULL,
   if (length(split_vertical) < dl)
     split_vertical <- rep(split_vertical, length.out = dl)
 
-  ## condvars
+  ## highlighting
+  if (!is.null(highlighting)) {
+    if (is.character(highlighting))
+      highlighting <- match(highlighting, names(dimnames(x)))
+    if (length(highlighting) > 0) {
+      if (is.character(condvars))
+        condvars <- match(condvars, names(dimnames(x)))
+      x <- if (length(condvars) > 0)
+        aperm(x, c(condvars, seq(dl)[-c(condvars,highlighting)], highlighting))
+      else
+        aperm(x, c(seq(dl)[-highlighting], highlighting))
+      if (is.null(spacing))
+        spacing <- spacing_highlighting
+      if (is.null(gp))
+        gp <- gpar(fill = rev(highlighting_fill(dim(x)[dl])))
+      if (!is.null(highlighting_direction)) {
+        split_vertical[dl] <- highlighting_direction %in% c("left", "right")
+        if (highlighting_direction %in% c("left", "top")) {
+          ## ugly:
+          tmp <- as.data.frame.table(x)
+          tmp[,dl] <- factor(tmp[,dl], rev(levels(tmp[,dl])))
+          x <- xtabs(Freq ~ ., data = tmp)
+          gp <- gpar(fill = highlighting_fill(dim(x)[dl]))
+        }
+      }
+    }
+  }
+  
+  ## Conditioning only
   if (!is.null(condvars)) {
     if (is.character(condvars))
       condvars <- match(condvars, names(dimnames(x)))
-    if (length(condvars) < 2)
+    if (length(condvars) > 0)
       x <- aperm(x, c(condvars, seq(dl)[-condvars]))
-    else
-      
+    
     if (is.null(spacing))
       spacing <- spacing_conditional
-  }
-  
-  ## highlighting
-  if (!is.null(highlighting) && is.null(condvars)) {
-    if (is.character(highlighting))
-      highlighting <- match(highlighting, names(dimnames(x)))
-    x <- aperm(x, c(seq(dl)[-highlighting], highlighting))
-    if (is.null(spacing))
-      spacing <- spacing_highlighting
-    if (is.null(gp))
-      gp <- gpar(fill = rev(highlighting_fill(dim(x)[dl])))
-    if (!is.null(highlighting_direction)) {
-      split_vertical[dl] <- highlighting_direction %in% c("left", "right")
-      if (highlighting_direction %in% c("left", "top")) {
-        ## ugly:
-        tmp <- as.data.frame.table(x)
-        tmp[,dl] <- factor(tmp[,dl], rev(levels(tmp[,dl])))
-        x <- xtabs(Freq ~ ., data = tmp)
-        gp <- gpar(fill = highlighting_fill(dim(x)[dl]))
-      }
-    }
-    
-  
-      
-      
   }
   
   ## spacing argument
