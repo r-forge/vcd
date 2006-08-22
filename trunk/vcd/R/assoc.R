@@ -5,14 +5,16 @@ assoc <- function(x, ...)
   UseMethod("assoc")
 
 assoc.formula <-
-function(formula, data = NULL, subset, na.action, ..., main = NULL, sub = NULL)
+function(formula, data = NULL, ..., subset = NULL, na.action = NULL,
+         main = NULL, sub = NULL)
 {
     if (is.logical(main) && main)
       main <- deparse(substitute(data))
     else if (is.logical(sub) && sub)
       sub <- deparse(substitute(data))
 
-    assoc.default(ftable(formula, data, subset, na.action), main = main, sub = sub, ...)
+    assoc.default(structable(formula, data, subset = subset, na.action = na.action),
+                  main = main, sub = sub, ...)
 }
 
 assoc.default <- function(x,

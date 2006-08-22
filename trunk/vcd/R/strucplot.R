@@ -233,7 +233,7 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   mar <- if (!is.unit(mar))
     unit(pexpand(mar, 4, rep.int(2.5, 4), c("top","right","bottom","left")), "lines")
   else
-    unit.rep(mar, length.out = 4)
+    rep(mar, length.out = 4)
   if (is.null(oma)) {
     space <- if (legend && keep_aspect_ratio)
       legend_width + mar[2] + mar[4] - mar[1] - mar[3]
@@ -250,7 +250,7 @@ vcdViewport <- function(mar = rep.int(2.5, 4),
   oma <- if (!is.unit(oma))
     unit(pexpand(oma, 2, rep.int(2, 2), c("top","bottom")), "lines")
   else
-    unit.rep(oma, length.out = 2)
+    rep(oma, length.out = 2)
   
   ## set up viewports
   vpPlot <- vpStack(viewport(layout.pos.col = 2, layout.pos.row = 3),

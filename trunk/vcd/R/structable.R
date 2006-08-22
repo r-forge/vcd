@@ -451,7 +451,7 @@ structable.default <- function(..., direction = NULL, split_vertical = FALSE) {
 }
 
 
-cbind.structable <- function(...) {
+cbind.structable <- function(..., deparse.level = 1) {
   mergetables <- function(t1, t2) {
     ret <- cbind(unclass(t1),unclass(t2))
     class(ret) <- class(t1)
@@ -475,7 +475,7 @@ cbind.structable <- function(...) {
     ret
 }
 
-rbind.structable <- function(...) {
+rbind.structable <- function(..., deparse.level = 1) {
   mergetables <- function(t1, t2) {
     ret <- rbind(unclass(t1),unclass(t2))
     class(ret) <- class(t1)

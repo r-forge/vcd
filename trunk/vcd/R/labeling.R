@@ -169,12 +169,12 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       unit(pexpand(offset_varnames, 4,
                    rep.int(0, 4), c("top","right","bottom","left")), "lines")
     else
-      unit.rep(offset_varnames, length.out = 4)
+      rep(offset_varnames, length.out = 4)
     offset_labels <- if (!is.unit(offset_labels))
       unit(pexpand(offset_labels, 4,
                    rep.int(0, 4), c("top","right","bottom","left")), "lines")
     else
-      unit.rep(offset_labels, length.out = 4)
+      rep(offset_labels, length.out = 4)
 
     ## tl_labels
     def <- logical()

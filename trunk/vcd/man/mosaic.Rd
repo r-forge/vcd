@@ -13,7 +13,7 @@
   highlighting_fill = grey.colors, highlighting_direction = NULL,
   zero_size = 0.5, main = NULL, sub = NULL, \dots)
 \method{mosaic}{formula}(formula, data, highlighting = NULL,
-  \dots, main = NULL, sub = NULL, subset = NULL)
+  \dots, main = NULL, sub = NULL, subset = NULL, na.action = NULL)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -30,6 +30,8 @@
   \item{data}{either a data frame, or an object of class \code{"table"}
     or \code{"ftable"}.}
   \item{subset}{an optional vector specifying a subset of observations to be used.}
+  \item{na.action}{a function which indicates what should happen when
+    the data contain \code{NA}s. Ignored if \code{data} is a contingency table.}
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
