@@ -78,37 +78,65 @@
 <<load_data,echo=FALSE,results=hide>>=
 library("vcd")
 
-data("Arthritis")
+data("Arthritis", package = "vcd")
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+names(dimnames(art))[2] <- "Improvement"
 
-data("UCBAdmissions")
-ucb <- aperm(UCBAdmissions)
+data("pistonrings", package = "HSAUR")
+pring <- pistonrings
+names(dimnames(pring)) <- c("Compressor", "Leg")
+ 
+data("alzheimer", package = "coin")
+alz <- xtabs(~ smoking + disease + gender, data = alzheimer)
+dimnames(alz)[[2]] <- c("Alzheimer's", "Dementia", "Other")
+names(dimnames(alz)) <- c("Smoking", "Disease", "Gender")
+
+data("Punishment", package = "vcd")
+pun <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+dimnames(pun) <- list(Memory = c("yes", "no"), Attitude = c("no", "moderate"),
+  Age = c("15-24", "25-39", "40+"), Education = c("Elementary", "Secondary", "High"))
 
 myseed <- 1071
+nrep <- 5000
+recompute <- FALSE
 @
 
 <<inference,echo=FALSE,results=hide>>=
-if(FALSE) {
+if(recompute) {
   set.seed(myseed)
-  art_max <- coindep_test(art, n = 5000)
+  art_max <- coindep_test(art, n = nrep)
   set.seed(myseed)
-  art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
+  art_chisq <- coindep_test(art, n = nrep, indepfun = function(x) sum(x^2))
 
   set.seed(myseed)
-  art_gp <- shading_max(art, n = 5000)
+  pring_max <- coindep_test(pistonrings, n = nrep)
+  set.seed(myseed)
+  pring_chisq <- coindep_test(pistonrings, n = nrep, indepfun = function(x) sum(x^2))
 
   set.seed(myseed)
-  ucb_doublemax <- coindep_test(ucb, "Dept", n = 5000)
+  alz_dmax <- coindep_test(alz, "Gender", n = nrep)
   set.seed(myseed)
-  ucb_maxChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
+  alz_maxchisq <- coindep_test(alz, "Gender", n = nrep, indepfun = function(x) sum(x^2))
   set.seed(myseed)
-  ucb_sumChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
+  alz_sumchisq <- coindep_test(alz, "Gender", n = nrep, indepfun = function(x) sum(x^2), aggfun = sum)
+  set.seed(myseed)
+  alz_cotab <- cotab_coindep(alz, condvars = "Gender", n = nrep, margins = c(2, 1, 1, 2),
+    varnames = FALSE)
 
   set.seed(myseed)
-  ucb_cotab <- cotab_coindep(ucb, condvars = "Dept", type = "assoc", n = 5000, margins = c(3, 1, 1, 3))
-  
-  save(art_max, art_chisq, art_gp,
-       ucb_doublemax, ucb_maxChisq, ucb_sumChisq, ucb_cotab,
+  pun_dmax <- coindep_test(pun, 3:4, n = nrep)
+  set.seed(myseed)
+  pun_maxchisq <- coindep_test(pun, 3:4, n = nrep, indepfun = function(x) sum(x^2))
+  set.seed(myseed)
+  pun_sumchisq <- coindep_test(pun, 3:4, n = nrep, indepfun = function(x) sum(x^2), aggfun = sum)
+  set.seed(myseed)
+  pun_cotab <- cotab_coindep(pun, condvars = 3:4, type = "assoc", n = nrep,
+    varnames = FALSE, margins = c(2, 1, 1, 2))
+
+  save(art_max, art_chisq,
+       pring_max, pring_chisq,
+       alz_dmax, alz_maxchisq, alz_sumchisq, alz_cotab,
+       pun_dmax, pun_maxchisq, pun_sumchisq, pun_cotab,
        file = "JCGS-inference.rda")
 } else {
   load("JCGS-inference.rda")
@@ -177,7 +205,7 @@ way based on the conditional permutation distribution of maximum-type
 test statistics. The shadings are first established for the case of independence
 in 2-way tables and then extended to more general independence models
 for multi-way tables, including in particular conditional independence
-problems.\\[0.3cm]
+models.\\[0.3cm]
 
 \noindent \textbf{Key Words:} Association plots; Conditional inference; 
 Contingency tables; HCL colors; HSV colors; Mosaic plots.
@@ -201,15 +229,16 @@ log-linear model that elevates the mosaic plot from a display for frequencies
 in a contingency table to a visualization technique that encompasses both, observed
 frequencies and residuals. This shading allows for judging the quality of a model
 fit and spotting dependence patterns that have not been accounted for by the model.
-Other techniques for visualizing independence in contingency tables such as
+Other techniques for visualizing dependence in contingency tables such as
 association plots \citep{vcd:Cohen:1980} can also be enhanced by using this
 residual-based shading.
 
 In this paper, the shading of \cite{vcd:Friendly:1994} is extended in two directions:
 usage of perceptually-based HCL (Hue-Chroma-Luminance) colors and combination of
-visualization and significance
-testing. Friendly's shading is typically implemented in statistical software using color
-spaces whose dimensions are only poorly mapped to the perceptual dimensions of the
+visualization and significance testing. Friendly's shading is typically implemented
+in statistical software using color spaces such as HLS (Hue-Luminance-Saturation) or
+HSV (Hue-Saturation-Value) colors. The dimensions of both spaces are only
+poorly mapped to the perceptual dimensions of the
 human visual system \citep{vcd:Brewer:1999,vcd:Ihaka:2003} which makes it more difficult
 to properly read and interpret the corresponding plots. For overcoming this problem,
 a general strategy for constructing diverging palettes in the perceptually-based HCL
@@ -250,7 +279,7 @@ with rheumatoid arthritis.}
 
 \begin{tabular}{rr|rrr}
 \\
-                   &         & \multicolumn{3}{|l}{\textbf{Improved}} \\
+                   &         & \multicolumn{3}{|l}{\textbf{Improvement}} \\
                    &         & None & Some & Marked \\ \hline
 \textbf{Treatment} & Placebo &   19 &    7 &      6 \\
                    & Treated &    6 &    5 &     16
@@ -274,14 +303,14 @@ variables can be formulated as
 H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
 \end{equation}
 
-The expected cell frequencies in this model are
+The estimated expected cell frequencies under $H_0$ are
 $\hat n_{ij} = n_{i+}n_{+j}/n_{++}$. The probably best known and most used
 measure of discrepancy between observed and expected values are the Pearson residuals
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
 \end{equation}
 The most convenient way to aggregate the $I \times J$ residuals
-to one test statistic is their squared sum
+to one test statistic is their sum of squares
 \begin{equation} \label{eq:ChiSquare}
 X^2 \quad = \quad \sum_{i, j}r_{ij}^2,
 \end{equation}
@@ -301,15 +330,15 @@ departure from independence), if any, is the maximum of the absolute values
 M \quad = \quad \max_{i, j} |r_{ij}|.
 \end{equation}
 Given a critical value $c_\alpha$ for this test statistic, all residuals whose
-absolute value exceeds $c_\alpha$ violate the null hypothesis of indendence at significance level
+absolute values exceed $c_\alpha$ violate the null hypothesis of indendence at significance level
 $\alpha$ \cite[][ch.~7]{vcd:Mazanec+Strasser:2000}. Thus, the interesting cells responsible
 for the dependence can easily be identified.
 
 Furthermore, an important reason for using the unconditional limiting distribution
 for the $X^2$ statistic from Equation~\ref{eq:ChiSquare} was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
-conditional inference (or permutation tests)---carried out either by simulation
-or by computation of the (asymptotic) permutation distribution---have been receiving
+conditional inference (or permutation tests, conditioning on the observations)---carried
+out either by simulation or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \citep[e.g.,][]{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
 For testing the independence hypothesis from Equation~\ref{eq:H0}, using a permutation test is particularly
 intuitive due to the permutation invariance (given row and column sums) of this problem.
@@ -326,7 +355,7 @@ dependence of improvement on treatment: the sum-of-squares statistic from Equati
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
 and the maximum statistic from Equation~\ref{eq:MaxAbs} is $M = \Sexpr{stat(art_max)}$
 with $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
-from a sample of size $5000$ from the permutation distribution under independence
+from a sample of size $\Sexpr{nrep}$ from the permutation distribution under independence
 generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
 using the \cite{vcd:Patefield:1981} algorithm and computing the maximum statistic for 
 each of these tables.
@@ -336,7 +365,7 @@ each of these tables.
 
 Two well-established visualization techniques for independence in 2-way tables are
 mosaic plots and association plots. Both are suitable to bring out
-departures of an observed table $[n_{ij}]$ from the expected table $[\hat n_{ij}]$
+departures of an observed table $[n_{ij}]$ from the estimated expected table $[\hat n_{ij}]$
 in a graphical way. The latter focuses on the visualization of the Pearson residuals
 $r_{ij}$ (under independence) while the former primarily displays the observed frequencies
 $n_{ij}$.
@@ -378,7 +407,7 @@ previous variables can also directly be used for visualizing multi-way tables
 \citep{vcd:Cohen:1980} visualize the table of Pearson residuals:
 each cell is represented by a rectangle that has (signed) height
 proportional to the corresponding Pearson residual $r_{ij}$ and width proportional to the
-square root of the expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
+square root of the estimated expected counts $\sqrt{\hat n_{ij}}$. Thus, the area is proportional to
 the raw residuals $n_{ij} - \hat n_{ij}$. The association plot for the arthritis
 data is shown in the right panel of Figure~\ref{fig:classic} which leads to the
 same interpretation as the mosaic plot: there are more placebo patients with no 
@@ -433,21 +462,21 @@ following could also be applied to control line type and color.
 The way the (light) blue and red colors are chosen differs somewhat between
 various implementations of Friendly mosaic plots: In his original 
 \proglang{SAS} implementation \citep[see][]{vcd:Friendly:2000}, Michael Friendly
-uses colors from a palette based on HLS (Hue-Luminance-Saturation) color space.
+uses colors from a palette based on HLS color space.
 The implementation in the standard packages of the
 \proglang{R} system for statistical computing and graphics
-\citep{vcd:R:2005} employs colors from HSV (Hue-Saturation-Value) space. 
+\citep{vcd:R:2005} employs colors from HSV space. 
 Both spaces are rather similar transformations of RGB (Red-Green-Blue) space
 \citep{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
 colors in many computer packages \citep{vcd:Moretti+Lyons:2002} making the generation
-of the Friendly shading very simple. As both spaces can generate the
+of the Friendly shading very simple. As both spaces can easily generate the
 same colors, we only discuss HSV space in the following.
 
-The HSV space originally looks like a cone\footnote{The wikipedia gives a very useful
+The HSV space looks like a cone\footnote{The wikipedia gives a very useful
 overview at \url{http://en.wikipedia.org/wiki/HSV_color_space} which also provides
 links to comparisons with other color spaces discussed in this paper.}
 with black at its peak (zero value) and full color wheels for different saturations at the other end,
-centered around a white (full value). Type and amount of color are controlled by hue
+around a white center (full value). Type and amount of color are controlled by hue
 and saturation, respectively. Typically, polar coordinates $(h, s, v)$ rescaled to the 
 unit interval are used in this space, giving it the appearance of a cylinder.
 For generating colors in the Friendly shading, the following strategy is used:
@@ -487,10 +516,10 @@ for(i in 1:(nc-1)) {
 for(i in 1:(nc-1)) {
   rect(-saturation[i], value[-nl], -(saturation[i] + 1/(nc-1)), value[-1], border = hue0[,i+1], col = hue0[,i+1])
 }
-axis(2, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
-axis(4, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
-axis(3, at = -4:4*.25, labels=c(4:0*.25, 1:4*.25))
-mtext(c("hue = 0", "hue = 2/3"), side = 3, at = c(-.5, .5), line = 3, cex = 1.2)
+axis(2, at = c(50, 75, 100)/100, labels = c(50, 75, 100))
+axis(4, at = c(50, 75, 100)/100, labels = c(50, 75, 100))
+axis(3, at = -4:4*.25, labels=c(4:0*25, 1:4*25))
+mtext(c("hue = 0", "hue = 240"), side = 3, at = c(-.5, .5), line = 3, cex = 1.2)
 mtext("saturation", side = 3, at = 0, line = 2)
 mtext("value", side = 2, at = .75, line = 2)
 mtext("value", side = 4, at = .75, line = 2)
@@ -638,7 +667,7 @@ grey is found to convey neutrality or un-interestingness much better than white
 Alternative ways to choose colors have been available for a long time, but have
 been only slowly adopted for implementations of colors in computer packages in 
 general and for shading in statistical graphs in particular. The idea of using
-perceptually-based colors that are `in harmony' go back to \cite{vcd:Munsell:1905} 
+perceptually-based colors that are `in harmony' goes back until at least \cite{vcd:Munsell:1905} 
 who introduced a color notation for balanced colors. Based on similar principles, Cynthia
 Brewer and co-workers suggested different types of palettes (qualitative/sequential/diverging)
 and provided the online tool \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003} for
@@ -650,7 +679,7 @@ how CIELUV colors can be used for choosing qualitative palettes for statistical 
 By taking polar coordinates in CIELUV space, it is called HCL (Hue-Chroma-Luminance) space
 and qualitative palettes can easily be chosen by using a range of hues for fixed values
 of chroma and luminance. Such colors are always balanced towards the same grey 
-and thus do not have the problem of varying saturations as the HSV colors.
+and thus do not have the problem of varying saturations that the HSV colors have.
 
 Here, we discuss how similar ideas can be used for deriving diverging HCL palettes that 
 provide a suitable translation of the ideas from the Friendly shading to perceptually
@@ -667,8 +696,8 @@ a diverging palette, this problem can easily be overcome as we just need two dif
 hues (a `negative' and a `positive' hue) and hence we can choose two hues that correspond to 
 similar shapes in the chroma/luminance plane. The lower panel of Figure~\ref{fig:shadingHSVHCL}
 shows two such planes side by side for the hues $h = 0$ and $h = 260$.\footnote{The hue
-$h = 260$ is chosen (rather than $h = 240$ which would correspond to $h = 2/3$ in HSV space)
-because its chroma/luminance plane is most similar to that of $h = 0$.}
+$h = 260$ is chosen rather than $h = 240$ because its chroma/luminance plane is most similar,
+as assessed by the symmetric difference of the planes, to that of $h = 0$.}
 To obtain a 
 sequence of colors with the same properties as the Friendly shading, the palette starts
 at a fully saturated red $(0, 100, 50)$, goes via a neutral color, ends at a fully saturated
@@ -693,10 +722,11 @@ impression of interestingness (or un-interstingness, respectively). That is,
 viewers might be tempted to interpret the absence of color in a plot
 as a clue that there is no significant departure from independence. Or vice
 versa, colored cells would convey the impression that there is significant
-dependence. Currently, both is not true as can be seen in the left panel
+dependence. Currently, both are not true as can be seen in the left panel
 of Figure~\ref{fig:shadings} which shows the mosaic display for the arthritis
-data with Friendly shading. Although there is significant dependence, no 
-residual exceeds an absolute value of $2$ and hence no cell is colored.
+data with Friendly shading. Although there is significant dependence (as according
+to both the maximum and $\chi^2$ tests), no residual exceeds an absolute value of $2$
+and hence no cell is colored.
 Of course, it can be argued that the shading was not designed for this purpose
 and that different cut offs than $2$ and $4$ should be used here. However,
 in this situation, it would be nice if such cut offs could be chosen automatically in a
@@ -735,33 +765,56 @@ to conceal the important cells and over-emphasize the unimportant ones. Hence,
 a discrete shading with few colors is much easier to interpret.
 
 
-\setkeys{Gin}{width=\textwidth}
+\setkeys{Gin}{width=2\textwidth}
 \begin{figure}[t!]
 \begin{center}
-<<shadings,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+<<shadings,fig=TRUE,echo=FALSE,height=12,width=16,results=hide,include=FALSE>>=
+mymar <- c(1.5, 0.5, 0.5, 2.5)
 grid.newpage()
-pushViewport(viewport(layout = grid.layout(1, 2)))
-pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(2.5, 4, 2.5, 3), gp_args = list(eps = NULL, lty = 1))
+pushViewport(viewport(layout = grid.layout(2, 3)))
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = mymar,
+  gp_args = list(eps = NULL, lty = 1))
 popViewport()
-pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
-mosaic(art, newpage = FALSE, gp = art_gp, margins = c(2.5, 3, 2.5, 4))
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+mosaic(art, newpage = FALSE, gp = shading_hsv, margins = mymar,
+  gp_args = list(interpolate = art_max$qdist(c(0.9, 0.99)), p.value = art_max$p.value))
+popViewport()
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 3))
+mosaic(art, newpage = FALSE, gp = shading_hcl, margins = mymar,
+  gp_args = list(interpolate = art_max$qdist(c(0.9, 0.99)), p.value = art_max$p.value))
+popViewport()
+
+pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))
+mosaic(pring, newpage = FALSE, gp = shading_Friendly, margins = mymar,
+  gp_args = list(eps = NULL, lty = 1, interpolate = c(1, 1.5)))
+popViewport()
+pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))
+mosaic(pring, newpage = FALSE, gp = shading_hsv, margins = mymar,
+  gp_args = list(interpolate = c(1, 1.5)))
+popViewport()
+pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 3))
+mosaic(pring, newpage = FALSE, gp = shading_hcl, margins = mymar,
+  gp_args = list(interpolate = c(1, 1.5)))
 popViewport(2)
 @
+\includegraphics[height=\textwidth,angle=90,keepaspectratio]{JCGS-shadings}
 \caption{Mosaic plot for the arthritis data with Friendly shading (left) and maximum shading (right).}
 \label{fig:shadings}
 \end{center}
 \end{figure}
+\setkeys{Gin}{width=\textwidth}
 
 This maximum shading is already very flexible and combines visualization and inference.
 However, it can only be applied when employing the maximum statistic because it is the only
 aggregation functional $\lambda(\cdot)$ where a single large residual $|r_{ij}|$ exceeding
 its critical value is equivalent
-to a significant value of the whole test statistic $\lambda([r_{ij}])$.\footnote{This
-can easily be seen from the following consideration: To obtain a level $\alpha$ test, where 
-any residual $|r_{ij}|$ exceeding the critical value $c_\alpha$ gives a significant test
-result, the equation $\alpha = P(\mbox{any } |r_{ij}| > c_\alpha)$ must hold. This is equivalent
-to $1 - \alpha = P(\mbox{all } |r_{ij}| \le c_\alpha) = P(\max_{i,j} |r_{ij}| \le c_\alpha)$.}
+to a significant value of the whole test statistic $\lambda([r_{ij}])$.
+%% `proof' for maximum shading
+%% \footnote{This can easily be seen from the following consideration: To obtain a level $\alpha$ test, where 
+%% any residual $|r_{ij}|$ exceeding the critical value $c_\alpha$ gives a significant test
+%% result, the equation $\alpha = P(\mbox{any } |r_{ij}| > c_\alpha)$ must hold. This is equivalent
+%% to $1 - \alpha = P(\mbox{all } |r_{ij}| \le c_\alpha) = P(\max_{i,j} |r_{ij}| \le c_\alpha)$.}
 Typically, applying the maximum statistic is feasible and also appropriate for exploratory 
 analysis, but it would be desirable to also have a residual-based shading that can incorporate
 visualization of significance when the sum-of-squares statistic $X^2$ (or any other functional
@@ -789,11 +842,12 @@ in 2-way tables. In this section, generalizations of these ideas to independence
 problems for multi-way tables are outlined. 
 
 Mosaic displays have been emphasized in the literature to be an excellent means
-of visualization for log-linear models \citep{vcd:Friendly:1999,vcd:Theus+Lauer:1999}.
-Problems of interest include complete, joint or conditional independence for all of 
-which the tables of expected values and residuals (again Pearson or deviance) can
-be computed. \cite{vcd:Friendly:1994,vcd:Friendly:1999} shows that his residual-based 
-shading scheme can directly be applied to these more complex independence models.
+of visualization for log-linear models \citep{vcd:Friendly:1999,vcd:Theus+Lauer:1999};
+typical hypotheses of interest include complete, joint or conditional independence.
+For all of these hypotheses, tables of estimated expected values and residuals
+(again Pearson or deviance) can be computed and \cite{vcd:Friendly:1994,vcd:Friendly:1999}
+shows that his residual-based  shading scheme can directly be applied to these more complex
+independence models.
 For inference, the most commonly used aggregation functional for the residuals
 is again the sum of squares yielding the associated Pearson or likelihood
 ratio statistic, respectively \citep{vcd:Agresti:2002}.
@@ -823,24 +877,24 @@ H_0: \; \pi_{ij|k} \quad = \quad \pi_{i+|k} \pi_{+j|k}.
 \end{equation}
 where $\pi_{ij|k}$ are the conditional probabilities given the stratum $k$
 with $k = 1, \dots, K$. Under the assumption of conditional independence,
-we can again compute expected frequencies $[\hat n_{ijk}]$ and the corresponding 
+we can again estimate expected frequencies $[\hat n_{ijk}]$ and the corresponding 
 residuals $[r_{ijk}]$. To test the conditional independence hypothesis, usually
 the sum-of-squares statistic is used
-\begin{equation} \label{eq:sumChisq}
+\begin{equation} \label{eq:sumchisq}
 \sum_{i, j, k} r_{ijk}^2 \quad = \quad \sum_k X_k^2,
 \end{equation}
 which is simply the sum of the individual sum-of-squares statistics $X_k^2$ in each stratum $k$.
 
 Alternatively, a maximum statistic similar to that from Equation~\ref{eq:MaxAbs}
 can be constructed
-\begin{equation} \label{eq:doublemax}
+\begin{equation} \label{eq:dmax}
 \max_{i, j, k} |r_{ijk}| \quad = \quad \max_k M_k.
 \end{equation}
 As in the 2-way case, this allows for identification of the cells that are responsible
 for the deviation from conditional independence (if any). If it is not so much of interest
 in which \emph{cell} but only in which \emph{stratum} the deviation occurs, then
 it would be natural to use 
-\begin{equation} \label{eq:maxChisq}
+\begin{equation} \label{eq:maxchisq}
 \max_k \sum_{i,j} r_{ijk}^2 \quad = \quad \max_k X_k^2.
 \end{equation}
 Given a critical value for this statistic, all strata $k$ whose associated sum-of-squares
@@ -856,21 +910,21 @@ and $\lambda_\mathrm{agg}$ is a functional for aggregating over the $k = 1, \dot
 If the maximum is used for the latter, then identification of the strata responsible for the
 dependence is possible. If additionally $\lambda_\mathrm{indep}$ is the maximum,
 the corresponding cells can also be identified. Hence, the double maximum
-statistic from Equation~\ref{eq:doublemax} is the only functional allowing for detection of
+statistic from Equation~\ref{eq:dmax} is the only functional allowing for detection of
 both the strata and the cells violating the conditional independence hypothesis.
 
 However, the main purpose of the formulation of the different test statistics is not so much 
 inference but their applicability to diagnostic plots via residual-based shadings. As already
 discussed, it is possible for all aggregation functionals to simply use either
 the significant or the non-significant shading for all cells in the contingency table---this
-strategy would have to be used for the sum-of-squares statistic from Equation~\ref{eq:sumChisq}. If
-$\lambda_\mathrm{agg}$ is the maximum as in Equation~\ref{eq:maxChisq},
+strategy would have to be used for the sum-of-squares statistic from Equation~\ref{eq:sumchisq}. If
+$\lambda_\mathrm{agg}$ is the maximum as in Equation~\ref{eq:maxchisq},
 then the significant palette would only be used
 in those strata in conflict with the hypothesis of conditional independence whereas the
 non-significant palette would be used for the remaining strata. Finally, if both $\lambda_\mathrm{agg}$
 and $\lambda_\mathrm{indep}$ are the maximum, then the same strategy as in Section~\ref{sec:shadings}
 can be pursued, i.e., only the significant palette is used but with data-driven cut offs
-derived from the distribution of the double maximum statistic from Equation~\ref{eq:doublemax}.
+derived from the distribution of the double maximum statistic from Equation~\ref{eq:dmax}.
 
 To arrange the shaded rectangles of the association or the mosaic plot, respectively,
 the most intuitive approach is to use the same conditioning in the display that
@@ -891,13 +945,13 @@ given the department leads to the well-known result that there is no
 gender discrimination in five of six departments, but that women are more
 likely to be admitted than men in the first department. This departure
 from conditional independence is picked up by all three statistics formulated
-above: the sum-of-squares statistic from Equation~\ref{eq:sumChisq} is
-$\sum_k X_k^2 = \Sexpr{stat(ucb_sumChisq)}$ ($p = \Sexpr{pval(ucb_sumChisq)}$),
-the maximum sum-of-squares statistic from Equation~\ref{eq:maxChisq} is
-$\max_k X_k^2 = \Sexpr{stat(ucb_maxChisq)}$ ($p = \Sexpr{pval(ucb_maxChisq)}$),
-and the double maximum statistic from Equation~\ref{eq:doublemax} is
-$\max_k M_k = \Sexpr{stat(ucb_doublemax)}$ ($p = \Sexpr{pval(ucb_doublemax)}$).
-The $p$ values are again computed by drawing $5000$ samples from the corresponding
+above: the sum-of-squares statistic from Equation~\ref{eq:sumchisq} is
+$\sum_k X_k^2 = \Sexpr{stat(alz_sumchisq)}$ ($p = \Sexpr{pval(alz_sumchisq)}$),
+the maximum sum-of-squares statistic from Equation~\ref{eq:maxchisq} is
+$\max_k X_k^2 = \Sexpr{stat(alz_maxchisq)}$ ($p = \Sexpr{pval(alz_maxchisq)}$),
+and the double maximum statistic from Equation~\ref{eq:dmax} is
+$\max_k M_k = \Sexpr{stat(alz_dmax)}$ ($p = \Sexpr{pval(alz_dmax)}$).
+The $p$ values are again computed by drawing $\Sexpr{nrep}$ samples from the corresponding
 permutation distribution. The latter two test statistics both indicate the 
 first department as the source of departure and the maximum statistic additionally
 identifies the deviations in the female applicants group. This result
@@ -911,14 +965,25 @@ A but not in departments B to F where all residuals are very small.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9>>=
-cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
+<<conditional_mosaic,fig=TRUE,echo=FALSE,height=5,width=9>>=
+cotabplot(~ Smoking + Disease | Gender, data = alz, panel = alz_cotab)
 @
 \caption{Conditional association plot for UCB admissions with double maximum shading.}
 \label{fig:ucb}
 \end{center}
 \end{figure}
 
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+\begin{center}
+<<conditional_assoc,fig=TRUE,echo=FALSE,height=11,width=11>>=
+cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab)
+@
+\caption{Conditional association plot for UCB admissions with double maximum shading.}
+\label{fig:ucb}
+\end{center}
+\end{figure}
 
 \section{Conclusions} \label{sec:conclusions}
 
@@ -940,7 +1005,7 @@ associated maximum test. The second approach uses pre-defined cut offs (such as 
 codes the result of the significance test by using full colors only for significant results and
 the same type of palette with a reduced amount of color for non-significant results.
 %
-Both results can not only be applied to the simple independence problem in 2-way
+Both strategies can not only be applied to the simple independence problem in 2-way
 contingency tables, but also to arbitrary inpendence models fitted via log-linear models
 in higher dimensions. In addition, it might be possible to exploit the structure of a given 
 independence problem to achieve better visualizations which is illustrated
@@ -977,7 +1042,42 @@ rseed <- 1071
 ## load packages and data
 library("vcd")
 art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
-ucb <- aperm(UCBAdmissions)
+data("pistonrings", package = "HSAUR")
+data("alzheimer", package = "coin")
+alz <- xtabs(~ smoking + disease + gender, data = alzheimer)
+pun <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
+
+
+## Inference
+## sum of squares
+ss <- function(x) sum(x^2)
+## X^2 (3)
+set.seed(rseed)
+coindep_test(art, n = 5000, indepfun = ss)
+set.seed(rseed)
+coindep_test(pistonrings, n = 5000, indepfun = ss)
+## M (4)
+set.seed(rseed)
+(art_max <- coindep_test(art, n = 5000))
+set.seed(rseed)
+coindep_test(pistonrings, n = 5000)
+
+## sum X^2 (6)
+set.seed(rseed)
+coindep_test(alz, 3, n = 5000, indepfun = ss, aggfun = sum)
+set.seed(rseed)
+coindep_test(pun, 3:4, n = 5000, indepfun = ss, aggfun = sum)
+## max M (7)
+set.seed(rseed)
+coindep_test(alz, 3, n = 5000)
+set.seed(rseed)
+coindep_test(pun, 3:4, n = 5000)
+## max X^2 (8)
+set.seed(rseed)
+coindep_test(alz, 3, n = 5000, indepfun = ss)
+set.seed(rseed)
+coindep_test(pun, 3:4, n = 5000, indepfun = ss)
+
 
 ## Figure 1
 mosaic(art)
@@ -985,31 +1085,23 @@ assoc(art)
 
 ## Figure 3
 mosaic(art, gp = shading_Friendly(lty = 1, eps = NULL))
+mosaic(art, gp = shading_hsv, gp_args = list(
+  interpolate = art_max$qdist(c(0.9, 0.99)), p.value = art_max$p.value))
 set.seed(rseed)
-mosaic(art, gp = shading_max)
+mosaic(art, gp = shading_max, gp_args = list(n = 5000))
+
+mosaic(pistonrings, gp = shading_Friendly(lty = 1, eps = NULL, interpolate = c(1, 1.5)))
+mosaic(pistonrings, gp = shading_hsv, gp_args = list(interpolate = c(1, 1.5)))
+mosaic(pistonrings, gp = shading_hcl, gp_args = list(interpolate = c(1, 1.5)))
 
 ## Figure 4
 set.seed(rseed)
-cotabplot(~ Admit + Gender | Dept, data = ucb, panel = cotab_coindep,
-          n = 5000, type = "assoc")
+cotabplot(~ smoking + disease | gender, data = alz, panel = cotab_coindep, n = 5000)
 
-## Inference
-## X^2 (3)
+## Figure 5
 set.seed(rseed)
-coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
-## M (4)
-set.seed(rseed)
-coindep_test(art, n = 5000)
-
-## sum X^2 (6)
-set.seed(rseed)
-coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
-## max M (7)
-set.seed(rseed)
-coindep_test(ucb, "Dept", n = 5000)
-## max X^2 (8)
-set.seed(rseed)
-coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
+cotabplot(~ memory + attitude | age + education, data = pun, panel = cotab_coindep,
+  n = 5000, type = "assoc")
 \end{verbatim}
 
 \end{appendix}
@@ -1027,6 +1119,32 @@ coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
 
 
 %% deprecated stuff
+
+%% UCB admissions
+data("UCBAdmissions", package = "datasets")
+ucb <- aperm(UCBAdmissions)
+
+set.seed(myseed)
+ucb_dmax <- coindep_test(ucb, "Dept", n = nrep)
+set.seed(myseed)
+ucb_maxchisq <- coindep_test(ucb, "Dept", n = nrep, indepfun = function(x) sum(x^2))
+set.seed(myseed)
+ucb_sumchisq <- coindep_test(ucb, "Dept", n = nrep, indepfun = function(x) sum(x^2), aggfun = sum)
+set.seed(myseed)
+ucb_cotab <- cotab_coindep(ucb, condvars = "Dept", type = "assoc", n = nrep, margins = c(3, 1, 1, 3))
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+\begin{center}
+<<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9>>=
+cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
+@
+\caption{Conditional association plot for UCB admissions with double maximum shading.}
+\label{fig:ucb}
+\end{center}
+\end{figure}
+
+
 
 %% employment data
 <<employment>>
