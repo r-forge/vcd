@@ -112,8 +112,10 @@ mosaic.default <- function(x, condvars = NULL,
         aperm(x, c(seq(dl)[-highlighting], highlighting))
       if (is.null(spacing))
         spacing <- spacing_highlighting
+      if (is.function(highlighting_fill))
+        highlighting_fill <- rev(highlighting_fill(dim(x)[dl]))
       if (is.null(gp))
-        gp <- gpar(fill = rev(highlighting_fill(dim(x)[dl])))
+        gp <- gpar(fill = highlighting_fill)
       if (!is.null(highlighting_direction)) {
         split_vertical[dl] <- highlighting_direction %in% c("left", "right")
         if (highlighting_direction %in% c("left", "top")) {
@@ -121,7 +123,7 @@ mosaic.default <- function(x, condvars = NULL,
           tmp <- as.data.frame.table(x)
           tmp[,dl] <- factor(tmp[,dl], rev(levels(tmp[,dl])))
           x <- xtabs(Freq ~ ., data = tmp)
-          gp <- gpar(fill = highlighting_fill(dim(x)[dl]))
+          gp <- gpar(fill = rev(highlighting_fill))
         }
       }
     }

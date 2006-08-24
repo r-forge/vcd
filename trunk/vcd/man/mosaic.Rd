@@ -59,7 +59,8 @@
     Ignored if \code{shade = FALSE}.}
   \item{highlighting}{character vector or integer specifying a variable
     to be highlighted in the cells.}
-  \item{highlighting_fill}{palette used for a highlighted variable, if any.}
+  \item{highlighting_fill}{color vector or palette function
+    used for a highlighted variable, if any.}
   \item{highlighting_direction}{Either \code{"left"}, \code{"right"},
     \code{"top"}, or \code{"bottom"} specifying the direction of
     highlighting in the cells.}
@@ -165,5 +166,12 @@ data(PreSex)
 mosaic(PreSex, condvars = c(1,4))
 mosaic(~ ExtramaritalSex + PremaritalSex | MaritalStatus + Gender,
        data = PreSex)
+
+## Highlighting:
+mosaic(Survived ~ ., data = Titanic)
+
+data(Arthritis)
+mosaic(Improved ~ Treatment | Sex, data = Arthritis)
+mosaic(Improved ~ Treatment | Sex, data = Arthritis, highlighting_direction = "right")
 }
 \keyword{hplot}

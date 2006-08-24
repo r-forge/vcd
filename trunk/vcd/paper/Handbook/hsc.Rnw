@@ -5,7 +5,7 @@
 % choose options for [] as required from the list
 % in the Reference Guide, Sect. 2.2
 
-\usepackage{Sweave,hyperref,color,graphicx} 
+\usepackage{Sweave,hyperref,color,graphicx,makeidx,multicol} 
 \usepackage[bottom]{footmisc}% places footnotes at page bottom
 
 \definecolor{Red}{rgb}{0.7,0,0}
@@ -79,6 +79,8 @@ hos_chisq <- coindep_test(hospital, n = 5000, indepfun = function(x) sum(x^2))
 \newcommand{\data}[1]{#1}
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\pkg}[1]{\texttt{#1}}
+
+\makeindex
 
 \begin{document}
 
@@ -1453,6 +1455,8 @@ partial tables and pairs plots.
 
 \bibliographystyle{abbrv}
 \bibliography{vcd}
+
+\printindex
 
 \end{document}
 
