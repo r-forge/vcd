@@ -85,6 +85,7 @@ names(dimnames(art))[2] <- "Improvement"
 data("pistonrings", package = "HSAUR")
 pring <- pistonrings
 names(dimnames(pring)) <- c("Compressor", "Leg")
+dimnames(pring)[[2]][2] <- "center"
  
 data("alzheimer", package = "coin")
 alz <- xtabs(~ smoking + disease + gender, data = alzheimer)
@@ -98,7 +99,7 @@ dimnames(pun) <- list(Memory = c("yes", "no"), Attitude = c("no", "moderate"),
 
 myseed <- 1071
 nrep <- 5000
-recompute <- FALSE
+recompute <- TRUE
 @
 
 <<inference,echo=FALSE,results=hide>>=
@@ -131,7 +132,7 @@ if(recompute) {
   pun_sumchisq <- coindep_test(pun, 3:4, n = nrep, indepfun = function(x) sum(x^2), aggfun = sum)
   set.seed(myseed)
   pun_cotab <- cotab_coindep(pun, condvars = 3:4, type = "assoc", n = nrep,
-    varnames = FALSE, margins = c(2, 1, 1, 2))
+    varnames = FALSE, margins = c(2, 1, 1, 2), test = "maxchisq", interpolate = 1:2)
 
   save(art_max, art_chisq,
        pring_max, pring_chisq,
@@ -304,7 +305,9 @@ H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
 \end{equation}
 
 The estimated expected cell frequencies under $H_0$ are
-$\hat n_{ij} = n_{i+}n_{+j}/n_{++}$. The probably best known and most used
+$\hat n_{ij} = n_{i+}n_{+j}/n_{++}$.
+%FIXME% point out homogeneity problem?
+The probably best known and most used
 measure of discrepancy between observed and expected values are the Pearson residuals
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
@@ -473,22 +476,24 @@ of the Friendly shading very simple. As both spaces can easily generate the
 same colors, we only discuss HSV space in the following.
 
 The HSV space looks like a cone\footnote{The wikipedia gives a very useful
+%FIXME% proper cite for Wikipedia
 overview at \url{http://en.wikipedia.org/wiki/HSV_color_space} which also provides
 links to comparisons with other color spaces discussed in this paper.}
 with black at its peak (zero value) and full color wheels for different saturations at the other end,
 around a white center (full value). Type and amount of color are controlled by hue
-and saturation, respectively. Typically, polar coordinates $(h, s, v)$ rescaled to the 
-unit interval are used in this space, giving it the appearance of a cylinder.
+and saturation, respectively. Typically, polar coordinates $(h, s, v)$ rescaled for $s$ and $v$
+to the interval $[0, 100]$ (or the unit interval) are used in this space, giving it the
+appearance of a cylinder.
 For generating colors in the Friendly shading, the following strategy is used:
 The hue $h$ codes the sign of the residuals---$h = 0$ (red hue) is used for negative residuals,
-$h = 2/3$ (blue hue) for positive residuals. The absolute size of the residuals
-is then coded by the saturation $s$ which is set to $0$, $0.5$ and $1$, respectively,
-for small/medium/large residuals. The value is always fixed at $v = 1$.
+$h = 240$ (blue hue) for positive residuals. The absolute size of the residuals
+is then coded by the saturation $s$ which is set to $0$, $50$ and $100$, respectively,
+for small/medium/large residuals. The value is always fixed at $v = 100$.
 This is also depicted in the upper panel of Figure~\ref{fig:shadingHSVHCL} which shows
-the saturation/value plane for the given hues $h = 0$ and $h = 2/3$. 
-The significant color palette shows the
+the saturation/value plane for the given hues $h = 0$ and $h = 240$. 
+The full-color palette shows the
 colors used for the Friendly shading when the residuals are increasing from left to right.
-The set of non-significant colors will be explained in Section~\ref{sec:significance}.
+The reduced-color palette will be explained in Section~\ref{sec:significance}.
 
 \setkeys{Gin}{width=.8\textwidth}
 \begin{figure}[p]
@@ -525,14 +530,14 @@ mtext("value", side = 2, at = .75, line = 2)
 mtext("value", side = 4, at = .75, line = 2)
 lines(c(-1, 1), c(.5, .5))
 
-## significant colors
+## full colors
 rect(-1, 0.95, -.90, 1, col = hsv(0, 1, 1))
 rect(-0.45, 0.95, -.55, 1, col = hsv(0, 0.5, 1))
 rect(-.05, .95, .05, 1, col = hsv(2/3, 0, 1))
 rect(0.45, 0.95, .55, 1, col = hsv(2/3, 0.5, 1))
 rect(.90, .95, 1, 1, col = hsv(2/3, 1, 1))
 
-text(-1, .33, "significant", pos = 4, cex = 1.2)
+text(-1, .33, "full color", pos = 4, cex = 1.2)
 rect(-1, .20, -.80, .30, col = hsv(0, 1, 1))
 rect(-.40, .20, -0.6, .30, col = hsv(0, 0.5, 1))
 rect(-.20, .20, 0, .30, col = hsv(0, 0, 1))
@@ -545,14 +550,14 @@ lines(c(-.45, -.05), c(0.975, .975), lty = 2)
 lines(c(.45, .05), c(0.975, .975), lty = 2)
 lines(c(.9, .55), c(0.975, .975), lty = 2)
 
-## non-significant colors
+## reduced colors
 rect(-1, 0.5, -.90, 0.55, col = hsv(0, 1, 0.5))
 rect(-0.45, 0.5, -.55, 0.55, col = hsv(0, 0.5, 0.5))
 rect(-.05, .5, .05, 0.55, col = hsv(2/3, 0, 0.5))
 rect(0.45, 0.5, .55, 0.55, col = hsv(2/3, 0.5, 0.5))
 rect(.90, .5, 1, 0.55, col = hsv(2/3, 1, 0.5))
 
-text(-1, .13, "non-significant", pos = 4, cex = 1.2)
+text(-1, .13, "reduced color", pos = 4, cex = 1.2)
 rect(-1, 0, -.80, .10, col = hsv(0, 1, 0.5))
 rect(-.60, 0, -.4, .10, col = hsv(0, 0.5, 0.5))
 rect(-.20, 0, 0, .10, col = hsv(0, 0, 0.5))
@@ -598,7 +603,7 @@ mtext("luminance", side = 2, at = 75, line = 2)
 mtext("luminance", side = 4, at = 75, line = 2)
 lines(c(-100, 100), c(50, 50))
 
-## significant colors
+## full colors
 rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
 rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
 rect(-5, 95, 5, 100, col = hcl(260, 0, 100))       ## grey vs. white
@@ -606,7 +611,7 @@ rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))     ## grey vs. white
 rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
 rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
 
-text(-100, 33, "significant", pos = 4, cex = 1.2)
+text(-100, 33, "full color", pos = 4, cex = 1.2)
 rect(-100, 20, -80, 30, col = hcl(0, 100, 50))
 rect(-60, 20, -40, 30, col = hcl(0, 50, 70))
 rect(-20, 20, 0, 30, col = hcl(0, 0, 90))       
@@ -621,14 +626,14 @@ lines(c(45, 5), c(72.5, 87.5), lty = 2)
 lines(c(-95, -55), c(52.5, 67.5), lty = 2)
 lines(c(95, 55), c(52.5, 67.5), lty = 2)
 
-## non-significant colors
+## reduced colors
 rect(-25, 47.5, -15, 52.5, col = hcl(0, 20, 50))
 rect(-15, 67.5, -5, 72.5, col = hcl(0, 10, 70))
 rect(5, 67.5, 15, 72.5, col = hcl(260, 10, 70))
 rect(25, 47.5, 15, 52.5, col = hcl(260, 20, 50))
 
 
-text(-100, 13, "non-significant", pos = 4, cex = 1.2)
+text(-100, 13, "reduced color", pos = 4, cex = 1.2)
 rect(-60, 0, -40, 10, col = hcl(0, 20, 50))
 rect(-40, 0, -20, 10, col = hcl(0, 10, 70))
 rect(-20, 0, 0, 10, col = hcl(0, 0, 90))
@@ -653,14 +658,14 @@ a number of disadvantages. Most importantly, HSV colors are not perceptually
 uniform because the three HSV dimensions map only poorly to the three
 perceptual dimensions of the human visual system  \citep{vcd:Brewer:1999,vcd:Ihaka:2003}.
 Consequently, the HSV dimensions are confounded, e.g., saturation
-is not uniform across different hues. A fully saturated blue $(2/3, 1, 1)$ is
-perceived to be much darker than a fully saturated red $(0, 1, 1)$ or green $(1/3, 1, 1)$.
+is not uniform across different hues. A fully saturated blue $(240, 100, 100)$ is
+perceived to be much darker than a fully saturated red $(0, 100, 100)$ or green $(120, 100, 100)$.
 This makes it more difficult for the human eye to judge the size of shaded areas
 and can therefore lead to color-caused optical illusions when used in statistical graphs
 \citep{vcd:Cleveland+McGill:1983}. Furthermore, flashy fully saturated HSV colors are
 good for drawing attention to a plot, but hard to look at for a longer time \citep{vcd:Ihaka:2003}
-which makes HSV-shaded graphics harder to interpret. Finally, white is employed as
-the neutral color for small residuals in the Friendly shading, but typically
+which makes graphics shaded with such colors harder to interpret. Finally, white is employed as
+the neutral color for small residuals in the Friendly shading, however typically
 grey is found to convey neutrality or un-interestingness much better than white
 \citep{vcd:Brewer:1999}.
 
@@ -672,25 +677,26 @@ who introduced a color notation for balanced colors. Based on similar principles
 Brewer and co-workers suggested different types of palettes (qualitative/sequential/diverging)
 and provided the online tool \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003} for
 selecting an appropriate palette for a specific problem. Furthermore, the
-\citet[CIE,][]{vcd:CIE:2004} introduced the two perceptually
-based color spaces CIELAB and CIELUV where the latter is typically preferred for 
+\citet[CIE,][]{vcd:CIE:2004} introduced the two perceptually-based 
+color spaces CIELAB and CIELUV where the latter is typically preferred for 
 emissive color technologies such as computer displays. \cite{vcd:Ihaka:2003} discusses
 how CIELUV colors can be used for choosing qualitative palettes for statistical graphics such as barplots.
 By taking polar coordinates in CIELUV space, it is called HCL (Hue-Chroma-Luminance) space
-and qualitative palettes can easily be chosen by using a range of hues for fixed values
-of chroma and luminance. Such colors are always balanced towards the same grey 
-and thus do not have the problem of varying saturations that the HSV colors have.
+and qualitative palettes can easily be chosen by using a range of hues for
+fixed values of chroma and luminance. Such colors are always balanced towards
+the same grey and thus do not have the problem of varying saturations that the HSV colors have.
+In general, the HCL space offers much better support for selecting balanced palettes
+along simple paths through the space, which will be exploited below.
 
-Here, we discuss how similar ideas can be used for deriving diverging HCL palettes that 
-provide a suitable translation of the ideas from the Friendly shading to perceptually
-uniform HCL colors. 
+In the following, we discuss how ideas similar to those from \cite{vcd:Ihaka:2003}
+can be used for deriving diverging HCL palettes that provide a suitable translation
+of the ideas from the Friendly shading to perceptually uniform HCL colors. 
 The HCL space looks like a distorted double cone with black (zero luminance) at one end and white
 at the other (full luminance). In its middle, there is a full color wheel for different
 values of chroma (that controls the colorfulness). Unfortunately, the HCL space is not as
-regular as the HSV space and consequently cannot be standardized in the same way as the
-HSV space. Its dimensions are usually given by a
+regular as the HSV space: although its dimensions are usually also given by a
 hue ranging in $[0, 360]$ degrees and chroma and luminance ranging in $[0, 100]$
-percent. However, not all combinations $(h, c, l)$ yield valid HCL colors and the admissable combinations
+percent, not all combinations $(h, c, l)$ yield valid HCL colors and the admissable combinations
 of $c$ and $l$ vary across different hues $h$. For the task of constructing
 a diverging palette, this problem can easily be overcome as we just need two different
 hues (a `negative' and a `positive' hue) and hence we can choose two hues that correspond to 
@@ -698,19 +704,23 @@ similar shapes in the chroma/luminance plane. The lower panel of Figure~\ref{fig
 shows two such planes side by side for the hues $h = 0$ and $h = 260$.\footnote{The hue
 $h = 260$ is chosen rather than $h = 240$ because its chroma/luminance plane is most similar,
 as assessed by the symmetric difference of the planes, to that of $h = 0$.}
-To obtain a 
-sequence of colors with the same properties as the Friendly shading, the palette starts
+To obtain a sequence of colors with the similar properties as the Friendly shading, the palette starts
 at a fully saturated red $(0, 100, 50)$, goes via a neutral color, ends at a fully saturated
 blue $(260, 100, 50)$, and uses linear interpolation in between. Instead of using white
 $(0, 0, 100)$ as the neutral color, a light grey $(0, 0, 90)$ is employed as motivated above.
-
-This diverging palette (see the `significant' colors in Figure~\ref{fig:shadingHSVHCL})
+The diverging palette (see the full-color palette in Figure~\ref{fig:shadingHSVHCL})
 uses both chroma---i.e., the colorfulness---and luminance---i.e., 
 the amount of grey---to code the absolute size of the quantity visualized---i.e., the
 residuals $r_{ij}$---when applied to the independence problem. By changing the neutral
 color or by changing the maximum chroma, respectively, this can be changed to using only
 chroma or luminance for this purpose, but using both seems to be a very effective way
-of visualization.
+of visualization and corresponds more closely with the properties of the Friendly shading.
+
+Applying these palettes to the mosaic plot of the arthritis data, yields
+the displays in the upper middle and right panels of Figure~\ref{fig:shadings} (with
+data-driven cut offs as defined Section~\ref{sec:significance}). This illustrates
+that especially the full color cells (in the `marked' column) are less flashy and more
+balanced in the HCL shading as compared to the HSV shading.
 
 
 \subsection{Significance} \label{sec:significance}
@@ -722,10 +732,10 @@ impression of interestingness (or un-interstingness, respectively). That is,
 viewers might be tempted to interpret the absence of color in a plot
 as a clue that there is no significant departure from independence. Or vice
 versa, colored cells would convey the impression that there is significant
-dependence. Currently, both are not true as can be seen in the left panel
+dependence. Currently, both are not true as can be seen in the upper left panel
 of Figure~\ref{fig:shadings} which shows the mosaic display for the arthritis
 data with Friendly shading. Although there is significant dependence (as according
-to both the maximum and $\chi^2$ tests), no residual exceeds an absolute value of $2$
+to both the maximum and sum-of-squares tests), no residual exceeds an absolute value of $2$
 and hence no cell is colored.
 Of course, it can be argued that the shading was not designed for this purpose
 and that different cut offs than $2$ and $4$ should be used here. However,
@@ -739,11 +749,11 @@ significance levels $\alpha$ these critical values correspond because the distri
 of $M$ depends on the underlying contingency table. The natural solution to this
 problem is to compute the critical values from the distribution of $M$ in a data-driven
 way (i.e., for the table visualized) and use these instead of the hard-coded values
-$2$ and $4$. In the right panel of Figure~\ref{fig:shadings} this is done for
+$2$ and $4$. In the upper middle and right panels of Figure~\ref{fig:shadings} this is done for
 the arthritis data by employing the critical values
 $\Sexpr{round(as.vector(art_max$qdist(0.9)), digits = 2)}$ at level $\alpha = 0.1$ and
 $\Sexpr{round(as.vector(art_max$qdist(0.99)), digits = 2)}$ at level $\alpha = 0.01$
-(and using the diverging HCL palette) derived from the permutation distribution of $M$ for 
+(using the diverging HSV and HCL palettes, respectively) derived from the permutation distribution of $M$ for 
 the arthritis data as described in Section~\ref{sec:tests}. By using these cut offs, the presence of color
 in the plot is equivalent to significance (of the maximum statistic $M$) at 
 level $\alpha = 0.1$ and $\alpha = 0.01$, respectively, and exactly the cells which
@@ -766,7 +776,7 @@ a discrete shading with few colors is much easier to interpret.
 
 
 \setkeys{Gin}{width=2\textwidth}
-\begin{figure}[t!]
+\begin{figure}[p]
 \begin{center}
 <<shadings,fig=TRUE,echo=FALSE,height=12,width=16,results=hide,include=FALSE>>=
 mymar <- c(1.5, 0.5, 0.5, 2.5)
@@ -791,15 +801,19 @@ mosaic(pring, newpage = FALSE, gp = shading_Friendly, margins = mymar,
 popViewport()
 pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))
 mosaic(pring, newpage = FALSE, gp = shading_hsv, margins = mymar,
-  gp_args = list(interpolate = c(1, 1.5)))
+  gp_args = list(interpolate = c(1, 1.5), p.value = pring_chisq$p.value))
 popViewport()
 pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 3))
 mosaic(pring, newpage = FALSE, gp = shading_hcl, margins = mymar,
-  gp_args = list(interpolate = c(1, 1.5)))
+  gp_args = list(interpolate = c(1, 1.5), p.value = pring_chisq$p.value))
 popViewport(2)
 @
 \includegraphics[height=\textwidth,angle=90,keepaspectratio]{JCGS-shadings}
-\caption{Mosaic plot for the arthritis data with Friendly shading (left) and maximum shading (right).}
+\caption{Upper row: Mosaic plot for the arthritis data with Friendly shading (left),
+HSV maximum shading (middle), HCL maximum shading (right). Lower row: Mosaic
+plot for the piston rings data with fixed user-defined cut offs 1 and 1.5 and 
+Friendly shading (left), HSV sum-of-squares shading (middle), HCL sum-of-squares shading
+(right).}
 \label{fig:shadings}
 \end{center}
 \end{figure}
@@ -825,14 +839,42 @@ therefore a rather natural idea is to use the fully colored palette only when th
 test is significant and to use a less colorful palette if not. For the HCL scheme, the
 amount of color can conveniently be controlled by varying the maximum chroma value used. For the full
 colors, the maximum chroma was set to $100$ as shown in Figure~\ref{fig:shadingHSVHCL} and 
-is reduced to $20$ for the non-significant palette. This palette still codes the absolute
+is decreased to $20$ for the reduced-color palette. This palette still codes the absolute
 size of the residuals by luminance (i.e., the amount of grey), uses the same neutral grey
 for small `un-interesting' residuals, codes positive and negative residuals by different hues,
 but gives less emphasis to the pattern by making the plot less colorful. A similar effect
-can be obtained in the HSV space if the value is reduced from $1$ to $0.5$ for non-significant 
-palettes (see Figure~\ref{fig:shadingHSVHCL}). As for the significant colors,
+can be obtained in the HSV space if the value is reduced from $100$ to $50$ for reduced-color 
+palettes (see Figure~\ref{fig:shadingHSVHCL}). As for the full colors,
 the dimensions used for creating this palette are confounded and hence the HCL scheme is clearly
 preferable.
+
+To see such a sum-of-squares shading in practice, we employ a data on the number of piston
+ring failures in three legs (north/center/south) in four different steam-driven compressors
+at an FIXME. The contingency table is given in \cite{vcd:Haberman:1973}, re-analyzed
+by \cite{vcd:Everitt+Hothorn:2006} and displayed in the lower row of Figure~\ref{fig:shadings}.
+Neither the sum-of-squares test ($X^2 = \Sexpr{stat(pring_chisq)}$, $p = \Sexpr{pval(pring_chisq)}$)
+nor the maximum test ($M = \Sexpr{stat(pring_max)}$, $p = \Sexpr{pval(pring_max)}$) find
+evidence for a departure from independence in the data (at 5\% level). However, as argued
+by \cite{vcd:Everitt+Hothorn:2006}, a closer look at the size of the residuals might be
+interesting. To do so, we choose two fixed cut offs within the range of residuals, 1 and 1.5,
+showing that more failures (than expected under independence) in the center leg and less failures
+in the south leg were observed for compressor 1 and vice versa for compressor 4. This is
+brought out clearly by all three shadings in the lower row of Figure~\ref{fig:shadings}. 
+However, less emphasis is given to this pattern by the sum-of-squares shadings in the
+middle and right panel because the reduced color palettes are used due to non-significance
+of the associated test (at 5\% level). Comparing the HSV-based and HCL-based version
+shows again that the latter are less flashy and more balanced.
+
+Other strategies for constructing palettes for general aggregation functionals $\lambda(\cdot)$
+(including the sum of squares) that are similar in spirit to the maximum shading are conceivable.
+Instead of using a reduced-color palette for non-significant tests, a no-color palette with
+only a light grey could be employed. This could also be seen as always using cut offs
+outside the range of residuals for non-significant tests. Analogously, for significant tests,
+cut offs that are always inside the range of residuals could be chosen. The latter could
+be determined by subject-matter knowledge, as a fraction of the associated critical value,
+or as certain quantiles of the absolute residuals.
+
+
 
 \section{Extensions} \label{sec:3way}
 
@@ -916,14 +958,14 @@ both the strata and the cells violating the conditional independence hypothesis.
 However, the main purpose of the formulation of the different test statistics is not so much 
 inference but their applicability to diagnostic plots via residual-based shadings. As already
 discussed, it is possible for all aggregation functionals to simply use either
-the significant or the non-significant shading for all cells in the contingency table---this
+the full-color or the reduced-color shading for all cells in the contingency table---this
 strategy would have to be used for the sum-of-squares statistic from Equation~\ref{eq:sumchisq}. If
 $\lambda_\mathrm{agg}$ is the maximum as in Equation~\ref{eq:maxchisq},
-then the significant palette would only be used
+then the full-color palette would only be used
 in those strata in conflict with the hypothesis of conditional independence whereas the
-non-significant palette would be used for the remaining strata. Finally, if both $\lambda_\mathrm{agg}$
+reduced-color palette would be used for the remaining strata. Finally, if both $\lambda_\mathrm{agg}$
 and $\lambda_\mathrm{indep}$ are the maximum, then the same strategy as in Section~\ref{sec:shadings}
-can be pursued, i.e., only the significant palette is used but with data-driven cut offs
+can be pursued, i.e., only the full-color palette is used but with data-driven cut offs
 derived from the distribution of the double maximum statistic from Equation~\ref{eq:dmax}.
 
 To arrange the shaded rectangles of the association or the mosaic plot, respectively,
@@ -938,52 +980,87 @@ not the conditioning distribution over $k = 1, \dots, K$ is visualized which
 could obscure departures from conditional independence if the number of observations
 in each stratum $n_{++k}$ are very different.
 
-For illustration, the famous admissions data of the University of
-California, Berkley, (UCB) from \cite{vcd:Bickel+Hammel+O'Connell:1975}
-are employed. Testing the conditional independence of admission and gender
-given the department leads to the well-known result that there is no 
-gender discrimination in five of six departments, but that women are more
-likely to be admitted than men in the first department. This departure
-from conditional independence is picked up by all three statistics formulated
-above: the sum-of-squares statistic from Equation~\ref{eq:sumchisq} is
-$\sum_k X_k^2 = \Sexpr{stat(alz_sumchisq)}$ ($p = \Sexpr{pval(alz_sumchisq)}$),
-the maximum sum-of-squares statistic from Equation~\ref{eq:maxchisq} is
-$\max_k X_k^2 = \Sexpr{stat(alz_maxchisq)}$ ($p = \Sexpr{pval(alz_maxchisq)}$),
-and the double maximum statistic from Equation~\ref{eq:dmax} is
-$\max_k M_k = \Sexpr{stat(alz_dmax)}$ ($p = \Sexpr{pval(alz_dmax)}$).
-The $p$ values are again computed by drawing $\Sexpr{nrep}$ samples from the corresponding
-permutation distribution. The latter two test statistics both indicate the 
-first department as the source of departure and the maximum statistic additionally
-identifies the deviations in the female applicants group. This result
-is also visualized by the conditional association plot in a trellis layout based
-on the double maximum shading in Figure~\ref{fig:ucb}. This can be
-interpreted as a diagnostic residual plot for the associated log-linear model
-because it shows that there are significant departures from the model in department
-A but not in departments B to F where all residuals are very small.
-
-
 \setkeys{Gin}{width=\textwidth}
-\begin{figure}[htbp]
+\begin{figure}[b!]
 \begin{center}
 <<conditional_mosaic,fig=TRUE,echo=FALSE,height=5,width=9>>=
 cotabplot(~ Smoking + Disease | Gender, data = alz, panel = alz_cotab)
 @
-\caption{Conditional association plot for UCB admissions with double maximum shading.}
-\label{fig:ucb}
+\caption{Conditional mosaic plot with double maximum shading for conditional
+independence of smoking and disease given gender.}
+\label{fig:alz}
 \end{center}
 \end{figure}
 
+For illustration, a 3-way and a 4-way table are employed: The first is taken
+from a case-control study of smoking and {A}lzheimer's disease published in
+\cite{vcd:Salib+Hillier:1997} and re-analyzed using conditional inference techniques
+in \cite{vcd:Hothorn+Hornik+VanDeWiel:2006}. It provides data on the smoking behaviour
+(no, $<$10, 10--20, $>$20 cigarettes per day), disease status (Alzheimer's, other
+dementias, other diagnoses) and gender. The question is whether smoking and disease 
+status are conditionally independent given gender. All three statistics
+suggested above find evidence for departure from significance: the sum-of-squares
+statistic from Equation~\ref{eq:sumchisq} is $\sum_k X_k^2 = \Sexpr{stat(alz_sumchisq)}$
+($p = \Sexpr{pval(alz_sumchisq)}$), the maximum sum-of-squares statistic from
+Equation~\ref{eq:maxchisq} is $\max_k X_k^2 = \Sexpr{stat(alz_maxchisq)}$
+($p = \Sexpr{pval(alz_maxchisq)}$), and the double maximum statistic from Equation~\ref{eq:dmax}
+is $\max_k M_k = \Sexpr{stat(alz_dmax)}$ ($p = \Sexpr{pval(alz_dmax)}$).
+The $p$ values are again computed by drawing $\Sexpr{nrep}$ samples from the corresponding
+permutation distribution. The conditional mosaic plot in Figure~\ref{fig:alz}
+shows clearly that the association of smoking and disease is present only in
+the group of male patients. The double maximum shading employed allows for
+identification of the male heavy smokers as the cells `responsible' for the dependence:
+other dementias are more frequent and Alzheimer's disease less frequent in this group than expected
+under independence. Interestingly, there seems to be another large residual for
+the light smoker group ($<$10 cigarettes) and Alzheimer's disease---however, this
+is only significant at 10\% and not at the 1\% level as the other two cells.
 
 \setkeys{Gin}{width=\textwidth}
-\begin{figure}[htbp]
+\begin{figure}[t!]
 \begin{center}
 <<conditional_assoc,fig=TRUE,echo=FALSE,height=11,width=11>>=
 cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab)
 @
-\caption{Conditional association plot for UCB admissions with double maximum shading.}
-\label{fig:ucb}
+\caption{Conditional association plot with maximum sum-of-squares shading for conditional
+independence of memory and attitude given age and education.}
+\label{fig:pun}
 \end{center}
 \end{figure}
+
+As a 4-way example, we use the punishment data \cite{vcd:andersen:1991} 
+from a study of the Gallup Institute in Denmark in 1979 about
+the attitude of a random sample of 783 persons towards corporal
+punishment of children. The contingency table comprises four margins:
+memory of punishments as a child (yes/no), attitude as a binary variable
+(approval of ``moderate'' punishment or ``no'' approval), highest level
+of education (elementary/secondary/high), and age group (15--24, 25--39, $\ge$40 years).
+It is of interest whether there is an association between memories of corporal punishments
+as a child and attitude towards punishment of children as an adult, controlling
+for age and education. Figure~\ref{fig:pun} shows a conditional association
+plot of memory and attitude given age and education. This can be
+interpreted as a diagnostic residual plot for the associated log-linear conditional
+indpendence model. It shows an association between memories and attitude
+for the lowest education group (first column) and highest age group (last row):
+experienced violence seems to engender violence again as there are less adults
+that disapprove punishment in the group with memories of punishments than expected
+under independence. For the remaining four age-education groups, there seems to be
+no association: all residuals of the conditional independence model are very close to
+zero in these cells. All three tests agree again that there is significant
+departure from conditional independence in this table: the sum-of-squares
+statistic is $\sum_k X_k^2 = \Sexpr{stat(pun_sumchisq)}$ ($p = \Sexpr{pval(pun_sumchisq)}$),
+the maximum sum-of-squares statistic is $\max_k X_k^2 = \Sexpr{stat(pun_maxchisq)}$
+($p = \Sexpr{pval(pun_maxchisq)}$), and the double maximum statistic
+is $\max_k M_k = \Sexpr{stat(pun_dmax)}$ ($p = \Sexpr{pval(pun_dmax)}$). The $\max_k X_k^2$
+result is visualized by means of a maximum sum-of-squares shading in Figure~\ref{fig:pun}
+with user-defined cut offs 1 and 2, chosen to be within the range of the residuals.
+The full-color palette is used only for those strata associated with a
+sum-of-squares statistic $X_k^2$ significant at (overall) 5\% level, the reduced-color
+palette is used otherwise. This highlights that the dependence pattern is significant
+only for the middle and high age group in the low education column. The other panels
+in the first column and last row also show a similar dependence pattern, however, it is not
+significant at 5\% level and hence graphically down-weighted by using reduced color.
+
+
 
 \section{Conclusions} \label{sec:conclusions}
 
@@ -999,11 +1076,12 @@ provide uniform saturations over different hues and that the colorfulness in thi
 shading can be controlled independently from the other two dimensions.
 %
 To combine visualization and significance testing, two approaches are presented:
-The first approach always uses a fully colored palette but relies on
+The first approach, based on the maximum statistic, always uses a fully colored palette but relies on
 data-driven cut offs such that the presence of color is equivalent to significance of the
-associated maximum test. The second approach uses pre-defined cut offs (such as $2$ and $4$) but
-codes the result of the significance test by using full colors only for significant results and
-the same type of palette with a reduced amount of color for non-significant results.
+associated maximum test. The second approach, also applicable to other statistics such as
+the sum of squares, uses pre-defined cut offs (e.g., $2$ and $4$) but
+codes the result of the associated significance test by using full colors only if it
+is significant and the same type of palette with a reduced amount of color otherwise.
 %
 Both strategies can not only be applied to the simple independence problem in 2-way
 contingency tables, but also to arbitrary inpendence models fitted via log-linear models
@@ -1011,21 +1089,20 @@ in higher dimensions. In addition, it might be possible to exploit the structure
 independence problem to achieve better visualizations which is illustrated
 for the conditional independence problem.
 %
-All associated significance tests are carried out using a conditional inference approach
+All significance tests are carried out using a conditional inference approach
 instead of relying on unconditional asymptotic results.
 
+\clearpage
 
 \section*{Computational Details}
 
 The results in this paper were obtained using
 \proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")}
-\citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2005} and the packages
-\pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2005},
+\citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2006} and the packages
+\pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2006},
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
-
-\clearpage
 
 \bibliography{vcd}
 
@@ -1101,7 +1178,7 @@ cotabplot(~ smoking + disease | gender, data = alz, panel = cotab_coindep, n = 5
 ## Figure 5
 set.seed(rseed)
 cotabplot(~ memory + attitude | age + education, data = pun, panel = cotab_coindep,
-  n = 5000, type = "assoc")
+  n = 5000, type = "assoc", test = "maxchisq", interpolate = 1:2)
 \end{verbatim}
 
 \end{appendix}
@@ -1250,12 +1327,13 @@ rect(0.9, 0.2, 1, 0.3, col = hsv(2/3, 1, 1))
 rect(0.7, 0.1, 0.8, 0.2, col = hsv(0, 0, 1))
 rect(0.8, 0.1, 0.9, 0.2, col = hsv(0, 0.5, 1))
 rect(0.9, 0.1, 1, 0.2, col = hsv(0, 1, 1))
-text(0.5, 0.1, "non-significant", pos = 1, cex = 1.5)
-text(0.85, 0.1, "significant", pos = 1, cex = 1.5)
+text(0.5, 0.1, "reduced color", pos = 1, cex = 1.5)
+text(0.85, 0.1, "full color", pos = 1, cex = 1.5)
 @
 
 \caption{Extended Friendly shading in HSV space.}
 \label{fig:Friendly-HSV}
 \end{center}
 \end{figure}
+
 

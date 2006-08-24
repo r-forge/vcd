@@ -1,112 +1,204 @@
-## HCL          vs. HSV
-## (260, 100, 50)   (232.2, 90.9, 76.4)
-## (260,  50, 72.5) (232.0, 54.7, 81.4)
-## (  0,   0, 95)   (  0.0,  0.0, 87.4)
-## (  0,  50, 72.5) (350.8, 59.9, 82.9)
-## (  0, 100, 95)   (350.7, 92.3, 64.9)
+Dear Luke,
 
-library("vcd")
+we prepared a revision of our manuscript
+  "Residual-based Shadings for Visualizing (Conditional) Independence"
+according to your comments and the reviews of the two referees. Please
+find attached a completely blinded (title and references), semi-blinded
+(only title) and unblinded PDF version of the manuscript. The latter
+two also include R code to reproduce the results and figures in the
+paper.
 
-data("Arthritis", package = "vcd")
-art <- xtabs(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female")
+The revision encompasses two main changes:
 
-data("pistonrings", package = "HSAUR")
-## piston ring failurs in each leg of four compressors
-## at an Imperial Chemical Industries plant
+  - side-by-side graphs
+    Figure 3 has been extended to illustrate the main points of the 
+    paper. It shows both modifications (significance and colors)
+    step by step: first a visualization of significance is added,
+    then HCL instead of HSV colors are employed.
+    This is demonstrated for two different contingency tables using
+    a significant maximum-type test and a non-significant sum-of-squares
+    test, respectively.
 
-data("UCBAdmissions", package = "datasets")
-ucb <- aperm(UCBAdmissions)
+  - conditional independence examples
+    The examples for conditional independence models were extended and
+    the UCB admissions example was omitted. First, we illustrate a 
+    shading corresponding to the double maximum test for a conditional
+    4x3 table in 2 strata. Second, we illustrate a shading corresponding
+    to the maximum of sum-of-squares test for a conditional 2x2 table
+    in 9 (= 3x3) strata. Thus, the double maximum shading is used when
+    the focus is on identifying cells in a larger table, and the maximum
+    sum-of-squares shading is used when only the stratum can be identified
+    (as there is only one degree of freedom in each conditional table,
+    as correctly pointed out by the referees).
+  
+Some more details can be found in the point-to-point answers to the 
+referees below.
 
-data("alzheimer", package = "coin")
-alz <- xtabs(~ smoking + disease + gender, data = alzheimer)
-
-data("Punishment", package = "vcd")
-pun <- xtabs(Freq ~ memory + attitude + age + education, data = Punishment)
-
-myseed <- 1071
-
-
-set.seed(myseed)
-art_max <- coindep_test(art, n = 5000)
-set.seed(myseed)
-art_chisq <- coindep_test(art, n = 5000, indepfun = function(x) sum(x^2))
-
-set.seed(myseed)
-art_gp <- shading_max(art, n = 5000)
-
-
-set.seed(myseed)
-pring_max <- coindep_test(pistonrings, n = 5000)
-set.seed(myseed)
-pring_chisq <- coindep_test(pistonrings, n = 5000, indepfun = function(x) sum(x^2))
+Best wishes,
+Z
 
 
-set.seed(myseed)
-ucb_doublemax <- coindep_test(ucb, "Dept", n = 5000)
-set.seed(myseed)
-ucb_maxChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2))
-set.seed(myseed)
-ucb_sumChisq <- coindep_test(ucb, "Dept", n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
+Referee 1
+*********
 
-set.seed(myseed)
-ucb_cotab <- cotab_coindep(ucb, condvars = "Dept", type = "assoc", n = 5000, margins = c(3, 1, 1, 3))
+> The UCB example does not do a good job of highlighting the utility of
+> the proposed colorization scheme. At the end of Section 3, I questioned
+> whether the chroma level could effectively convey the information about
+> omnibus statistical significance-for a single table, without a basis
+> for comparison of chroma brightness, I doubt that it can. However, the
+> authors go on to describe the use of varying levels of brightness to
+> convey information about significance of tests of strata-specific
+> independence. Here, I see the utility of varying chroma levels, and 
+> here is where a better choice of example (rather than the UCB example)
+> would be an effective way to highlight this utility. 
 
+The usage of full-color and reduced-color palettes in 2-way tables has
+been explained more clearly in Section 3 and two tables are used to 
+bring out more clearly the benefits of the new shadings. In particular,
+Figure 3 has several side-by-side mosaic plots (with legends) that
+compare different shadings for significant and non-significant tests.
 
-set.seed(myseed)
-alz_doublemax <- coindep_test(alz, "gender", n = 5000)
-set.seed(myseed)
-alz_maxChisq <- coindep_test(alz, "gender", n = 5000, indepfun = function(x) sum(x^2))
-set.seed(myseed)
-alz_sumChisq <- coindep_test(alz, "gender", n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
+In Section 4, a better example (than UCB admissions) has been added that
+explains how varying chroma levels can bring out strata-specific
+independence.
 
-set.seed(myseed)
-alz_cotab <- cotab_coindep(alz, condvars = "gender", n = 5000, margins = c(3, 1, 1, 3))
+> More examples (not many details, mostly the graphical displays) would
+> give the reader a better feeling for the utility of the approach.
+> A conditional independence example, that results in a range of
+> significance levels for testing strata-specific independence would
+> be nice.
 
-
-set.seed(myseed)
-pun_doublemax <- coindep_test(pun, 3:4, n = 5000)
-set.seed(myseed)
-pun_maxChisq <- coindep_test(pun, 3:4, n = 5000, indepfun = function(x) sum(x^2))
-set.seed(myseed)
-pun_sumChisq <- coindep_test(pun, 3:4, n = 5000, indepfun = function(x) sum(x^2), aggfun = sum)
-
-set.seed(myseed)
-pun_cotab1 <- cotab_coindep(pun, condvars = 3:4, n = 5000, varnames = FALSE, margins = c(2, 1, 1, 2))
-set.seed(myseed)
-pun_cotab2 <- cotab_coindep(pun, condvars = 3:4, type = "assoc", n = 5000, varnames = FALSE, margins = c(2, 1, 1, 2))
-
+As already explained above, the examples in Sections 3 and 4 have been
+extended (or newly added) to address these points.
 
 
-grid.newpage()
-pushViewport(viewport(layout = grid.layout(3, 2)))
-pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-mosaic(art, newpage = FALSE, gp = shading_Friendly, margins = c(1.5, 0.5, 0.5, 1.5),
-  gp_args = list(eps = NULL, lty = 1))
-popViewport()
-pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))
-mosaic(art, newpage = FALSE, gp = shading_hsv, margins = c(1.5, 0.5, 0.5, 1.5),
-  gp_args = list(interpolate = art_max$qdist(c(0.9, 0.99)), p.value = art_max$p.value))
-popViewport()
-pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 1))
-mosaic(art, newpage = FALSE, gp = art_gp, margins = c(1.5, 0.5, 0.5, 1.5))
-popViewport()
+Referee 2
+*********
 
-pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-mosaic(pistonrings, newpage = FALSE, gp = shading_Friendly, margins = c(1.5, 0.5, 0.5, 1.5),
-  gp_args = list(eps = NULL, lty = 1, interpolate = c(1, 1.5)))
-popViewport()
-pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))
-mosaic(pistonrings, newpage = FALSE, gp = shading_hcl, margins = c(1.5, 0.5, 0.5, 1.5),
-  gp_args = list(interpolate = c(1, 1.5), level = 0))
-popViewport()
-pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 2))
-mosaic(pistonrings, newpage = FALSE, gp = shading_hcl, margins = c(1.5, 0.5, 0.5, 1.5),
-  gp_args = list(interpolate = c(1, 1.5)))
-popViewport(2)
+> On the first point, I am not sure that I am persuaded that the maximum
+> approach is the only approach that can be handled in the spirit of the
+> paper. If you are willing to work with, say, a 0.05 cutoff c_0.05 for
+> X^2 based on either the asymptotic or randomization distribution, then
+> you could use a strategy in which for a table with X^2 > c_0.05 the
+> cells are colored according to their relative contribution to X^2. It
+> may make sense to only use color for those cells where r_ij^2 >
+> c_0.05/df or something along those lines, and it may be useful to map,
+> say, intensity onto the p-value. Some experimentation will be needed
+> to see what works best or at least reasonably well. This sort of
+> approach should be possible whenever one of your \lambda functions is
+> \sum.
 
-cotabplot(~ smoking + disease | gender, data = alz, panel = alz_cotab)
+This is an interesting point and we have experimented with several
+alternative strategies for choosing cut offs for test statistics other
+than the maximum. It is rather clear that if we wish to mimic the
+behaviour of the maximum shading, the cut offs always have to be outside
+the range of residuals for non-significant tests and inside the range
+otherwise. The problem is to find cut offs with an intuitive meaning
+if other test statistics are used: it is always tempting to classify 
+the colored cells as significant (which is only true for the maximum
+statistic).
 
-cotabplot(~ memory + attitude | age + education, data = pun, panel = pun_cotab1)
-cotabplot(~ memory + attitude | age + education, data = pun, panel = pun_cotab2)
+The strategy you describe above sometimes works rather well, but for
+some tables it results in rather many colored cells in the plot. To
+avoid this, one could always shade a certain share of the cells only.
 
-cotabplot(punish, panel = cotab_coindep, panel_args = list(varnames = FALSE, margins = c(2, 1, 1, 2)))
+We have added some discussion of such alternative strategies at the
+end of Section 3.
+
+FIXME: Der erste Teil koennte recht defensiv wirken, vielleicht kann
+man das noch progressiver formulieren?
+
+> With respect to the superiority of HCL you in a number of places you
+> claim that HCL is clearly superior but you do not provide much
+> concrete support. The only side by side comparison of HCL and HSV is
+> Figure 2 and I at least find this setting too abstract to be useful.
+> I would prefer a much reduced version of this figure (or eliminate
+> it?) and adding a number of pairs of concrete figures (e.g. mosaic
+> plots) comparing the two approaches you are contrasting. That way
+> each claim you make would be illustrated by a concrete example.
+
+We have extended Figure 3 for contrasting HSV-based and HCL-based 
+shadings (both for the full-color and reduced-color palettes). This
+shows in a practical example that the HCL colors are better belanced
+and less flashy than the HSV colors from the Friendly shading.
+
+Figure 2 is kept in the paper because it shows that walking along
+simple paths through HCL palettes leads to more useful palettes
+(in the sense above: balanced, less flashy). As both HSV and HCL
+colors can also be represented in RGB (or HSV for that matter),
+this is an important point because it is exactly the intuitive
+interpretation of the dimensions that makes HCL more useful than
+HSV.
+
+For the full-color HCL palettes we have computed the representation
+of the colors in HSV space:
+
+HCL		 HSV
+(260, 100, 50)   (232.2, 90.9, 76.4)
+(260,  50, 72.5) (232.0, 54.7, 81.4)
+(  0,	0, 95)   (  0.0,  0.0, 87.4)
+(  0,  50, 72.5) (350.8, 59.9, 82.9)
+(  0, 100, 95)   (350.7, 92.3, 64.9)
+
+This shows that it would be very hard to choose balanced colors in
+HSV space because saturation and value would have to be chosen very
+differently for differing hues.
+
+> One general perceptual question you might consider briefly is whether
+> strategies appropriate for single plots are equally appropriate for
+> ensembles of plots. Figure 4 is essentially a trellis display, and one
+> can also imagine using Mosaic plots in a trellis display. It would
+> seem that the lack of color in the right plot in Figure 3 is less
+> important if this is a stand-alone plot than if it is part of a
+> collection like Figure 4.
+
+The two new examples in Section 4 have been chosen as to address this
+point. It shows how both association and mosaic displays can be 
+employed in a trellis layout and how color can bring out both
+significance and dependence patterns in these more complex graphs.
+
+> page 4, line 3: what is an unconditional limiting distribution?
+> page 4, line -4: say what you are conditioning on
+
+It is now pointed out more clearly that conditional inference always
+conditions on the observations (i.e., relies on the permutation 
+distribution of the test statistics). The term `unconditional limiting
+distribution' is used in contrast to the `conditional limiting
+distribution'.
+
+> pages 4-5: independence isn't really the right term for this example
+> except artificially if the treatment assignment is randomized: this is
+> really a comparison of distributions or test of homogeneity.
+
+FIXME: Dazu habe ich jetzt noch nix gemacht. Das ist nun wirklich extrem
+kleinlich, da eh jeder weiss, wie's geht. Ich habe nicht leicht herausfinden
+koennen, ob das treatment zufaellig zugewiesen wurde (wuerde dies aber 
+vermuten, da es sich um eine Doppel-Blind-Studie handelt). In jedem Fall
+moechte ich den Punkt eh nicht diskutieren. Reicht es, wenn wir irgendwo
+in Section 2 schreiben, dass Homogenitaet genauso geht?
+
+> page 5, line 3: Standard errors for your p-values?
+
+FIXME: Das ist auch ein bisschen muehsam. Also der Bootstrap-Schaetzer
+fuer die Standardabweichung ist (trivialerweise!) einfach
+  sqrt(p * (1-p) / 5000)
+Muss man ihm das tatsaechlich irgendwohin schreiben? Wenn ja, wie macht
+man das, ohne dass es herablassend wirkt?
+
+> page 11, line 6: what does "most similar" mean?
+
+FIXME: Ich habe jetzt `symmetric difference' in die Fussnote geschrieben,
+reicht das? Will man dazu mehr sagen? (Ich glaube, dass eigentlich nicht.)
+Man koennte auch versuchen, dem Referee eine vollstaendige Antwort zu
+geben und im Paper nur etwas vages zu schreiben.
+
+> page 12, line -6 to -4: It would seem to me that a continuous
+> scale within the ranges above 1.24 and below -1.24 would work well and
+> be a good fit to the HCL scheme. If this is not true an example would
+> help.
+
+FIXME: Das kann man machen, aber man sieht nicht wirklich mehr. Ich moechte
+dafuer aber nicht noch ein Bild ins Paper geben. Was macht man da?
+
+All remaining minor points have been incorporated into the revised
+manuscript.

@@ -199,7 +199,8 @@ cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
 class(cotab_fourfold) <- "grapcon_generator"
 
 cotab_coindep <- function(x, condvars,
-  test = c("max", "Chisq"), level = NULL, n = 1000,
+  test = c("doublemax", "maxchisq", "sumchisq"),
+  level = NULL, n = 1000, interpolate = c(2, 4),
   h = NULL, c = NULL, l = NULL, lty = 1,
   type = c("mosaic", "assoc"),
   legend = FALSE, ylim = NULL, ...)
@@ -232,7 +233,8 @@ cotab_coindep <- function(x, condvars,
   cond.char <- names(cond.dnam) 	
 
   test <- match.arg(test)
-  if(test == "max") {
+  switch(test,
+  "doublemax" = {
     if(is.null(level)) level <- c(0.9, 0.99)
     fm <- coindep_test(x, cond.num, n = n)
     resids <- residuals(fm)
@@ -240,51 +242,53 @@ cotab_coindep <- function(x, condvars,
     col.bins <- fm$qdist(sort(level))
     gpfun <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
       h = h, c = c, l = l, interpolate = col.bins, lty = lty, p.value = fm$p.value)
-  } else {
+  },
+  "maxchisq" = {
     if(is.null(level)) level <- 0.95
     level <- level[1]
-    
-    indep.formula <- as.formula(paste("~ (",
-                                      paste(ind.char, collapse = " + "),
-	    			      ") * ",
-				      paste(cond.char, collapse = " * "),
-				      sep = ""))
-    fm <- loglm(indep.formula, data = x, fitted = TRUE)
-    resids <- residuals(fm, type = "pearson")
-    
-    gpfun <- shading_hcl(x, fitted(fm), resids, fm$df,
-      h = h, c = c, l = l, lty = lty)
-  }
+    fm <- coindep_test(x, cond.num, n = n, indepfun = function(x) sum(x^2))
+    resids <- residuals(fm)
 
-  ## if "maxChisq" should be implemented, use something
-  ## along the lines of
-  ## mosaiclist <- list()
-  ## 
-  ## rval <- function(x, indep, cond)
-  ##   mosaiclist[[ ... ]](co_table(margin.table(x, c(indep, cond)), cond)[[ ... ]])
+    chisqs <- sapply(co_table(residuals(fm), fm$margin), function(x) sum(x^2))
+    pvals <- 1 - fm$pdist(chisqs)        
+    gpfun <- sapply(pvals, function(p)
+      shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+      h = h, c = c, l = l, interpolate = interpolate, lty = lty, level = level, p.value = p))
+  },
+  "sumchisq" = {
+    if(is.null(level)) level <- 0.95
+    level <- level[1]
+    fm <- coindep_test(x, cond.num, n = n, indepfun = function(x) sum(x^2), aggfun = sum)
+    resids <- residuals(fm)
+    
+    gpfun <- shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+      h = h, c = c, l = l, interpolate = interpolate, lty = lty, level = level, p.value = fm$p.value)
+  })
 
   type <- match.arg(type)
   if(type == "mosaic") {
     rval <- function(x, condlevels) {
-    if(is.null(condlevels))
-      mosaic(x, newpage = FALSE, pop = TRUE,
-             gp = gpfun, legend = legend, ...)
-    else
-      mosaic(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-             newpage = FALSE, pop = TRUE,
-	     gp = gpfun, legend = legend, ...)
+      if(is.null(condlevels)) {
+        tab <- x
+        gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
+      } else {
+        tab <- co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]]
+        gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
+      }
+      mosaic(tab, newpage = FALSE, pop = TRUE, gp = gp, legend = legend, ...)
     }
   } else {
     if(is.null(ylim)) ylim <- range(resids)
 
     rval <- function(x, condlevels) {
-    if(is.null(condlevels))
-      assoc(x, newpage = FALSE, pop = TRUE,
-             gp = gpfun, legend = legend, ylim = ylim, ...)
-    else
-      assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-             newpage = FALSE, pop = TRUE,
-	     gp = gpfun, legend = legend, ylim = ylim, ...)
+      if(is.null(condlevels)) {
+        tab <- x
+        gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
+      } else {
+        tab <- co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]]
+        gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
+      }
+      assoc(tab, newpage = FALSE, pop = TRUE, gp = gp, legend = legend, ylim = ylim, ...)
     }
   }
 
