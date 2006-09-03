@@ -1,0 +1,56 @@
+\begin{theindex}
+
+  \item association plot, \hyperpage{1}, \hyperpage{9}
+
+  \indexspace
+
+  \item Categorical data, \hyperpage{1}
+  \item conditional independence, \hyperpage{21}
+  \item contingency tables, \hyperpage{1}
+
+  \indexspace
+
+  \item Data
+    \subitem arthritis, \hyperpage{16}
+    \subitem Danish corporate punishment, \hyperpage{24}
+    \subitem hospital, \hyperpage{3}
+    \subitem UCB Admissions, \hyperpage{19}
+  \item diverging color palette, \hyperpage{11}
+  \item doubledecker plot, \hyperpage{20}
+
+  \indexspace
+
+  \item highlighting, \hyperpage{13}
+  \item HSV colors, \hyperpage{11}
+
+  \indexspace
+
+  \item mosaic plot, \hyperpage{1}, \hyperpage{5}
+
+  \indexspace
+
+  \item pairs plot, \hyperpage{19}
+  \item Patefield algorithm, \hyperpage{17}
+  \item Pearson residuals, \hyperpage{9}
+  \item permutation test, \hyperpage{15}
+
+  \indexspace
+
+  \item qualitative color palette, \hyperpage{11}
+
+  \indexspace
+
+  \item R, \hyperpage{2}
+  \item residual-based shading, \hyperpage{14}
+  \item RGB colors, \hyperpage{11}
+
+  \indexspace
+
+  \item sieve plot, \hyperpage{1}, \hyperpage{7}
+  \item spine plot, \hyperpage{5}
+
+  \indexspace
+
+  \item trellis layout, \hyperpage{23}
+
+\end{theindex}
