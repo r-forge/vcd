@@ -80,7 +80,7 @@ hos_chisq <- coindep_test(hospital, n = 5000, indepfun = function(x) sum(x^2))
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\pkg}[1]{\texttt{#1}}
 
-\makeindex
+%\makeindex
 
 \begin{document}
 
@@ -101,8 +101,8 @@ Wien\\Augasse 2--6, 1090 Vienna, Austria
 \section{Introduction}
 \label{sec:intro}
 
-Categorical data analysis is typically based on two- or
-higher-dimensional contingency tables, cross-tabulating the
+\index{Categorical data} Categorical data analysis is typically based on two- or
+higher-dimensional \index{contingency tables} contingency tables, cross-tabulating the
 co-occurences of levels of nominal and/or ordinal data. 
 In order to explain these, statisticians
 typically look for (conditional) independence structures using common
@@ -117,17 +117,18 @@ mosaic and sieve plots have been extended over the last two decades,
 and implementations exist in many statistical environments.
 
 All three graphical methods visualize aspects of (possibly higher-dimensional)
-contingency tables. A \emph{mosaic plot} \cite{vcd:Hartigan+Kleiner:1984} is basically 
+contingency tables. A \emph{mosaic plot} \index{mosaic plot}
+\cite{vcd:Hartigan+Kleiner:1984} is basically 
 an area-proportional visualization of (typically, observed) frequencies, composed
 of tiles (corresponding to the cells) created by recursive
 vertical and horizontal splits of a rectangle. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
 dimensions of previous splits. 
-\emph{Sieve plots} \cite{vcd:riedwyl+schuepbach:1994} 
+\emph{Sieve plots} \index{sieve plot} \cite{vcd:riedwyl+schuepbach:1994} 
 are similar to mosaic plots, but the area of each
 tile is proportional to the \emph{expected} cell entry, and each tile
 is filled with a number of rectangles corresponding to the observed value.
-An \emph{association plot} \cite{vcd:Cohen:1980}
+An \emph{association plot} \index{association plot} \cite{vcd:Cohen:1980}
 visualizes the standardized deviations of observed frequencies from
 those expected under a certain independence hypothesis.
 Each cell is represented by a rectangle that has
@@ -165,7 +166,7 @@ Implementations of association and sieve plots can only be found in
 for two-way tables only).
 Table~\ref{tab:compare} gives an overview of the available functionality in these systems.
 The figures in this chapter have all been produced using the
-\proglang{R} system, using the extension packages \pkg{vcd} 
+\proglang{R} \index{R} system, using the extension packages \pkg{vcd} 
 \cite{vcd:Meyer+Zeileis+Hornik:2005} and
 \pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
 (Figure~\ref{fig:bars3d} only), all freely available from the
@@ -213,7 +214,8 @@ Section~\ref{sec:concl} concludes the chapter.
 \label{sec:twoway}
 
 Throughout this section, our examples will be based on
-the \data{hospital} data \cite{vcd:wing:1962} given in Table~\ref{tab:hospital}.
+the \index{Data!hospital} 
+\data{hospital} data \cite{vcd:wing:1962} given in Table~\ref{tab:hospital}.
 
 \begin{table}[h]
 \begin{center}
@@ -330,7 +332,7 @@ contingency tables.
 \subsection{Mosaic Displays}
 \label{sec:mosaic}
 
-Mosaic displays have been introduced by 
+\index{mosaic plot} Mosaic displays have been introduced by 
 \cite{vcd:Hartigan+Kleiner:1981,vcd:Hartigan+Kleiner:1984} and
 extended, e.g., by \cite{vcd:Friendly:1994,vcd:Friendly:1999,vcd:Friendly:2000}. 
 They visualize the observed values of a contingency table by
@@ -343,8 +345,8 @@ according to the marginals of one of the variables. To be consistent with the te
 representation, we choose LOS with vertical splits (see Figure~\ref{fig:mosaic1fig}). 
 The result is similar to a bar plot where not the height, but the width is
 adapted to visualize the counts for each level, which is also 
-called a \emph{spine plot} \cite{vcd:hummel:1996}. From this plot, we see that 
-the number of patients 
+called a \emph{spine plot} \cite{vcd:hummel:1996}. \index{spine plot}
+From this plot, we see that the number of patients 
 decreases with the length of stay. Step 2 now is to add further splits in the
 other direction, i.e., horizontal splits, for the second
 variable. This means that each vertical bar is split according to the
@@ -413,6 +415,7 @@ as first splitting variable.}
 \subsection{Sieve Plots}
 \label{sec:sieve}
 
+\index{sieve plot}
 When we try to explain data, we assume the validity of a certain
 model for the generating process. In the case of two-way contingency
 tables, the two most common and well-known hypotheses \cite{vcd:Agresti:2002} are 
@@ -490,10 +493,11 @@ labeling_cells(text = t(hospital), clip = FALSE, gp = gpar(fontface = 2, fontsiz
 \subsection{Association Plots}
 \label{sec:assoc}
 
+\index{association plot}
 In the last section, we have seen how to compare observed and expected
 values of a contingency table using sieve plots. We can do this
 more straightforwardly by using a plot that directly visualizes the residuals. The
-most widely used residuals are the Pearson residuals
+most widely used residuals are the Pearson residuals \index{Pearson residuals}
 
 \begin{equation} \label{eq:Pearson}
 r_{ij} \quad = \quad \frac{n_{ij} - \hat n_{ij}}{\sqrt{\hat n_{ij}}}.
@@ -589,6 +593,7 @@ Due to the three-dimensional nature of human color
 perception \cite{vcd:Mollon:1995}, 
 it has been common to specify colors using the three primaries
 red, green, and blue (RGB colors), especially for computer devices. 
+\index{RGB colors}
 The appearance of the on-screen colors is affected by the device
 characteristics: For example, the intensity $I$ of a primary 
 on a particular device follows the rule $I=L^\gamma$, with $L$
@@ -598,7 +603,7 @@ appear identical on different devices, their gamma characteristics
 have to be taken into account.
 
 Choosing colors and color palettes in RGB space can be a bit inconvenient
-and hence software implementations are often based on
+and hence software implementations are often based on \index{HSV colors}
 Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Satu\-ration 
 color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
@@ -616,13 +621,15 @@ perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihak
 One important issue here is that HSV dimensions are confounded, e.g., saturation
 is not uniform across different hues.
 As an example, see Figure~\ref{fig:colors} (left) 
-showing a qualitative color palette (colors $(H, 100, 100)$ for varying hues $H$) in the HSV
+showing a qualitative color palette \index{qualitative color palette}
+(colors $(H, 100, 100)$ for varying hues $H$) in the HSV
 space: although saturation and value are fixed, the fully saturated blue is
 perceived much darker than the fully saturated red or green,
 making it difficult to judge the size of shaded areas.
 Furthermore, the flashy fully saturated HSV colors are hard 
 to look at for a longer time. For similar reasons, it is equally difficult
 to derive acceptable diverging palettes from the HSV space, i.e.,
+\index{diverging color palette}
 bipolar scales containing colors ranging between two very distinct colors.
 The upper part of Figure~\ref{fig:diverging} shows a diverging
 palette in the HSV space with colors ranging from a saturated red $(0, 100, 100)$
@@ -716,7 +723,8 @@ we mark tiles for patients never or seldom visited to visualize their proportion
 the LOS strata. For optical clarity, we set the
 spacing between the visit frequency tiles to 0. Clearly, the
 proportion of these patients increases with LOS. In fact, such a
-``stacked'' plot can also be interpreted as spine plot with highlighting
+``stacked'' plot can also be interpreted as spine plot with
+highlighting \index{highlighting}
 \cite{vcd:hummel:1996}, particularly useful in analyzing relationships among
 categorical data with a binary dependent variable. More variations on
 this theme, such as doubledecker plots, are treated in Chapter III-12.
@@ -773,7 +781,8 @@ positive, red for negative, and gray for zero residuals.
 
 Mosaic plots in their initial version are monochrome
 displays. Friendly \cite{vcd:Friendly:1994} introduced a
-residual-based shading of the tiles to additionally visualize the
+\index{residual-based shading} residual-based shading
+of the tiles to additionally visualize the
 residuals from a given independence model fitted to the table. 
 The idea is to use a color coding for the mosaic tiles that visualizes the
 sign and absolute size of each residual $r_{ij}$: Cells corresponding to small
@@ -857,7 +866,7 @@ conditional inference (or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \cite{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
 For testing the independence hypothesis from (\ref{eq:H0}),
-using a permutation test is particularly intuitive due to the 
+using a \index{permutation test} permutation test is particularly intuitive due to the 
 permutation invariance (given row and column sums) of this problem.
 Consequently, all results in this paper are based on conditional inference performed
 by simulating the permutation distribution of test statistics of type
@@ -901,7 +910,7 @@ large tables, the test of
 independence may not be significant even though some of the residuals are
 ``large''. On the other hand, the test might be significant even
 though the residuals are ``small''. In fact, the cut-off points are really
-data-dependent. Consider the case of the \data{arthritis} data 
+data-dependent. Consider the case of the \data{arthritis} data \index{Data!arthritis}
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, stratified by
 gender (see Table~\ref{tab:arthritis} for the female patients):
@@ -942,7 +951,8 @@ evidence for the rejection of the independence hypothesis can easily be identifi
 As explained above, 
 the conditional distribution of this test statistic under the null can be obtained
 by simulation, sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
-using, e.g., the Patefield algorithm \cite{vcd:Patefield:1981} 
+using, e.g., the Patefield algorithm \cite{vcd:Patefield:1981}
+\index{Patefield algorithm}
 and computing the maximum statistic for each of these tables.
 In Figure~\ref{fig:arthritis2}, we visualize again the \data{arthritis} data, this
 time using the maximum test statistic and its 10\% and 
@@ -1013,6 +1023,7 @@ conditional independence models.
 \label{sec:flat}
 
 As an example, consider the well-known UCB admissions data
+\index{Data!UCB Admissions}
 \cite{vcd:Bickel+Hammel+O'Connell:1975} on applicants, classified by
 admission and gender, to graduate school at the University of California
 in Berkeley for the six largest departments in 1973. The `flattened'
@@ -1043,7 +1054,8 @@ Female & Admitted & 89 & 17 & 202 & 131 & 94 & 24 \\
 A first step in the exploratory analysis of more complex tables is to
 get a quick overview on the data. For this, 
 all basic plots can be combined in pairwise displays,
-arranged in a matrix similar to scatterplots in a pairs plot.
+arranged in a matrix similar to scatterplots in a pairs
+plot. \index{pairs plot}
 The diagonal cells contain the variable names, optionally with
 univariate statistics, whereas the off-diagonal cells feature plots whose
 variables are implicitly specified by the cells' position in the matrix. %'
@@ -1074,7 +1086,8 @@ display,
 splitting first in the explanatory variables department and gender and highlighting
 the resulting mosaic with respect to the dependent variable admissions. Here, we
 use the vertical splits for both explanatory variables, resulting in the 
-doubledecker plot in Figure~\ref{fig:doubleucb}. From the widths of the
+\index{doubledecker plot} doubledecker plot 
+in Figure~\ref{fig:doubleucb}. From the widths of the
 tiles it can be seen that students apply to the six departments in
 unequal numbers (with a particularly small
 number of females in departments~A and B),
@@ -1114,7 +1127,8 @@ doubledecker(aperm(aperm(UCBAdmissions, c(1,3,2))[2:1,,], c(2,3,1)), margins = c
 In addition to the exploratory approaches 
 to the visualization of multi-way tables outlined in 
 the previous section, there are specialized displays 
-designed for the visualization of conditional independence structures. 
+designed for the visualization of \index{conditional independence} 
+conditional independence structures. 
 
 One approach is employing pairs plots (such as that in Figure~\ref{fig:pairs}) for model search:
 we can use the position of the cells in the pairs matrix to select an
@@ -1256,6 +1270,7 @@ very unevenly distributed marginals, the strata can become very
 distorted, and the tiles, along with their shading, inscrutable.
 An alternative is to complement the conditioning in the model by
 a conditioning in the plot, i.e., to use trellis-like layouts for
+\index{trellis layout}
 visualizing \emph{partial} tables as defined by the conditioning variables. 
 All subtables are corrected for the marginals and thus, all
 corresponding plots in the panels have the same size. 
@@ -1299,6 +1314,7 @@ As a four-way example, we use the punishment data \cite{vcd:andersen:1991}
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
 punishment of children (see Table~\ref{tab:punish}).      
+\index{Data!Danish corporate punishment}
 The data consist of four variables: Attitude is a binary variable
 indicating whether a person approves moderate punishment of children
 (``moderate''), or refuses any punishment of children (``no'').
