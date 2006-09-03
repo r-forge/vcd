@@ -108,6 +108,11 @@ end of Section 3.
 FIXME: Der erste Teil koennte recht defensiv wirken, vielleicht kann
 man das noch progressiver formulieren?
 
+%DM% Ich finde, man sagt schon recht klar, dass sein Vorschlag unausgegoren 
+     ist, ohne dass er das Gesicht völlig verliert. Ich hätte nur die beiden 
+     "rather" weggelassen, das klingt wirklich defensiv.
+
+
 > With respect to the superiority of HCL you in a number of places you
 > claim that HCL is clearly superior but you do not provide much
 > concrete support. The only side by side comparison of HCL and HSV is
@@ -177,6 +182,11 @@ vermuten, da es sich um eine Doppel-Blind-Studie handelt). In jedem Fall
 moechte ich den Punkt eh nicht diskutieren. Reicht es, wenn wir irgendwo
 in Section 2 schreiben, dass Homogenitaet genauso geht?
 
+%DM% ich denke, ja. Kannst ja evtl. noch beim Beispiel in Klammer schreiben, 
+     dass das eigentlich der Homogenitätsfall ist - da wollte er sich nur
+     wichtig machen.
+
+
 > page 5, line 3: Standard errors for your p-values?
 
 FIXME: Das ist auch ein bisschen muehsam. Also der Bootstrap-Schaetzer
@@ -185,20 +195,39 @@ fuer die Standardabweichung ist (trivialerweise!) einfach
 Muss man ihm das tatsaechlich irgendwohin schreiben? Wenn ja, wie macht
 man das, ohne dass es herablassend wirkt?
 
+%DM% Einfach dazu angeben, ohne weiteren Kommentar, und wenn er dann unbedingt
+     die Formel will, kann man immer noch eine Fussnote machen.
+
+
 > page 11, line 6: what does "most similar" mean?
 
 FIXME: Ich habe jetzt `symmetric difference' in die Fussnote geschrieben,
 reicht das? Will man dazu mehr sagen? (Ich glaube, dass eigentlich nicht.)
+
+%DM% ich glaube auch nicht, das sprengt den Rahmen. Und das wollte man ja 
+     eigentlich in einem anderen paper verarbeiten.
+
 Man koennte auch versuchen, dem Referee eine vollstaendige Antwort zu
 geben und im Paper nur etwas vages zu schreiben.
+
+%DM% Man koennte auch dem referee nur eine vage Antwort geben - glaubst
+     Du wirklich, dass der das _ganz_ genau wissen will? Am Ende will er
+     dann wirklich, dass wir's ins paper reinschreiben.
 
 > page 12, line -6 to -4: It would seem to me that a continuous
 > scale within the ranges above 1.24 and below -1.24 would work well and
 > be a good fit to the HCL scheme. If this is not true an example would
 > help.
 
-FIXME: Das kann man machen, aber man sieht nicht wirklich mehr. Ich moechte
-dafuer aber nicht noch ein Bild ins Paper geben. Was macht man da?
+FIXME: Das kann man machen, aber man sieht nicht wirklich mehr. 
+
+%DM% schaut das dann "zu bunt" aus wie wir schreiben?
+
+Ich moechte dafuer aber nicht noch ein Bild ins Paper geben. Was macht man da?
+
+%DM% Das Argument kommt natürlich oft, vielleicht will man wirklich ein
+     für alle mal ein Beispiel dafür bringen, dass continuous shading
+     nix bringt. Uns ist es ja klar, aber den Lesern offenbar nicht.
 
 All remaining minor points have been incorporated into the revised
 manuscript.
