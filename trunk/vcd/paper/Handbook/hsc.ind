@@ -4,24 +4,32 @@
 
   \indexspace
 
-  \item Categorical data, \hyperpage{1}
+  \item catgorical data, \hyperpage{1}
+  \item color palette
+    \subitem diverging, \hyperpage{11}
+    \subitem qualitative, \hyperpage{11}
+  \item color space
+    \subitem CIELAB, \hyperpage{13}
+    \subitem CIELUV, \hyperpage{13}
+    \subitem HCL, \hyperpage{13}
+    \subitem HSV, \hyperpage{11}
+    \subitem RGB, \hyperpage{11}
   \item conditional independence, \hyperpage{21}
+  \item conditional inference, \hyperpage{15}
   \item contingency tables, \hyperpage{1}
 
   \indexspace
 
-  \item Data
+  \item data
     \subitem arthritis, \hyperpage{16}
-    \subitem Danish corporate punishment, \hyperpage{24}
+    \subitem Danish corporal punishment, \hyperpage{24}
     \subitem hospital, \hyperpage{3}
-    \subitem UCB Admissions, \hyperpage{19}
-  \item diverging color palette, \hyperpage{11}
+    \subitem UCB admissions, \hyperpage{19}
   \item doubledecker plot, \hyperpage{20}
 
   \indexspace
 
   \item highlighting, \hyperpage{13}
-  \item HSV colors, \hyperpage{11}
 
   \indexspace
 
@@ -36,13 +44,8 @@
 
   \indexspace
 
-  \item qualitative color palette, \hyperpage{11}
-
-  \indexspace
-
   \item R, \hyperpage{2}
   \item residual-based shading, \hyperpage{14}
-  \item RGB colors, \hyperpage{11}
 
   \indexspace
 

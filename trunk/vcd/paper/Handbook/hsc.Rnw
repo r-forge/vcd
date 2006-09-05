@@ -5,7 +5,7 @@
 % choose options for [] as required from the list
 % in the Reference Guide, Sect. 2.2
 
-\usepackage{Sweave,hyperref,color,graphicx,makeidx,multicol} 
+\usepackage{Sweave,color,hyperref,graphicx,makeidx,multicol} 
 \usepackage[bottom]{footmisc}% places footnotes at page bottom
 
 \definecolor{Red}{rgb}{0.7,0,0}
@@ -101,7 +101,7 @@ Wien\\Augasse 2--6, 1090 Vienna, Austria
 \section{Introduction}
 \label{sec:intro}
 
-\index{Categorical data} Categorical data analysis is typically based on two- or
+\index{catgorical data} Categorical data analysis is typically based on two- or
 higher-dimensional \index{contingency tables} contingency tables, cross-tabulating the
 co-occurences of levels of nominal and/or ordinal data. 
 In order to explain these, statisticians
@@ -214,7 +214,7 @@ Section~\ref{sec:concl} concludes the chapter.
 \label{sec:twoway}
 
 Throughout this section, our examples will be based on
-the \index{Data!hospital} 
+the \index{data!hospital} 
 \data{hospital} data \cite{vcd:wing:1962} given in Table~\ref{tab:hospital}.
 
 \begin{table}[h]
@@ -593,7 +593,7 @@ Due to the three-dimensional nature of human color
 perception \cite{vcd:Mollon:1995}, 
 it has been common to specify colors using the three primaries
 red, green, and blue (RGB colors), especially for computer devices. 
-\index{RGB colors}
+\index{color space!RGB}
 The appearance of the on-screen colors is affected by the device
 characteristics: For example, the intensity $I$ of a primary 
 on a particular device follows the rule $I=L^\gamma$, with $L$
@@ -603,7 +603,7 @@ appear identical on different devices, their gamma characteristics
 have to be taken into account.
 
 Choosing colors and color palettes in RGB space can be a bit inconvenient
-and hence software implementations are often based on \index{HSV colors}
+and hence software implementations are often based on \index{color space!HSV}
 Hue-Saturation-Value (HSV) colors (or the comparable Hue-Luminance-Satu\-ration 
 color scheme). Both spaces are rather similar transformations of the RGB space
 \cite{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
@@ -621,7 +621,7 @@ perceptual dimensions of the human visual system  \cite{vcd:Brewer:1999,vcd:Ihak
 One important issue here is that HSV dimensions are confounded, e.g., saturation
 is not uniform across different hues.
 As an example, see Figure~\ref{fig:colors} (left) 
-showing a qualitative color palette \index{qualitative color palette}
+showing a qualitative color palette \index{color palette!qualitative}
 (colors $(H, 100, 100)$ for varying hues $H$) in the HSV
 space: although saturation and value are fixed, the fully saturated blue is
 perceived much darker than the fully saturated red or green,
@@ -629,7 +629,7 @@ making it difficult to judge the size of shaded areas.
 Furthermore, the flashy fully saturated HSV colors are hard 
 to look at for a longer time. For similar reasons, it is equally difficult
 to derive acceptable diverging palettes from the HSV space, i.e.,
-\index{diverging color palette}
+\index{color palette!diverging}
 bipolar scales containing colors ranging between two very distinct colors.
 The upper part of Figure~\ref{fig:diverging} shows a diverging
 palette in the HSV space with colors ranging from a saturated red $(0, 100, 100)$
@@ -686,9 +686,11 @@ who introduced a notation for balanced colors. Based on those,
 tools producing better palettes for specific tasks have been developed 
 \cite{vcd:Harrower+Brewer:2003}. Other perceptually-based color
 spaces, especially suited for computer displays, are the CIELAB and CIELUV
+\index{color space!CIELAB} \index{color space!CIELUV}
 spaces \cite{vcd:CIE:2004} from which qualitative palettes for
 statistical graphics have been derived \cite{vcd:Ihaka:2003}. A
 transformation of the CIELUV space leads to the HCL (Hue-Chroma-Luminance) space.
+\index{color space!HCL}
 These colors are again specified by triplets $(H, C, L)$:
 chroma $C$ loosely corresponds to colorfulness and luminance $L$ to
 brightness, but in contrast to HSV colors, chroma is an
@@ -862,7 +864,8 @@ degrees of freedom under the null hypothesis.
 An important reason for using the unconditional limiting distribution
 for the $X^2$ statistic from (\ref{eq:ChiSquare}) was the closed form result
 for the distribution. Recently, with the improving perfomance of computers,
-conditional inference (or permutation tests)---carried out either by simulation
+conditional inference \index{conditional inference}
+(or permutation tests)---carried out either by simulation
 or by computation of the (asymptotic) permutation distribution---have been receiving
 increasing attention \cite{vcd:Ernst:2004,vcd:Pesarin:2001,vcd:Strasser+Weber:1999}. 
 For testing the independence hypothesis from (\ref{eq:H0}),
@@ -910,7 +913,7 @@ large tables, the test of
 independence may not be significant even though some of the residuals are
 ``large''. On the other hand, the test might be significant even
 though the residuals are ``small''. In fact, the cut-off points are really
-data-dependent. Consider the case of the \data{arthritis} data \index{Data!arthritis}
+data-dependent. Consider the case of the \data{arthritis} data \index{data!arthritis}
 \cite{vcd:Koch+Edwards:1988}, resulting from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, stratified by
 gender (see Table~\ref{tab:arthritis} for the female patients):
@@ -1023,7 +1026,7 @@ conditional independence models.
 \label{sec:flat}
 
 As an example, consider the well-known UCB admissions data
-\index{Data!UCB Admissions}
+\index{data!UCB admissions}
 \cite{vcd:Bickel+Hammel+O'Connell:1975} on applicants, classified by
 admission and gender, to graduate school at the University of California
 in Berkeley for the six largest departments in 1973. The `flattened'
@@ -1314,7 +1317,7 @@ As a four-way example, we use the punishment data \cite{vcd:andersen:1991}
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
 punishment of children (see Table~\ref{tab:punish}).      
-\index{Data!Danish corporate punishment}
+\index{data!Danish corporal punishment}
 The data consist of four variables: Attitude is a binary variable
 indicating whether a person approves moderate punishment of children
 (``moderate''), or refuses any punishment of children (``no'').
