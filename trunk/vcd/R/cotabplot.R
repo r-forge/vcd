@@ -92,83 +92,84 @@ cotabplot.default <- function(x, cond = NULL,
   if(cond.n < 1) panel(x, NULL) ## no conditioning variables
   else {
   
-  cond.nlevels <- sapply(cond.dnam, length)
-  nplots <- prod(cond.nlevels)
-  condition <- as.matrix(expand.grid(cond.dnam))
+    cond.nlevels <- sapply(cond.dnam, length)
+    nplots <- prod(cond.nlevels)
+    condition <- as.matrix(expand.grid(cond.dnam))
 
-  ## compute layout
-  #Z# needs fixing for more than two conditioning variables
-  layout <- c(1,1,1) ## rows, cols, pages
-  if(cond.n == 1) {
-    layout[2] <- ceiling(sqrt(floor(cond.nlevels)))
-    layout[1] <- ceiling(cond.nlevels/layout[2])
-    layout <- expand.grid(lapply(layout, function(x) 1:x))[1:nplots,]
-  }
-  else {
-    layout[1] <- cond.nlevels[1]
-    layout[2] <- cond.nlevels[2]
-    if(cond.n >= 3) layout[3] <- nplots/prod(cond.nlevels[1:2]) #Z# FIXME
-    if(layout[3] > 1) stop("multiple pages not supported yet")
-    layout <- expand.grid(lapply(layout, function(x) 1:x))
-  }
+    ## compute layout
+                                        #Z# needs fixing for more than two conditioning variables
+    layout <- c(1,1,1) ## rows, cols, pages
+    if(cond.n == 1) {
+      layout[2] <- ceiling(sqrt(floor(cond.nlevels)))
+      layout[1] <- ceiling(cond.nlevels/layout[2])
+      layout <- expand.grid(lapply(layout, function(x) 1:x))[1:nplots,]
+    } else {
+      layout[1] <- cond.nlevels[1]
+      layout[2] <- cond.nlevels[2]
+      if(cond.n >= 3) layout[3] <- nplots/prod(cond.nlevels[1:2]) #Z# FIXME
+      if(layout[3] > 1) stop("multiple pages not supported yet")
+      layout <- expand.grid(lapply(layout, function(x) 1:x))
+    }
 
-  ## push basic grid of nr x nc cells
-  nr <- max(layout[,1])
-  nc <- max(layout[,2])
-  pushViewport(plotViewport(margins))
-  pushViewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
+    ## push basic grid of nr x nc cells
+    nr <- max(layout[,1])
+    nc <- max(layout[,2])
+    pushViewport(plotViewport(margins))
+    pushViewport(viewport(layout = grid.layout(nr, nc, widths = unit(1/nc, "npc"))))
 
-  strUnit <- unit(2 * ncol(condition), "strheight", "A")
-  cellport <- function(name) viewport(layout = grid.layout(2, 1,
-        heights = unit.c(strUnit, unit(1, "npc") - strUnit)),
-	name = name)
+    strUnit <- unit(2 * ncol(condition), "strheight", "A")
+    cellport <- function(name) viewport(layout = grid.layout(2, 1,
+                                          heights = unit.c(strUnit, unit(1, "npc") - strUnit)),
+                                        name = name)
 
-  ## go through each conditioning combination
-  for(i in 1:nrow(condition)) {
+    ## go through each conditioning combination
+    for(i in 1:nrow(condition)) {
 
-    ## conditioning information in ith cycle
-    condi <- as.vector(condition[i,])
-    names(condi) <- colnames(condition)
-    condistr <- paste(condi, collapse = ".")
-    condilab <- paste(cond.char, condi, sep = " = ")
+      ## conditioning information in ith cycle
+      condi <- as.vector(condition[i,])
+      names(condi) <- colnames(condition)
+      condistr <- paste(condi, collapse = ".")
+      condilab <- paste(cond.char, condi, sep = " = ")
 
-    ## header
-    pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
-    pushViewport(cellport(paste("cell", condistr, sep = ".")))
-    pushViewport(viewport(layout.pos.row = 1, name = paste("lab", condistr, sep = ".")))
-    grid.rect(gp = rect_gp)
-    grid.text(condilab, y = cond.n:1/cond.n - 1/(2*cond.n), gp = text_gp)
-    grid.segments(0, 0:cond.n/cond.n, 1, 0:cond.n/cond.n)
-    upViewport()
+      ## header
+      pushViewport(viewport(layout.pos.row = layout[i,1], layout.pos.col = layout[i,2]))
+      pushViewport(cellport(paste("cell", condistr, sep = ".")))
+      pushViewport(viewport(layout.pos.row = 1, name = paste("lab", condistr, sep = ".")))
+      grid.rect(gp = rect_gp)
+      grid.text(condilab, y = cond.n:1/cond.n - 1/(2*cond.n), gp = text_gp)
+      grid.segments(0, 0:cond.n/cond.n, 1, 0:cond.n/cond.n)
+      upViewport()
 
-    ## main plot
-    pushViewport(viewport(layout.pos.row = 2, name = paste("plot", condistr, sep = ".")))
-    panel(x, condi)
-    upViewport(2)
-    grid.rect(gp = gpar(fill = "transparent"))
-    upViewport()
-  }
+      ## main plot
+      pushViewport(viewport(layout.pos.row = 2, name = paste("plot", condistr, sep = ".")))
+      panel(x, condi,
+            paste("panel:", paste(names(condi), condi, sep = "=", collapse = ","), "|", sep = ""))
+      upViewport(2)
+      grid.rect(gp = gpar(fill = "transparent"))
+      upViewport()
+    }
+    
   upViewport()
   if(pop) popViewport() else upViewport()
-  }
+}
 
   invisible(x)
 }
 
 cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
-  function(x, condlevels) {
-    if(is.null(condlevels)) mosaic(x, newpage = FALSE, pop = TRUE, ...)
+  function(x, condlevels, prefix) {
+    if(is.null(condlevels)) mosaic(x, newpage = FALSE, pop = FALSE, ...)
       else mosaic(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                  newpage = FALSE, pop = TRUE, ...)
+                  newpage = FALSE, pop = FALSE, prefix = prefix, ...)
   }
 }
 class(cotab_mosaic) <- "grapcon_generator"
 
 cotab_sieve <- function(x = NULL, condvars = NULL, ...) {
-  function(x, condlevels) {
-    if(is.null(condlevels)) sieve(x, newpage = FALSE, pop = TRUE, ...)
+  function(x, condlevels, prefix = prefix) {
+    if(is.null(condlevels)) sieve(x, newpage = FALSE, pop = FALSE, ...)
       else sieve(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                 newpage = FALSE, pop = TRUE, ...)
+                 newpage = FALSE, pop = FALSE, prefix = prefix, ...)
   }
 }
 class(cotab_sieve) <- "grapcon_generator"
@@ -179,16 +180,16 @@ cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
     if(is.null(ylim)) ylim <- range(residuals(fm))
   }
   
-  function(x, condlevels) {
-    if(is.null(condlevels)) assoc(x, newpage = FALSE, pop = TRUE, ylim = ylim, ...)
+  function(x, condlevels, prefix) {
+    if(is.null(condlevels)) assoc(x, newpage = FALSE, pop = FALSE, ylim = ylim, ...)
       else assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                  newpage = FALSE, pop = TRUE, ylim = ylim, ...)
+                  newpage = FALSE, pop = FALSE, ylim = ylim, prefix = prefix, ...)
   }
 }
 class(cotab_assoc) <- "grapcon_generator"
 
 cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
-  function(x, condlevels) {
+  function(x, condlevels, prefix) {
     if (is.null(condlevels)) 
       fourfold(x, newpage = FALSE, ...)
     else
@@ -267,7 +268,7 @@ cotab_coindep <- function(x, condvars,
 
   type <- match.arg(type)
   if(type == "mosaic") {
-    rval <- function(x, condlevels) {
+    rval <- function(x, condlevels, prefix) {
       if(is.null(condlevels)) {
         tab <- x
         gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
@@ -275,12 +276,13 @@ cotab_coindep <- function(x, condvars,
         tab <- co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]]
         gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
       }
-      mosaic(tab, newpage = FALSE, pop = TRUE, gp = gp, legend = legend, ...)
+      mosaic(tab, newpage = FALSE, pop = FALSE, gp = gp, legend = legend,
+             prefix = prefix, ...)
     }
   } else {
     if(is.null(ylim)) ylim <- range(resids)
 
-    rval <- function(x, condlevels) {
+    rval <- function(x, condlevels, prefix) {
       if(is.null(condlevels)) {
         tab <- x
         gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
@@ -288,7 +290,8 @@ cotab_coindep <- function(x, condvars,
         tab <- co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]]
         gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
       }
-      assoc(tab, newpage = FALSE, pop = TRUE, gp = gp, legend = legend, ylim = ylim, ...)
+      assoc(tab, newpage = FALSE, pop = FALSE, gp = gp, legend = legend, ylim = ylim,
+            prefix = prefix, ...)
     }
   }
 

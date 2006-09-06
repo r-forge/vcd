@@ -72,7 +72,7 @@ assoc.default <- function(x,
 struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                         yspace = unit(0.5, "lines"), xscale = 0.9,
                         gp_axis = gpar(lty = 3))
-  function(residuals, observed = NULL, expected, spacing, gp, split_vertical) {
+  function(residuals, observed = NULL, expected, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -152,7 +152,8 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
     }
 
     ## start spltting on top, creates viewport-tree
-    pushViewport(split(ylim, xlim, i = 1, name = "cell:", row = 1, col = 1))
+    pushViewport(split(ylim, xlim, i = 1, name = paste(prefix, "cell:", sep = ""),
+                       row = 1, col = 1))
 
     ## draw tiles
     mnames <- paste(apply(expand.grid(dn), 1,
@@ -160,7 +161,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                           )
                     )
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell:", mnames[i], sep = ""))
+      seekViewport(paste(prefix, "cell:", mnames[i], sep = ""))
       grid.lines(y = unit(0, "native"), gp = gp_axis)
       grid.rect(y = 0, x = 0,
                 height = residuals[i],
@@ -168,7 +169,7 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
                 default.units = "native",
                 gp = structure(lapply(gp, function(x) x[i]), class = "gpar"),
                 just = c("center", "bottom"),
-                name = paste("rect:", mnames[i], sep = "")
+                name = paste(prefix, "rect:", mnames[i], sep = "")
                 )
     }
 

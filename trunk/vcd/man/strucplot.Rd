@@ -17,7 +17,7 @@ strucplot(x, residuals = NULL, expected = NULL,
   main = NULL, sub = NULL, margins = unit(2.5, "lines"),
   title_margins = NULL, legend_width = NULL,
   main_gp = gpar(fontsize = 20), sub_gp = gpar(fontsize = 15),
-  newpage = TRUE, pop = TRUE, keep_aspect_ratio = NULL, \dots)
+  newpage = TRUE, pop = TRUE, keep_aspect_ratio = NULL, prefix = "", \dots)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -116,6 +116,8 @@ strucplot(x, residuals = NULL, expected = NULL,
   \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not. If unspecified, the default is \code{TRUE} for
     two-dimensional tables and \code{FALSE} otherwise.}
+  \item{prefix}{optional character string used as a prefix for the
+    generated viewport and grob names.}
   \item{\dots}{For convenience, list of arguments passed to the
     labeling-generating function, if specified.}
 }
