@@ -10,7 +10,7 @@
   lower_panel = pairs_mosaic, lower_panel_args = list(),
   diag_panel = pairs_barplot, diag_panel_args = list(),
   main = NULL, title_gp = gpar(fontsize = 20), space = 0.1,
-  newpage = TRUE, \dots)
+  newpage = TRUE, pop = TRUE, \dots)
 }
 \arguments{
 
@@ -33,6 +33,8 @@
   \item{space}{double specifying the distance between the cells.}
   \item{newpage}{logical controlling whether a new grid page should be
     created.}
+  \item{pop}{logical indicating whether all viewports should be popped
+    after the plot has been drawn.}
   \item{\dots}{For convenience,
     list of arguments for the panel-generating
     functions of upper and lower panels, if specified.}

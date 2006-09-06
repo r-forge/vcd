@@ -114,7 +114,7 @@ sieve.default <- function(x, condvars = NULL, gp = NULL,
 
 struc_sieve <- function(sievetype = c("observed", "expected")) {
   sievetype = match.arg(sievetype)
-  function(residuals, observed, expected, spacing, gp, split_vertical) {
+  function(residuals, observed, expected, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(expected)
     dnn <- names(dn)
     dx <- dim(expected)
@@ -171,7 +171,7 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
 
     ## start splitting on top, creates viewport-tree
     pushViewport(split(expected + .Machine$double.eps,
-                       i = 1, name = "cell:", row = 1, col = 1,
+                       i = 1, name = paste(prefix, "cell:", sep = ""), row = 1, col = 1,
                        rowmargin = n, colmargin = n))
 
     ## draw rectangles
@@ -180,7 +180,7 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
                     )
     
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell:", mnames[i], sep = ""))
+      seekViewport(paste(prefix, "cell:", mnames[i], sep = ""))
       vp <- current.viewport()
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       
@@ -196,7 +196,8 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
         grid.segments(x0 = 0, x1 = vp$xscale[2], y0 = jj, y1 = jj,
                       default.units = "native", gp = gpobj)
       }
-      grid.rect(name = paste("rect:", mnames[i], sep = ""), gp = gpar(fill = "transparent"))
+      grid.rect(name = paste(prefix, "rect:", mnames[i], sep = ""),
+                gp = gpar(fill = "transparent"))
     }
   }
 }

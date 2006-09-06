@@ -157,7 +157,7 @@ mosaic.default <- function(x, condvars = NULL,
 }
 
 struc_mosaic <- function(zero_size = 0.5)
-  function(residuals, observed, expected = NULL, spacing, gp, split_vertical) {
+  function(residuals, observed, expected = NULL, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(observed)
     dnn <- names(dn)
     dx <- dim(observed)
@@ -196,7 +196,7 @@ struc_mosaic <- function(zero_size = 0.5)
 
     ## start spltting on top, creates viewport-tree
     pushViewport(split(observed + .Machine$double.eps,
-                       i = 1, name = "cell:", row = 1, col = 1))
+                       i = 1, name = paste(prefix, "cell:", sep = ""), row = 1, col = 1))
 
     ## draw rectangles
     mnames <-  apply(expand.grid(dn), 1,
@@ -205,19 +205,19 @@ struc_mosaic <- function(zero_size = 0.5)
     zeros <- observed <= .Machine$double.eps
 
     for (i in seq(along = mnames)) {
-      seekViewport(paste("cell:", mnames[i], sep = ""))
+      seekViewport(paste(prefix, "cell:", mnames[i], sep = ""))
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       if (!zeros[i]) {
-        grid.rect(gp = gpobj, name = paste("rect:", mnames[i], sep = ""))
+        grid.rect(gp = gpobj, name = paste(prefix, "rect:", mnames[i], sep = ""))
       } else { 
         grid.lines(x = 0.5, gp = gpobj)
         grid.lines(y = 0.5, gp = gpobj)
         if (zero_size > 0) {
           grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                       gp = gpar(col = gp$fill[i]),
-                      name = paste("disc:", mnames[i], sep = ""))
+                      name = paste(prefix, "disc:", mnames[i], sep = ""))
           grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
-                      name = paste("circle:", mnames[i], sep = ""))
+                      name = paste(prefix, "circle:", mnames[i], sep = ""))
         }
       }
     }
