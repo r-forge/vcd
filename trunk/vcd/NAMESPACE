@@ -1,3 +1,5 @@
+importFrom("utils","head","tail")
+
 export(
 ## generic functions
        "agreementplot",
