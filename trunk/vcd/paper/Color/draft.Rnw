@@ -262,7 +262,7 @@ full green ends at a much lighter color with $L = 75$.
 if(generate_png) {
   png(file = "pal-s-construct.png", height = 420, width = 840)
   par(mfrow = c(1, 2))
-  hue.slice(260, grid.n = 301, main = "H = 260")
+  hue.slice(260, grid.n = 301)
   lines(c(0, 100), c(90, 50), lty = 2)
   lines(c(0, 80), c(90, 30), lty = 2)
   lines(c(2.5, 2.5), c(90, 30), lty = 2)
@@ -273,7 +273,7 @@ if(generate_png) {
   rect(77.5, 27.5, 82.5, 32.5, col = hcl(260, 80, 30))
   rect(0, 57.5, 5, 62.5, col = hcl(260, 0, 60))
   rect(0, 27.5, 5, 32.5, col = hcl(260, 0, 30))
-  hue.slice(120, grid.n = 301, main = "H = 120")
+  hue.slice(120, grid.n = 301)
   lines(c(0, 100), c(90, 75), lty = 2)
   lines(c(2.5, 2.5), c(90, 30), lty = 2)
   rect(0, 87.5, 5, 92.5, col = hcl(260, 0, 90))
