@@ -68,7 +68,7 @@ hcl.wheel <-
 }
 
 ## show slices for given hues
-hue.slice <- function(hue, grid.n = 251, plot = TRUE, fixup = FALSE)
+hue.slice <- function(hue, grid.n = 251, plot = TRUE, fixup = FALSE, main = NULL)
 {
   chroma = seq(0, 100, length = grid.n)
   luminance = seq(0, 100, length = grid.n)
@@ -77,7 +77,7 @@ hue.slice <- function(hue, grid.n = 251, plot = TRUE, fixup = FALSE)
   color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
   xlab <- "chroma"
   ylab <- "luminance"
-  main <- paste("hue =", round(hue, digits = 0))
+  if(is.null(main)) main <- paste("hue =", round(hue, digits = 0))
   if(plot) {
     plot(0.5, 0.5, xlim = range(chroma), ylim = range(luminance), type = "n", axes = FALSE,
          xlab = xlab, ylab = ylab, yaxs = "i", xaxs = "i", main = main)
