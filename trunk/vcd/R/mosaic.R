@@ -75,7 +75,10 @@ mosaic.default <- function(x, condvars = NULL,
                            highlighting = NULL, 
                            highlighting_fill = grey.colors,
                            highlighting_direction = NULL,
-                           zero_size = 0.5, main = NULL, sub = NULL, ...) {
+                           zero_size = 0.5,
+                           split_zeros = FALSE,
+                           shade_zeros = TRUE,
+                           main = NULL, sub = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
   else if (is.logical(sub) && sub)
@@ -146,7 +149,8 @@ mosaic.default <- function(x, condvars = NULL,
   
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            core = struc_mosaic(zero_size = zero_size),
+            core = struc_mosaic(zero_size = zero_size, split_zeros = split_zeros,
+              shade_zeros = shade_zeros),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
@@ -156,7 +160,7 @@ mosaic.default <- function(x, condvars = NULL,
             ...)
 }
 
-struc_mosaic <- function(zero_size = 0.5)
+struc_mosaic <- function(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRUE)
   function(residuals, observed, expected = NULL, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(observed)
     dnn <- names(dn)
@@ -164,7 +168,8 @@ struc_mosaic <- function(zero_size = 0.5)
     dl <- length(dx)
 
     ## split workhorse
-    split <- function(x, i, name, row, col) {
+    zerostack <- character(0)
+    split <- function(x, i, name, row, col, zero) {
       cotab <- co_table(x, 1)
       margin <- sapply(cotab, sum)
       v <- split_vertical[i]
@@ -185,10 +190,19 @@ struc_mosaic <- function(zero_size = 0.5)
       row <- col <- rep.int(1, d)
       if (v) col <- 2 * 1:d - 1 else row <- 2 * 1:d - 1
       f <- if (i < dl) 
-        function(m) split(cotab[[m]], i + 1, name[m], row[m], col[m])
+        function(m) {
+          co <- cotab[[m]]
+          z <- mean(co) <= .Machine$double.eps
+          if (z && !zero && !split_zeros) zerostack <<- c(zerostack, name[m])
+          split(co, i + 1, name[m], row[m], col[m], z && !split_zeros)
+        }
       else
-        function(m) viewport(layout.pos.col = col[m], layout.pos.row = row[m],
-                             name = remove_trailing_comma(name[m]))
+        function(m) {
+          if (cotab[[m]] <= .Machine$double.eps && !zero)
+            zerostack <<- c(zerostack, name[m])
+          viewport(layout.pos.col = col[m], layout.pos.row = row[m],
+                   name = remove_trailing_comma(name[m]))
+        }
       vpleaves <- structure(lapply(1:d, f), class = c("vpList", "viewport"))
 
       vpTree(vproot, vpleaves)
@@ -196,7 +210,8 @@ struc_mosaic <- function(zero_size = 0.5)
 
     ## start spltting on top, creates viewport-tree
     pushViewport(split(observed + .Machine$double.eps,
-                       i = 1, name = paste(prefix, "cell:", sep = ""), row = 1, col = 1))
+                       i = 1, name = paste(prefix, "cell:", sep = ""),
+                       row = 1, col = 1, zero = FALSE))
 
     ## draw rectangles
     mnames <-  apply(expand.grid(dn), 1,
@@ -204,15 +219,28 @@ struc_mosaic <- function(zero_size = 0.5)
                      )
     zeros <- observed <= .Machine$double.eps
 
+    ## draw zero cell lines
+    for (i in remove_trailing_comma(zerostack)) {
+      seekViewport(i)
+      grid.lines(x = 0.5)
+      grid.lines(y = 0.5)
+      if (!shade_zeros && zero_size > 0) {
+        grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
+                    gp = gpar(col = "grey"),
+                    name = paste(prefix, "disc:", mnames[i], sep = ""))
+        grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
+                    name = paste(prefix, "circle:", mnames[i], sep = ""))
+      }
+    }
+
+    # draw boxes
     for (i in seq(along = mnames)) {
       seekViewport(paste(prefix, "cell:", mnames[i], sep = ""))
       gpobj <- structure(lapply(gp, function(x) x[i]), class = "gpar")
       if (!zeros[i]) {
         grid.rect(gp = gpobj, name = paste(prefix, "rect:", mnames[i], sep = ""))
       } else { 
-        grid.lines(x = 0.5, gp = gpobj)
-        grid.lines(y = 0.5, gp = gpobj)
-        if (zero_size > 0) {
+        if (shade_zeros && zero_size > 0) {
           grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                       gp = gpar(col = gp$fill[i]),
                       name = paste(prefix, "disc:", mnames[i], sep = ""))
@@ -221,6 +249,5 @@ struc_mosaic <- function(zero_size = 0.5)
         }
       }
     }
-
   }
 class(struc_mosaic) <- "grapcon_generator"
