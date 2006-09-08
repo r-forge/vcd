@@ -6,11 +6,18 @@
   producing mosaic plots.
 }
 \usage{
-struc_mosaic(zero_size = 0.5)
+struc_mosaic(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRUE)
 }
 \arguments{
   \item{zero_size}{size of the bullets used for zero-entries in the
     contingency table (if 0, no bullets are drawn).} 
+  \item{split_zeros}{logical controlling whether zero cells should be
+    further splitted. If \code{FALSE} and \code{shade_zeros} is
+    \code{FALSE}, only one bullet is drawn (centered) for unsplitted
+    zero cells. If \code{FALSE} and \code{shade_zeros} is
+    \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
+    residual-based shadings to be effective also for zero cells.}
+  \item{shade_zeros}{logical controlling whether zero bullets should be shaded.}
 }
 \details{
   This function is usually called by \code{\link{strucplot}} (typically

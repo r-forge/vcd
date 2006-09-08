@@ -11,7 +11,8 @@
   split_vertical = NULL, direction = NULL, spacing = NULL,
   spacing_args = list(), gp = NULL, highlighting = NULL,
   highlighting_fill = grey.colors, highlighting_direction = NULL,
-  zero_size = 0.5, main = NULL, sub = NULL, \dots)
+  zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRUE,
+  main = NULL, sub = NULL, \dots)
 \method{mosaic}{formula}(formula, data, highlighting = NULL,
   \dots, main = NULL, sub = NULL, subset = NULL, na.action = NULL)
 }
@@ -34,6 +35,13 @@
     the data contain \code{NA}s. Ignored if \code{data} is a contingency table.}
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
+  \item{split_zeros}{logical controlling whether zero cells should be
+    further splitted. If \code{FALSE} and \code{shade_zeros} is
+    \code{FALSE}, only one bullet is drawn (centered) for unsplitted
+    zero cells. If \code{FALSE} and \code{shade_zeros} is
+    \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
+    residual-based shadings to be effective also for zero cells.}
+  \item{shade_zeros}{logical controlling whether zero bullets should be shaded.}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
     is the number of margins of \code{x} (default: \code{FALSE}).
     Values are recycled as needed. 
