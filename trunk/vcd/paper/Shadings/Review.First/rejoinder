@@ -32,7 +32,9 @@ The revision encompasses two main changes:
     as correctly pointed out by the referees).
   
 Some more details can be found in the point-to-point answers to the 
-referees below.
+referees below. (One comment below includes R code that needs to be
+eliminated if you decide to pass on the completely blinded instead of the
+semi-blinded version of the paper.)
 
 Best wishes,
 Z
@@ -167,10 +169,10 @@ distribution'.
 > except artificially if the treatment assignment is randomized: this is
 > really a comparison of distributions or test of homogeneity.
 
-The most common terminology in log-linear models is to speak of various
-kinds of independence models even if homogeneity would be more precise
-for many sampling schemes. Hence, we adopt this terminology but point
-out the relation to homogeneity in Section 2.1
+The most common terminology in the log-linear models literature is to
+speak of various kinds of independence models even if homogeneity would
+be more precise for many sampling schemes. Hence, we adopt this
+terminology, but point out the relation to homogeneity in Section 2.1
 
 > page 5, line 3: Standard errors for your p-values?
 
@@ -200,10 +202,10 @@ between hues.
 > be a good fit to the HCL scheme. If this is not true an example would
 > help.
 
-Typically users find find it difficult to resolve chroma and luminance 
-differences (that are not very large). This is re-inforced if there are many
-colors and if the shaded areas are distant within the plotting region. To
-illustrate this, we attach a PDF graphic to this rejoinder where we
+Typically, users find it difficult to resolve chroma and luminance
+differences (that are not very large). This is reinforced if there are many
+colors and if the shaded areas are non-adjacent within the plotting region.
+To illustrate this, we attach a PDF graphic to this rejoinder where we
 used a continuous shading starting from (H, 50, 72.5) at 1.24 and reaching
 (H, 100, 50) at 2 (corresponding roughly to the 99.99% quantile). Instead
 of using this raw scale, we could also interpolate on the p value scale,
