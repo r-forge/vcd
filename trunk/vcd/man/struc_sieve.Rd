@@ -49,7 +49,7 @@ struc_sieve(sievetype = c("observed","expected"))
 }
 \examples{
 ## Titanic data
-data(Titanic)
+data("Titanic")
 strucplot(Titanic, core = struc_sieve)
 }
 \keyword{hplot}

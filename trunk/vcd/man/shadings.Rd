@@ -145,7 +145,7 @@ shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
 }
 \examples{
 ## load Arthritis data
-data(Arthritis)
+data("Arthritis")
 art <- xtabs(~Treatment + Improved, data = Arthritis)
 
 ## plain mosaic display without shading

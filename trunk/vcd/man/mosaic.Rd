@@ -11,7 +11,7 @@
   split_vertical = NULL, direction = NULL, spacing = NULL,
   spacing_args = list(), gp = NULL, highlighting = NULL,
   highlighting_fill = grey.colors, highlighting_direction = NULL,
-  zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRUE,
+  zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE,
   main = NULL, sub = NULL, \dots)
 \method{mosaic}{formula}(formula, data, highlighting = NULL,
   \dots, main = NULL, sub = NULL, subset = NULL, na.action = NULL)
@@ -35,13 +35,13 @@
     the data contain \code{NA}s. Ignored if \code{data} is a contingency table.}
   \item{zero_size}{size of the bullets used for zero entries (if 0, no
     bullets are drawn).}
-  \item{split_zeros}{logical controlling whether zero cells should be
-    further splitted. If \code{FALSE} and \code{shade_zeros} is
+  \item{zero_split}{logical controlling whether zero cells should be
+    further splitted. If \code{FALSE} and \code{zero_shade} is
     \code{FALSE}, only one bullet is drawn (centered) for unsplitted
-    zero cells. If \code{FALSE} and \code{shade_zeros} is
+    zero cells. If \code{FALSE} and \code{zero_shade} is
     \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
     residual-based shadings to be effective also for zero cells.}
-  \item{shade_zeros}{logical controlling whether zero bullets should be shaded.}
+  \item{zero_shade}{logical controlling whether zero bullets should be shaded.}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
     is the number of margins of \code{x} (default: \code{FALSE}).
     Values are recycled as needed. 
@@ -146,14 +146,14 @@
   \code{\link{doubledecker}}
 }
 \examples{
-data(Titanic)
+data("Titanic")
 mosaic(Titanic)
 
 ## Formula interface for tabulated data plus shading and legend:
 mosaic(~ Sex + Age + Survived, data = Titanic,
   main = "Survival on the Titanic", shade = TRUE, legend = TRUE)
 
-data(HairEyeColor)
+data("HairEyeColor")
 mosaic(HairEyeColor, shade = TRUE)
 ## Independence model of hair and eye color and sex.  Indicates that
 ## there are significantly more blue eyed blond females than expected
@@ -167,10 +167,10 @@ mosaic(HairEyeColor, shade = TRUE, expected = list(c(1,2), 3))
 
 ## Formula interface for raw data: visualize crosstabulation of numbers
 ## of gears and carburettors in Motor Trend car data.
-data(mtcars)
+data("mtcars")
 mosaic(~ gear + carb, data = mtcars, shade = TRUE)
 
-data(PreSex)
+data("PreSex")
 mosaic(PreSex, condvars = c(1,4))
 mosaic(~ ExtramaritalSex + PremaritalSex | MaritalStatus + Gender,
        data = PreSex)
@@ -178,7 +178,7 @@ mosaic(~ ExtramaritalSex + PremaritalSex | MaritalStatus + Gender,
 ## Highlighting:
 mosaic(Survived ~ ., data = Titanic)
 
-data(Arthritis)
+data("Arthritis")
 mosaic(Improved ~ Treatment | Sex, data = Arthritis, zero_size = 0)
 mosaic(Improved ~ Treatment | Sex, data = Arthritis, zero_size = 0, highlighting_direction = "right")
 }

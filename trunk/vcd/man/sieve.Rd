@@ -117,7 +117,7 @@
   \code{\link{doubledecker}}
 }
 \examples{
-data(HairEyeColor)
+data("HairEyeColor")
 
 ## aggregate over 'sex':
 (tab <- margin.table(HairEyeColor, c(2,1)))
@@ -132,7 +132,7 @@ sieve(tab, shade = TRUE)
 sieve(HairEyeColor, shade = TRUE)
 
 ## an example for the formula interface:
-data(VisualAcuity)
+data("VisualAcuity")
 sieve(Freq ~ right + left,  data = VisualAcuity)
 
 ## example with observed values in the cells:
