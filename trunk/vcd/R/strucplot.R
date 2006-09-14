@@ -72,7 +72,7 @@ strucplot <- function(## main parameters
   ## A parameter df is added for inference
   ## (which is done in the shading (generating) functions).
   df <- NULL
-  if (is.null(expected) || !is.numeric(expected))
+  if (is.null(expected) || !is.numeric(expected)) {
     if (inherits(expected, "formula")) {
       fm <- loglm(expected, x, fitted = TRUE)
       expected <- fitted(fm)
@@ -88,6 +88,7 @@ strucplot <- function(## main parameters
       expected <- fm$fit
       df <- fm$df
     }
+  }
   
   ## compute residuals
   if (is.null(residuals))
