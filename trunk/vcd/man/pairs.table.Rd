@@ -105,8 +105,8 @@ Hence, the second approach is equivalent to the first if
   David Meyer \email{David.Meyer@R-project.org}
 }
 \examples{
-data(UCBAdmissions)
-data(PreSex)
+data("UCBAdmissions")
+data("PreSex")
 
 pairs(PreSex)
 pairs(UCBAdmissions)

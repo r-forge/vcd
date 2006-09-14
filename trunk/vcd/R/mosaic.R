@@ -76,8 +76,8 @@ mosaic.default <- function(x, condvars = NULL,
                            highlighting_fill = grey.colors,
                            highlighting_direction = NULL,
                            zero_size = 0.5,
-                           split_zeros = FALSE,
-                           shade_zeros = TRUE,
+                           zero_split = FALSE,
+                           zero_shade = TRUE,
                            main = NULL, sub = NULL, ...) {
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
@@ -149,8 +149,8 @@ mosaic.default <- function(x, condvars = NULL,
   
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
-            core = struc_mosaic(zero_size = zero_size, split_zeros = split_zeros,
-              shade_zeros = shade_zeros),
+            core = struc_mosaic(zero_size = zero_size, zero_split = zero_split,
+              zero_shade = zero_shade),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
@@ -160,7 +160,7 @@ mosaic.default <- function(x, condvars = NULL,
             ...)
 }
 
-struc_mosaic <- function(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRUE)
+struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE)
   function(residuals, observed, expected = NULL, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(observed)
     dnn <- names(dn)
@@ -193,8 +193,8 @@ struc_mosaic <- function(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRU
         function(m) {
           co <- cotab[[m]]
           z <- mean(co) <= .Machine$double.eps
-          if (z && !zero && !split_zeros) zerostack <<- c(zerostack, name[m])
-          split(co, i + 1, name[m], row[m], col[m], z && !split_zeros)
+          if (z && !zero && !zero_split) zerostack <<- c(zerostack, name[m])
+          split(co, i + 1, name[m], row[m], col[m], z && !zero_split)
         }
       else
         function(m) {
@@ -224,7 +224,7 @@ struc_mosaic <- function(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRU
       seekViewport(i)
       grid.lines(x = 0.5)
       grid.lines(y = 0.5)
-      if (!shade_zeros && zero_size > 0) {
+      if (!zero_shade && zero_size > 0) {
         grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                     gp = gpar(col = "grey"),
                     name = paste(prefix, "disc:", mnames[i], sep = ""))
@@ -240,7 +240,7 @@ struc_mosaic <- function(zero_size = 0.5, split_zeros = FALSE, shade_zeros = TRU
       if (!zeros[i]) {
         grid.rect(gp = gpobj, name = paste(prefix, "rect:", mnames[i], sep = ""))
       } else { 
-        if (shade_zeros && zero_size > 0) {
+        if (zero_shade && zero_size > 0) {
           grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
                       gp = gpar(col = gp$fill[i]),
                       name = paste(prefix, "disc:", mnames[i], sep = ""))

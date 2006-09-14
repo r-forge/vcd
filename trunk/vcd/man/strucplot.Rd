@@ -197,6 +197,8 @@ strucplot(x, residuals = NULL, expected = NULL,
   \code{\link{spacings}}
 }
 \examples{
+data("Titanic")
+
 strucplot(Titanic)
 strucplot(Titanic, core = struc_assoc)
 strucplot(Titanic, spacing = spacing_increase,

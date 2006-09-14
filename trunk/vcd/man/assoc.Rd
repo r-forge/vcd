@@ -167,7 +167,7 @@
   David Meyer \email{David.Meyer@R-project.org}
 }
 \examples{
-data(HairEyeColor)
+data("HairEyeColor")
 ## Aggregate over sex:
 (x <- margin.table(HairEyeColor, c(1, 2)))
 

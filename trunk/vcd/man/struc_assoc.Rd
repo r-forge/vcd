@@ -81,7 +81,7 @@ struc_assoc(compress = TRUE, xlim = NULL, ylim = NULL,
 }
 \examples{
 ## UCB Admissions
-data(UCBAdmissions)
+data("UCBAdmissions")
 ucb <- aperm(UCBAdmissions)
 
 ## association plot for conditional independence
