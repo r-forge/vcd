@@ -90,27 +90,19 @@ Referee 2
 
 This is an interesting point and we have experimented with several
 alternative strategies for choosing cut offs for test statistics other
-than the maximum. It is rather clear that if we wish to mimic the
-behaviour of the maximum shading, the cut offs always have to be outside
-the range of residuals for non-significant tests and inside the range
-otherwise. The problem is to find cut offs with an intuitive meaning
-if other test statistics are used: it is always tempting to classify 
-the colored cells as significant (which is only true for the maximum
-statistic).
+than the maximum. It is clear that if we wish to mimic the behaviour of
+the maximum shading, the cut offs always have to be outside the range
+of residuals for non-significant tests and inside the range otherwise.
+The problem is to find cut offs with an intuitive meaning if other test
+statistics are used: it is always tempting to classify the colored
+cells as significant (which is only true for the maximum statistic).
 
-The strategy you describe above sometimes works rather well, but for
-some tables it results in rather many colored cells in the plot. To
-avoid this, one could always shade a certain share of the cells only.
+The strategy you describe above sometimes works well, but for some
+tables it results in many colored cells in the plot. To avoid this,
+one could always shade a certain share of the cells only.
 
 We have added some discussion of such alternative strategies at the
 end of Section 3.
-
-FIXME: Der erste Teil koennte recht defensiv wirken, vielleicht kann
-man das noch progressiver formulieren?
-
-%DM% Ich finde, man sagt schon recht klar, dass sein Vorschlag unausgegoren 
-     ist, ohne dass er das Gesicht völlig verliert. Ich hätte nur die beiden 
-     "rather" weggelassen, das klingt wirklich defensiv.
 
 
 > With respect to the superiority of HCL you in a number of places you
@@ -143,7 +135,7 @@ HCL		 HSV
 (260,  50, 72.5) (232.0, 54.7, 81.4)
 (  0,	0, 95)   (  0.0,  0.0, 87.4)
 (  0,  50, 72.5) (350.8, 59.9, 82.9)
-(  0, 100, 95)   (350.7, 92.3, 64.9)
+(  0, 100, 50)   (350.7, 92.3, 64.9)
 
 This shows that it would be very hard to choose balanced colors in
 HSV space because saturation and value would have to be chosen very
@@ -175,59 +167,56 @@ distribution'.
 > except artificially if the treatment assignment is randomized: this is
 > really a comparison of distributions or test of homogeneity.
 
-FIXME: Dazu habe ich jetzt noch nix gemacht. Das ist nun wirklich extrem
-kleinlich, da eh jeder weiss, wie's geht. Ich habe nicht leicht herausfinden
-koennen, ob das treatment zufaellig zugewiesen wurde (wuerde dies aber 
-vermuten, da es sich um eine Doppel-Blind-Studie handelt). In jedem Fall
-moechte ich den Punkt eh nicht diskutieren. Reicht es, wenn wir irgendwo
-in Section 2 schreiben, dass Homogenitaet genauso geht?
-
-%DM% ich denke, ja. Kannst ja evtl. noch beim Beispiel in Klammer schreiben, 
-     dass das eigentlich der Homogenitätsfall ist - da wollte er sich nur
-     wichtig machen.
-
+The most common terminology in log-linear models is to speak of various
+kinds of independence models even if homogeneity would be more precise
+for many sampling schemes. Hence, we adopt this terminology but point
+out the relation to homogeneity in Section 2.1
 
 > page 5, line 3: Standard errors for your p-values?
 
-FIXME: Das ist auch ein bisschen muehsam. Also der Bootstrap-Schaetzer
-fuer die Standardabweichung ist (trivialerweise!) einfach
+Estimated standard errors can be obtained using the formula
   sqrt(p * (1-p) / 5000)
-Muss man ihm das tatsaechlich irgendwohin schreiben? Wenn ja, wie macht
-man das, ohne dass es herablassend wirkt?
 
-%DM% Einfach dazu angeben, ohne weiteren Kommentar, und wenn er dann unbedingt
-     die Formel will, kann man immer noch eine Fussnote machen.
-
+In our case this gives
+  Arthritis (X^2): 0.0008
+  Arthritis (M): 0.0014
+  Piston rings (X^2): 0.0036
+  Piston rings (M): 0.0045
+  Alzheimer (sum X^2): 0
+  Alzheimer (max X^2): 0
+  Alzheimer (max M): 0
+  Punishment (sum X^2): 0.0002
+  Punishment (max X^2): 0.0011
+  Punishment (max M): 0.0011
 
 > page 11, line 6: what does "most similar" mean?
 
-FIXME: Ich habe jetzt `symmetric difference' in die Fussnote geschrieben,
-reicht das? Will man dazu mehr sagen? (Ich glaube, dass eigentlich nicht.)
-
-%DM% ich glaube auch nicht, das sprengt den Rahmen. Und das wollte man ja 
-     eigentlich in einem anderen paper verarbeiten.
-
-Man koennte auch versuchen, dem Referee eine vollstaendige Antwort zu
-geben und im Paper nur etwas vages zu schreiben.
-
-%DM% Man koennte auch dem referee nur eine vage Antwort geben - glaubst
-     Du wirklich, dass der das _ganz_ genau wissen will? Am Ende will er
-     dann wirklich, dass wir's ins paper reinschreiben.
+A remark has been added to the paper: We use the are of the symmetric
+difference in the chroma/luminance plane for assessing similarities
+between hues.
 
 > page 12, line -6 to -4: It would seem to me that a continuous
 > scale within the ranges above 1.24 and below -1.24 would work well and
 > be a good fit to the HCL scheme. If this is not true an example would
 > help.
 
-FIXME: Das kann man machen, aber man sieht nicht wirklich mehr. 
+Typically users find find it difficult to resolve chroma and luminance 
+differences (that are not very large). This is re-inforced if there are many
+colors and if the shaded areas are distant within the plotting region. To
+illustrate this, we attach a PDF graphic to this rejoinder where we
+used a continuous shading starting from (H, 50, 72.5) at 1.24 and reaching
+(H, 100, 50) at 2 (corresponding roughly to the 99.99% quantile). Instead
+of using this raw scale, we could also interpolate on the p value scale,
+the resulting plot would be very similar. Starting from the R code from
+the appendix, you can generate this graphic via
 
-%DM% schaut das dann "zu bunt" aus wie wir schreiben?
+mosaic(art, gp = shading_hcl, gp_args = list(
+  interpolate = function(x) ifelse(x >= 1.24, 1 + 0.5/(2 - 1.24) * (x - 2), 0),
+  p.value = art_max$p.value))
 
-Ich moechte dafuer aber nicht noch ein Bild ins Paper geben. Was macht man da?
-
-%DM% Das Argument kommt natürlich oft, vielleicht will man wirklich ein
-     für alle mal ein Beispiel dafür bringen, dass continuous shading
-     nix bringt. Uns ist es ja klar, aber den Lesern offenbar nicht.
+Whereas it is relatively easy to compare the two blue cells, it
+is much harder to resolve difference between the two red cells.
+Also, it is difficult to pick up differences between red and blue cells.
 
 All remaining minor points have been incorporated into the revised
 manuscript.

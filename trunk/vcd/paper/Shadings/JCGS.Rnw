@@ -99,6 +99,7 @@ dimnames(pun) <- list(Memory = c("yes", "no"), Attitude = c("no", "moderate"),
 
 myseed <- 1071
 nrep <- 5000
+nrep_char <- "5,000"
 recompute <- TRUE
 @
 
@@ -197,7 +198,7 @@ hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fi
 \begin{abstract}
 Residual-based shadings for enhancing mosaic and association plots
 to visualize independence models for contingency tables are extended
-in two directions: (a)~perceptually uniform HCL colors are used and (b)~the
+in two directions: (a)~perceptually uniform Hue-Chroma-Luminance colors are used and (b)~the
 result of an associated significance test is coded by the appearance of
 color in the visualization. For obtaining (a), a general strategy for
 deriving diverging palettes in the perceptually-based HCL space is suggested. As for (b),
@@ -227,7 +228,7 @@ in the mosaic display
 In particular, \cite{vcd:Friendly:1994} suggested a shading strategy
 based on the residuals (typically, Pearson or deviance residuals) of the associated
 log-linear model that elevates the mosaic plot from a display for frequencies
-in a contingency table to a visualization technique that encompasses both, observed
+in a contingency table to a visualization technique that encompasses both observed
 frequencies and residuals. This shading allows for judging the quality of a model
 fit and spotting dependence patterns that have not been accounted for by the model.
 Other techniques for visualizing dependence in contingency tables such as
@@ -305,8 +306,9 @@ H_0: \; \pi_{ij} \quad = \quad \pi_{i+} \pi_{+j}.
 \end{equation}
 
 The estimated expected cell frequencies under $H_0$ are
-$\hat n_{ij} = n_{i+}n_{+j}/n_{++}$.
-%FIXME% point out homogeneity problem?
+$\hat n_{ij} = n_{i+}n_{+j}/n_{++}$. As well-established in the stastical literature,
+a very closely related hypothesis is that of homogeneity which in particular leads to the same
+expected cell frequencies and is hence not discussed explicitely below.
 The probably best known and most used
 measure of discrepancy between observed and expected values are the Pearson residuals
 \begin{equation} \label{eq:Pearson}
@@ -358,9 +360,9 @@ dependence of improvement on treatment: the sum-of-squares statistic from Equati
 is $X^2 = \Sexpr{stat(art_chisq)}$ with a $p$ value of $p = \Sexpr{pval(art_chisq)}$,
 and the maximum statistic from Equation~\ref{eq:MaxAbs} is $M = \Sexpr{stat(art_max)}$
 with $p = \Sexpr{pval(art_max)}$. Both $p$ values have been computed
-from a sample of size $\Sexpr{nrep}$ from the permutation distribution under independence
+from a sample of size $\Sexpr{nrep_char}$ from the permutation distribution under independence
 generated via sampling tables with the same row and column sums $n_{i+}$ and $n_{+j}$
-using the \cite{vcd:Patefield:1981} algorithm and computing the maximum statistic for 
+using the \cite{vcd:Patefield:1981} algorithm and computing the respective statistic for 
 each of these tables.
 
 
@@ -372,24 +374,6 @@ departures of an observed table $[n_{ij}]$ from the estimated expected table $[\
 in a graphical way. The latter focuses on the visualization of the Pearson residuals
 $r_{ij}$ (under independence) while the former primarily displays the observed frequencies
 $n_{ij}$.
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[b!]
-\begin{center}
-<<classic_plots,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
-grid.newpage()
-pushViewport(viewport(layout = grid.layout(1, 2)))
-pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
-mosaic(art, newpage = FALSE, margins = c(2.5, 4, 2.5, 3))
-popViewport()
-pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
-assoc(art, newpage = FALSE, margins = c(5, 2, 5, 4))
-popViewport(2)
-@
-\caption{Classic mosaic and association plot for the arthritis data.}
-\label{fig:classic}
-\end{center}
-\end{figure}
 
 \emph{Mosaic plots}
 \citep{vcd:Hartigan+Kleiner:1981} can be seen as an extension of grouped
@@ -415,8 +399,27 @@ the raw residuals $n_{ij} - \hat n_{ij}$. The association plot for the arthritis
 data is shown in the right panel of Figure~\ref{fig:classic} which leads to the
 same interpretation as the mosaic plot: there are more placebo patients with no 
 improvement and fewer with marked improvement than expected under independence---vice
-versa for the treated patiens.
+versa for the treated patients.
 
+\clearpage
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<classic_plots,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(1, 2)))
+pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
+mosaic(art, newpage = FALSE, margins = c(2.5, 4, 2.5, 3))
+popViewport()
+pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
+assoc(art, newpage = FALSE, margins = c(5, 2, 5, 4))
+popViewport(2)
+@
+\caption{Classic mosaic and association plot for the arthritis data.}
+\label{fig:classic}
+\end{center}
+\end{figure}
 
 \section{Residual-based Shadings} \label{sec:shadings}
 
@@ -458,8 +461,6 @@ area-proportional visualization techniques, we focus on area shadings and always
 use solid black borders throughout this paper, but the extensions suggested in the
 following could also be applied to control line type and color.
 
-\clearpage
-
 \subsection{Colors} \label{sec:colors}
 
 The way the (light) blue and red colors are chosen differs somewhat between
@@ -475,10 +476,8 @@ colors in many computer packages \citep{vcd:Moretti+Lyons:2002} making the gener
 of the Friendly shading very simple. As both spaces can easily generate the
 same colors, we only discuss HSV space in the following.
 
-The HSV space looks like a cone\footnote{The wikipedia gives a very useful
-%FIXME% proper cite for Wikipedia
-overview at \url{http://en.wikipedia.org/wiki/HSV_color_space} which also provides
-links to comparisons with other color spaces discussed in this paper.}
+The HSV space looks like a cone \citep[see e.g.,][which also provides
+links to comparisons with other color spaces discussed in this paper]{vcd:Wiki+HSV:2006}
 with black at its peak (zero value) and full color wheels for different saturations at the other end,
 around a white center (full value). Type and amount of color are controlled by hue
 and saturation, respectively. Typically, polar coordinates $(h, s, v)$ rescaled for $s$ and $v$
@@ -653,7 +652,7 @@ lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
 
 Although this HSV-based shading is already very useful for enhancing mosaic and
 association plots and although HSV is a very commonly available implementation of
-color spaces, HSV colors in general and the Friendly shading in particular have
+color spaces, HSV color space in general and the Friendly shading in particular have
 a number of disadvantages. Most importantly, HSV colors are not perceptually
 uniform because the three HSV dimensions map only poorly to the three
 perceptual dimensions of the human visual system  \citep{vcd:Brewer:1999,vcd:Ihaka:2003}.
@@ -703,7 +702,7 @@ hues (a `negative' and a `positive' hue) and hence we can choose two hues that c
 similar shapes in the chroma/luminance plane. The lower panel of Figure~\ref{fig:shadingHSVHCL}
 shows two such planes side by side for the hues $h = 0$ and $h = 260$.\footnote{The hue
 $h = 260$ is chosen rather than $h = 240$ because its chroma/luminance plane is most similar,
-as assessed by the symmetric difference of the planes, to that of $h = 0$.}
+as assessed by the area of the symmetric difference of the planes, to that of $h = 0$.}
 To obtain a sequence of colors with the similar properties as the Friendly shading, the palette starts
 at a fully saturated red $(0, 100, 50)$, goes via a neutral color, ends at a fully saturated
 blue $(260, 100, 50)$, and uses linear interpolation in between. Instead of using white
@@ -713,10 +712,11 @@ uses both chroma---i.e., the colorfulness---and luminance---i.e.,
 the amount of grey---to code the absolute size of the quantity visualized---i.e., the
 residuals $r_{ij}$---when applied to the independence problem. By changing the neutral
 color or by changing the maximum chroma, respectively, this can be changed to using only
-chroma or luminance for this purpose, but using both seems to be a very effective way
-of visualization and corresponds more closely with the properties of the Friendly shading.
+chroma or luminance for this purpose, but using both is a very effective way
+of visualization (i.e., yields palettes with more distinctive colors)
+and corresponds more closely with the properties of the Friendly shading.
 
-Applying these palettes to the mosaic plot of the arthritis data, yields
+Applying these palettes to the mosaic plot of the arthritis data yields
 the displays in the upper middle and right panels of Figure~\ref{fig:shadings} (with
 data-driven cut offs as defined Section~\ref{sec:significance}). This illustrates
 that especially the full color cells (in the `marked' column) are less flashy and more
@@ -848,13 +848,13 @@ palettes (see Figure~\ref{fig:shadingHSVHCL}). As for the full colors,
 the dimensions used for creating this palette are confounded and hence the HCL scheme is clearly
 preferable.
 
-To see such a sum-of-squares shading in practice, we employ a data on the number of piston
+To see such a sum-of-squares shading in practice, we employ a data set on the number of piston
 ring failures in three legs (north/center/south) in four different steam-driven compressors
-at an FIXME. The contingency table is given in \cite{vcd:Haberman:1973}, re-analyzed
+at an Imperial Chemical Industries plant. The contingency table is given in \cite{vcd:Haberman:1973}, re-analyzed
 by \cite{vcd:Everitt+Hothorn:2006} and displayed in the lower row of Figure~\ref{fig:shadings}.
 Neither the sum-of-squares test ($X^2 = \Sexpr{stat(pring_chisq)}$, $p = \Sexpr{pval(pring_chisq)}$)
 nor the maximum test ($M = \Sexpr{stat(pring_max)}$, $p = \Sexpr{pval(pring_max)}$) find
-evidence for a departure from independence in the data (at 5\% level). However, as argued
+evidence for a departure from independence in the data (at the 5\% level). However, as argued
 by \cite{vcd:Everitt+Hothorn:2006}, a closer look at the size of the residuals might be
 interesting. To do so, we choose two fixed cut offs within the range of residuals, 1 and 1.5,
 showing that more failures (than expected under independence) in the center leg and less failures
@@ -863,7 +863,7 @@ brought out clearly by all three shadings in the lower row of Figure~\ref{fig:sh
 However, less emphasis is given to this pattern by the sum-of-squares shadings in the
 middle and right panel because the reduced color palettes are used due to non-significance
 of the associated test (at 5\% level). Comparing the HSV-based and HCL-based version
-shows again that the latter are less flashy and more balanced.
+shows that the latter are less flashy and more balanced.
 
 Other strategies for constructing palettes for general aggregation functionals $\lambda(\cdot)$
 (including the sum of squares) that are similar in spirit to the maximum shading are conceivable.
@@ -913,7 +913,7 @@ How the structure of the independence problem can be exploited for
 selecting a suitable layout and shading for mosaic and association plots,
 is exemplified with the conditional independence problem in 3-way tables.
 For a table $[n_{ijk}]$ with underlying
-theoretical probability distribution $[p_{ijk}]$, this can be formulated as
+theoretical probability distribution $[\pi_{ijk}]$, this can be formulated as
 \begin{equation} \label{eq:H0ci}
 H_0: \; \pi_{ij|k} \quad = \quad \pi_{i+|k} \pi_{+j|k}.
 \end{equation}
@@ -932,7 +932,7 @@ can be constructed
 \begin{equation} \label{eq:dmax}
 \max_{i, j, k} |r_{ijk}| \quad = \quad \max_k M_k.
 \end{equation}
-As in the 2-way case, this allows for identification of the cells that are responsible
+As in the 2-way case, this allows for identification of the cells which are responsible
 for the deviation from conditional independence (if any). If it is not so much of interest
 in which \emph{cell} but only in which \emph{stratum} the deviation occurs, then
 it would be natural to use 
@@ -950,7 +950,7 @@ All these statistics are of type
 where $\lambda_\mathrm{indep}$ is a functional for assessing independence in stratum $k$
 and $\lambda_\mathrm{agg}$ is a functional for aggregating over the $k = 1, \dots, K$ strata.
 If the maximum is used for the latter, then identification of the strata responsible for the
-dependence is possible. If additionally $\lambda_\mathrm{indep}$ is the maximum,
+non-independence is possible. If additionally $\lambda_\mathrm{indep}$ is the maximum,
 the corresponding cells can also be identified. Hence, the double maximum
 statistic from Equation~\ref{eq:dmax} is the only functional allowing for detection of
 both the strata and the cells violating the conditional independence hypothesis.
@@ -1005,7 +1005,7 @@ statistic from Equation~\ref{eq:sumchisq} is $\sum_k X_k^2 = \Sexpr{stat(alz_sum
 Equation~\ref{eq:maxchisq} is $\max_k X_k^2 = \Sexpr{stat(alz_maxchisq)}$
 ($p = \Sexpr{pval(alz_maxchisq)}$), and the double maximum statistic from Equation~\ref{eq:dmax}
 is $\max_k M_k = \Sexpr{stat(alz_dmax)}$ ($p = \Sexpr{pval(alz_dmax)}$).
-The $p$ values are again computed by drawing $\Sexpr{nrep}$ samples from the corresponding
+The $p$ values are again computed by drawing $\Sexpr{nrep_char}$ samples from the corresponding
 permutation distribution. The conditional mosaic plot in Figure~\ref{fig:alz}
 shows clearly that the association of smoking and disease is present only in
 the group of male patients. The double maximum shading employed allows for
@@ -1027,7 +1027,7 @@ independence of memory and attitude given age and education.}
 \end{center}
 \end{figure}
 
-As a 4-way example, we use the punishment data \cite{vcd:andersen:1991} 
+As a 4-way example, we use the punishment data \citep{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
 punishment of children. The contingency table comprises four margins:
@@ -1039,7 +1039,7 @@ as a child and attitude towards punishment of children as an adult, controlling
 for age and education. Figure~\ref{fig:pun} shows a conditional association
 plot of memory and attitude given age and education. This can be
 interpreted as a diagnostic residual plot for the associated log-linear conditional
-indpendence model. It shows an association between memories and attitude
+independence model. It shows an association between memories and attitude
 for the lowest education group (first column) and highest age group (last row):
 experienced violence seems to engender violence again as there are less adults
 that disapprove punishment in the group with memories of punishments than expected
@@ -1100,7 +1100,7 @@ The results in this paper were obtained using
 \proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")}
 \citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2006} and the packages
 \pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2006},
-{\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep{vcd:Venables+Ripley:2002},
+{\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep[see][]{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
 
@@ -1135,7 +1135,7 @@ set.seed(rseed)
 coindep_test(pistonrings, n = 5000, indepfun = ss)
 ## M (4)
 set.seed(rseed)
-(art_max <- coindep_test(art, n = 5000))
+art_max <- coindep_test(art, n = 5000)
 set.seed(rseed)
 coindep_test(pistonrings, n = 5000)
 
@@ -1213,7 +1213,7 @@ ucb_cotab <- cotab_coindep(ucb, condvars = "Dept", type = "assoc", n = nrep, mar
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9>>=
+<<conditional_assoc,fig=TRUE,echo=FALSE,height=6,width=9,eval=FALSE>>=
 cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
 @
 \caption{Conditional association plot for UCB admissions with double maximum shading.}
@@ -1224,7 +1224,7 @@ cotabplot(~ Gender + Admit | Dept, data = ucb, panel = ucb_cotab)
 
 
 %% employment data
-<<employment>>
+<<employment,eval=FALSE>>
 ## data
 data("Employment")
 emp <- aperm(Employment)
@@ -1249,7 +1249,7 @@ cotabplot(emp, "LayoffCause", panel = cotab_coindep, type = "assoc", split_verti
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<Friendly-hue,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+<<Friendly-hue,fig=TRUE,echo=FALSE,height=4.8,width=8,eval=FALSE>>
 plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
 dummy <- 0:100/100
 dummy.col <- hsv(dummy[-101] + 1/200, 1, 1)
@@ -1266,7 +1266,7 @@ text(0.1, 0.1, expression(r[ij] < 0), pos = 1, cex = 1.5)
 text(2/3, 0.1, expression(r[ij] > 0), pos = 1, cex = 1.5)
 @
 
-<<Friendly-sat,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+<<Friendly-sat,fig=TRUE,echo=FALSE,height=4.8,width=8,eval=FALSE>>
 plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
 dummy <- 0:100/100
 dummy.col <- hsv(2/3, dummy[-101] + 1/200, 1)
@@ -1293,7 +1293,7 @@ text(0.5, 0.1, expression((2 < abs(r[ij])) < 4), pos = 1, cex = 1.5)
 text(0.9, 0.1, expression(abs(r[ij]) > 4), pos = 1, cex = 1.5)
 @
 
-<<Friendly-val,fig=TRUE,echo=FALSE,height=4.8,width=8>>
+<<Friendly-val,fig=TRUE,echo=FALSE,height=4.8,width=8,eval=FALSE>>
 plot(0.5, 0.5, xlim = c(0, 1), ylim = c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", yaxs = "i")
 dummy <- 0:100/100
 dummy.col <- hsv(2/3, 1, dummy[-101] + 1/200)
