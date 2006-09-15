@@ -198,7 +198,8 @@ hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fi
 \begin{abstract}
 Residual-based shadings for enhancing mosaic and association plots
 to visualize independence models for contingency tables are extended
-in two directions: (a)~perceptually uniform Hue-Chroma-Luminance colors are used and (b)~the
+in two directions: (a)~perceptually uniform Hue-Chroma-Luminance (HCL)
+colors are used and (b)~the
 result of an associated significance test is coded by the appearance of
 color in the visualization. For obtaining (a), a general strategy for
 deriving diverging palettes in the perceptually-based HCL space is suggested. As for (b),
