@@ -142,8 +142,7 @@ cotabplot.default <- function(x, cond = NULL,
 
       ## main plot
       pushViewport(viewport(layout.pos.row = 2, name = paste("plot", condistr, sep = ".")))
-      panel(x, condi,
-            paste("panel:", paste(names(condi), condi, sep = "=", collapse = ","), "|", sep = ""))
+      panel(x, condi)
       upViewport(2)
       grid.rect(gp = gpar(fill = "transparent"))
       upViewport()
@@ -157,19 +156,21 @@ cotabplot.default <- function(x, cond = NULL,
 }
 
 cotab_mosaic <- function(x = NULL, condvars = NULL, ...) {
-  function(x, condlevels, prefix) {
+  function(x, condlevels) {
     if(is.null(condlevels)) mosaic(x, newpage = FALSE, pop = FALSE, ...)
       else mosaic(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                  newpage = FALSE, pop = FALSE, prefix = prefix, ...)
+                  newpage = FALSE, pop = FALSE,
+                  prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
   }
 }
 class(cotab_mosaic) <- "grapcon_generator"
 
 cotab_sieve <- function(x = NULL, condvars = NULL, ...) {
-  function(x, condlevels, prefix = prefix) {
+  function(x, condlevels) {
     if(is.null(condlevels)) sieve(x, newpage = FALSE, pop = FALSE, ...)
       else sieve(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                 newpage = FALSE, pop = FALSE, prefix = prefix, ...)
+                 newpage = FALSE, pop = FALSE,
+                 prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
   }
 }
 class(cotab_sieve) <- "grapcon_generator"
@@ -180,16 +181,17 @@ cotab_assoc <- function(x = NULL, condvars = NULL, ylim = NULL, ...) {
     if(is.null(ylim)) ylim <- range(residuals(fm))
   }
   
-  function(x, condlevels, prefix) {
+  function(x, condlevels) {
     if(is.null(condlevels)) assoc(x, newpage = FALSE, pop = FALSE, ylim = ylim, ...)
       else assoc(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                  newpage = FALSE, pop = FALSE, ylim = ylim, prefix = prefix, ...)
+                  newpage = FALSE, pop = FALSE, ylim = ylim,
+                 prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
   }
 }
 class(cotab_assoc) <- "grapcon_generator"
 
 cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
-  function(x, condlevels, prefix) {
+  function(x, condlevels) {
     if (is.null(condlevels)) 
       fourfold(x, newpage = FALSE, ...)
     else
@@ -268,7 +270,7 @@ cotab_coindep <- function(x, condvars,
 
   type <- match.arg(type)
   if(type == "mosaic") {
-    rval <- function(x, condlevels, prefix) {
+    rval <- function(x, condlevels) {
       if(is.null(condlevels)) {
         tab <- x
         gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
@@ -277,12 +279,12 @@ cotab_coindep <- function(x, condvars,
         gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
       }
       mosaic(tab, newpage = FALSE, pop = FALSE, gp = gp, legend = legend,
-             prefix = prefix, ...)
+             prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
     }
   } else {
     if(is.null(ylim)) ylim <- range(resids)
 
-    rval <- function(x, condlevels, prefix) {
+    rval <- function(x, condlevels) {
       if(is.null(condlevels)) {
         tab <- x
         gp <- if(is.list(gpfun)) gpfun[[1]] else gpfun
@@ -291,7 +293,7 @@ cotab_coindep <- function(x, condvars,
         gp <- if(is.list(gpfun)) gpfun[[paste(condlevels, collapse = ".")]] else gpfun
       }
       assoc(tab, newpage = FALSE, pop = FALSE, gp = gp, legend = legend, ylim = ylim,
-            prefix = prefix, ...)
+            prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
     }
   }
 
@@ -299,23 +301,3 @@ cotab_coindep <- function(x, condvars,
 }
 class(cotab_coindep) <- "grapcon_generator"
 
-
-## Examples:
-## these work (although they are not very meaningful)
-## 
-## cotabplot(~ Class + Survived | Age + Sex, data = Titanic)
-## cotabplot(Titanic)
-## cotabplot(Titanic, panel = cotab_assoc)
-
-## here are some bugs in legends function
-## 
-## cotabplot(Titanic, shade = TRUE)
-## cotabplot(Titanic, shade = TRUE, legend = FALSE)
-
-## further illustrations (legends need to be switched on, see above)
-## 
-## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions)
-## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions,
-##   panel = cotab_coindep, legend = TRUE)
-## cotabplot(~ Gender + Admit | Dept, data = UCBAdmissions,
-##   panel = cotab_coindep, legend = TRUE, type = "assoc")

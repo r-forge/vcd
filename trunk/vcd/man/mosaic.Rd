@@ -12,7 +12,7 @@
   spacing_args = list(), gp = NULL, highlighting = NULL,
   highlighting_fill = grey.colors, highlighting_direction = NULL,
   zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE,
-  main = NULL, sub = NULL, \dots)
+  zero_color = gpar(fill = 0), main = NULL, sub = NULL, \dots)
 \method{mosaic}{formula}(formula, data, highlighting = NULL,
   \dots, main = NULL, sub = NULL, subset = NULL, na.action = NULL)
 }
@@ -41,7 +41,10 @@
     zero cells. If \code{FALSE} and \code{zero_shade} is
     \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
     residual-based shadings to be effective also for zero cells.}
-  \item{zero_shade}{logical controlling whether zero bullets should be shaded.}
+  \item{zero_shade}{logical controlling whether zero bullets should be
+    shaded.}
+  \item{zero_color}{object of class \code{"gpar"} used
+    for zero bullets in case they are \emph{not} shaded.}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
     is the number of margins of \code{x} (default: \code{FALSE}).
     Values are recycled as needed. 

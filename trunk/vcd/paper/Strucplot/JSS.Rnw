@@ -174,13 +174,18 @@ Table \ref{tab:compare} gives an overview of the available functionality in thes
   \centering
   \begin{tabular}{|l|c|c|c|c|c|}
     \hline
-                             & \proglang{SAS} & \proglang{S-PLUS} & \proglang{R} & \pkg{ViSta} & \pkg{MANET}/\pkg{Mondrian}\\\hline
-    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$\\
-    Shape                    &     &        & $\times$ &       & $\times$\\
-    Residual-based shadings  &  $\times$  &        & $\times$ &   $\times$   & ($\times$)\\
-    Conditional Views        &  $\times$  &        & $\times$ &       & $\times$\\
-    Interaction              &     &        &   &   $\times$   & $\times$\\
-    Extensible Design        &     &        & $\times$ &       &  \\\hline
+                             & \proglang{SAS} & \proglang{S-PLUS} &
+                             \proglang{R} & \pkg{ViSta} & \pkg{MANET}
+                             & \pkg{Mondrian}\\\hline
+    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$& $\times$\\
+    Shape                    &     &        & $\times$ & $\times$  & &\\
+    Residual-based shadings  &  $\times$  &        & $\times$ &   highlighting   &($\times$)& ($\times$)\\
+    Conditional Views        &  $\times$  &        & $\times$ & $\times$ & &\\
+    Interaction              &     &        &   &   $\times$   & $\times$& $\times$\\
+    Linking                  &     &        &   &              & $\times$& $\times$\\
+    Extensible Design        &     &        & $\times$ &       &  &\\
+    Language                 & SAS & S & S & XLisp & ?? & Java\\
+\hline
   \end{tabular}
   \caption{Comparison of current software environments.}
   \label{tab:compare}
