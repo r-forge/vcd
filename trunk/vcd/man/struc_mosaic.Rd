@@ -6,7 +6,8 @@
   producing mosaic plots.
 }
 \usage{
-struc_mosaic(zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE)
+struc_mosaic(zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE,
+             zero_color = gpar(fill = 0))
 }
 \arguments{
   \item{zero_size}{size of the bullets used for zero-entries in the
@@ -17,7 +18,10 @@ struc_mosaic(zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE)
     zero cells. If \code{FALSE} and \code{zero_shade} is
     \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
     residual-based shadings to be effective also for zero cells.}
-  \item{zero_shade}{logical controlling whether zero bullets should be shaded.}
+  \item{zero_shade}{logical controlling whether zero bullets should be
+    shaded.}
+  \item{zero_color}{object of class \code{"gpar"} used
+    for zero bullets in case they are \emph{not} shaded.}
 }
 \details{
   This function is usually called by \code{\link{strucplot}} (typically
