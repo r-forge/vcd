@@ -36,7 +36,6 @@ function(formula, data = NULL, highlighting = NULL,
     highlighting <- length(varnames) + length(condnames)
   }
     
-  
 
   if (inherits(edata, "ftable") || inherits(edata, "table") || length(dim(edata)) > 2) {
     condind <- NULL
@@ -71,15 +70,18 @@ function(formula, data = NULL, highlighting = NULL,
 mosaic.default <- function(x, condvars = NULL,
                            split_vertical = NULL, direction = NULL,
                            spacing = NULL, spacing_args = list(),
-                           gp = NULL,
+                           gp = NULL, expected = NULL, shade = NULL,
                            highlighting = NULL, 
                            highlighting_fill = grey.colors,
                            highlighting_direction = NULL,
                            zero_size = 0.5,
                            zero_split = FALSE,
-                           zero_shade = TRUE,
-                           zero_color = gpar(fill = 0),
+                           zero_shade = NULL,
+                           zero_gp = gpar(col = 0),
                            main = NULL, sub = NULL, ...) {
+  zero_shade <- !is.null(shade) && shade || !is.null(expected) || !is.null(gp)
+  if (!is.null(shade) && !shade) zero_shade = FALSE
+  
   if (is.logical(main) && main)
     main <- deparse(substitute(x))
   else if (is.logical(sub) && sub)
@@ -151,18 +153,20 @@ mosaic.default <- function(x, condvars = NULL,
   strucplot(x,
             condvars = if (is.null(condvars)) NULL else length(condvars),
             core = struc_mosaic(zero_size = zero_size, zero_split = zero_split,
-              zero_shade = zero_shade, zero_color = zero_color),
+              zero_shade = zero_shade, zero_gp = zero_gp),
             split_vertical = split_vertical,
             spacing = spacing,
             spacing_args = spacing_args,
             gp = gp,
+            expected = expected,
+            shade = shade,
             main = main,
             sub = sub,
             ...)
 }
 
 struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
-                         zero_shade = TRUE, zero_color = gpar(fill = 0))
+                         zero_shade = TRUE, zero_gp = gpar(col = 0))
   function(residuals, observed, expected = NULL, spacing, gp, split_vertical, prefix = "") {
     dn <- dimnames(observed)
     dnn <- names(dn)
@@ -228,7 +232,7 @@ struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
       grid.lines(y = 0.5)
       if (!zero_shade && zero_size > 0) {
         grid.points(0.5, 0.5, pch = 19, size = unit(zero_size, "char"),
-                    gp = zero_color,
+                    gp = zero_gp,
                     name = paste(prefix, "disc:", mnames[i], sep = ""))
         grid.points(0.5, 0.5, pch = 1, size = unit(zero_size, "char"),
                     name = paste(prefix, "circle:", mnames[i], sep = ""))

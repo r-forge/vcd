@@ -31,7 +31,7 @@ strucplot(x, residuals = NULL, expected = NULL,
     expected to be ordered first in the table.
     This information is used for computing the expected values, and is
     also passed to the spacing functions (see \code{\link{spacings}}).}
-  \item{shade}{logical specifying whether gp should be used or not
+  \item{shade}{logical specifying whether \code{gp} should be used or not
     (see \code{gp}). If \code{TRUE} and \code{expected} is unspecified,
     a default model is fitted: if \code{condvars} is specified, a
     corresponding conditional independence model, and else the total

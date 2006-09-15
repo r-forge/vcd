@@ -9,10 +9,10 @@
 \usage{
 \method{mosaic}{default}(x, condvars = NULL,
   split_vertical = NULL, direction = NULL, spacing = NULL,
-  spacing_args = list(), gp = NULL, highlighting = NULL,
-  highlighting_fill = grey.colors, highlighting_direction = NULL,
-  zero_size = 0.5, zero_split = FALSE, zero_shade = TRUE,
-  zero_color = gpar(fill = 0), main = NULL, sub = NULL, \dots)
+  spacing_args = list(), gp = NULL, expected = NULL, shade = NULL,
+  highlighting = NULL, highlighting_fill = grey.colors, highlighting_direction = NULL,
+  zero_size = 0.5, zero_split = FALSE, zero_shade = NULL,
+  zero_gp = gpar(col = 0), main = NULL, sub = NULL, \dots)
 \method{mosaic}{formula}(formula, data, highlighting = NULL,
   \dots, main = NULL, sub = NULL, subset = NULL, na.action = NULL)
 }
@@ -42,8 +42,10 @@
     \code{TRUE}, a bullet for each zero cell is drawn to allow, e.g.,
     residual-based shadings to be effective also for zero cells.}
   \item{zero_shade}{logical controlling whether zero bullets should be
-    shaded.}
-  \item{zero_color}{object of class \code{"gpar"} used
+    shaded. The default is \code{TRUE} if \code{shade} is \code{TRUE}
+    or \code{expected} is not null or \code{gp} is not null, and
+   \code{FALSE} otherwise.}
+  \item{zero_gp}{object of class \code{"gpar"} used
     for zero bullets in case they are \emph{not} shaded.}
   \item{split_vertical}{vector of logicals of length \eqn{k}, where \eqn{k}
     is the number of margins of \code{x} (default: \code{FALSE}).
@@ -68,6 +70,16 @@
     \code{\link{shadings}}). Components of \code{"gpar"}
     objects are recycled as needed along the last splitting dimension.
     Ignored if \code{shade = FALSE}.}
+  \item{shade}{logical specifying whether \code{gp} should be used or not
+    (see \code{gp}). If \code{TRUE} and \code{expected} is unspecified,
+    a default model is fitted: if \code{condvars} (see
+    \code{\link{strucplot}}) is specified, a
+    corresponding conditional independence model, and else the total
+    independence model.}
+  \item{expected}{optionally, an array of expected values of the same dimension
+    as \code{x}, or alternatively the corresponding independence model specification
+    as used by \code{\link[stats]{loglin}} or \code{\link[MASS]{loglm}}
+    (see \code{\link{strucplot}}).}
   \item{highlighting}{character vector or integer specifying a variable
     to be highlighted in the cells.}
   \item{highlighting_fill}{color vector or palette function
