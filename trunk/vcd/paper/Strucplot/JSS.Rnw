@@ -167,29 +167,39 @@ aspects.
 e.g., for \proglang{SAS} \citep{vcd:SAS:2005}, \proglang{ViSta} \citep{vcd:young:1996}, 
 \proglang{MANET} \citep{vcd:Unwin+Hawkins+Hofmann:1996},
 \proglang{Mondrian} \citep{vcd:Theus:2003},
-\proglang{R} \citep{vcd:R:2005}, and \proglang{S-PLUS} \citep{vcd:SPLUS:2005}. 
+\proglang{R} \citep{vcd:R:2006}, and \proglang{S-PLUS}
+\citep{vcd:SPLUS:2005}. For \proglang{R}, currently three
+implementations do exist in the packages \pkg{graphics} (in base \proglang{R}), 
+\pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006},
+and \pkg{iPlots} \citep{vcd:urbanek+wichtrey:2006}, respectively.
 Table \ref{tab:compare} gives an overview of the available functionality in these systems.
+Most environments are available on Windows, Apple Macintosh, and Linux/Unix
+variants, except \proglang{MANET} which is only available for the
+Macinthosh platforms. \proglang{Mondrian} is a JAVA application, as
+well as major parts of the \pkg{iPlots} package.
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{|l|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|c|}
     \hline
                              & \proglang{SAS} & \proglang{S-PLUS} &
                              \proglang{R} & \pkg{ViSta} & \pkg{MANET}
                              & \pkg{Mondrian}\\\hline
     Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$& $\times$\\
-    Shape                    &     &        & $\times$ & $\times$  & &\\
+    Shape                    &     &        & $\times$ & $\times$  &  $\times$&\\
     Residual-based shadings  &  $\times$  &        & $\times$ &   highlighting   &($\times$)& ($\times$)\\
-    Conditional Views        &  $\times$  &        & $\times$ & $\times$ & &\\
-    Interaction              &     &        &   &   $\times$   & $\times$& $\times$\\
-    Linking                  &     &        &   &              & $\times$& $\times$\\
+    Conditional Views        &  $\times$  &        & $\times$ & $\times$ &  $\times$&\\
+    Interaction              &     &        & $\times$  &   $\times$   & $\times$& $\times$\\
+    Linking                  &     &        & $\times$  &       & $\times$& $\times$\\
     Extensible Design        &     &        & $\times$ &       &  &\\
-    Language                 & SAS & S & S & XLisp & ?? & Java\\
+    Language                 & SAS & S & S,JAVA & XLisp & C++ & JAVA\\
 \hline
   \end{tabular}
   \caption{Comparison of current software environments.}
   \label{tab:compare}
 \end{table}
+
+%%DM%% Fixme: separate columns for iplot, base, and vcd?
 
 Figures \ref{fig:arthritis} to \ref{fig:titanic} illustrate some of these
 extensions (the code is given in Appendix \ref{sec:code}). 
@@ -510,8 +520,13 @@ mosaic(~ Sex + Eye + Hair, data = HairEyeColor)
 \end{center}
 \end{figure}
 
-\noindent The small bullets indicate zero entries in the corresponding
-cell. Note that in contrast to, e.g.,  \codefun{mosaicplot} in base
+\noindent For zero entries, tiles have zero area and are, additionally,
+marked by small bullets (see, e.g, Figure \ref{fig:doubledecker}). By
+default, these cells are not splitted further. The bullets help
+distinguishing very small cells from zero entries, and are
+particularly useful when color shadings come into play 
+(see the example using the \data{Bundesliga} data in Section \ref{sec:overview}). 
+Note that in contrast to, e.g.,  \codefun{mosaicplot} in base
 \proglang{R}, the default split direction and level ordering in all strucplot
 displays correspond to the textual representation.
 It is also possible to visualize the expected values instead of the
@@ -617,8 +632,47 @@ mosaic(hec, direction = c("v","h","v"))
 By a suitable combination of splitting, spacing, and
 labeling settings, the functions provided by the strucplot framework
 can be customized in a quite flexible way. For example, 
-\codefun{doubledecker} is simply a wrapper for 
-\codefun{mosaic}, setting the right defaults. 
+\codefun{doubledecker.default} is simply a wrapper for 
+\codefun{strucplot}, setting the right defaults:
+
+<<doubledecker>>=
+doubledecker.default <- 
+  function(x,
+           depvar = length(dim(x)), 
+           margins = c(1, 4, length(dim(x)) + 1, 1),
+           col = rainbow_hcl(tail(dim(x), 1), end = 260),
+           labeling = labeling_doubledecker,
+           spacing = spacing_highlighting,
+           main = NULL, 
+           keep_aspect_ratio = FALSE,
+           ...) {
+  d <- dim(x)
+  l <- length(d)
+  if (is.character(depvar))
+    depvar <- match(depvar, names(dimnames(x)))
+  condvars <- (1:l)[-depvar]
+  x <- aperm(x, c(condvars, depvar))
+  strucplot(x,
+         condvars = l - 1,
+         spacing = spacing,
+         split = c(rep.int(TRUE, l - 1), FALSE),
+         gp = gpar(fill = col),
+         shade = TRUE,
+         labeling = labeling,
+         main = main,
+         margins = margins,
+         legend = NULL,
+         keep_aspect_ratio = keep_aspect_ratio,
+         ...
+         )
+}
+@ 
+
+\noindent Most default settings such as colors, spacing, and labeling are specified via the parameters of
+\codefun{doubledecker.default} and passed through to
+\codefun{strucplot}. The additional code just handles the dependent
+variable information, and in particular permutes the table to have the
+variable as the last dimension as required for the doubledecker plot.
 Figure \ref{fig:doubledecker} shows a doubledecker plot of
 the \data{Titanic} data, explaining the probability of survival (`survived') by age, given
 sex, given class. It is created by:
@@ -1307,6 +1361,8 @@ mosaic(bl, gp = shading_hsv)
 \end{center}
 \end{figure}
 
+\noindent (Note that the bullets drawn for zero cells are shaded, too). 
+
 A shading function building upon \codefun{shading\_hsv} is \codefun{shading\_Friendly},
 implementing the shading introduced by \cite{vcd:Friendly:1994}. In addition
 to the defaults of the HSV shading, it uses the border color and line type to 
@@ -1988,9 +2044,7 @@ table, except that no space between the levels of the highlighted
 variable is used.
 In the \data{Arthritis} example, we will highlight patients with `Marked' 
 improvement in both groups. To obtain such a display within 
-the strucplot framework\footnote{The \pkg{vcd} package also provides 
-a specialized \codefun{spine} function for spine plots and spinograms.}, it
-suffices to set the space between the `Improved' tiles to 0 (see
+the strucplot framework, it suffices to set the space between the `Improved' tiles to 0 (see
 Figure \ref{fig:artspine}):
 
 <<artspine,echo=TRUE,results=verbatim>>=
@@ -2010,6 +2064,15 @@ mosaic(art, spacing = my_spacing, gp = my_colors)
 \end{center}
 \end{figure}
 
+\noindent Note that the default and formula methods for 
+\codefun{mosaic} provide a
+convenience interface for highlighting. A similar plot (with slightly
+different shading) than the previous one can be obtained using:
+
+<<artspine>>=
+mosaic(Improved ~ Treatment, data = Arthritis, split_vertical = TRUE)
+@ 
+ 
 \noindent The strucplot framework also provides a set of spacing grapcon
 generators that compute suitable spacing objects for
 typical applications. The simplest spacing is \codefun{spacing\_equal}

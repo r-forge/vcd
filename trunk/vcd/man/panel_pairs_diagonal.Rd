@@ -2,6 +2,7 @@
 \alias{pairs_barplot}
 \alias{pairs_text}
 \alias{pairs_diagonal_text}
+\alias{pairs_diagonal_mosaic}
 \title{Diagonal Panel Functions for Table Pairs Plot}
 \description{
   Diagonal panel functions for \code{\link{pairs.table}}.
@@ -12,12 +13,14 @@ pairs_barplot(gp_bars = gpar(fill = "gray"),
   gp_leveltext = gpar(),
   just_leveltext = c("center", "bottom"),
   just_vartext = c("center", "top"),
-  rot = 0, abbreviate = FALSE, \dots)
+  rot = 0, abbreviate = FALSE, check_overlap = TRUE, \dots)
 pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
   gp_leveltext = gpar(), gp_border = gpar(), \dots) 
 pairs_diagonal_text(varnames = TRUE, gp_vartext = gpar(fontsize = 17, fontface = "bold"),
   gp_leveltext = gpar(), gp_border = gpar(), pos = c("right","top"),
-  distribute = c("equal","margin"), rot = 0, \dots) 
+  distribute = c("equal","margin"), rot = 0, \dots)
+pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
+  alternate_labels = TRUE, ...)
 }
 \arguments{
   \item{dimnames}{vector of logicals indicating whether the factor
@@ -43,7 +46,28 @@ pairs_diagonal_text(varnames = TRUE, gp_vartext = gpar(fontsize = 17, fontface =
      (only used for \code{pairs_text_diagonal}).}
   \item{abbreviate}{integer or logical indicating
     the number of characters the labels should be abbreviated
-    to. \code{TRUE} means 1 character, \code{FALSE} causes no abbreviation.}
+    to. \code{TRUE} means 1 character, \code{FALSE} causes no
+    abbreviation.}
+  \item{check_overlap}{If \code{TRUE}, some levels will suppressed to
+    avoid overlapping, if any.}
+  \item{split_vertical}{vector of logicals of length \eqn{k}, where
+    \eqn{k} is the number of margins of \code{x} (values are recycled as needed).
+    A \code{TRUE} component indicates that the tile(s) of the
+    corresponding dimension should be split vertically, \code{FALSE}
+    means horizontal splits. Default is \code{FALSE.}}
+  \item{margins}{either an object of class \code{"unit"} of length 4, or
+    a numeric vector of length 4. The elements are recycled as needed.
+    The four components specify the top, right,
+    bottom, and left margin of the plot, respectively.
+    When a numeric vector is supplied, the numbers are interpreted as
+    \code{"lines"} units.  In addition, the unit or numeric vector
+    may have named arguments
+    (\samp{top}, \samp{right}, \samp{bottom}, and \samp{left}), in which
+    case the non-named arguments specify the default values (recycled as
+    needed), overloaded by the named arguments.}
+  \item{alternate_labels}{vector of logicals indicating whether labels should
+    be alternated on the top/bottom (left/right) side of the plot for a
+    particular dimension.}
   \item{\dots}{other parameters passed to the underlying graphics
     functions.}
 }
