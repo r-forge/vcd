@@ -23,7 +23,7 @@ spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
 }
 class(spacing_increase) <- "grapcon_generator"
 
-spacing_highlighting <- function(start = unit(0.3, "lines"), rate = 1.5) {
+spacing_highlighting <- function(start = unit(0.2, "lines"), rate = 1.5) {
  if (!is.unit(start)) start <- unit(start, "lines")
   function(d, condvars = NULL)
     c(spacing_increase(start, rate)(d, condvars)[-length(d)],

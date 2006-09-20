@@ -16,7 +16,7 @@ spacing_equal(sp = unit(0.3, "lines"))
 spacing_dimequal(sp)
 spacing_increase(start = unit(0.3, "lines"), rate = 1.5)
 spacing_conditional(sp = unit(0.3, "lines"), start = unit(2, "lines"), rate = 1.8)
-spacing_highlighting(start = unit(0.3, "lines"), rate = 1.5)
+spacing_highlighting(start = unit(0.2, "lines"), rate = 1.5)
 }
 \arguments{
   \item{start}{object of class \code{"unit"} indicating the start value
