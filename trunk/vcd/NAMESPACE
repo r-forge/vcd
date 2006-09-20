@@ -66,6 +66,7 @@ export(
        "pairs_barplot",
        "pairs_text",
        "pairs_diagonal_text",
+       "pairs_diagonal_mosaic",
        "pairs_strucplot",
        "pairs_mosaic",
        "pairs_assoc",

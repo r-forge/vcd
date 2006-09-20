@@ -1,7 +1,7 @@
 ##################################################################
 ## spacings
 
-spacing_equal <- function(sp = unit(0.5, "lines")) {
+spacing_equal <- function(sp = unit(0.3, "lines")) {
   if (!is.unit(sp)) sp <- unit(sp, "lines")
   function(d, condvars = NULL) lapply(d, function(x) rep(sp, x - 1))
 }
@@ -23,7 +23,7 @@ spacing_increase <- function(start = unit(0.3, "lines"), rate = 1.5) {
 }
 class(spacing_increase) <- "grapcon_generator"
 
-spacing_highlighting <- function(start = unit(0.2, "lines"), rate = 1.5) {
+spacing_highlighting <- function(start = unit(0.3, "lines"), rate = 1.5) {
  if (!is.unit(start)) start <- unit(start, "lines")
   function(d, condvars = NULL)
     c(spacing_increase(start, rate)(d, condvars)[-length(d)],
@@ -31,7 +31,7 @@ spacing_highlighting <- function(start = unit(0.2, "lines"), rate = 1.5) {
 }
 class(spacing_highlighting) <- "grapcon_generator"
 
-spacing_conditional <- function(sp = unit(0.5, "lines"),
+spacing_conditional <- function(sp = unit(0.3, "lines"),
                                 start = unit(2, "lines"), rate = 1.8) {
   condfun <- spacing_increase(start, rate)
   equalfun <- spacing_equal(sp)
