@@ -525,7 +525,8 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       
       ## mask half of the labels
       for (i in which(alternate_labels))
-        set_labels[[i]][seq(1, length(d[[i]]), 2)] <- ""
+        if (length(d[[i]]) > 1)
+          set_labels[[i]][seq(2, length(d[[i]]), 2)] <- ""
     }
     
     split()
@@ -544,8 +545,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       
       ## mask other half of alternated labels
       for (i in which(alternate_labels))
-        if (length(d[[i]]) > 1)
-          set_labels[[i]][seq(2, length(d[[i]]), 2)] <- ""
+        set_labels[[i]][seq(1, length(d[[i]]), 2)] <- ""
       
       ## invert tl_labels and labsp
       tl_labels <- ! tl_labels

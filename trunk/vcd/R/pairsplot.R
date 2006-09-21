@@ -162,17 +162,21 @@ pairs_diagonal_text <- function(varnames = TRUE,
 }
 class(pairs_diagonal_text) <- "grapcon_generator"
 
-pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
+pairs_barplot <- function(gp_bars = NULL,
                           gp_vartext = gpar(fontsize = 17),
                           gp_leveltext = gpar(),
                           just_leveltext = c("center", "bottom"),
                           just_vartext = c("center", "top"),
                           rot = 0, abbreviate = FALSE,
                           check_overlap = TRUE,
+                          fill = "grey",
                           ...)
   function(x, i) {
     dn <- names(dimnames(x))
     x <- margin.table(x, i)
+    if (is.function(fill)) fill <- rev(fill(dim(x)))
+    if (is.null(gp_bars))
+      gp_bars <- gpar(fill = fill)
     pushViewport(viewport(x = 0.3, y = 0.1, width = 0.7, height = 0.7,
                           yscale = c(0,max(x)), just = c("left", "bottom"))
                  )
@@ -196,13 +200,29 @@ pairs_barplot <- function(gp_bars = gpar(fill = "gray"),
   }
 class(pairs_barplot) <- "grapcon_generator"
 
-pairs_diagonal_mosaic <- function(split_vertical = TRUE, margins = unit(0, "lines"),
-                                  alternate_labels = TRUE, ...)
-  function(x, i) mosaic(margin.table(x, i),
-                        newpage = FALSE,
-                        split_vertical = split_vertical,
-                        margins = margins,
-                        alternate_labels = alternate_labels,
-                        prefix = "diag", ...)
+pairs_diagonal_mosaic <- function(split_vertical = TRUE,
+                                  margins = unit(0, "lines"),
+                                  alternate_labels = TRUE,
+                                  offset_labels = -0.4,
+                                  offset_varnames = 0,
+                                  gp = NULL,
+                                  fill = "grey",
+                                  ...)
+  function(x, i) {
+    if (is.function(fill))
+      fill <- rev(fill(dim(x)[i]))
+    if (is.null(gp))
+      gp <- gpar(fill = fill)
+    mosaic(margin.table(x, i),
+           newpage = FALSE,
+           split_vertical = split_vertical,
+           margins = margins,
+           alternate_labels = alternate_labels,
+           offset_labels = offset_labels,
+           offset_varnames = offset_varnames,
+           prefix = "diag",
+           gp = gp,
+           ...)
+  }
 class(pairs_diagonal_mosaic) <- "grapcon_generator"
 
