@@ -8,19 +8,20 @@
   Diagonal panel functions for \code{\link{pairs.table}}.
 }
 \usage{
-pairs_barplot(gp_bars = gpar(fill = "gray"),
+pairs_barplot(gp_bars = NULL,
   gp_vartext = gpar(fontsize = 17),
   gp_leveltext = gpar(),
   just_leveltext = c("center", "bottom"),
   just_vartext = c("center", "top"),
-  rot = 0, abbreviate = FALSE, check_overlap = TRUE, \dots)
+  rot = 0, abbreviate = FALSE, check_overlap = TRUE, fill = "grey", \dots)
 pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
   gp_leveltext = gpar(), gp_border = gpar(), \dots) 
 pairs_diagonal_text(varnames = TRUE, gp_vartext = gpar(fontsize = 17, fontface = "bold"),
   gp_leveltext = gpar(), gp_border = gpar(), pos = c("right","top"),
   distribute = c("equal","margin"), rot = 0, \dots)
 pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
-  alternate_labels = TRUE, ...)
+  alternate_labels = TRUE, offset_labels = -0.4, offset_varnames = 0,
+  gp = NULL, fill = "grey", ...)
 }
 \arguments{
   \item{dimnames}{vector of logicals indicating whether the factor
@@ -28,13 +29,20 @@ pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
   \item{varnames}{vector of logicals indicating whether the variable
     names should be displayed (only used for \code{pairs_text_diagonal}).}
   \item{gp_bars}{object of class \code{"gpar"} used for bars (only used
-    for \code{pairs_barplot}).}
+    for \code{pairs_barplot}). If unspecified, the default is to set the \code{fill}
+    component of this object to the \code{fill} argument.}
   \item{gp_vartext}{object of class \code{"gpar"} used for the factor
     names.}
   \item{gp_leveltext}{object of class \code{"gpar"} used for the factor
     levels.}
   \item{gp_border}{object of class \code{"gpar"} used for the border
     (only used for \code{pairs_text}).}
+  \item{gp}{object of class \code{"gpar"} used for the tiles (only used
+    for \code{pairs_diagonal_mosaic}).
+    If unspecified, the default is to set the \code{fill}
+    component of this object to the \code{fill} argument.}
+  \item{fill}{color vector or palette function used for the fill colors
+    of bars (for \code{pairs_barplot}) or tiles (for \code{pairs_diagonal_mosaic}).}
   \item{just_leveltext, just_vartext}{character string indicating the
     justification for variable names and levels.}
   \item{pos}{character string of length 2 controlling the
@@ -68,6 +76,9 @@ pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
   \item{alternate_labels}{vector of logicals indicating whether labels should
     be alternated on the top/bottom (left/right) side of the plot for a
     particular dimension.}
+  \item{offset_labels, offset_varnames}{numeric vector of length 4
+    indicating the offset of the
+    labels (variable names) for each of the four sides of the plot.}
   \item{\dots}{other parameters passed to the underlying graphics
     functions.}
 }

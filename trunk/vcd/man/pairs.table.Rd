@@ -124,6 +124,8 @@ Hence, the second approach is equivalent to the first if
 \examples{
 data("UCBAdmissions")
 data("PreSex")
+data(HairEyeColor)
+hec = structable(Eye ~ Sex + Hair, data = HairEyeColor)
 
 pairs(PreSex)
 pairs(UCBAdmissions)
@@ -131,5 +133,9 @@ pairs(UCBAdmissions, upper_panel_args = list(shade = TRUE))
 pairs(UCBAdmissions, lower_panel = pairs_mosaic(type = "conditional"))
 pairs(UCBAdmissions, diag_panel = pairs_text)
 pairs(UCBAdmissions, upper_panel = pairs_assoc, shade = TRUE)
+pairs(hec, highlighting = 2, diag_panel_args = list(fill = grey.colors))
+pairs(hec, highlighting = 2, diag_panel = pairs_diagonal_mosaic,
+           diag_panel_args = list(fill = grey.colors))
+
 }
 \keyword{hplot}

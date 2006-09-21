@@ -275,7 +275,7 @@ doubledecker(Survived ~ ., data = Titanic, labeling_args =
 This paper describes the strucplot framework provided by the \pkg{vcd}
 package for the \proglang{R} environment for statistical computing and
 graphics, available from the Comprehensive \proglang{R} Archive Network
-(\url{http://cran.r-project.org/}).  The framework integrates displays
+(\url{http://CRAN.R-project.org/}).  The framework integrates displays
 such as mosaic, association, and sieve plots by their unifying property
 of being flat representations of contingency tables.  These basic plots,
 as well as specialized displays for conditional independence, can be
@@ -390,6 +390,8 @@ framework into more complex displays (e.g., by means of panel functions).
      shading  & \codefun{shading\_binary} & visualizes the sign of the  residuals\\
               & \codefun{shading\_Friendly} & implements Friendly-like
               shading (based on HSV-colors)\\
+              & \codefun{shading\_sieve} & implements Friendly-like
+              shading used for sieve plots\\ && (based on HCL-colors)\\
               & \codefun{shading\_hcl} & shading based on HCL-colors\\
               & \codefun{shading\_hsv} & shading based on HSV-colors\\
               & \codefun{shading\_max} & shading visualizing the
@@ -616,7 +618,7 @@ argument taking a vector of \code{"h"} and
 \code{"v"} characters (see Figure \ref{fig:split}):
 
 <<split2>>=
-mosaic(hec, direction = c("v","h","v"))
+mosaic(hec, direction = c("h","h","v"))
 @
 
 \begin{figure}[p]
@@ -700,18 +702,21 @@ doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
 \subsection{Conditional and partial views}
 
 
-So far, we have visualized full tables. Subtables can be selected in a
+So far, we have visualized either full or collapsed tables, as
+suggested by the analysis task at hand. Subtables can be selected in a
 similar way than for objects of class \class{table} using
 indexing. Note, however, that subsetting of \class{structable} objects 
 is more restrictive because of their inherent conditional structure. Since the variables
 on both the row and the columns side are nested, 
 subsetting is only possible ``outside-in'', that is, indexing operates
-on blocks defined by the variable levels:
+on blocks defined by the variable levels. In the following, we again use the
+Titanic data, this time collapsed over `Survived' to investigate the
+structure of crew and passengers:
 
 <<subsetting,results=verbatim>>=
-hec
-hec["Male",]
-hec["Male", c("Brown","Green")]
+(tit <- structable(~ Sex + Class + Age, data = Titanic))
+tit["Male",]
+tit["Male", c("1st","2nd","3rd")]
 @ 
 
 \noindent \emph{Conditioning} on levels (i.e., choosing a table subset for fixed levels
@@ -720,9 +725,9 @@ Here again, the sequence of conditioning levels is restricted by the
 hierarchical structure of the \class{structable} object:
 
 <<conditioning,results=verbatim>>=
-hec[["Male",]]
-hec[[c("Male", "Red"),]]
-hec[["Male","Green"]]
+tit[["Male",]]
+tit[[c("Male", "Adult"),]]
+tit[["Male","1st"]]
 @ 
 
 \noindent Now, there are several ways for visualizing 
@@ -732,15 +737,19 @@ the association between hair and eye color, given gender, by using
 subsetting on the flat table and \pkg{grid}'s viewport 
 framework to visualize the two groups besides each other:
 
-<<Variables>>=
+<<Variables1>>=
 pushViewport(viewport(layout = grid.layout(ncol = 2)))
+@ 
 
+<<Variables2>>=
 pushViewport(viewport(layout.pos.col = 1))
-mosaic(hec[["Male"]], margins = c(left = 2.5, top = 2.5, 0), sub = "Male", newpage = FALSE)
+mosaic(tit[["Male"]], margins = c(left = 2.5, top = 2.5, 0), sub = "Male", newpage = FALSE)
 popViewport()
+@ 
 
+<<Variables3>>=
 pushViewport(viewport(layout.pos.col = 2))
-mosaic(hec[["Female"]], margins = c(top = 2.5, 0), sub = "Female", newpage = FALSE)
+mosaic(tit[["Female"]], margins = c(top = 2.5, 0), sub = "Female", newpage = FALSE)
 popViewport(2)
 @
 
@@ -748,10 +757,12 @@ popViewport(2)
 \begin{figure}[p]
 \begin{center}
 <<Variablesfig,fig=TRUE,echo=FALSE,height=6,width=12>>=
-<<Variables>>
+<<Variables1>>
+<<Variables2>>
+<<Variables3>>
 @
 \caption{Two mosaic displays put side-by-side, visualizing the 
-distribution of hair and eye color, given gender. The marginal
+distribution of class and age, given gender. The marginal
 distribution of `Sex' cannot be seen.}
 \label{fig:parttable}
 \end{center}
@@ -772,7 +783,7 @@ The formula interface of \codefun{mosaic} allows the
 specification of conditioning variables (see Figure \ref{fig:conditioning}):
 
 <<Conditioning>>=
-mosaic(~ Hair + Eye | Sex, data = hec, split_vertical = TRUE, keep_aspect_ratio = FALSE)
+mosaic(~ Age + Class | Sex, data = tit, split_vertical = TRUE, keep_aspect_ratio = FALSE)
 @
 
 \setkeys{Gin}{width=\textwidth}
@@ -782,7 +793,7 @@ mosaic(~ Hair + Eye | Sex, data = hec, split_vertical = TRUE, keep_aspect_ratio 
 <<Conditioning>>
 @
 \caption{Mosaic plot again visualizing the 
-distribution of hair and eye color, given gender, this time using a
+distribution of class and age, given gender, this time using a
 single mosaic plot. In contrast to Figure \ref{fig:parttable}, this
 plot also visualizes the marginal distribution of `Sex'.}
 \label{fig:conditioning}
@@ -805,7 +816,8 @@ in a lattice-like layout, conditioning on variable \emph{levels}.
 The plot in Figure \ref{fig:cotabplot} shows hair and eye color, given sex:
 
 <<cotabplot>>=
-cotabplot(~ Hair + Eye | Sex, data = hec, panel_args = list(margins = 3), labeling = labeling_left(clip = FALSE))
+cotabplot(~ Age + Class | Sex, data = tit, panel_args = list(margins = 3), 
+          labeling = labeling_left, tl_labels = c(Class = FALSE))
 @
 
 \setkeys{Gin}{width=\textwidth}
@@ -814,8 +826,8 @@ cotabplot(~ Hair + Eye | Sex, data = hec, panel_args = list(margins = 3), labeli
 <<cotabplotfig,fig=TRUE,echo=FALSE,height=6,width=11>>=
 <<cotabplot>>
 @
-\caption{Conditional table plot for the \data{HairEyeColor} data,
-  again visualizing the distribution of hair and eye color, given
+\caption{Conditional table plot for the \data{Titanic} data,
+  again visualizing the distribution of age and class, given
   gender, using separate mosaic displays like the `manual' plot 
   in Figure \ref{fig:parttable}.}
 \label{fig:cotabplot}
@@ -834,14 +846,31 @@ the \codefun{pairs} methods create pairwise views of the table.
 The function produces, by default, a plot matrix 
 having strucplot displays in the off-diagonal panels, and
 the variable names (optionally, with univariate statistics) in the diagonal cells. 
-Figure \ref{fig:pairs} shows a pairs display with mosaic plots visualizing mutual 
-independence in the lower triangle,
-association plots for the same in the upper triangle, and bar charts in the diagonal.
+Figure \ref{fig:pairs} shows a pairs display for the
+\data{HairEyeColor} data with univariate mosaics in the diagonal,
+and mosaic plots visualizing mutual independence in the upper and lower triangles.
+Due to the inherent asymmetry of mosaic displays, the corresponding plots in the
+upper and lower triangle differ depending on which variable is used first
+for splitting---inspecting both views might help detecting patterns in a data set. 
+Additionally, 
+we are using a special spacing and shading normally used to `highlight' %'
+the second variable in the first (as will be discussed in Section \ref{sec:spacing}): here,
+the intention of the spacing 
+is to emphasize the conditional distributions of the second variable,
+given the first one, and the shading helps identifying the factor levels in
+the second variable.
 
 <<pairs>>=
-pairs(hec, lower_panel = pairs_assoc, space = 0.3, 
-      diag_panel_args = list(rot = -45, just_leveltext = c("left","bottom")))
+pairs(hec, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
+      diag_panel_args = list(fill = grey.colors))
 @
+
+% auch möglich mit Titanic-Daten:
+% <<pairs>>=
+% pairs(tit, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
+%       diag_panel_args = list(fill = grey.colors, alternate_labels = FALSE))
+% @
+
 
 %\setkeys{Gin}{width=\textwidth}
 \setkeys{Gin}{width=0.7\textwidth}
@@ -1224,13 +1253,14 @@ as two derived functions: \codefun{shading\_Friendly} building upon
 the same conceptual tools, but use different color spaces: the
 Hue-Saturation-Value (HSV) and the Hue-Chroma-Luminance (HCL) scheme,
 respectively. We will first expose the basic concept of these shading
-functions using the HSV space, and
-then briefly explain the differences to the HCL space \citep[a detailed
+functions using HSV space, and
+then briefly explain the differences to HCL space \citep[a detailed
 discussion can be found in][]{vcd:Zeileis+Meyer+Hornik:2005}. 
-The HCL space is trickier
-to use, but preferable to the HSV space from a perceptual point of view.
+Color palettes in HCL space are trickier
+to choose, but preferable to palettes derived 
+from HSV space from a perceptual point of view.
 
-In the HSV space, colors are specified in three dimensions: Hue,
+In HSV space, colors are specified in three dimensions: Hue,
 Saturation (`colorfulness'), and Value (`lightness', amount of gray). 
 These three dimensions are used by \codefun{shading\_hsv} to visualize information 
 about the residuals and the underlying independence model. The hue 
@@ -1391,223 +1421,223 @@ in the original \proglang{SAS} implementation of the Friendly mosaic plots.)
 
 As introduced before, the default shading scheme is not
 \codefun{shading\_hsv} but \codefun{shading\_hcl} due to the better
-perceptual characteristics of the HCL color space.
-Figure \ref{fig:shadingHSVHCL} depicts 
-the HSV space in the upper panel and the HCL space in the lower panel.
-On the left (right) side, we see the color scales for red (blue)
-hue, respectively. The $x$-axis represents the colorfulness, and the
-$y$-axis the brightness.
-The boxes represent the diverging color palettes used for the shadings.
-For the HSV space, we can see that the effect of changing the 
-level of brightness (`value') is not the same for different levels of 
-saturation, and again not the same for the two different hues.
-In fact, in the HSV space all dimensions are confounded, which 
-obviously is problematic for coding information. In contrast, the HCL color
-space offers perceptually uniform colors: as can be seen from the lower panel, 
-the chroma is homogeneous for different levels of luminance. 
-Unfortunately, this comes at the 
-price of the space being irregularly shaped, making it difficult to automatically select 
-diverging color palettes. The following example again 
-illustrates the \data{HairEyeColor} data, this time with HCL colors 
-(Figure \ref{fig:hclshading1} depicts the default palette, 
+perceptual characteristics of HCL color space.
+% Figure \ref{fig:shadingHSVHCL} depicts 
+% HSV space in the upper panel and HCL space in the lower panel.
+% On the left (right) side, we see the color scales for red (blue)
+% hue, respectively. The $x$-axis represents the colorfulness, and the
+% $y$-axis the brightness.
+% The boxes represent the diverging color palettes used for the shadings.
+% For HSV space, we can see that the effect of changing the 
+% level of brightness (`value') is not the same for different levels of 
+% saturation, and again not the same for the two different hues.
+% In fact, in HSV space all dimensions are confounded, which 
+% obviously is problematic for coding information. In contrast, HCL color
+% space offers perceptually uniform colors: as can be seen from the lower panel, 
+% the chroma is homogeneous for different levels of luminance. 
+% Unfortunately, this comes at the 
+% price of the space being irregularly shaped, making it difficult to automatically select 
+% diverging color palettes. 
+The following example again illustrates the \data{HairEyeColor} data, 
+this time with HCL colors (Figure \ref{fig:hclshading1} depicts the default palette, 
 and Figure \ref{fig:hclshading2} an alternative setting):
 
-<<auxiliary_functions,echo=FALSE,results=hide>>=
-hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
-{
-  type <- match.arg(type)
-  if(type == "HCL") {
-    chroma = seq(0, 100, length = grid.n)
-    luminance = seq(0, 100, length = grid.n)
-    nc <- length(chroma)
-    nl <- length(luminance)
-    color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
-    xlab <- "chroma"
-    ylab <- "luminance"
-    main <- paste("hue =", round(hue, digits = 0))
-  } else {
-    chroma = seq(0, 1, length = grid.n)
-    luminance = seq(0, 1, length = grid.n)
-    nc <- length(chroma)
-    nl <- length(luminance)
-    color.slice <- outer(chroma, luminance, function(y, x) hsv(hue, x, y))
-    xlab <- "saturation"
-    ylab <- "value"
-    main <- paste("hue =", round(hue, digits = 3))
-  }
-  if(plot) {
-    plot(0.5, 0.5, xlim = range(chroma), ylim = range(luminance), type = "n", axes = FALSE,
-         xlab = xlab, ylab = ylab, yaxs = "i", xaxs = "i", main = main)
-    for(i in 1:(nc-1)) {
-      rect(chroma[i], luminance[-nl], chroma[i] + 100/(nc-1), luminance[-1], border = color.slice[,i+1], col = color.slice[,i+1])
-    }
-    axis(1)
-    axis(2)
-    box()
-  }
-  colnames(color.slice) <- chroma
-  rownames(color.slice) <- luminance
-  attr(color.slice, "type") <- type
-  class(color.slice) <- "slice"
-  invisible(color.slice)
-}
-@
+% <<auxiliary_functions,echo=FALSE,results=hide>>=
+% hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
+% {
+%   type <- match.arg(type)
+%   if(type == "HCL") {
+%     chroma = seq(0, 100, length = grid.n)
+%     luminance = seq(0, 100, length = grid.n)
+%     nc <- length(chroma)
+%     nl <- length(luminance)
+%     color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
+%     xlab <- "chroma"
+%     ylab <- "luminance"
+%     main <- paste("hue =", round(hue, digits = 0))
+%   } else {
+%     chroma = seq(0, 1, length = grid.n)
+%     luminance = seq(0, 1, length = grid.n)
+%     nc <- length(chroma)
+%     nl <- length(luminance)
+%     color.slice <- outer(chroma, luminance, function(y, x) hsv(hue, x, y))
+%     xlab <- "saturation"
+%     ylab <- "value"
+%     main <- paste("hue =", round(hue, digits = 3))
+%   }
+%   if(plot) {
+%     plot(0.5, 0.5, xlim = range(chroma), ylim = range(luminance), type = "n", axes = FALSE,
+%          xlab = xlab, ylab = ylab, yaxs = "i", xaxs = "i", main = main)
+%     for(i in 1:(nc-1)) {
+%       rect(chroma[i], luminance[-nl], chroma[i] + 100/(nc-1), luminance[-1], border = color.slice[,i+1], col = color.slice[,i+1])
+%     }
+%     axis(1)
+%     axis(2)
+%     box()
+%   }
+%   colnames(color.slice) <- chroma
+%   rownames(color.slice) <- luminance
+%   attr(color.slice, "type") <- type
+%   class(color.slice) <- "slice"
+%   invisible(color.slice)
+% }
+% @
 
-\setkeys{Gin}{width=.8\textwidth}
-\begin{figure}[p]
-\begin{center}
-<<shading_HSV,fig=TRUE,echo=FALSE,height=7,width=8>>=
-## generate colors
-hue23 <- hue.slice(2/3, grid.n = 101, plot = FALSE, type = "HSV")
-hue0 <- hue.slice(0, grid.n = 101, plot = FALSE, type = "HSV")
-saturation <- as.numeric(colnames(hue23))
-value <- as.numeric(rownames(hue23))
+% \setkeys{Gin}{width=.8\textwidth}
+% \begin{figure}[p]
+% \begin{center}
+% <<shading_HSV,fig=TRUE,echo=FALSE,height=7,width=8>>=
+% ## generate colors
+% hue23 <- hue.slice(2/3, grid.n = 101, plot = FALSE, type = "HSV")
+% hue0 <- hue.slice(0, grid.n = 101, plot = FALSE, type = "HSV")
+% saturation <- as.numeric(colnames(hue23))
+% value <- as.numeric(rownames(hue23))
 
-## select those with value >= 0.5
-hue23 <- hue23[value >= .5, ]
-hue0 <- hue0[value >= .5, ]
-value <- value[value >= .5]
-nl <- nrow(hue23)
-nc <- ncol(hue23)
+% ## select those with value >= 0.5
+% hue23 <- hue23[value >= .5, ]
+% hue0 <- hue0[value >= .5, ]
+% value <- value[value >= .5]
+% nl <- nrow(hue23)
+% nc <- ncol(hue23)
 
-## plot 2 slides from HSV space
-plot(0.5, 0.5, xlim = c(-1, 1), ylim = c(0, 1), type = "n", axes = FALSE,
-       xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
-for(i in 1:(nc-1)) {
-  rect(saturation[i], value[-nl], saturation[i] + 1/(nc-1), value[-1], border = hue23[,i+1], col = hue23[,i+1])
-}
-for(i in 1:(nc-1)) {
-  rect(-saturation[i], value[-nl], -(saturation[i] + 1/(nc-1)), value[-1], border = hue0[,i+1], col = hue0[,i+1])
-}
-axis(2, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
-axis(4, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
-axis(3, at = -4:4*.25, labels=c(4:0*.25, 1:4*.25))
-mtext(c("hue = 0", "hue = 2/3"), side = 3, at = c(-.5, .5), line = 3, cex = 1.2)
-mtext("saturation", side = 3, at = 0, line = 2)
-mtext("value", side = 2, at = .75, line = 2)
-mtext("value", side = 4, at = .75, line = 2)
-lines(c(-1, 1), c(.5, .5))
+% ## plot 2 slides from HSV space
+% plot(0.5, 0.5, xlim = c(-1, 1), ylim = c(0, 1), type = "n", axes = FALSE,
+%        xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
+% for(i in 1:(nc-1)) {
+%   rect(saturation[i], value[-nl], saturation[i] + 1/(nc-1), value[-1], border = hue23[,i+1], col = hue23[,i+1])
+% }
+% for(i in 1:(nc-1)) {
+%   rect(-saturation[i], value[-nl], -(saturation[i] + 1/(nc-1)), value[-1], border = hue0[,i+1], col = hue0[,i+1])
+% }
+% axis(2, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
+% axis(4, at = c(50, 75, 100)/100, labels = c(0.5, 0.75, 1))
+% axis(3, at = -4:4*.25, labels=c(4:0*.25, 1:4*.25))
+% mtext(c("hue = 0", "hue = 2/3"), side = 3, at = c(-.5, .5), line = 3, cex = 1.2)
+% mtext("saturation", side = 3, at = 0, line = 2)
+% mtext("value", side = 2, at = .75, line = 2)
+% mtext("value", side = 4, at = .75, line = 2)
+% lines(c(-1, 1), c(.5, .5))
 
-## significant colors
-rect(-1, 0.95, -.90, 1, col = hsv(0, 1, 1))
-rect(-0.45, 0.95, -.55, 1, col = hsv(0, 0.5, 1))
-rect(-.05, .95, .05, 1, col = hsv(2/3, 0, 1))
-rect(0.45, 0.95, .55, 1, col = hsv(2/3, 0.5, 1))
-rect(.90, .95, 1, 1, col = hsv(2/3, 1, 1))
+% ## significant colors
+% rect(-1, 0.95, -.90, 1, col = hsv(0, 1, 1))
+% rect(-0.45, 0.95, -.55, 1, col = hsv(0, 0.5, 1))
+% rect(-.05, .95, .05, 1, col = hsv(2/3, 0, 1))
+% rect(0.45, 0.95, .55, 1, col = hsv(2/3, 0.5, 1))
+% rect(.90, .95, 1, 1, col = hsv(2/3, 1, 1))
 
-text(-1, .33, "significant", pos = 4, cex = 1.2)
-rect(-1, .20, -.80, .30, col = hsv(0, 1, 1))
-rect(-.40, .20, -0.6, .30, col = hsv(0, 0.5, 1))
-rect(-.20, .20, 0, .30, col = hsv(0, 0, 1))
-rect(0, .20, .20, .30, col = hsv(2/3, 0, 1))
-rect(0.4, .20, .60, .30, col = hsv(2/3, .5, 1))
-rect(.80, .20, 1, .30, col = hsv(2/3, 1, 1))
+% text(-1, .33, "significant", pos = 4, cex = 1.2)
+% rect(-1, .20, -.80, .30, col = hsv(0, 1, 1))
+% rect(-.40, .20, -0.6, .30, col = hsv(0, 0.5, 1))
+% rect(-.20, .20, 0, .30, col = hsv(0, 0, 1))
+% rect(0, .20, .20, .30, col = hsv(2/3, 0, 1))
+% rect(0.4, .20, .60, .30, col = hsv(2/3, .5, 1))
+% rect(.80, .20, 1, .30, col = hsv(2/3, 1, 1))
 
-lines(c(-.9, -.55), c(0.975, .975), lty = 2)
-lines(c(-.45, -.05), c(0.975, .975), lty = 2)
-lines(c(.45, .05), c(0.975, .975), lty = 2)
-lines(c(.9, .55), c(0.975, .975), lty = 2)
+% lines(c(-.9, -.55), c(0.975, .975), lty = 2)
+% lines(c(-.45, -.05), c(0.975, .975), lty = 2)
+% lines(c(.45, .05), c(0.975, .975), lty = 2)
+% lines(c(.9, .55), c(0.975, .975), lty = 2)
 
-## non-significant colors
-rect(-1, 0.5, -.90, 0.55, col = hsv(0, 1, 0.5))
-rect(-0.45, 0.5, -.55, 0.55, col = hsv(0, 0.5, 0.5))
-rect(-.05, .5, .05, 0.55, col = hsv(2/3, 0, 0.5))
-rect(0.45, 0.5, .55, 0.55, col = hsv(2/3, 0.5, 0.5))
-rect(.90, .5, 1, 0.55, col = hsv(2/3, 1, 0.5))
+% ## non-significant colors
+% rect(-1, 0.5, -.90, 0.55, col = hsv(0, 1, 0.5))
+% rect(-0.45, 0.5, -.55, 0.55, col = hsv(0, 0.5, 0.5))
+% rect(-.05, .5, .05, 0.55, col = hsv(2/3, 0, 0.5))
+% rect(0.45, 0.5, .55, 0.55, col = hsv(2/3, 0.5, 0.5))
+% rect(.90, .5, 1, 0.55, col = hsv(2/3, 1, 0.5))
 
-text(-1, .13, "non-significant", pos = 4, cex = 1.2)
-rect(-1, 0, -.80, .10, col = hsv(0, 1, 0.5))
-rect(-.60, 0, -.4, .10, col = hsv(0, 0.5, 0.5))
-rect(-.20, 0, 0, .10, col = hsv(0, 0, 0.5))
-rect(0, 0, .20, .10, col = hsv(2/3, 0, 0.5))
-rect(0.4, 0, .60, .1, col = hsv(2/3, .5, 0.5))
-rect(.80, 0, 1, .10, col = hsv(2/3, 1, 0.5))
+% text(-1, .13, "non-significant", pos = 4, cex = 1.2)
+% rect(-1, 0, -.80, .10, col = hsv(0, 1, 0.5))
+% rect(-.60, 0, -.4, .10, col = hsv(0, 0.5, 0.5))
+% rect(-.20, 0, 0, .10, col = hsv(0, 0, 0.5))
+% rect(0, 0, .20, .10, col = hsv(2/3, 0, 0.5))
+% rect(0.4, 0, .60, .1, col = hsv(2/3, .5, 0.5))
+% rect(.80, 0, 1, .10, col = hsv(2/3, 1, 0.5))
 
-lines(c(-.9, -.55), c(0.525, .525), lty = 2)
-lines(c(-.45, -.05), c(0.525, .525), lty = 2)
-lines(c(.45, .05), c(0.525, .525), lty = 2)
-lines(c(.9, .55), c(0.525, .525), lty = 2)
-@ 
+% lines(c(-.9, -.55), c(0.525, .525), lty = 2)
+% lines(c(-.45, -.05), c(0.525, .525), lty = 2)
+% lines(c(.45, .05), c(0.525, .525), lty = 2)
+% lines(c(.9, .55), c(0.525, .525), lty = 2)
+% @ 
 
-<<shading_HCL,fig=TRUE,echo=FALSE,height=7,width=8>>=
-## generate colors
-hue260 <- hue.slice(260, grid.n = 101, plot = FALSE)
-hue360 <- hue.slice(360, grid.n = 101, plot = FALSE)
-mychroma <- as.numeric(colnames(hue260))
-luminance <- as.numeric(rownames(hue260))
+% <<shading_HCL,fig=TRUE,echo=FALSE,height=7,width=8>>=
+% ## generate colors
+% hue260 <- hue.slice(260, grid.n = 101, plot = FALSE)
+% hue360 <- hue.slice(360, grid.n = 101, plot = FALSE)
+% mychroma <- as.numeric(colnames(hue260))
+% luminance <- as.numeric(rownames(hue260))
 
-## select those with lumincance >= 50
-hue260 <- hue260[luminance >= 50, ]
-hue360 <- hue360[luminance >= 50, ]
-luminance <- luminance[luminance >= 50]
-nc <- ncol(hue260)
-nl <- nrow(hue260)
+% ## select those with lumincance >= 50
+% hue260 <- hue260[luminance >= 50, ]
+% hue360 <- hue360[luminance >= 50, ]
+% luminance <- luminance[luminance >= 50]
+% nc <- ncol(hue260)
+% nl <- nrow(hue260)
 
-## plot 2 slides from HCL space
-plot(0.5, 0.5, xlim = c(-100, 100), ylim = c(0, 100), type = "n", axes = FALSE,
-       xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
-for(i in 1:(nc-1)) {
-  rect(mychroma[i], luminance[-nl], mychroma[i] + 100/(nc-1), luminance[-1], border = hue260[,i+1], col = hue260[,i+1])
-}
-for(i in 1:(nc-1)) {
-  rect(-mychroma[i], luminance[-nl], -(mychroma[i] + 100/(nc-1)), luminance[-1], border = hue360[,i+1], col = hue360[,i+1])
-}
-axis(2, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
-axis(4, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
-axis(3, at = -4:4*25, labels=c(4:0*25, 1:4*25))
-mtext(c("hue = 0", "hue = 260"), side = 3, at = c(-50, 50), line = 3, cex = 1.2)
-mtext("chroma", side = 3, at = 0, line = 2)
-mtext("luminance", side = 2, at = 75, line = 2)
-mtext("luminance", side = 4, at = 75, line = 2)
-lines(c(-100, 100), c(50, 50))
+% ## plot 2 slides from HCL space
+% plot(0.5, 0.5, xlim = c(-100, 100), ylim = c(0, 100), type = "n", axes = FALSE,
+%        xlab = "", ylab = "", yaxs = "i", xaxs = "i", main = "")
+% for(i in 1:(nc-1)) {
+%   rect(mychroma[i], luminance[-nl], mychroma[i] + 100/(nc-1), luminance[-1], border = hue260[,i+1], col = hue260[,i+1])
+% }
+% for(i in 1:(nc-1)) {
+%   rect(-mychroma[i], luminance[-nl], -(mychroma[i] + 100/(nc-1)), luminance[-1], border = hue360[,i+1], col = hue360[,i+1])
+% }
+% axis(2, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
+% axis(4, at = c(50, 70, 90, 100), labels = c(50, 70, 90, 100))
+% axis(3, at = -4:4*25, labels=c(4:0*25, 1:4*25))
+% mtext(c("hue = 0", "hue = 260"), side = 3, at = c(-50, 50), line = 3, cex = 1.2)
+% mtext("chroma", side = 3, at = 0, line = 2)
+% mtext("luminance", side = 2, at = 75, line = 2)
+% mtext("luminance", side = 4, at = 75, line = 2)
+% lines(c(-100, 100), c(50, 50))
 
-## significant colors
-rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
-rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
-rect(-5, 95, 5, 100, col = hcl(260, 0, 100))       ## grey vs. white
-rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))     ## grey vs. white
-rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
-rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
+% ## significant colors
+% rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
+% rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
+% rect(-5, 95, 5, 100, col = hcl(260, 0, 100))       ## grey vs. white
+% rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))     ## grey vs. white
+% rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
+% rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
 
-text(-100, 33, "significant", pos = 4, cex = 1.2)
-rect(-100, 20, -80, 30, col = hcl(0, 100, 50))
-rect(-60, 20, -40, 30, col = hcl(0, 50, 70))
-rect(-20, 20, 0, 30, col = hcl(0, 0, 90))       
-rect(0, 20, 20, 30, col = hcl(260, 0, 90))
-#white# rect(-20, 20, 0, 30, col = hcl(0, 0, 100))
-#white# rect(0, 20, 20, 30, col = hcl(260, 0, 100))
-rect(40, 20, 60, 30, col = hcl(260, 50, 70))
-rect(80, 20, 100, 30, col = hcl(260, 100, 50))
+% text(-100, 33, "significant", pos = 4, cex = 1.2)
+% rect(-100, 20, -80, 30, col = hcl(0, 100, 50))
+% rect(-60, 20, -40, 30, col = hcl(0, 50, 70))
+% rect(-20, 20, 0, 30, col = hcl(0, 0, 90))       
+% rect(0, 20, 20, 30, col = hcl(260, 0, 90))
+% #white# rect(-20, 20, 0, 30, col = hcl(0, 0, 100))
+% #white# rect(0, 20, 20, 30, col = hcl(260, 0, 100))
+% rect(40, 20, 60, 30, col = hcl(260, 50, 70))
+% rect(80, 20, 100, 30, col = hcl(260, 100, 50))
 
-lines(c(-45, -5), c(72.5, 87.5), lty = 2)
-lines(c(45, 5), c(72.5, 87.5), lty = 2)
-lines(c(-95, -55), c(52.5, 67.5), lty = 2)
-lines(c(95, 55), c(52.5, 67.5), lty = 2)
+% lines(c(-45, -5), c(72.5, 87.5), lty = 2)
+% lines(c(45, 5), c(72.5, 87.5), lty = 2)
+% lines(c(-95, -55), c(52.5, 67.5), lty = 2)
+% lines(c(95, 55), c(52.5, 67.5), lty = 2)
 
-## non-significant colors
-rect(-25, 47.5, -15, 52.5, col = hcl(0, 20, 50))
-rect(-15, 67.5, -5, 72.5, col = hcl(0, 10, 70))
-rect(5, 67.5, 15, 72.5, col = hcl(260, 10, 70))
-rect(25, 47.5, 15, 52.5, col = hcl(260, 20, 50))
+% ## non-significant colors
+% rect(-25, 47.5, -15, 52.5, col = hcl(0, 20, 50))
+% rect(-15, 67.5, -5, 72.5, col = hcl(0, 10, 70))
+% rect(5, 67.5, 15, 72.5, col = hcl(260, 10, 70))
+% rect(25, 47.5, 15, 52.5, col = hcl(260, 20, 50))
 
 
-text(-100, 13, "non-significant", pos = 4, cex = 1.2)
-rect(-60, 0, -40, 10, col = hcl(0, 20, 50))
-rect(-40, 0, -20, 10, col = hcl(0, 10, 70))
-rect(-20, 0, 0, 10, col = hcl(0, 0, 90))
-rect(0, 0, 20, 10, col = hcl(260, 0, 90))
-rect(20, 0, 40, 10, col = hcl(260, 10, 70))
-rect(40, 0, 60, 10, col = hcl(260, 20, 50))
+% text(-100, 13, "non-significant", pos = 4, cex = 1.2)
+% rect(-60, 0, -40, 10, col = hcl(0, 20, 50))
+% rect(-40, 0, -20, 10, col = hcl(0, 10, 70))
+% rect(-20, 0, 0, 10, col = hcl(0, 0, 90))
+% rect(0, 0, 20, 10, col = hcl(260, 0, 90))
+% rect(20, 0, 40, 10, col = hcl(260, 10, 70))
+% rect(40, 0, 60, 10, col = hcl(260, 20, 50))
 
-lines(c(-18.75, -11.25), c(52.5, 67.5), lty = 2)
-lines(c(-8.75, -1.25), c(72.5, 87.5), lty = 2)
-lines(c(18.75, 11.75), c(52.5, 67.5), lty = 2)
-lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
-@ 
-\caption{Residual-based shadings in HSV (upper) and HCL space (lower).}
-\label{fig:shadingHSVHCL}
-\end{center}
-\end{figure}
+% lines(c(-18.75, -11.25), c(52.5, 67.5), lty = 2)
+% lines(c(-8.75, -1.25), c(72.5, 87.5), lty = 2)
+% lines(c(18.75, 11.75), c(52.5, 67.5), lty = 2)
+% lines(c(8.75, 1.25), c(72.5, 87.5), lty = 2)
+% @ 
+% \caption{Residual-based shadings in HSV (upper) and HCL space (lower).}
+% \label{fig:shadingHSVHCL}
+% \end{center}
+% \end{figure}
 
 
 <<hclshading1>>=
@@ -1653,6 +1683,7 @@ for rheumatoid arthritis on a group of female patients using the
 maximum shading (see Figure \ref{fig:maximum}):
 
 <<arthritis>>=
+set.seed(4711)
 mosaic(~ Treatment + Improved, data = Arthritis, subset = Sex == "Female",
        gp = shading_max)
 @
