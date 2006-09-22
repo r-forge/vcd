@@ -20,7 +20,7 @@ pairs_diagonal_text(varnames = TRUE, gp_vartext = gpar(fontsize = 17, fontface =
   gp_leveltext = gpar(), gp_border = gpar(), pos = c("right","top"),
   distribute = c("equal","margin"), rot = 0, \dots)
 pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
-  alternate_labels = TRUE, offset_labels = -0.4, offset_varnames = 0,
+  offset_labels = -0.4, offset_varnames = 0,
   gp = NULL, fill = "grey", ...)
 }
 \arguments{
@@ -73,9 +73,6 @@ pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
     (\samp{top}, \samp{right}, \samp{bottom}, and \samp{left}), in which
     case the non-named arguments specify the default values (recycled as
     needed), overloaded by the named arguments.}
-  \item{alternate_labels}{vector of logicals indicating whether labels should
-    be alternated on the top/bottom (left/right) side of the plot for a
-    particular dimension.}
   \item{offset_labels, offset_varnames}{numeric vector of length 4
     indicating the offset of the
     labels (variable names) for each of the four sides of the plot.}
