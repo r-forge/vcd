@@ -135,7 +135,7 @@ pairs(UCBAdmissions, diag_panel = pairs_text)
 pairs(UCBAdmissions, upper_panel = pairs_assoc, shade = TRUE)
 pairs(hec, highlighting = 2, diag_panel_args = list(fill = grey.colors))
 pairs(hec, highlighting = 2, diag_panel = pairs_diagonal_mosaic,
-           diag_panel_args = list(fill = grey.colors))
+           diag_panel_args = list(fill = grey.colors, alternate_labels =TRUE))
 
 }
 \keyword{hplot}

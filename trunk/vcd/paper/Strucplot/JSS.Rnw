@@ -714,7 +714,7 @@ Titanic data, this time collapsed over `Survived' to investigate the
 structure of crew and passengers:
 
 <<subsetting,results=verbatim>>=
-(tit <- structable(~ Sex + Class + Age, data = Titanic))
+(tit <- structable(~ Sex + Class + Age, data = Titanic[,,2:1,]))
 tit["Male",]
 tit["Male", c("1st","2nd","3rd")]
 @ 
@@ -777,51 +777,17 @@ This idea applies to almost all
 vectorized arguments in the strucplot framework (with
 \code{split\_vertical} as a prominent exception).
 
-Since mosaic displays are ``conditional plots'' by definition, we can
-also use one single mosaic for stratified plots.
-The formula interface of \codefun{mosaic} allows the
-specification of conditioning variables (see Figure \ref{fig:conditioning}):
-
-<<Conditioning>>=
-mosaic(~ Age + Class | Sex, data = tit, split_vertical = TRUE, keep_aspect_ratio = FALSE)
-@
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[p]
-\begin{center}
-<<Conditioningfig,fig=TRUE,echo=FALSE,width=12>>=
-<<Conditioning>>
-@
-\caption{Mosaic plot again visualizing the 
-distribution of class and age, given gender, this time using a
-single mosaic plot. In contrast to Figure \ref{fig:parttable}, this
-plot also visualizes the marginal distribution of `Sex'.}
-\label{fig:conditioning}
-\end{center}
-\end{figure}
-\setkeys{Gin}{width=0.7}
-
-\noindent The effect of using this kind of formula is that
-conditioning variables are permuted ahead of the the conditioned variables
-in the table, and that \codefun{spacing\_conditional} is used as
-default to better
-distinguish conditioning from conditioned dimensions.
-This spacing uses equal space between tiles of conditioned variables,
-and increasing space between tiles of conditioning variables. In
-addition, we release the fixed aspect ratio to get less distorted margins.
-
 The \codefun{cotabplot} function does a much better job on this task:
 it arranges stratified strucplot displays 
 in a lattice-like layout, conditioning on variable \emph{levels}.
 The plot in Figure \ref{fig:cotabplot} shows hair and eye color, given sex:
 
 <<cotabplot>>=
-cotabplot(~ Age + Class | Sex, data = tit, panel_args = list(margins = 3), 
-          labeling = labeling_left, tl_labels = c(Class = FALSE))
+cotabplot(~ Class + Age | Sex, data = tit, split_vertical = TRUE)
 @
 
 \setkeys{Gin}{width=\textwidth}
-\begin{figure}[h]
+\begin{figure}[p]
 \begin{center}
 <<cotabplotfig,fig=TRUE,echo=FALSE,height=6,width=11>>=
 <<cotabplot>>
@@ -834,10 +800,52 @@ cotabplot(~ Age + Class | Sex, data = tit, panel_args = list(margins = 3),
 \end{center}
 \end{figure}
 \setkeys{Gin}{width=0.7\textwidth}
+%\noindent The \code{labeling\_args} argument modifies the labels'
+%appearance: here, to be left-aligned and unclipped
+%(see Section \ref{sec:labeling}).
 
-\noindent The \code{labeling\_args} argument modifies the labels'
-appearance: here, to be left-aligned and unclipped
-(see Section \ref{sec:labeling}).
+\noindent Visualizing the strata separately `hides' the distribution of the
+conditioning variable(s) which may or may not be appropriated or
+sensible in a particular analysis step. If we wish to keep the
+information on the marginal distribution(s), we can use one single
+mosaic for the stratified plot since mosaic displays are 
+``conditional plots'' by definition. We just need to make sure that
+conditioning variables are used first for splitting. 
+Both the default and the formula interface of \codefun{mosaic} allow the
+specification of conditioning variables (see Figure \ref{fig:conditioning}):
+
+<<Conditioning1>>=
+mosaic(tit, conditional = "Sex", split_vertical = c(TRUE, TRUE, FALSE), 
+       keep_aspect_ratio = FALSE)
+@ 
+<<Conditioning2>>=
+mosaic(~ Class + Age | Sex, data = tit, split_vertical = c(TRUE, TRUE, FALSE), 
+       keep_aspect_ratio = FALSE)
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[h]
+\begin{center}
+<<Conditioningfig,fig=TRUE,echo=FALSE,width=12>>=
+<<Conditioning2>>
+@
+\caption{Mosaic plot again visualizing the 
+distribution of class and age, given gender, this time using a
+single mosaic plot. In contrast to Figure \ref{fig:parttable}, this
+plot also visualizes the marginal distribution of `Sex'.}
+\label{fig:conditioning}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.7}
+
+\noindent The effect of using this is that
+conditioning variables are permuted ahead of the the conditioned variables
+in the table, and for the formula interface, 
+that \codefun{spacing\_conditional} is used as default to better
+distinguish conditioning from conditioned dimensions.
+This spacing uses equal space between tiles of conditioned variables,
+and increasing space between tiles of conditioning variables. In
+addition, we release the fixed aspect ratio to get less distorted margins.
 
 Another high-level function for visualizing conditional independence
 models are the \codefun{pairs} methods for table and structable objects.
@@ -847,7 +855,7 @@ The function produces, by default, a plot matrix
 having strucplot displays in the off-diagonal panels, and
 the variable names (optionally, with univariate statistics) in the diagonal cells. 
 Figure \ref{fig:pairs} shows a pairs display for the
-\data{HairEyeColor} data with univariate mosaics in the diagonal,
+\data{Titanic} data with univariate mosaics in the diagonal,
 and mosaic plots visualizing mutual independence in the upper and lower triangles.
 Due to the inherent asymmetry of mosaic displays, the corresponding plots in the
 upper and lower triangle differ depending on which variable is used first
@@ -861,15 +869,9 @@ given the first one, and the shading helps identifying the factor levels in
 the second variable.
 
 <<pairs>>=
-pairs(hec, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
-      diag_panel_args = list(fill = grey.colors))
+pairs(tit, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
+      diag_panel_args = list(fill = grey.colors, alternate_labels = FALSE))
 @
-
-% auch möglich mit Titanic-Daten:
-% <<pairs>>=
-% pairs(tit, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
-%       diag_panel_args = list(fill = grey.colors, alternate_labels = FALSE))
-% @
 
 
 %\setkeys{Gin}{width=\textwidth}
@@ -879,7 +881,7 @@ pairs(hec, highlighting = 2, diag_panel = pairs_diagonal_mosaic,
 <<pairsfig,fig=TRUE,echo=FALSE,width=8,height=8>>=
 <<pairs>>
 @
-\caption{Pairs plot for the \data{HairEyeColor} data.}
+\caption{Pairs plot for the \data{Titanic} data.}
 \label{fig:pairs}
 \end{center}
 \end{figure}
@@ -912,7 +914,6 @@ becomes increasingly difficult with
 higher dimensionality. Therefore, this plot is typically used with a suitable 
 residual-based shading (see Section \ref{sec:shading}).
 
-
 \subsection{Interactive plot modifications}
 
 All strucplot core functions are supposed to produce conditional hierarchical
@@ -924,7 +925,7 @@ labeling functions, to access specific tiles after they have been
 plotted. The naming convention for the viewports is:
 
 \begin{center}
-\code{cell:\emph{Variable1}=\emph{Level1},\emph{Variable2}=\emph{Level2}} \dots
+\code{[Optional prefix]cell:\emph{Variable1}=\emph{Level1},\emph{Variable2}=\emph{Level2}} \dots
 \end{center}
 
 \noindent Clearly, these names depend on the splitting.
@@ -981,6 +982,40 @@ assoc(tab, gp = gpar(fill = x))
 \end{center}
 \end{figure}
 
+\subsection{Performance Issues}
+\label{sec:performance}
+
+As stated above, the implementation of strucplot displays is based on
+creating and nesting \pkg{grid} viewports. The main time-consuming steps performed by
+the core functions are the follwing:
+
+\begin{enumerate}
+\item recursively, create a tree of nested viewports
+\item push the whole tree, i.e., add it to the system tree maintained
+  by the \pkg{grid} engine
+\item one by one, seek all cells of the strucplot display and add
+  plot-specific content (rectangles for mosaics, bars for association
+  plots, etc.)
+\end{enumerate}
+
+\noindent All these operations scale linearly with the amount of
+created viewports. For a $d$-dimensional table with $k_i$
+levels, $i=1 \dots d$, the total number of needed viewports
+$T_d$ can roughly be estimated as:
+
+\begin{equation}
+  \label{eq:numbervp}
+  T_d = \sum_{i=1}_d \prod_{j \le i} k_j
+\end{equation}
+
+\noindent Assuming an equal number for all dimensions, we obtain:
+
+\begin{equation}
+  \label{eq:equalvp}
+  T_d = \sum_{i=1}_d k^i = \frac{k(k^d-1)}{k-1}
+\end{equation}
+
+\noindent and so the time complexity for drawing a strucplot display is of order $O(k^d)$.
 
 \section{Residual-based shadings}
 \label{sec:shading}
