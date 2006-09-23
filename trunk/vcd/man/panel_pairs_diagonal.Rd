@@ -13,7 +13,8 @@ pairs_barplot(gp_bars = NULL,
   gp_leveltext = gpar(),
   just_leveltext = c("center", "bottom"),
   just_vartext = c("center", "top"),
-  rot = 0, abbreviate = FALSE, check_overlap = TRUE, fill = "grey", \dots)
+  rot = 0, abbreviate = FALSE, check_overlap = TRUE, fill = "grey",
+  var_offset = unit(1, "npc"), \dots)
 pairs_text(dimnames = TRUE, gp_vartext = gpar(fontsize = 17), 
   gp_leveltext = gpar(), gp_border = gpar(), \dots) 
 pairs_diagonal_text(varnames = TRUE, gp_vartext = gpar(fontsize = 17, fontface = "bold"),
@@ -76,6 +77,9 @@ pairs_diagonal_mosaic(split_vertical = TRUE, margins = unit(0, "lines"),
   \item{offset_labels, offset_varnames}{numeric vector of length 4
     indicating the offset of the
     labels (variable names) for each of the four sides of the plot.}
+  \item{var_offset}{object of class \code{"unit"} specifying the
+        offset of variable names from the bottom of the barplots
+        created by \code{pairs_barplot}. If numeric, the unit defaults to "npc".}
   \item{\dots}{other parameters passed to the underlying graphics
     functions.}
 }

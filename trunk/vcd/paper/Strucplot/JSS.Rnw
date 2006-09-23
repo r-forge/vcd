@@ -302,8 +302,9 @@ the concepts of generating functions and graphical appearance control
 functions can be combined to provide a flexible customization of
 complex graphical displays as created by the strucplot framework.
 Sections \ref{sec:labeling} and \ref{sec:spacing} discuss in detail the labeling
-and spacing features, respectively, before Section \ref{sec:conclusion}
-concludes the work.
+and spacing features, respectively. Section \ref{sec:example}
+exemplifies the framework in the analysis of a four-way data set, 
+before Section \ref{sec:conclusion} concludes the work.
 
 \section[The strucplot framework]{The strucplot framework}
 \label{sec:strucplot}
@@ -488,7 +489,7 @@ as well as one (artificial) dichotomous variable (gender). The
 \codefun{structable} function (quite similar to \codefun{ftable} in
 base \proglang{R}, but allowing the specification of split directions):
 
-<<structable,results=verbatim>>=
+<<structable,echo=TRUE,results=verbatim>>=
 (hec <- structable(Eye ~ Sex + Hair, data = HairEyeColor))
 @
 
@@ -1001,21 +1002,24 @@ the core functions are the follwing:
 \noindent All these operations scale linearly with the amount of
 created viewports. For a $d$-dimensional table with $k_i$
 levels, $i=1 \dots d$, the total number of needed viewports
-$T_d$ can roughly be estimated as:
+$T_d$ can roughly be estimated as
 
 \begin{equation}
   \label{eq:numbervp}
-  T_d = \sum_{i=1}_d \prod_{j \le i} k_j
+  T_d = k_1 + k_1k_2 + \dots + k_1 \dots k_d = \sum_{i=1}^d \prod_{j \le i} k_j
 \end{equation}
 
-\noindent Assuming an equal number for all dimensions, we obtain:
+\noindent since we first push the $k_1$ viewports for the levels of the
+first dimension, then, for \emph{each} of those, the $k_2$ levels of
+the second dimension, etc. Assuming an equal number of levels $k$
+for all dimensions, we obtain:
 
 \begin{equation}
   \label{eq:equalvp}
-  T_d = \sum_{i=1}_d k^i = \frac{k(k^d-1)}{k-1}
+  T_d = \sum_{i=1}^d k^i = \frac{k(k^d-1)}{k-1}
 \end{equation}
 
-\noindent and so the time complexity for drawing a strucplot display is of order $O(k^d)$.
+\noindent and so the time complexity for drawing a strucplot display is of order $k^d$.
 
 \section{Residual-based shadings}
 \label{sec:shading}
@@ -2182,6 +2186,170 @@ variables (`PremaritalSex' and `ExtramaritalSex'). This
 spacing is the default when conditional variables are specified for a
 strucplot display (see Section \ref{sec:strucplot}).
 
+\section{Example: the Ovarian Cancer Data}
+\label{sec:example}
+
+In the following, we demonstrate some of the described techniques in
+analyzing the Ovarian Cancer data set.
+The data origins from \citep{vcd:obel:1975} and is 
+about a retrospective study of ovary cancer
+carried out in 1973.  Information was obtained from 299 women, who
+were operated for ovary cancer 10 years before. The data consists of
+four binary variables: the `stage' of the cancer at the time of
+operation (levels: early, advanced), the type of `operation' performed
+(radical, limited), the `survival' status after 10 years (yes, no),
+and `xray' indicating whether X-ray treatment was received (yes,
+no). 
+
+The dataset in \pkg{vcd} comes pretabulated in a data frame, so we
+first create the four-way table:
+
+<<oc1>>=
+tab <- xtabs(Freq ~ stage + operation + xray + survival, data = OvaryCancer)
+@ 
+
+\noindent A `flattened' textual representation can be obtained using \codefun{structable}:
+
+<<oc2,echo=TRUE,results=verbatim>>=
+structable(survival ~ ., data = tab)
+@ 
+
+\noindent A first overview can be obtained using a pairs plot (Figure \ref{fig:ocpairs}):
+
+<<oc3>>=
+dpa <- list(var_offset = 1.2, rot = -30, just_leveltext= "left")
+pairs(tab, diag_panel_args = dpa)
+@ 
+
+\begin{figure}[h]
+\begin{center}
+<<ocpairs,echo=FALSE,fig=TRUE>>=
+<<oc3>>
+@ 
+\caption{Pairs plot for the \data{OvaryCancer} data showing mosaic displays for all pairwise distributions and bar plots for all marginal distributions.}
+\label{fig:ocpairs}
+\end{center}
+\end{figure}
+
+\noindent The pairs plot, by default, creates mosaic displays for all pairwise 
+variable combinations, and bar plots in the diagonal to visualize the absolute 
+frequencies of the variables. The \texttt{var\_offset} argument modifies the offset of the 
+(centered) variable names to avoid overlap with the bars. 
+Additionally, we use the \texttt{rot} and the
+\texttt{just\_leveltext} arguments to rotate the level names, again to avoid their overlap.
+First, we consider the marginal distributions. The study design involved 
+(nearly) the same number of survived (150) and deceased (149) patients. Similarly balanced,
+158 cases were in an advanced and 141 in an early stage. Most patients (251, 84\%) 
+were treated with a radical operation, and 186 (62\%) got X-ray treatment. Next, we inspect
+the two-way interaction of the influencing factors (`stage', `operation', and `xray'): the
+corresponding mosaics exhibit symmetric, regular shapes with aligned tiles, 
+which indicate no marginal interaction between these variables. 
+The same is true for the interactions of `survival'
+with `operation' and `xray', respectively. Only the stage seems to influence
+survival: here, the tiles are ``shifted''.
+
+A different view on the data can be obtained using a doubledecker plot, explaining
+survival by the three other factors (Figure \ref{fig:ocdoubledecker}):
+
+<<oc4>>=
+doubledecker(survival ~ stage + operation + xray, data = tab)
+@ 
+
+\begin{figure}[h]
+\begin{center}
+<<ocdoubledecker,echo=FALSE,fig=TRUE>>=
+<<oc4>>
+@ 
+\caption{Doubledecker plot for the \data{OvaryCancer} data showing the
+ conditional distribution of `xray', given `operation', given `stage', and with
+ `survival' highlighted.}
+\label{fig:ocdoubledecker}
+\end{center}
+\end{figure}
+
+\noindent From a technical point of view, the display is constructed as a mosaic plot
+showing the conditional distribution of `survival', given `xray', given `operation', 
+given `stage', with vertical splits for the conditioning variables and horizontal ones for
+`survival'. Additionally, there is zero space between the tiles of the last dimension and
+a binary shading is used for survived and deceased patients.
+Conceptually, this plot is interpreted as a mosaic plot of just the influencing
+variables, with `survival' highlighted in the tiles. Thus, the plot really shows
+the influence of the ``explanatory'' variables on `survival'. Clearly, the survival
+rate is higher among patients in an early stage, but neither radical operation 
+nor X-ray treatment seem to improve the situation. From this exploratory
+phase, it even seems that for patients in an
+early stage with a limited operation, no X-ray treatment would be better, 
+and that for patients in an advanced stage, limited in contrast to radical 
+operation would improve the chance of survival. %'
+
+To visualize inference results, we can make use of residual-based shadings. First, we
+again use the pairs plot display, this time using color to bring out departures from
+the hypothesized marginal independence models (Figure \ref{fig:ocpairsshaded}):
+
+<<oc5>>=
+pairs(tab, diag_panel_args = dpa, gp = shading_max)
+@ 
+
+\begin{figure}[h]
+\begin{center}
+<<ocpairsshaded,echo=FALSE,fig=TRUE>>=
+<<oc5>>
+@ 
+\caption{Pairs plot for the \data{OvaryCancer} data showing mosaic displays for all pairwise distributions and bar plots for all marginal distributions. The colored cells show the
+violation of the independence hypothesis for `stage' and `survival'.}
+\label{fig:ocpairsshaded}
+\end{center}
+\end{figure}
+
+\noindent Only the mosaics showing the interaction of `stage' and `survival' have 
+colored cells, indicating that the survival rate of patients in an early stage is
+higher than would be expected under (marginal) independence. The hypotheses of
+independence are not rejected for all other marginal interactions. Next, we investigate
+log-linear models for the four-way table. The default model used by \codefun{mosaic} is
+the total independence model, visualized in Figure \ref{fig:ocmosaictotal}:
+
+<<oc6>>=
+mosaic(tab, shade = TRUE)
+@ 
+
+\begin{figure}[h]
+\begin{center}
+<<ocmosaictotal,echo=FALSE,fig=TRUE>>=
+<<oc6>>
+@ 
+\caption{Mosaic plot for the \data{OvaryCancer} data, with residual-based shading
+for the (clearly rejected) default hypothesis of total independence of all variables.}
+\label{fig:ocmosaictotal}
+\end{center}
+\end{figure}
+
+\noindent The model is clearly rejected (P-value: 0.000). From the exploratory phase of
+our analysis, we (only) suspect `stage' to be influential on the survival rate. A 
+corresponding hypothesis is that `survival' be independent of `xray' and `operation', given
+`stage'. The model is specified using the \texttt{expected} argument, 
+either using the \codefun{loglin} interface or 
+the \codefun{loglm} formula interface (the resulting mosaic plot is shown in Figure
+\ref{fig:ocmosaicstage}):
+
+<<oc7>>=
+mosaic(tab, expected = ~ (survival + operation * xray) * stage)
+@ 
+
+\begin{figure}[h]
+\begin{center}
+<<ocmosaicstage,echo=FALSE,fig=TRUE>>=
+<<oc7>>
+@ 
+\caption{Mosaic plot for the \data{OvaryCancer} data, with residual-based shading
+for the hypothesis of `survival' being independent of `xray' and `operation', given
+`stage'. The hypothesis is not rejected.}
+\label{fig:ocmosaicstage}
+\end{center}
+\end{figure}
+
+\noindent Thus, based on this data, only pre-diagnosis seems to matter in ovarian
+cancer therapy.
+
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -2224,6 +2392,10 @@ system. In the following, we give a short description of each data set.
   gender in 592 statistics
   students. The gender information is artificial. Source: \cite{vcd:Snee:1974}.
   Package: \pkg{datasets} (included in base \proglang{R}).
+\item[\texttt{OvaryCancer}]  Data about a retrospective study of ovary cancer
+     carried out in 1973.  Information was obtained from 299 women, who
+     were operated for ovary cancer 10 years before. Source:
+     \cite{vcd:obel:1975}. Package: \pkg{vcd}.
 \item[\texttt{PreSex}]  Data from \cite{vcd:thornes+collard:1979} reported in 
   \cite{vcd:gilbert:1981}, on pre- and extra-marital sex and divorce. Package:
   \pkg{vcd}.
@@ -2246,7 +2418,7 @@ system. In the following, we give a short description of each data set.
 
 \begin{itemize}
 
-\item Mosaic plot for the \data{Arthiritis} data in Figure \ref{fig:arthritis}:
+\item Mosaic plot for the \data{Arthritis} data in Figure \ref{fig:arthritis}:
 \begin{Sinput}
 mosaic(art, gp = shading_max, split_vertical = TRUE)
 \end{Sinput}
