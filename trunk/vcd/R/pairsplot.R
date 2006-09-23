@@ -170,8 +170,11 @@ pairs_barplot <- function(gp_bars = NULL,
                           rot = 0, abbreviate = FALSE,
                           check_overlap = TRUE,
                           fill = "grey",
+                          var_offset = unit(1, "npc"),
                           ...)
   function(x, i) {
+    if (!is.unit(var_offset))
+      var_offset <- unit(var_offset, "npc")
     dn <- names(dimnames(x))
     x <- margin.table(x, i)
     if (is.function(fill)) fill <- rev(fill(dim(x)))
@@ -195,7 +198,7 @@ pairs_barplot <- function(gp_bars = NULL,
               x = xpos - halfstep, just = just_leveltext, gp = gp_leveltext,
               check.overlap = check_overlap)
     popViewport(1)
-    grid.text(names(dimnames(x)), y = 1, just = just_vartext, gp = gp_vartext)
+    grid.text(names(dimnames(x)), y = var_offset, just = just_vartext, gp = gp_vartext)
 
   }
 class(pairs_barplot) <- "grapcon_generator"

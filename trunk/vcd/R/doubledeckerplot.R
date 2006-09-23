@@ -10,6 +10,9 @@ function(formula, data = NULL, ..., main = NULL)
     if (is.logical(main) && main)
       main <- deparse(substitute(data))
     
+    if (is.structable(data))
+      data <- as.table(data)
+
     m <- match.call(expand.dots = FALSE)
     edata <- eval(m$data, parent.frame())
     
@@ -34,6 +37,8 @@ function(formula, data = NULL, ..., main = NULL)
           dat <- margin.table(dat, ind)
         } else {
           ind <- match(dep, names(dimnames(dat)))
+          if (is.na(ind))
+            stop(paste("Can't find", dep, "in", deparse(substitute(data))))
           dat <- aperm(dat, c(seq(along = dim(dat))[-ind], ind))
         }
         doubledecker.default(dat, main = main, ...)
@@ -58,6 +63,7 @@ doubledecker.default <- function(x,
                          main = NULL, 
                          keep_aspect_ratio = FALSE,
                          ...) {
+  x <- as.table(x)
   d <- dim(x)
   l <- length(d)
   if (is.character(depvar))
