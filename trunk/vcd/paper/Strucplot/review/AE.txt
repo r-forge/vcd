@@ -1,0 +1,23 @@
+AE report for JSS submission #203
+
+This paper describes the vcd package that allows one through mosaic,
+association and sieve plots to visualize multivariate categorical data.
+The paper is well written and I would recommend to be tentatively
+accepted. However, a minor revision is necessary before publication. The
+following points need to be addressed in the revision:
+
+(1) The structure of the paper could be improved. The various types
+of plots used for visualizing multiway contingency tables should be 
+introduced (their main features described and examples shown) in
+the introductory section.
+
+(2) At the end of the paper (new section) a more challenging data set
+should be analyzed using the functionality of the package and the reader
+be walked through this analysis.
+
+(3) Computational/performance issues should be briefly addressed.
+
+(4) All the comments raised in the referee's report should be addressed.
+However, I find section 3.3 useful and would like the authors to keep it 
+in its current form. 
+
