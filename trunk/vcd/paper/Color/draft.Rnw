@@ -50,6 +50,8 @@ collection of examples is available via \verb/help("rainbow_hcl")/ that provides
 more comparisons between existing \proglang{R} palettes (based on HSV colors) and
 the HCL color palettes.
 
+%%FIXME: what to say about ColorBrewer
+
 \section{Color spaces} \label{sec:spaces}
 
 For choosing color palettes, it is imperative to have an understanding
@@ -61,7 +63,7 @@ distinct stages: 1.~perception of \textit{light/dark} contrasts (monochrome only
 \cite{vcd:Ihaka:2003} for more details and references.
 
 Due to these three color axes, colors are typically described as
-locations in a 3-dimensional spaces. However, human perception of color
+locations in 3-dimensional spaces. However, human perception of color
 does not correspond to the physiological axes above, but rather to polar
 coordinates in the color plane (yellow/blue vs.~green/red) plus a third
 light/dark axis. Thus, perceptually-based color spaces are defined by three dimensions
@@ -69,7 +71,7 @@ that try to capture
 \begin{enumerate}
   \item \textbf{hue} (dominant wavelength)
   \item \textbf{chroma} (colorfulness)
-  \item \textbf{luminance} (brightness, `amount of gray')
+  \item \textbf{luminance} (brightness, amount of light)
 \end{enumerate}
 
 \setkeys{Gin}{width=0.8\textwidth}
@@ -185,6 +187,8 @@ In \pkg{vcd}, these palettes are available in the function
 rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, ...)
 \end{Soutput}
 
+%%FIXME: briefly explain interface
+
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[p]
 \begin{center}
@@ -246,14 +250,14 @@ different degrees of non-linearity.
 Furthermore, the intensity $i$ could additionally be coded by colorfulness (chroma), e.g.,
   \[ (H, 0 + i^p \cdot C_{\max}, L_{\max} - i^p \cdot (L_{\max} - L_{\min})). \]
 This strategy is depicted in the left panel of Figure~\ref{fig:pal-s-construct} for a blue
-hue $H = 260$ and different combinations of maximal chroma (0, 80 and 100, respecitvely) and
-minimal luminance (30, 30 and 50, respectively). The first two combinations are also
-shown in the first two rows of Figure~\ref{fig:pal-s-examples}. The right panel of
-Figure~\ref{fig:pal-s-construct} shows that the exact same strategy is not possible 
-for the green hue $H = 120$. While the gray colors without chroma can be chosen in 
+hue $H = 260$ and different combinations of maximal chroma ($C_{\max} = 0$, $80$ and $100$,
+respecitvely) and minimal luminance ($L_{\min} = 30$, $30$ and $50$, respectively).
+The first two combinations are also shown in the first two rows of Figure~\ref{fig:pal-s-examples}.
+The right panel of Figure~\ref{fig:pal-s-construct} shows that the exact same strategy
+is not possible  for the green hue $H = 120$. While the gray colors without chroma can be chosen in 
 the same way, there is a stronger trade-off between using dark colors (with low luminance)
 and colorful colors (with high chroma). Hence, the second path from light gray to 
-full green ends at a much lighter color with $L = 75$.
+full green ends at a much lighter color with $L_{\min} = 75$.
 
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[b!]
@@ -286,7 +290,7 @@ if(generate_png) {
 @
 \includegraphics{pal-s-construct}
 \caption{\label{fig:pal-s-construct} Constructing sequential palettes. The chroma/luminance
-plane is show for two hues $H = 260$ (left) and $H = 120$ (right). Colors are chosen by varying
+plane is shown for two hues $H = 260$ (left) and $H = 120$ (right). Colors are chosen by varying
 either only luminance or both luminance and chroma.}
 \end{center}
 \end{figure}
@@ -408,6 +412,7 @@ hues $H = 0$ and 260 with two different paths---with slightly different emphasis
 luminance or chroma contrasts---from a full red over a neutral grey to a full blue.
 These particular hues were chosen because they have rather similar
 chroma/luminance planes, allowing for many different combinations of maximal chroma and luminance.
+%%FIXME: symmetric difference
 As Figure~\ref{fig:pal-s-construct} illustrates, a bit of care is needed to choose two colors
 that are sufficiently similar in their chroma/luminance plane to allow for the same
 luminance and/or chroma contrasts.
@@ -424,7 +429,7 @@ whereas the others use larger ranges on the chroma axis.
 \section{Illustrations}
 
 In this section, we show a few examples for the various types of palettes applied
-to statistical graphics. The first illustration is visualization of a bivariate
+to statistical graphics. The first illustration is a visualization of a bivariate
 density estimation for the Old Faithful geyser eruptions data. Figure~\ref{fig:bkde}
 shows heatmaps of a bivariate kernel density estimate of waiting times between
 and duration of geyser eruptions in Yellowstone National Park. Both use a sequential
@@ -498,11 +503,11 @@ would enter a coalition with the leftists, this lead to a big coalition of CDU a
 Figure~\ref{fig:votes} shows the distribution of votes in this election stratified by 
 province (Bundesland) in a highlighted mosaic display. The order of provinces is from 
 north to south, first for the 10 Western provinces, then for the 6 Eastern provinces. Clearly,
-the SPD performed better in the North and the CDU better in the South; furthermore, the
+the SPD performed better in the North and the CDU better in the South; furthermore,
 Die Linke performed particularly well in the Eastern provinces and the Saarland.
 
 As pointed out in Section~\ref{sec:diverging}, diverging palettes are particularly useful
-when visualizing residuals or correlation (with natural neutral value 0) or probabilities 
+when visualizing residuals or correlations (with natural neutral value 0) or probabilities 
 in 2-class supervised learning (with neutral value 0.5). Examples for both situations are
 provided here. Figure~\ref{fig:arthritis} visualizes the outcome of a double-blind clinical
 trial investigating a new treatment for rheumatoid arthritis. The mosaic rectangles alone
