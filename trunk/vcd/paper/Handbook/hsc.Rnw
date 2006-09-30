@@ -160,14 +160,14 @@ the following aspects:
 e.g., for \proglang{SAS} \cite{vcd:SAS:2005}, \pkg{ViSta} \cite{vcd:young:1996}, 
 \pkg{MANET} \cite{vcd:Unwin+Hawkins+Hofmann:1996},
 \pkg{Mondrian} \cite{vcd:Theus:2003},
-\proglang{R} \cite{vcd:R:2005}, and \proglang{S-PLUS} \cite{vcd:SPLUS:2005}. 
+\proglang{R} \cite{vcd:R:2006}, and \proglang{S-PLUS} \cite{vcd:SPLUS:2005}. 
 Implementations of association and sieve plots can only be found in
 \proglang{R} and \proglang{SAS} (in the latter, these plots are available
 for two-way tables only).
 Table~\ref{tab:compare} gives an overview of the available functionality in these systems.
 The figures in this chapter have all been produced using the
 \proglang{R} \index{R} system, using the extension packages \pkg{vcd} 
-\cite{vcd:Meyer+Zeileis+Hornik:2005} and
+\cite{vcd:Meyer+Zeileis+Hornik:2006} and
 \pkg{scatterplot3d} \cite{vcd:ligges+maechler:2003}
 (Figure~\ref{fig:bars3d} only), all freely available from the
 Comprehensive \proglang{R} Archive Network
@@ -398,7 +398,7 @@ It seems apparent that the distribution of LOS %'
 is similar for monthly and never visited patients, so this two categories actually
 represent one homogenous group (patients visited only casually). Since
 the first splitting variable dominates the plot, it should be chosen
-as to be the explanatory variable.
+to be the explanatory variable.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -431,7 +431,7 @@ of these hypotheses. To fix notations, in the following we consider a
 2-way contingency table with $I$ rows and $J$ columns,
 cell frequencies $\{n_{ij}\}$ for
 $i = 1, \dots, I$ and $j = 1, \dots, J$, and row and column sums
-$n_{i+} = \sum_i n_{ij}$ and $n_{+j} = \sum_j n_{ij}$, respectively. For
+$n_{i+} = \sum_j n_{ij}$ and $n_{+j} = \sum_i n_{ij}$, respectively. For
 convenience, the number of observations is denoted $n = n_{++}$.
 Given an underlying distribution with theoretical cell probabilities
 $\pi_{ij}$, the null hypothesis of independence of the two categorical
@@ -474,7 +474,7 @@ the latter producing tiles of either very high or very low density
 along one of the diagonals.
 In the case of our data, the density of the rectangles is marked along the secondary
 diagonal, indicating a negative association of 
-the two variables. This gives evidence to the fact that for these patients,
+the two variables. This gives evidence for the fact that for these patients,
 visit frequency decreases with the length of stay.
 
 \setkeys{Gin}{width=0.7\textwidth}
@@ -516,7 +516,7 @@ Consistent with the corresponding mosaic and sieve plots,
 we clearly see that too many (too few) patients that stay from 
 2 to 9 (more than 19) years get visited regularly
 than would be expected under the null of independence, and that this pattern is 
-reversed for patients visited less than monthly and that get never visited.
+reversed for patients visited less than monthly or never visited.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -555,7 +555,7 @@ As introduced in the previous section for association plots, the
 investigation of residuals from a posited independence model is of
 major interest in analyzing contingency tables. In the following, we
 will demonstrate how the use of colors can greatly facilitate the
-detection of interesting patterns. Before, we start with some general 
+detection of interesting patterns. We start with some general 
 remarks on colors and color palettes.
 
 \subsection[A Note on Colors and Color Palettes]{A Note on Colors and
@@ -613,7 +613,7 @@ the saturation $S$ (`colorfulness' or `pureness', in $[0, 100]$), and
 the value $V$ (`brightness', amount of gray, in $[0, 100]$).\footnote{In many implementations,
 all three dimensions are scaled to the unit interval instead of the coordinates used here.}
 These intuitive dimensions
-make HSV colors easyier to specifiy than, e.g, RGB colors. 
+make HSV colors easier to specify than RGB colors. 
 However, HSV colors have several disadvantages.
 Most importantly, HSV colors are not perceptually
 uniform because the three HSV dimensions map only poorly to the three
@@ -735,13 +735,13 @@ this theme, such as doubledecker plots, are treated in Chapter III-12.
 \begin{figure}
 \begin{center}
 <<highlight,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
+mycol <- rep(grey.colors(2)[2:1], 1:2)
 mosaic(t(hospital), 
        mar = c(left = 3.5), 
        labeling_args = list(offset_labels = c(left = 0.5), 
          offset_varnames = c(left = 1, top = 0.5), set_labels = 
          list("Visit frequency" = c("Regular","Less than\nmonthly","Never"))),
-       split = TRUE, spacing = spacing_highlighting, 
-       gp = gpar(fill = rep(grey.colors(2)[2:1], 1:2)))
+       split = TRUE, highlighting = 2, gp = gpar(fill = mycol, col = mycol))
 @ 
 \caption{Spine plot with highlighting for the hospital data.}
 \label{fig:highlight}
@@ -1061,10 +1061,10 @@ arranged in a matrix similar to scatterplots in a pairs
 plot. \index{pairs plot}
 The diagonal cells contain the variable names, optionally with
 univariate statistics, whereas the off-diagonal cells feature plots whose
-variables are implicitly specified by the cells' position in the matrix. %'
+variables are implicitly specified by the cells' positions in the matrix. %'
 In Figure~\ref{fig:pairs}, the diagonal cells show bar plots for the
-distribution of the variables, and the off-diagonal cells mosaic plots
-for the corresponding pair of variables. The plots suggest that
+distributions of the variables, and the off-diagonal cells mosaic plots
+for the corresponding pairs of variables. The plots suggest that
 admission differs between male and female students, and between the departments,
 and that the proportion of male and female students varies across the departments.
 In particular, departments A and B have a higher proportion of male students
@@ -1083,7 +1083,7 @@ pairs(UCBAdmissions)
 
 The next step is to investigate three-way interactions among the variables.
 In this example, we have a binary variable of interest (admission)
-that shall be ``explained'' by the others. 
+that is to be ``explained'' by the others. 
 A natural way of representing such a three-way table is to use a mosaic
 display, 
 splitting first in the explanatory variables department and gender and highlighting
@@ -1345,19 +1345,19 @@ Secondary   & No && 2 & 23 & 8 & 52&4&44 \\
 \end{center}
 \end{table}
 
-In a first step, we create a mosaic plot for an exploratory view on the data:
+In a first step, we create a mosaic plot for an exploratory view of the data:
 Attitude towards punishment clearly is the dependent variable 
 here and should be used as the last split via highlighting. 
-Furthermore, we expect age and education to have an influence on both the memory
-and the attitude, hence they should be used first for splitting as stratifying
+Furthermore, we expect age and education to have an influence on both memory
+and attitude, hence they should be used first for splitting as stratifying
 variables. In fact, the question is whether memory has some influence on attitude, given 
 age and education. We choose to create a three-way mosaic plot of the 
 hypothesized explanatory variables (first splitting horizontically by age, 
 then vertically by education, and finally horizontically again by memory), 
 and to have attitude, the dependent variable, 
 highlighted in the tiles (see Figure~\ref{fig:punishhigh}).
-We can see that half of the people have more than 40 years of
-age, most of which of only completed elementary school (much more than 
+We can see that half of the people are more than 40 years of
+age, most of whom of only completed elementary school (much more than 
 in the other age groups). Furthermore, it can be seen that the proportion
 of people with memories of punishments increases with age and that
 the approval rate decreases with education (this, however, is better shown in 
@@ -1366,9 +1366,9 @@ attitude depends on memory, the plot suggests quite clearly (and somewhat
 surprisingly) that for those people with elementary school education,
 a higher proportion \emph{with} memories tends to
 accept moderate punishment of children than those without: 
-experienced violence seems to engender violence again.
+experience of punishment seems to support use of punishment.
 For the other education groups, the picture is less clear: some cells 
-indicate the same association while others do not.
+indicate the same association, while others do not.
 
 \setkeys{Gin}{width=0.7\textwidth}
 \begin{figure}
@@ -1384,24 +1384,24 @@ mosaic(~ age + education + memory + attitude, data = punish, keep = FALSE,
 \end{figure}
 
 In summary, both age and education clearly matter here.
-But is there really any significant influence of memory on the attitude towards 
+But is there really any significant influence of memory on attitude towards 
 punishment apart from that? Or, rephrased as a hypothesis:
 Are memory and attitude conditionally independent, given age and education?
-To focus on this question, we take another model-based view on the data
+To focus on this question, we take another model-based view of the data
 which avoids the distracting influence of the marginal variables (age
 and education): We employ
 partial mosaic plots in a trellis layout (conditioning on age and education) with
 residual-based shading and data-driven cut-offs (see Figure~\ref{fig:punishcotab}).
 This visualization brings out much more clearly that the increased approval rate
-among people with memories of punishments is present mainly in the elementary education
-column and, to a lesser degree, in the age 40+ row. Using, e.g., a 
+among people with memories of punishment is present mainly in the elementary education
+column and, to a lesser degree, in the age 40+ row. Using a 
 permutation test similar to the one discussed in Section \ref{sec:test}, 
 model statistics reveal that the hypothesis is rejected at a significance level of 
 1\%, but the shading clearly shows that this association is
 only significant in two cells (the two older age groups with elementary education)
 where fewer people without memories do not approve punishment than expected under
 (conditional) independence. In the group of people with age between
-25--39, the lighter shading indicates that here,
+25--39, the lighter shading indicates that here
 the association is only significant at the 10\% level.
 
 % ## \setkeys{Gin}{width=0.7\textwidth}
@@ -1424,7 +1424,7 @@ The advantage of the exploratory view
 is to visualize the joint distribution of all variables.
 On the other hand, the visualization might be 
 strongly influenced by the marginal distribution of education over age (in particular
-the large proportion of 40+ people with elementary education)
+the large proportion of 40+ people with elementary education),
 which is not of interest in the conditional independence problem. The
 partial mosaic plot suppresses this effect by complementing the 
 conditioning in the model with conditioning in the visualization.
@@ -1448,11 +1448,11 @@ cotabplot(punish, panel = cotab_coindep, panel_args = list(varnames = FALSE, mar
 
 Mosaic, association, and sieve plots can be used for visualizing multi-way tables
 by applying them to flat representations. Mosaic plots are particularly useful
-for exploratory analysis whereas the other two require specification of a certain
-independence model for which deviations should be brought out. In addition, specialized
-`flavours' of the plots can leverage the
-exploratory (pairs plots, highlighting, doubledecker plots) 
-or model-based analysis (residual-based shading, conditional plots).
+for exploratory analysis, whereas the other two require specification of a certain
+independence model from which deviations should be examined. In addition, specialized
+`flavours' of the plots can leverage
+exploratory analyses (pairs plots, highlighting, doubledecker plots) 
+or model-based analyses (residual-based shading, conditional plots).
 
 \section{Conclusion}
 \label{sec:concl}
