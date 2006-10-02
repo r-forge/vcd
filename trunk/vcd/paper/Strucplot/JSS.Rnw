@@ -26,8 +26,8 @@ can be combined into more complex, specialized plots for visualizing
 conditional independence, GLMs, and the results of
 independence tests. The framework's modular design allows
 flexible customization of the plots' graphical appearance, including 
-shading, labeling, spacing, and legend, by means of \underline{gr}aphical
-\underline{ap}pearance \underline{con}trol (`grapcon') functions. 
+shading, labeling, spacing, and legend, by means of `graphical
+appearance control' functions. 
 The framework is provided by the \proglang{R} package \pkg{vcd}.
 }
 
@@ -97,7 +97,7 @@ art <- xtabs(~Treatment + Improved, data = Arthritis)
 @
 
 \newcommand{\var}[1]{\textit{\texttt{#1}}}
-\newcommand{\data}[1]{`\texttt{#1}'}
+\newcommand{\data}[1]{\texttt{#1}}
 \newcommand{\class}[1]{\textsf{#1}}
 %% \code without `-' ligatures
 \def\nohyphenation{\hyphenchar\font=-1 \aftergroup\restorehyphenation}
@@ -134,7 +134,7 @@ implementations available in many statistical environments.  A
 \emph{mosaic plot} \citep{vcd:Hartigan+Kleiner:1984} is basically an
 area-proportional visualization of (typically, observed) frequencies,
 composed of tiles (corresponding to the cells) created by recursive
-vertical and horizontal splits of a square. Thus, the area of each tile
+vertical and horizontal splits of a rectangle. Thus, the area of each tile
 is proportional to the corresponding cell entry \emph{given} the
 dimensions of previous splits. An \emph{association plot}
 \citep{vcd:Cohen:1980} visualizes the standardized deviations of
@@ -164,62 +164,68 @@ aspects.
 \end{enumerate}
 
 \noindent Current implementations of mosaic displays can be found,
-e.g., for \proglang{SAS} \citep{vcd:SAS:2005}, \proglang{ViSta} \citep{vcd:young:1996}, 
-\proglang{MANET} \citep{vcd:Unwin+Hawkins+Hofmann:1996},
-\proglang{Mondrian} \citep{vcd:Theus:2003},
+e.g., for \proglang{SAS} \citep{vcd:SAS:2005}, \pkg{ViSta} \citep{vcd:young:1996}, 
+\pkg{MANET} \citep{vcd:Unwin+Hawkins+Hofmann:1996},
+\pkg{Mondrian} \citep{vcd:Theus:2003},
 \proglang{R} \citep{vcd:R:2006}, and \proglang{S-PLUS}
 \citep{vcd:SPLUS:2005}. For \proglang{R}, currently three
 implementations do exist in the packages \pkg{graphics} (in base \proglang{R}), 
 \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006},
-and \pkg{iPlots} \citep{vcd:urbanek+wichtrey:2006}, respectively.
+and \pkg{iplots} \citep{vcd:urbanek+wichtrey:2006}, respectively.
 Table \ref{tab:compare} gives an overview of the available functionality in these systems.
-Most environments are available on Windows, Apple Macintosh, and Linux/Unix
-variants, except \proglang{MANET} which is only available for the
-Macinthosh platforms. \proglang{Mondrian} is a JAVA application, as
-well as major parts of the \pkg{iPlots} package.
+Most environments are available on Windows, MacOS, and Linux/Unix
+variants, except \pkg{MANET} which is only available for the
+Macinthosh platforms. 
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{|l|c|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
     \hline
-                             & \proglang{SAS} & \proglang{S-PLUS} &
-                             \proglang{R} & \pkg{ViSta} & \pkg{MANET}
-                             & \pkg{Mondrian}\\\hline
-    Basic functionality      &  $\times$  &   $\times$    & $\times$ &   $\times$   & $\times$& $\times$\\
-    Shape                    &     &        & $\times$ & $\times$  &  $\times$&\\
-    Residual-based shadings  &  $\times$  &        & $\times$ &   highlighting   &($\times$)& ($\times$)\\
-    Conditional Views        &  $\times$  &        & $\times$ & $\times$ &  $\times$&\\
-    Interaction              &     &        & $\times$  &   $\times$   & $\times$& $\times$\\
-    Linking                  &     &        & $\times$  &       & $\times$& $\times$\\
-    Extensible Design        &     &        & $\times$ &       &  &\\
-    Language                 & SAS & S & S,JAVA & XLisp & C++ & JAVA\\
+                             &                &                   
+                             &\multicolumn{3}{c|}{}   &        & &\\
+                             & \proglang{SAS} & \proglang{S-PLUS} 
+                             &\multicolumn{3}{c|}{\proglang{R}} & \pkg{ViSta} & \pkg{MANET}
+                             & \pkg{Mondrian}\\
+                             &                &                   
+                             &\pkg{base}&\pkg{vcd}   &\pkg{iplots}&        & &\\\hline
+
+    Basic functionality      &  $\times$  & $\times$  & $\times$ &$\times$ &$\times$ &   $\times$   & $\times$& $\times$\\
+    Shape                    &            &           &          &         &$\times$ & $\times$  &  $\times$&\\
+    Res.-based shadings  &  $\times$  &        & $\times$ & $\times$ & ($\times$) &     &($\times$)& ($\times$)\\
+    Highlighting             &     &        &   &$\times$   &$\times$  & $\times$ & $\times$& $\times$\\
+    Conditional views        &  $\times$  &        &    &$\times$ &          & $\times$ &  $\times$&\\
+    Interaction              &     &        &   &  &$\times$  &   $\times$   & $\times$& $\times$\\
+    Linking                  &     &        &   &  &$\times$  &       & $\times$& $\times$\\
+    Extensible design        &     &        &  &$\times$ & &       &  &\\
+    Language                 & \proglang{SAS} & \proglang{S} &
+    \proglang{S} & \proglang{S} & \proglang{Java} & \proglang{XLisp} & \proglang{C++} & \proglang{Java}\\
 \hline
   \end{tabular}
   \caption{Comparison of current software environments.}
   \label{tab:compare}
 \end{table}
 
-%%DM%% Fixme: separate columns for iplot, base, and vcd?
-
 Figures \ref{fig:arthritis} to \ref{fig:titanic} illustrate some of these
 extensions (the code is given in Appendix \ref{sec:code}). 
-Figure \ref{fig:arthritis} shows the results from a double-blind clinical trial
+Figure~\ref{fig:arthritis} shows the results from a double-blind clinical trial
 investigating a new treatment for rheumatoid arthritis, using an
 extended mosaic plot with residual-based shading based on the
 maximum statistic: clearly, the new treatment is effective. Figure
 \ref{fig:ucbadmissions} visualizes the well-known UCB admissions data
-by the means of a conditional association plot. The panels show the
+by means of a conditional association plot. The panels show the
 residuals from a conditional independence model (independence of gender
 and admission, given department), stratified by department. Clearly,
 the situation in department A (more women/less men accepted than
-would be expected under the null) causes the rejection of the
-hypothesis of conditional independence. Figure \ref{fig:presex}
+would be expected under the null hypothesis) causes the rejection of the
+hypothesis of conditional independence. Figure~\ref{fig:presex}
 illustrates the conditional independence of premarital and
-extramarital sex, given gender and marital status. The Chi-squared
-test of independence rejects the null hypothesis: possibly, because
-too many men who had premarital sex also had extramarital sex?
-Finally, Figure \ref{fig:titanic} visualizes the `Survival on the Titanic' 
-data using a double-decker plot. Here, a binary response (survival to the disaster)
+extramarital sex, given gender and marital status. The $\chi^2$ test 
+of independence rejects the null hypothesis: possibly, because
+the tendency of people  to have extramarital
+sex when they had premarital sex 
+is particularly marked among married people?
+Finally, Figure~\ref{fig:titanic} visualizes the `Survival on the Titanic' 
+data using a double-decker plot. Here, a binary response (survival of the disaster)
 shall be explained by other factors (class, gender, and age). The blue
 boxes represent the proportion of survived passengers in a particular
 stratum. The proportions of saved women and children are indeed higher
@@ -242,7 +248,8 @@ mosaic(art, gp = shading_max, split_vertical = TRUE)
 \begin{figure}[p]
 \begin{center}
 <<UCBAdmissions,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
-cotabplot(UCBAdmissions, panel = cotab_assoc, shade = TRUE, legend = FALSE)
+cotabplot(UCBAdmissions, panel = cotab_coindep, shade = TRUE, legend = FALSE, 
+          type = "assoc")
 @
 \caption{Conditional association plot for the \data{UCBAdmissions} data.}
 \label{fig:ucbadmissions}
@@ -263,7 +270,7 @@ mosaic(PreSex, condvars = c(1, 4), shade = TRUE)
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<Titanic,fig=TRUE,echo=FALSE,height=6,width=8,results=hide>>=
+<<Titanic,fig=TRUE,echo=FALSE,height=6,width=10,results=hide>>=
 doubledecker(Survived ~ ., data = Titanic, labeling_args = 
              list(set_varnames = c(Sex = "Gender")))
 @
@@ -281,14 +288,16 @@ of being flat representations of contingency tables.  These basic plots,
 as well as specialized displays for conditional independence, can be
 used both for exploratory visualization and model-based analysis.
 Exploratory techniques include specialized displays for the bivariate
-case, as well as pairs and trellis plot-like displays for
+case, as well as pairs and trellis-type displays for
 higher-dimensional tables. Model-based tools include methods suitable
 for the visualization of conditional independence tests (including
 permutation tests), as well as for the visualization of particular GLMs
 (logistic regression, log-linear models). Additionally, two of the
 framework's further strengths are its flexibility and extensibility:
 graphical appearance aspects such as shading, labeling, and spacing are
-modularized by means of `graphical appearance functions', allowing
+modularized by means of ``\underline{\vphantom{g}gr}aphical 
+\underline{\vphantom{g}ap}pearance \underline{\vphantom{g}con}trol''
+(\emph{grapcon}) functions, allowing
 fine-granular customization and user-level extensions.
 
 The remainder of the paper is organized as follows. In
@@ -298,13 +307,13 @@ basic functionality.
 In Section \ref{sec:shading}, we demonstrate how
 (residual-based) shadings support the visualization of log-linear models and
 the results of independence tests. Also, we explain step-by-step how
-the concepts of generating functions and graphical appearance control
-functions can be combined to provide a flexible customization of
+the concepts of generating and grapcon functions
+can be combined to provide a flexible customization of
 complex graphical displays as created by the strucplot framework.
 Sections \ref{sec:labeling} and \ref{sec:spacing} discuss in detail the labeling
 and spacing features, respectively. Section \ref{sec:example}
-exemplifies the framework in the analysis of a four-way data set, 
-before Section \ref{sec:conclusion} concludes the work.
+exemplifies the framework in the analysis of a four-way data set.
+Section \ref{sec:conclusion} concludes the work.
 
 \section[The strucplot framework]{The strucplot framework}
 \label{sec:strucplot}
@@ -328,39 +337,39 @@ for granular control of graphical appearance aspects, including:
 \item the labeling of the tiles
 \end{itemize}
 
-The strucplot framework is highly modularized: Figure \ref{fig:struc}
+The strucplot framework is highly modularized: Figure~\ref{fig:struc}
 shows the hierarchical relationship between the various components. 
 On the lowest level, there are several groups of workhorse and 
 parameter functions that directly or indirectly influence the final
 appearance of the plot (see Table \ref{tab:grapcons} for an overview). 
-These are examples of `\underline{gr}aphical \underline{ap}pearance \underline{con}trol'
-(`grapcon') functions. They are created by generating functions
+These are examples of grapcon functions. They are created by generating functions
 (`grapcon generators'), allowing
-flexible parameterization and extensibility (Figure \ref{fig:struc}
+flexible parameterization and extensibility (Figure~\ref{fig:struc}
 only shows the generators). The generator names
-follow the naming convention \code{\emph{group\_foo}()},  
-where (\code{\emph{group}}) reflects the group the
+follow the naming convention \code{\textit{group\_foo}()},  
+where (\code{\textit{group}}) reflects the group the
 generators belong to (strucplot core, labeling,
 legend, shading, or spacing). The workhorse functions (created by 
-\code{struc\_\emph{foo}()}, 
-\code{labeling\_\emph{foo}()}, and \code{legend\_\emph{foo}()}) 
+\code{struc\_\textit{foo}()}, 
+\code{labeling\_\textit{foo}()}, and \code{legend\_\textit{foo}()}) 
 directly produce graphical output (i.e., ``add ink to the canvas''), whereas
 the parameter functions
-(created by \code{spacing\_\emph{foo}()} and \code{shading\_\emph{foo}()}) compute
+(created by \code{spacing\_\textit{foo}()} and \code{shading\_\textit{foo}()}) compute
 graphical parameters used by the others. The grapcon functions returned by 
-\code{struc\_\emph{foo}()} implement the core functionality, creating the tiles and their
+\code{struc\_\textit{foo}()} implement the core functionality, 
+creating the tiles and their
 content.  On the second level of the framework, a suitable combination
 of the low-level grapcon functions (or, alternatively, corresponding generating functions)
 is passed as ``hyperparameters'' to \codefun{strucplot}.
 This central function 
-sets up the graphical layout using grid viewports (see Figure \ref{fig:layout}),
+sets up the graphical layout using grid viewports (see Figure~\ref{fig:layout}),
 and coordinates the specified core, labeling, shading, and spacing functions to produce 
 the plot. On the third level, we provide
 several convenience functions such as \codefun{mosaic},
 \codefun{sieve}, \codefun{assoc}, and \codefun{doubledecker} which 
 interface \codefun{strucplot} through sensible parameter defaults
 and support for model formulae. Finally, on the fourth
-level, there are `related' \pkg{vcd} functions (such as \codefun{cotabplot}
+level, there are ``related'' \pkg{vcd} functions (such as \codefun{cotabplot}
 and the \codefun{pairs} methods for table objects) 
 arranging collections of plots of the strucplot 
 framework into more complex displays (e.g., by means of panel functions).
@@ -379,27 +388,27 @@ framework into more complex displays (e.g., by means of panel functions).
               & \codefun{labeling\_cells} & cell labels\\
               & \codefun{labeling\_conditional} & border labels 
                                                   for conditioning variables\\
-              && and cell labels for conditioned variables.\\
+              && and cell labels for conditioned variables\\
               & \codefun{labeling\_doubledecker} & draws labels for
               doubledecker plot\\
-              & \codefun{labeling\_lboxed} & left-aligned labels with boxes.\\
+              & \codefun{labeling\_lboxed} & left-aligned labels with boxes\\
               & \codefun{labeling\_left} & left-aligned border labels\\
               & \codefun{labeling\_left2} & left-aligned border
               labels, all labels on top and left border\\
               & \codefun{labeling\_list} & draws a list of labels
               under the plot\\\hline\hline
      shading  & \codefun{shading\_binary} & visualizes the sign of the  residuals\\
-              & \codefun{shading\_Friendly} & implements Friendly-like
-              shading (based on HSV-colors)\\
-              & \codefun{shading\_sieve} & implements Friendly-like
-              shading used for sieve plots\\ && (based on HCL-colors)\\
-              & \codefun{shading\_hcl} & shading based on HCL-colors\\
-              & \codefun{shading\_hsv} & shading based on HSV-colors\\
+              & \codefun{shading\_Friendly} & implements Friendly
+              shading (based on HSV colors)\\
+              & \codefun{shading\_hcl} & shading based on HCL colors\\
+              & \codefun{shading\_hsv} & shading based on HSV colors\\
               & \codefun{shading\_max} & shading visualizing the
-              maximum test statistic\\ && (based on HCL-colors)\\\hline\hline
+              maximum test statistic\\ && (based on HCL colors)\\
+              & \codefun{shading\_sieve} & implements Friendly
+              shading customized for sieve plots\\ && (based on HCL colors)\\\hline\hline
      spacing  & \codefun{spacing\_conditional} & increasing spacing
               for conditioning variables,\\&& equal spacing for
-              conditioned variables.\\
+              conditioned variables\\
               & \codefun{spacing\_dimequal} & equal spacing for each dimension\\
               & \codefun{spacing\_equal} & equal spacing for all dimensions\\
               & \codefun{spacing\_highlighting} & increasing spacing,
@@ -484,13 +493,13 @@ framework into more complex displays (e.g., by means of panel functions).
 
 As an example, consider the \data{HairEyeColor} 
 data containing two polytomous variables (hair and eye color), 
-as well as one (artificial) dichotomous variable (gender). The
+as well as one (artificial) dichotomous gender variable (\code{Sex}). The
 `flattened' contingency table can be obtained using the
 \codefun{structable} function (quite similar to \codefun{ftable} in
 base \proglang{R}, but allowing the specification of split directions):
 
 <<structable,echo=TRUE,results=verbatim>>=
-(hec <- structable(Eye ~ Sex + Hair, data = HairEyeColor))
+(HEC <- structable(Eye ~ Sex + Hair, data = HairEyeColor))
 @
 
 Let us first visualize the contingency table by means of a mosaic plot.
@@ -500,10 +509,10 @@ Let us first visualize the contingency table by means of a mosaic plot.
 % vertical and horizontal splits of a square. Thus, the area of each tile
 % is proportional to the corresponding cell entry \emph{given} the
 % dimensions of previous splits. 
-Figure \ref{fig:observed} depicts the effect of
+The effect of
 
 <<Observed>>=
-mosaic(hec)
+mosaic(HEC)
 @
 
 \noindent equivalent to
@@ -523,20 +532,22 @@ mosaic(~ Sex + Eye + Hair, data = HairEyeColor)
 \end{center}
 \end{figure}
 
-\noindent For zero entries, tiles have zero area and are, additionally,
-marked by small bullets (see, e.g, Figure \ref{fig:doubledecker}). By
-default, these cells are not splitted further. The bullets help
+\noindent depicts the observed frequencies of the \code{HairEyeColor}
+data. If there are zero entries, tiles have zero area and are, additionally,
+marked by small bullets (see, e.g, Figure~\ref{fig:titanic}). By
+default, these cells are not split further. The bullets help
 distinguishing very small cells from zero entries, and are
 particularly useful when color shadings come into play 
 (see the example using the \data{Bundesliga} data in Section \ref{sec:overview}). 
 Note that in contrast to, e.g.,  \codefun{mosaicplot} in base
 \proglang{R}, the default split direction and level ordering in all strucplot
-displays correspond to the textual representation.
+displays correspond to the textual representation produced by the
+print methods.
 It is also possible to visualize the expected values instead of the
-observed values (see Figure \ref{fig:expected}):
+observed values (see Figure~\ref{fig:expected}):
 
 <<Expected>>=
-mosaic(hec, type = "expected")
+mosaic(HEC, type = "expected")
 @
 
 \begin{figure}[p]
@@ -552,10 +563,10 @@ mosaic(hec, type = "expected")
 
 \noindent In order to compare observed and expected values,
 a sieve plot \citep{vcd:riedwyl+schuepbach:1994} 
-could be used (see Figure \ref{fig:sieve}):
+could be used (see Figure~\ref{fig:sieve}):
 
 <<sieve>>=
-sieve(hec)
+sieve(~ Sex + Eye + Hair, data = HEC, spacing = spacing_dimequal(c(2,0,0)))
 @
 
 \begin{figure}[h]
@@ -571,13 +582,13 @@ sieve(hec)
 
 \noindent Alternatively, we can directly inspect the residuals. 
 The Pearson residuals (standardized deviations of observed from expected values) 
-are preferably visualized using association
+are conveniently visualized using association
 plots \citep{vcd:Cohen:1980}. In contrast to \codefun{assocplot} in
 base \proglang{R}, \pkg{vcd}'s \codefun{assoc}
-function scales to more than two variables (see Figure \ref{fig:residuals}):
+function scales to more than two variables (see Figure~\ref{fig:residuals}):
 
 <<Residuals>>=
-assoc(hec, compress = FALSE)
+assoc(HEC, compress = FALSE)
 @
 
 \begin{figure}[p]
@@ -590,37 +601,26 @@ assoc(hec, compress = FALSE)
 \end{center}
 \end{figure}
 
-\noindent The \code{compress} argument keeps distances between tiles
-equal for better comparison.
+\noindent where the \code{compress} argument keeps distances between tiles
+equal.
 
 For both mosaic plots and association plots, 
 the splitting of the tiles can be controlled using the
-\code{split\_vertical} argument (default: alternating splits starting
-with a vertical one). 
+\code{split\_vertical} argument. The default is to alternate splits starting
+with a horizontal one (see Figure~\ref{fig:split}).
 
 <<echo=FALSE>>=
 options(width=60)
 @ 
 
 <<split1>>=
-mosaic(hec, split_vertical = c(TRUE, FALSE, TRUE), 
+mosaic(HEC, split_vertical = c(TRUE, FALSE, TRUE), 
 labeling_args = list(abbreviate = c(Eye = 3)))
 @
 
 <<echo=FALSE>>=
 options(width=70)
 @ 
-
-\noindent (Note that \code{hec}, a \class{structable} object, already includes a
-splitting information which simply gets overloaded in this example.) 
-For compatibility with \codefun{mosaicplot} in base \proglang{R},
-the \codefun{mosaic} function also allows the use of a \code{"direction"} 
-argument taking a vector of \code{"h"} and
-\code{"v"} characters (see Figure \ref{fig:split}):
-
-<<split2>>=
-mosaic(hec, direction = c("h","h","v"))
-@
 
 \begin{figure}[p]
 \begin{center}
@@ -632,51 +632,28 @@ mosaic(hec, direction = c("h","h","v"))
 \end{center}
 \end{figure}
 
+\noindent (Note that \code{HEC}, a \class{structable} object, already includes a
+splitting information which simply gets overloaded in this example.) 
+For compatibility with \codefun{mosaicplot} in base \proglang{R},
+the \codefun{mosaic} function also allows the use of a \code{"direction"} 
+argument taking a vector of \code{"h"} and
+\code{"v"} characters:
+
+<<split2>>=
+mosaic(HEC, direction = c("v","h","v"))
+@
+
 By a suitable combination of splitting, spacing, and
 labeling settings, the functions provided by the strucplot framework
 can be customized in a quite flexible way. For example, 
-\codefun{doubledecker.default} is simply a wrapper for 
-\codefun{strucplot}, setting the right defaults:
-
-<<doubledecker>>=
-doubledecker.default <- 
-  function(x,
-           depvar = length(dim(x)), 
-           margins = c(1, 4, length(dim(x)) + 1, 1),
-           col = rainbow_hcl(tail(dim(x), 1), end = 260),
-           labeling = labeling_doubledecker,
-           spacing = spacing_highlighting,
-           main = NULL, 
-           keep_aspect_ratio = FALSE,
-           ...) {
-  d <- dim(x)
-  l <- length(d)
-  if (is.character(depvar))
-    depvar <- match(depvar, names(dimnames(x)))
-  condvars <- (1:l)[-depvar]
-  x <- aperm(x, c(condvars, depvar))
-  strucplot(x,
-         condvars = l - 1,
-         spacing = spacing,
-         split = c(rep.int(TRUE, l - 1), FALSE),
-         gp = gpar(fill = col),
-         shade = TRUE,
-         labeling = labeling,
-         main = main,
-         margins = margins,
-         legend = NULL,
-         keep_aspect_ratio = keep_aspect_ratio,
-         ...
-         )
-}
-@ 
-
-\noindent Most default settings such as colors, spacing, and labeling are specified via the parameters of
-\codefun{doubledecker.default} and passed through to
+the default method for \codefun{doubledecker} is simply a wrapper for 
+\codefun{strucplot}, setting the right defaults.
+Most default settings such as colors, spacing, and labeling are
+specified via the parameters and passed through to
 \codefun{strucplot}. The additional code just handles the dependent
-variable information, and in particular permutes the table to have the
+variable information, and in particular permutes the table to have the dependent
 variable as the last dimension as required for the doubledecker plot.
-Figure \ref{fig:doubledecker} shows a doubledecker plot of
+Figure~\ref{fig:titanic} shows a doubledecker plot of
 the \data{Titanic} data, explaining the probability of survival (`survived') by age, given
 sex, given class. It is created by:
 
@@ -690,45 +667,46 @@ doubledecker(Titanic)
 doubledecker(Survived ~ Class + Sex + Age, data = Titanic)
 @
 
-\begin{figure}[h]
-\begin{center}
-<<doubledeckerfig,fig=TRUE,echo=FALSE>>=
-<<doubledecker1>>
-@
-\caption{Doubledecker plot for the \data{Titanic} data.}
-\label{fig:doubledecker}
-\end{center}
-\end{figure}
-
 \subsection{Conditional and partial views}
 
 
 So far, we have visualized either full or collapsed tables, as
 suggested by the analysis task at hand. Subtables can be selected in a
-similar way than for objects of class \class{table} using
+similar way as for objects of class \class{table} using
 indexing. Note, however, that subsetting of \class{structable} objects 
 is more restrictive because of their inherent conditional structure. Since the variables
 on both the row and the columns side are nested, 
 subsetting is only possible ``outside-in'', that is, indexing operates
-on blocks defined by the variable levels. In the following, we again use the
-Titanic data, this time collapsed over `Survived' to investigate the
-structure of crew and passengers:
+on blocks defined by the variable levels. In the following, we use the
+Titanic data again, this time collapsed over `Survived' to investigate the
+structure of crew and passengers (and having the \code{Child} and
+\code{Age} labels of the \code{Age} variable swapped for optical clarity):
+
+<<echo=FALSE>>=
+options(width=75)
+@ 
 
 <<subsetting,results=verbatim>>=
-(tit <- structable(~ Sex + Class + Age, data = Titanic[,,2:1,]))
-tit["Male",]
-tit["Male", c("1st","2nd","3rd")]
+(STD <- structable(~ Sex + Class + Age, data = Titanic[,,2:1,]))
+STD["Male",]
+STD["Male", c("1st","2nd","3rd")]
+@ 
+
+<<echo=FALSE>>=
+options(width=70)
 @ 
 
 \noindent \emph{Conditioning} on levels (i.e., choosing a table subset for fixed levels
 of the conditioning variable(s)) is done using the \code{[[} operator. %]]
 Here again, the sequence of conditioning levels is restricted by the
-hierarchical structure of the \class{structable} object:
+hierarchical structure of the \class{structable} object. In the
+following examples, note that compared to subsetting, the first
+dimension(s) have been dropped:
 
 <<conditioning,results=verbatim>>=
-tit[["Male",]]
-tit[[c("Male", "Adult"),]]
-tit[["Male","1st"]]
+STD[["Male",]]
+STD[[c("Male", "Adult"),]]
+STD[["Male","1st"]]
 @ 
 
 \noindent Now, there are several ways for visualizing 
@@ -744,13 +722,13 @@ pushViewport(viewport(layout = grid.layout(ncol = 2)))
 
 <<Variables2>>=
 pushViewport(viewport(layout.pos.col = 1))
-mosaic(tit[["Male"]], margins = c(left = 2.5, top = 2.5, 0), sub = "Male", newpage = FALSE)
+mosaic(STD[["Male"]], margins = c(left = 2.5, top = 2.5, 0), sub = "Male", newpage = FALSE)
 popViewport()
 @ 
 
 <<Variables3>>=
 pushViewport(viewport(layout.pos.col = 2))
-mosaic(tit[["Female"]], margins = c(top = 2.5, 0), sub = "Female", newpage = FALSE)
+mosaic(STD[["Female"]], margins = c(top = 2.5, 0), sub = "Female", newpage = FALSE)
 popViewport(2)
 @
 
@@ -772,8 +750,8 @@ distribution of `Sex' cannot be seen.}
 
 \noindent Note the use of the \code{margins} argument: it takes a
 vector with up to four values whose unnamed components are recycled,
-but ``overruled'' by the named arguments. Thus, in the example, only
-the top margin is set to 2 lines, and all other to 0.
+but ``overruled'' by the named arguments. Thus, in the second example, only
+the top margin is set to 2.5 lines, and all other to 0.
 This idea applies to almost all
 vectorized arguments in the strucplot framework (with
 \code{split\_vertical} as a prominent exception).
@@ -781,10 +759,10 @@ vectorized arguments in the strucplot framework (with
 The \codefun{cotabplot} function does a much better job on this task:
 it arranges stratified strucplot displays 
 in a lattice-like layout, conditioning on variable \emph{levels}.
-The plot in Figure \ref{fig:cotabplot} shows hair and eye color, given sex:
+The plot in Figure~\ref{fig:cotabplot} shows hair and eye color, given sex:
 
 <<cotabplot>>=
-cotabplot(~ Class + Age | Sex, data = tit, split_vertical = TRUE)
+cotabplot(~ Class + Age | Sex, data = STD, split_vertical = TRUE)
 @
 
 \setkeys{Gin}{width=\textwidth}
@@ -796,7 +774,7 @@ cotabplot(~ Class + Age | Sex, data = tit, split_vertical = TRUE)
 \caption{Conditional table plot for the \data{Titanic} data,
   again visualizing the distribution of age and class, given
   gender, using separate mosaic displays like the `manual' plot 
-  in Figure \ref{fig:parttable}.}
+  in Figure~\ref{fig:parttable}.}
 \label{fig:cotabplot}
 \end{center}
 \end{figure}
@@ -805,23 +783,21 @@ cotabplot(~ Class + Age | Sex, data = tit, split_vertical = TRUE)
 %appearance: here, to be left-aligned and unclipped
 %(see Section \ref{sec:labeling}).
 
-\noindent Visualizing the strata separately `hides' the distribution of the
-conditioning variable(s) which may or may not be appropriated or
+\noindent Visualizing the strata separately ``hides'' the distribution of the
+conditioning variable(s) which may or may not be appropriate or
 sensible in a particular analysis step. If we wish to keep the
 information on the marginal distribution(s), we can use one single
 mosaic for the stratified plot since mosaic displays are 
 ``conditional plots'' by definition. We just need to make sure that
 conditioning variables are used first for splitting. 
 Both the default and the formula interface of \codefun{mosaic} allow the
-specification of conditioning variables (see Figure \ref{fig:conditioning}):
+specification of conditioning variables (see Figure~\ref{fig:conditioning}):
 
 <<Conditioning1>>=
-mosaic(tit, conditional = "Sex", split_vertical = c(TRUE, TRUE, FALSE), 
-       keep_aspect_ratio = FALSE)
+mosaic(STD, condvars = "Sex", split_vertical = c(TRUE, TRUE, FALSE))
 @ 
 <<Conditioning2>>=
-mosaic(~ Class + Age | Sex, data = tit, split_vertical = c(TRUE, TRUE, FALSE), 
-       keep_aspect_ratio = FALSE)
+mosaic(~ Class + Age | Sex, data = STD, split_vertical = c(TRUE, TRUE, FALSE))
 @
 
 \setkeys{Gin}{width=\textwidth}
@@ -832,8 +808,8 @@ mosaic(~ Class + Age | Sex, data = tit, split_vertical = c(TRUE, TRUE, FALSE),
 @
 \caption{Mosaic plot again visualizing the 
 distribution of class and age, given gender, this time using a
-single mosaic plot. In contrast to Figure \ref{fig:parttable}, this
-plot also visualizes the marginal distribution of `Sex'.}
+single mosaic plot. In contrast to Figures~\ref{fig:parttable} and \ref{fig:cotabplot}, 
+this plot also visualizes the marginal distribution of \code{Sex}.}
 \label{fig:conditioning}
 \end{center}
 \end{figure}
@@ -841,23 +817,22 @@ plot also visualizes the marginal distribution of `Sex'.}
 
 \noindent The effect of using this is that
 conditioning variables are permuted ahead of the the conditioned variables
-in the table, and for the formula interface, 
-that \codefun{spacing\_conditional} is used as default to better
+in the table, and that \codefun{spacing\_conditional} is used as default to better
 distinguish conditioning from conditioned dimensions.
 This spacing uses equal space between tiles of conditioned variables,
-and increasing space between tiles of conditioning variables. In
-addition, we release the fixed aspect ratio to get less distorted margins.
+and increasing space between tiles of conditioning variables. 
 
-Another high-level function for visualizing conditional independence
-models are the \codefun{pairs} methods for table and structable objects.
+Another set of high-level functions for visualizing conditional independence
+models are the \codefun{pairs} methods for \class{table} and \class{structable} objects.
 In contrast to \codefun{cotabplot} which conditions on variables,
 the \codefun{pairs} methods create pairwise views of the table. 
 The function produces, by default, a plot matrix 
 having strucplot displays in the off-diagonal panels, and
-the variable names (optionally, with univariate statistics) in the diagonal cells. 
-Figure \ref{fig:pairs} shows a pairs display for the
+the variable names (optionally, with univariate displays) in the diagonal cells. 
+Figure~\ref{fig:pairs} shows a pairs display for the
 \data{Titanic} data with univariate mosaics in the diagonal,
-and mosaic plots visualizing mutual independence in the upper and lower triangles.
+and mosaic plots visualizing the corresponding bivariate mosaics
+in the upper and lower triangles.
 Due to the inherent asymmetry of mosaic displays, the corresponding plots in the
 upper and lower triangle differ depending on which variable is used first
 for splitting---inspecting both views might help detecting patterns in a data set. 
@@ -870,8 +845,8 @@ given the first one, and the shading helps identifying the factor levels in
 the second variable.
 
 <<pairs>>=
-pairs(tit, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
-      diag_panel_args = list(fill = grey.colors, alternate_labels = FALSE))
+pairs(STD, highlighting = 2, diag_panel = pairs_diagonal_mosaic, 
+      diag_panel_args = list(fill = grey.colors))
 @
 
 
@@ -888,8 +863,10 @@ pairs(tit, highlighting = 2, diag_panel = pairs_diagonal_mosaic,
 \end{figure}
 \setkeys{Gin}{width=0.7\textwidth}
 
-\noindent (The labels of the variables are to be read from left to
-right and from top to bottom.) In plots produced by \codefun{pairs}, 
+\noindent The labels of the variables are to be read from left to
+right and from top to bottom. In addition, the levels can be matched
+by position with the columns and by shading with the rows.
+In plots produced by \codefun{pairs}, 
 each panel's row and column define two variables $X$ and $Y$ used for the
 specification of four different types of independence: pairwise,
 total, conditional, and joint. The pairwise mosaic
@@ -902,9 +879,9 @@ independence of $X$ and $Y$, given all other variables. The joint independence
 mosaic matrix shows mosaic plots for joint independence of all
 pairs ($X$, $Y$) of variables from the others.
 
-Since the matrix is symmetric, the upper and lower parts can
+Upper and lower parts can
 independently be used to display different 
-types of independence models, or different strucplots displays
+types of independence models, or different strucplot displays
 (mosaic, association, or sieve plots).
 The available panel functions (\codefun{pairs\_assoc}, 
 \codefun{pairs\_mosaic}, and \codefun{pairs\_sieve}) 
@@ -926,15 +903,15 @@ labeling functions, to access specific tiles after they have been
 plotted. The naming convention for the viewports is:
 
 \begin{center}
-\code{[Optional prefix]cell:\emph{Variable1}=\emph{Level1},\emph{Variable2}=\emph{Level2}} \dots
+\code{\emph{[Optional prefix]}cell:\emph{Variable1}=\emph{Level1},\emph{Variable2}=\emph{Level2}} \dots
 \end{center}
 
 \noindent Clearly, these names depend on the splitting.
 The following example shows how to access parts of the plot after it has
-been drawn (see Figure \ref{fig:afterplot}):
+been drawn (see Figure~\ref{fig:afterplot}):
 
 <<viewportnames>>=
-mosaic(~ Hair + Eye, data = hec, pop = FALSE)
+mosaic(~ Hair + Eye, data = HEC, pop = FALSE)
 
 seekViewport("cell:Hair=Blond")
 grid.rect(gp = gpar(col = "red", lwd = 4))
@@ -961,10 +938,10 @@ default. Therefore, the \texttt{pop} argument has to be set to
 In addition to the viewports, the main graphical elements get names
 following a similar construction method. This allows to change
 graphical parameters of plot elements \emph{after} 
-the plotting (see Figure \ref{fig:changeplot}):
+the plotting (see Figure~\ref{fig:changeplot}):
 
 <<changeplot,results=verbatim>>=
-assoc(Eye ~ Hair, data = hec, pop = FALSE)
+assoc(Eye ~ Hair, data = HEC, pop = FALSE)
 getNames()[1:6]
 grid.edit("rect:Hair=Blond,Eye=Blue", gp = gpar(fill = "red"))
 @ 
@@ -983,12 +960,12 @@ assoc(tab, gp = gpar(fill = x))
 \end{center}
 \end{figure}
 
-\subsection{Performance Issues}
+\subsection{Performance issues}
 \label{sec:performance}
 
 As stated above, the implementation of strucplot displays is based on
 creating and nesting \pkg{grid} viewports. The main time-consuming steps performed by
-the core functions are the follwing:
+the core functions are the following:
 
 \begin{enumerate}
 \item recursively, create a tree of nested viewports
@@ -1006,22 +983,22 @@ $T_d$ can roughly be estimated as
 
 \begin{equation}
   \label{eq:numbervp}
-  T_d = k_1 + k_1k_2 + \dots + k_1 \dots k_d = \sum_{i=1}^d \prod_{j \le i} k_j
+  T_d \quad = \quad k_1 + k_1k_2 + \cdots + k_1 \cdots k_d \quad =\quad \sum_{i=1}^d \prod_{j \le i} k_j
 \end{equation}
 
 \noindent since we first push the $k_1$ viewports for the levels of the
 first dimension, then, for \emph{each} of those, the $k_2$ levels of
-the second dimension, etc. Assuming an equal number of levels $k$
-for all dimensions, we obtain:
+the second dimension, etc. If the number of levels is equal ($k$) for
+all dimensions, this simplifies to:
 
 \begin{equation}
   \label{eq:equalvp}
-  T_d = \sum_{i=1}^d k^i = \frac{k(k^d-1)}{k-1}
+  T_d \quad = \quad \sum_{i=1}^d k^i = \frac{k(k^d-1)}{k-1}
 \end{equation}
 
 \noindent and so the time complexity for drawing a strucplot display is of order $k^d$.
 
-\section{Residual-based shadings}
+\section{Shadings}
 \label{sec:shading}
 
 
@@ -1037,8 +1014,7 @@ of the functions of the strucplot framework. This argument basically expects an 
 of class \class{gpar} whose components are arrays of the same shape 
 (length and dimensionality) as the data table (see Section \ref{sec:gp}). 
 For convenience, however, the user can also
-supply a specialized graphical appearance control (``grapcon'') 
-function that computes such an object given a vector of
+supply a grapcon function that computes such an object given a vector of
 residuals, or, alternatively, a generating function that takes
 certain arguments and returns such a grapcon function (see Section
 \ref{sec:shadingcustom}). We provide several shading functions, including
@@ -1052,7 +1028,7 @@ As an example, consider the \data{UCBAdmissions} data.
 In the table aggregated over departments, we
 would like to highlight the (incidentally wrong) impression that there
 were too many male students accepted compared to the presumably
-discriminated female students (see Figure \ref{fig:ucb}):
+discriminated female students (see Figure~\ref{fig:ucb}):
 
 <<ucb,results=verbatim>>=
 (ucb <- margin.table(UCBAdmissions, 1:2))
@@ -1078,13 +1054,13 @@ with appropriate colors (dark cyan for admitted male students and dark
 magenta for rejected female students) and supply them to the \code{fill} component 
 of the \class{gpar} object passed to the \code{gp} argument of \codefun{mosaic}. 
 For visual clarity, we additionally hide the tiles' borders by setting the \code{col} 
-component to 0 (white).
+component to 0 (transparent).
 
 If the parameters specified in the \class{gpar} object are ``incomplete'',
 they will be recycled along the last splitting
 dimension. In the following example based on the \data{Titanic} data, 
 we will highlight all cells corresponding to survived
-passengers (see Figure \ref{fig:recycling}):
+passengers (see Figure~\ref{fig:recycling}):
 
 <<recycling>>=
 mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")), 
@@ -1144,7 +1120,7 @@ fill color (for simplicity, we will treat 0 as positive).
 
 The first method is precomputing the graphical parameters ``by
 hand''. We will use `light blue' color for positive and `light salmon'
-color for negative residuals (see Figure \ref{fig:binary}):
+color for negative residuals (see Figure~\ref{fig:binary}):
 
 <<shading1,results=verbatim>>=
 expected <- independence_table(ucb)
@@ -1312,7 +1288,7 @@ a test statistic: light colors for significant,
 and dark colors for non-significant results. 
 
 As an example, we will visualize the association of hair and eye
-color in the \data{HairEyeColor} data set (see Figure \ref{fig:haireye})
+color in the \data{HairEyeColor} data set (see Figure~\ref{fig:haireye})
 
 <<haireye>>=
 haireye <- margin.table(HairEyeColor, 1:2)
@@ -1341,7 +1317,7 @@ are approximately standard normal which implies that the highlighted cells are t
 residuals \emph{individually} significant at approximately the $\alpha
 = 0.05$ and $\alpha = 0.0001$ levels, respectively. These default cut-off points can
 be changed to alternative values using the \code{interpolate}
-argument (see Figure \ref{fig:interpolate}):
+argument (see Figure~\ref{fig:interpolate}):
 
 <<interpolate>>=
 mosaic(haireye, gp = shading_hsv, gp_args = list(interpolate = 1:4))
@@ -1375,7 +1351,7 @@ ipol <- function(x) pmin(x/4, 1)
 
 \noindent Note that this \codefun{ipol} 
 function maps residuals greater than 4 to a saturation
-level of 1. However, the resulting plot (Figure \ref{fig:continuous}) is 
+level of 1. However, the resulting plot (Figure~\ref{fig:continuous}) is 
 deceiving: 
 
 <<continuous2>>=
@@ -1413,7 +1389,7 @@ shows the relationship of home goals and away
 goals of Germany's premier soccer league in 1995: although there are two
 ``larger'' residuals (one greater than 2, one less then $-2$), the
 $\chi^2$ test does not reject the null hypothesis of
-independence. Consequently, the colors appear dark (see Figure \ref{fig:bundesliga}):
+independence. Consequently, the colors appear dark (see Figure~\ref{fig:bundesliga}):
 
 <<bundesliga>>=
 bl <- xtabs(~ HomeGoals + AwayGoals, data = Bundesliga, subset = Year == 1995)
@@ -1437,7 +1413,7 @@ implementing the shading introduced by \cite{vcd:Friendly:1994}. In addition
 to the defaults of the HSV shading, it uses the border color and line type to 
 redundantly code the residuals' sign. The following example again uses 
 the \data{Bundesliga} data from above, this time using the Friendly 
-scheme and, in addition, an alternative legend (see Figure \ref{fig:friendly}):
+scheme and, in addition, an alternative legend (see Figure~\ref{fig:friendly}):
 
 <<friendly>>=
 mosaic(bl, gp = shading_Friendly, legend = legend_fixed, zero_size = 0)
@@ -1461,7 +1437,7 @@ in the original \proglang{SAS} implementation of the Friendly mosaic plots.)
 As introduced before, the default shading scheme is not
 \codefun{shading\_hsv} but \codefun{shading\_hcl} due to the better
 perceptual characteristics of HCL color space.
-% Figure \ref{fig:shadingHSVHCL} depicts 
+% Figure~\ref{fig:shadingHSVHCL} depicts 
 % HSV space in the upper panel and HCL space in the lower panel.
 % On the left (right) side, we see the color scales for red (blue)
 % hue, respectively. The $x$-axis represents the colorfulness, and the
@@ -1478,8 +1454,8 @@ perceptual characteristics of HCL color space.
 % price of the space being irregularly shaped, making it difficult to automatically select 
 % diverging color palettes. 
 The following example again illustrates the \data{HairEyeColor} data, 
-this time with HCL colors (Figure \ref{fig:hclshading1} depicts the default palette, 
-and Figure \ref{fig:hclshading2} an alternative setting):
+this time with HCL colors (Figure~\ref{fig:hclshading1} depicts the default palette, 
+and Figure~\ref{fig:hclshading2} an alternative setting):
 
 % <<auxiliary_functions,echo=FALSE,results=hide>>=
 % hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fixup = FALSE)
@@ -1719,7 +1695,7 @@ By default, two cut-off points are computed corresponding
 to confidence levels of $90\%$ and $99\%$, respectively.
 In the following example, we investigate the effect of a new treatment
 for rheumatoid arthritis on a group of female patients using the
-maximum shading (see Figure \ref{fig:maximum}):
+maximum shading (see Figure~\ref{fig:maximum}):
 
 <<arthritis>>=
 set.seed(4711)
@@ -1782,7 +1758,7 @@ the problem of overlapping labels can be handled in several ways.
 As an example, consider the \data{Titanic} data, consisting
 of 4 categorical variables: survival (`survived'), gender (i.e., `sex'), age, and
 crew. By default, the variable names and levels are plotted `around' the
-plot in a counter-clockwise way (see Figure \ref{fig:defaults}):
+plot in a counter-clockwise way (see Figure~\ref{fig:defaults}):
 
 <<default>>=
 mosaic(Titanic)
@@ -1802,7 +1778,7 @@ mosaic(Titanic)
 \noindent Note that the last two levels of the `survived' variable do
 overlap, as well as some adult and child labels of the `age' Variable.
 This issue can be addressed in several ways. The `brute force'
-method is to enable clipping for these dimensions (see Figure \ref{fig:clipping}):
+method is to enable clipping for these dimensions (see Figure~\ref{fig:clipping}):
 
 <<clipping>>=
 mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE, Age = TRUE)))
@@ -1829,7 +1805,7 @@ framework can be abbreviated in the following way: unnamed components
 overridden by the named components. Here, the default is \code{FALSE},
 and therefore clipping is enabled only for the `survived' and `age' variables.
 A more sensible solution to the overlap problem is to abbreviate the 
-levels (see Figure \ref{fig:abbreviating}):
+levels (see Figure~\ref{fig:abbreviating}):
 
 <<abbreviating>>=
 mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 3)))
@@ -1867,7 +1843,7 @@ offset_varnames = c(right = 1), offset_labels = c(right = 0.3)), margins = c(rig
 \end{figure}
 
 \noindent Finally, we could also inhibit the output of repeated levels 
-(see Figure \ref{fig:repeat}):
+(see Figure~\ref{fig:repeat}):
 
 <<repeat>>=
 mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
@@ -1886,7 +1862,7 @@ mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
 We now proceed with a few more `cosmetic' features (which do not all
 produce satisfactory results for our sample data).
 A first simple, but effectful modification is to position
-all labels and variables left-aligned:  (see Figure \ref{fig:left}):
+all labels and variables left-aligned:  (see Figure~\ref{fig:left}):
 
 <<left>>=
 mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
@@ -1913,7 +1889,7 @@ mosaic(Titanic, labeling = labeling_left)
 
 \noindent Next, we show how to put all levels to the
 bottom and right margins, and all variable names to the top and left
-margins (see Figure \ref{fig:margins}):
+margins (see Figure~\ref{fig:margins}):
 
 <<margins>>=
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbreviate = c(Survived = 1, Age = 3)))
@@ -1931,7 +1907,7 @@ mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbr
 
 \noindent The \var{tl\_foo} (``top left'') arguments are \code{TRUE} by default. 
 Now, we will add boxes to the labels and additionally
-enable clipping (see Figure \ref{fig:boxes}):
+enable clipping (see Figure~\ref{fig:boxes}):
 
 <<boxes>>=
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, 
@@ -1959,7 +1935,7 @@ mosaic(Titanic, labeling = labeling_cboxed)
 @ 
 
 \noindent Another variant is to put the variable names into the
-same line as the levels (see Figure \ref{fig:labbl}):
+same line as the levels (see Figure~\ref{fig:labbl}):
 
 <<labbl>>=
 mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE,
@@ -1993,7 +1969,7 @@ mosaic(Titanic, labeling = labeling_lboxed, margins = c(right = 4, left = 1, 3))
 
 This labeling draws both variable names and levels in the
 cells. As an example, we use the \data{PreSex} data on pre- and
-extramarital sex and divorce (see Figure \ref{fig:cell}):
+extramarital sex and divorce (see Figure~\ref{fig:cell}):
 
 <<cell>>=
 mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
@@ -2010,7 +1986,7 @@ mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells)
 \end{figure}
 
 \noindent In the case of narrow cells, it might be useful to
-abbreviate labels and/or variable names and turn off clipping (see Figure \ref{fig:cell2}):
+abbreviate labels and/or variable names and turn off clipping (see Figure~\ref{fig:cell2}):
 
 <<cell2>>=
 mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, 
@@ -2029,7 +2005,7 @@ labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, 
 
 \noindent For some data, it might be convenient to combine cell
 labeling with border labeling as done by \codefun{labels\_conditional}
-(see Figure \ref{fig:conditional}):
+(see Figure~\ref{fig:conditional}):
 
 <<conditional>>=
 mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, labeling = labeling_conditional(abbreviate_varnames = TRUE, abbreviate_labels = TRUE, clip = FALSE))
@@ -2050,7 +2026,7 @@ arbitrary text to the cells by supplying a character array in the same
 shape than the data array to the \code{text} argument (cells with missing values
 are ignored). In the following example using the `Titanic' data, 
 this is used to add all observed values greater
-than 5 to the cells after the mosaic has been plotted (see Figure \ref{fig:text}):
+than 5 to the cells after the mosaic has been plotted (see Figure~\ref{fig:text}):
 
 <<text>>=
 mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = 1, Age = 4)), pop = FALSE)
@@ -2073,7 +2049,7 @@ labeling_cells(text = tab, clip = FALSE)(Titanic)
 
 If problems with overlapping labels cannot satisfactorily resolved,
 the last remedy could be to simply list the levels below the plot
-(see Figure \ref{fig:list}):
+(see Figure~\ref{fig:list}):
 
 <<list>>=
 mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
@@ -2100,7 +2076,7 @@ Spacing of strucplot displays is customizable in a similar way than shading. The
 list of \class{unit} vectors, one for each dimension, specifying the
 space between the tiles corresponding to the levels. 
 Consider again the introductory example of the \data{Arthritis} data 
-(Figure \ref{fig:arthritis}). Since we are interested in the effect of
+(Figure~\ref{fig:arthritis}). Since we are interested in the effect of
 the medicament in the placebo and treatment groups, a mosaic plot is
 certainly appropriate to visualize the three levels of `Improved' in
 the two `Treatment' strata. Another conceptual approach is to use
@@ -2115,7 +2091,7 @@ variable is used.
 In the \data{Arthritis} example, we will highlight patients with `Marked' 
 improvement in both groups. To obtain such a display within 
 the strucplot framework, it suffices to set the space between the `Improved' tiles to 0 (see
-Figure \ref{fig:artspine}):
+Figure~\ref{fig:artspine}):
 
 <<artspine,echo=TRUE,results=verbatim>>=
 (art <- structable(~Treatment + Improved, data = Arthritis, split_vertical = TRUE))
@@ -2179,7 +2155,7 @@ mosaic(art, spacing = spacing_highlighting, gp = my_colors)
 visualizing conditional independence: it combines
 \codefun{spacing\_equal} (for the conditioned dimensions) and 
 \codefun{spacing\_increase} (for the conditioning dimensions). As an example, 
-consider Figure \ref{fig:presex}: the spacing clearly allows to better 
+consider Figure~\ref{fig:presex}: the spacing clearly allows to better 
 distinguish the conditioning variables 
 (`Gender' and `MaritalStatus') from the conditioned 
 variables (`PremaritalSex' and `ExtramaritalSex'). This
@@ -2214,7 +2190,7 @@ tab <- xtabs(Freq ~ stage + operation + xray + survival, data = OvaryCancer)
 structable(survival ~ ., data = tab)
 @ 
 
-\noindent A first overview can be obtained using a pairs plot (Figure \ref{fig:ocpairs}):
+\noindent A first overview can be obtained using a pairs plot (Figure~\ref{fig:ocpairs}):
 
 <<oc3>>=
 dpa <- list(var_offset = 1.2, rot = -30, just_leveltext= "left")
@@ -2249,7 +2225,7 @@ with `operation' and `xray', respectively. Only the stage seems to influence
 survival: here, the tiles are ``shifted''.
 
 A different view on the data can be obtained using a doubledecker plot, explaining
-survival by the three other factors (Figure \ref{fig:ocdoubledecker}):
+survival by the three other factors (Figure~\ref{fig:ocdoubledecker}):
 
 <<oc4>>=
 doubledecker(survival ~ stage + operation + xray, data = tab)
@@ -2284,7 +2260,7 @@ operation would improve the chance of survival. %'
 
 To visualize inference results, we can make use of residual-based shadings. First, we
 again use the pairs plot display, this time using color to bring out departures from
-the hypothesized marginal independence models (Figure \ref{fig:ocpairsshaded}):
+the hypothesized marginal independence models (Figure~\ref{fig:ocpairsshaded}):
 
 <<oc5>>=
 pairs(tab, diag_panel_args = dpa, gp = shading_max)
@@ -2306,7 +2282,7 @@ colored cells, indicating that the survival rate of patients in an early stage i
 higher than would be expected under (marginal) independence. The hypotheses of
 independence are not rejected for all other marginal interactions. Next, we investigate
 log-linear models for the four-way table. The default model used by \codefun{mosaic} is
-the total independence model, visualized in Figure \ref{fig:ocmosaictotal}:
+the total independence model, visualized in Figure~\ref{fig:ocmosaictotal}:
 
 <<oc6>>=
 mosaic(tab, shade = TRUE)
@@ -2418,23 +2394,23 @@ system. In the following, we give a short description of each data set.
 
 \begin{itemize}
 
-\item Mosaic plot for the \data{Arthritis} data in Figure \ref{fig:arthritis}:
+\item Mosaic plot for the \data{Arthritis} data in Figure~\ref{fig:arthritis}:
 \begin{Sinput}
 mosaic(art, gp = shading_max, split_vertical = TRUE)
 \end{Sinput}
 
 \item Conditional association plot for the \data{UCBAdmissions} 
-data in Figure \ref{fig:ucbadmissions}:
+data in Figure~\ref{fig:ucbadmissions}:
 \begin{Sinput}
 cotabplot(UCBAdmissions, panel = cotab_assoc, shade = TRUE, legend = FALSE)
 \end{Sinput}
 
-\item Mosaic plot for the \data{PreSex} data in Figure \ref{fig:presex}:
+\item Mosaic plot for the \data{PreSex} data in Figure~\ref{fig:presex}:
 \begin{Sinput}
 mosaic(PreSex, condvars = c(1, 4), shade = TRUE)
 \end{Sinput}
 
-\item Double-decker plot for the \data{Titanic} data in Figure \ref{fig:titanic}:
+\item Double-decker plot for the \data{Titanic} data in Figure~\ref{fig:titanic}:
 \begin{Sinput}
 doubledecker(Survived ~ ., data = Titanic, labeling_args = 
              list(set_varnames = c(Sex = "Gender")))
