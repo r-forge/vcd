@@ -71,7 +71,7 @@ assoc.default <- function(x,
 
 ## old code: more elegant conceptually, but less performant
 ##
-## struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
+## struc_assoc2 <- function(compress = TRUE, xlim = NULL, ylim = NULL,
 ##                         yspace = unit(0.5, "lines"), xscale = 0.9,
 ##                         gp_axis = gpar(lty = 3))
 ##   function(residuals, observed = NULL, expected, spacing, gp, split_vertical, prefix = "") {
@@ -176,7 +176,7 @@ assoc.default <- function(x,
 ##     }
 
 ##   }
-## class(struc_assoc) <- "grapcon_generator"
+## class(struc_assoc2) <- "grapcon_generator"
 
 
 struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
@@ -226,7 +226,10 @@ struc_assoc <- function(compress = TRUE, xlim = NULL, ylim = NULL,
 
 
       ## compute total cols/rows and build split layout
-      dist <- unit.c(unit(len, "null"), spacing[[i]]  + (1 * !v) * yspace)
+      dist <- if (d > 1)
+        unit.c(unit(len, "null"), spacing[[i]]  + (1 * !v) * yspace)
+      else
+        unit(len, "null")
       idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2 * d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])

@@ -222,7 +222,10 @@ struc_sieve <- function(sievetype = c("observed", "expected")) {
       d <- dx[i]
 
       ## compute total cols/rows and build split layout
-      dist <- unit.c(unit(margin, "null"), spacing[[i]])
+      dist <- if (d > 1)
+        unit.c(unit(margin, "null"), spacing[[i]])
+      else
+        unit(margin, "null")
       idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2 * d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])
