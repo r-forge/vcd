@@ -167,7 +167,7 @@ mosaic.default <- function(x, condvars = NULL,
 
 ## old code: more elegant, but less performant
 ##
-## struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
+## struc_mosaic2 <- function(zero_size = 0.5, zero_split = FALSE,
 ##                          zero_shade = TRUE, zero_gp = gpar(col = 0))
 ##   function(residuals, observed, expected = NULL, spacing, gp, split_vertical, prefix = "") {
 ##     dn <- dimnames(observed)
@@ -258,7 +258,7 @@ mosaic.default <- function(x, condvars = NULL,
 ##       }
 ##     }
 ##   }
-## class(struc_mosaic) <- "grapcon_generator"
+## class(struc_mosaic2) <- "grapcon_generator"
 
 struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
                          zero_shade = TRUE, zero_gp = gpar(col = 0))
@@ -284,13 +284,16 @@ struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
     split <- function(x, i, name, row, col, zero, index) {
       cotab <- co_table(x, 1)
       margin <- sapply(cotab, sum)
-#      margin[margin == 0] <- .Machine$double.eps
-      margin <- margin + .Machine$double.eps
+      margin[margin == 0] <- .Machine$double.eps
+#      margin <- margin + .Machine$double.eps
       v <- split_vertical[i]
       d <- dx[i]
 
       ## compute total cols/rows and build split layout
-      dist <- unit.c(unit(margin, "null"), spacing[[i]])
+      dist <- if (d > 1)
+        unit.c(unit(margin, "null"), spacing[[i]])
+      else
+        unit(margin, "null")
       idx <- matrix(1:(2 * d), nrow = 2, byrow = TRUE)[-2 * d]
       layout <- if (v)
         grid.layout(ncol = 2 * d - 1, widths = dist[idx])
