@@ -71,16 +71,17 @@ doubledecker.default <- function(x,
   condvars <- (1:l)[-depvar]
   x <- aperm(x, c(condvars, depvar))
   strucplot(x,
-         condvars = l - 1,
-         spacing = spacing,
-         split = c(rep.int(TRUE, l - 1), FALSE),
-         gp = gp,
-         shade = TRUE,
-         labeling = labeling,
-         main = main,
-         margins = margins,
-         legend = NULL,
-         keep_aspect_ratio = keep_aspect_ratio,
-         ...
-         )
+            core = struc_mosaic(zero_split = FALSE, zero_shade = FALSE),
+            condvars = l - 1,
+            spacing = spacing,
+            split = c(rep.int(TRUE, l - 1), FALSE),
+            gp = gp,
+            shade = TRUE,
+            labeling = labeling,
+            main = main,
+            margins = margins,
+            legend = NULL,
+            keep_aspect_ratio = keep_aspect_ratio,
+            ...
+            )
 }
