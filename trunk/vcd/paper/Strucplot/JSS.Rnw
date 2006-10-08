@@ -57,7 +57,7 @@ residual-based shading, \pkg{grid}, \proglang{R}}
 %% in the following format:
 \Address{
   David Meyer\\
-  Department of Information Systems and Process Management\\
+  Department of Information Systems and Operations\\
   E-mail: \email{David.Meyer@wu-wien.ac.at}\\
   URL: \url{http://wi.wu-wien.ac.at/~meyer/}\\
 
@@ -190,15 +190,15 @@ Macinthosh platforms.
                              &\pkg{base}&\pkg{vcd}   &\pkg{iplots}&        & &\\\hline
 
     Basic functionality      &  $\times$  & $\times$  & $\times$ &$\times$ &$\times$ &   $\times$   & $\times$& $\times$\\
-    Shape                    &            &           &          &         &$\times$ & $\times$  &  $\times$&\\
+    Shape                    &            &           &          &$\times$ && $\times$  &  $\times$&\\
     Res.-based shadings  &  $\times$  &        & $\times$ & $\times$ & ($\times$) &     &($\times$)& ($\times$)\\
     Highlighting             &     &        &   &$\times$   &$\times$  & $\times$ & $\times$& $\times$\\
     Conditional views        &  $\times$  &        &    &$\times$ &          & $\times$ &  $\times$&\\
     Interaction              &     &        &   &  &$\times$  &   $\times$   & $\times$& $\times$\\
-    Linking                  &     &        &   &  &$\times$  &       & $\times$& $\times$\\
+    Linking                  &     &        &   &  &$\times$  & $\times$ & $\times$& $\times$\\
     Extensible design        &     &        &  &$\times$ & &       &  &\\
     Language                 & \proglang{SAS} & \proglang{S} &
-    \proglang{S} & \proglang{S} & \proglang{Java} & \proglang{XLisp} & \proglang{C++} & \proglang{Java}\\
+    \proglang{R} & \proglang{R} & \proglang{R}/\proglang{Java} & \proglang{XLisp} & \proglang{C++} & \proglang{Java}\\
     \hline
   \end{tabular}
   \caption{Comparison of current software environments.}
@@ -354,7 +354,7 @@ These are examples of grapcon functions. They are created by generating function
 flexible parameterization and extensibility (Figure~\ref{fig:struc}
 only shows the generators). The generator names
 follow the naming convention \code{\textit{group\_foo}()},  
-where (\code{\textit{group}}) reflects the group the
+where \code{\textit{group}} reflects the group the
 generators belong to (strucplot core, labeling,
 legend, shading, or spacing). The workhorse functions (created by 
 \code{struc\_\textit{foo}()}, 
@@ -587,7 +587,8 @@ sieve(~ Sex + Eye + Hair, data = HEC, spacing = spacing_dimequal(c(2,0,0)))
 \end{center}
 \end{figure}
 
-\noindent Alternatively, we can directly inspect the residuals. 
+\noindent where \code{spacing\_dimequal} is used to set the spacing
+of the second and third dimension to zero. Alternatively, we can directly inspect the residuals. 
 The Pearson residuals (standardized deviations of observed from expected values) 
 are conveniently visualized using association
 plots \citep{vcd:Cohen:1980}. In contrast to \codefun{assocplot} in
@@ -614,7 +615,7 @@ equal.
 For both mosaic plots and association plots, 
 the splitting of the tiles can be controlled using the
 \code{split\_vertical} argument. The default is to alternate splits starting
-with a horizontal one (see Figure~\ref{fig:split}).
+with a horizontal one (see Figure~\ref{fig:split}):
 
 <<echo=FALSE>>=
 options(width=60)
@@ -708,7 +709,7 @@ of the conditioning variable(s)) is done using the \code{[[} operator. %]]
 Here again, the sequence of conditioning levels is restricted by the
 hierarchical structure of the \class{structable} object. In the
 following examples, note that compared to subsetting, the first
-dimension(s) have been dropped:
+dimension(s) are dropped:
 
 <<conditioning,results=verbatim>>=
 STD[["Male",]]
@@ -827,13 +828,14 @@ conditioning variables are permuted ahead of the the conditioned variables
 in the table, and that \codefun{spacing\_conditional} is used as default to better
 distinguish conditioning from conditioned dimensions.
 This spacing uses equal space between tiles of conditioned variables,
-and increasing space between tiles of conditioning variables. 
+and increasing space between tiles of conditioning variables (See 
+Section~\ref{sec:spacing}).
 
 Another set of high-level functions for visualizing conditional independence
 models are the \codefun{pairs} methods for \class{table} and \class{structable} objects.
 In contrast to \codefun{cotabplot} which conditions on variables,
 the \codefun{pairs} methods create pairwise views of the table. 
-The function produces, by default, a plot matrix 
+They produce, by default, a plot matrix 
 having strucplot displays in the off-diagonal panels, and
 the variable names (optionally, with univariate displays) in the diagonal cells. 
 Figure~\ref{fig:pairs} shows a pairs display for the
@@ -975,12 +977,10 @@ creating and nesting \pkg{grid} viewports. The main time-consuming steps perform
 the core functions are the following:
 
 \begin{enumerate}
-\item recursively, create a tree of nested viewports
-\item push the whole tree, i.e., add it to the system tree maintained
-  by the \pkg{grid} engine
-\item one by one, seek all cells of the strucplot display and add
-  plot-specific content (rectangles for mosaics, bars for association
-  plots, etc.)
+\item recursively, split the table until the individual cells are reached
+\item during the splits, add viewports to the plot
+\item for the individual cells, add plot-specific content 
+      (rectangles for mosaics, bars for association plots, etc.)
 \end{enumerate}
 
 \noindent All these operations scale linearly with the amount of
@@ -1070,7 +1070,7 @@ we will highlight all cells corresponding to survived
 passengers (see Figure~\ref{fig:recycling}):
 
 <<recycling>>=
-mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")), 
+mosaic(Titanic, gp = gpar(fill = c("gray","dark magenta")),
                 spacing = spacing_highlighting,
                 labeling_args = list(abbreviate = c(Age = 3), rep = c(Survived = FALSE))
       )
@@ -1285,7 +1285,8 @@ discussion can be found in][]{vcd:Zeileis+Meyer+Hornik:2005}.
 Color palettes in HCL space are 
 preferable to palettes derived 
 from HSV space from a perceptual point of view. Functions for creating
-palettes (see, e.g., \codefun{diverge\_hcl}) are provided with the package.
+palettes (see, e.g., \codefun{diverge\_hcl}) are provided with the
+\pkg{vcd} package.
 
 In HSV space, colors are specified in three dimensions: Hue,
 Saturation (``colorfulness''), and Value (``lightness'', amount of gray). 
@@ -1323,20 +1324,20 @@ mosaic(haireye, gp = shading_hcl, gp_args = list(h = c(130, 43), c = 100, l = c(
 
 \noindent In Figure~\ref{fig:haireye}, the plot
 in the middle depicts the default palette, 
-and the bottom plot an alternative setting for Hue (\code{h}), Chroma (\code{s}), and
-Luminance (\code{v}).
+and the bottom plot an alternative setting for Hue (\code{h}), Chroma (\code{c}), and
+Luminance (\code{l}).
 
 \setkeys{Gin}{width=0.7\textwidth}
 
 \begin{figure}[htbp]
 \begin{center}
-<<haireyefig1,fig=TRUE,echo=FALSE,height=5>>=
+<<haireyefig1,fig=TRUE,echo=FALSE,height=3,width=5>>=
 mosaic(haireye, gp = shading_hsv, margin = c(bottom = 1), keep_aspect_ratio = FALSE)
 @
-<<haireyefig2,fig=TRUE,echo=FALSE,height=5>>=
+<<haireyefig2,fig=TRUE,echo=FALSE,height=3,width=5>>=
 mosaic(haireye, gp = shading_hcl, margin = c(bottom = 1), keep_aspect_ratio = FALSE)
 @
-<<haireyefig3,fig=TRUE,echo=FALSE,height=5>>=
+<<haireyefig3,fig=TRUE,echo=FALSE,height=3,width=5>>=
 mosaic(haireye, gp = shading_hcl, margin = c(bottom = 1), gp_args = list(h = c(130, 43), c = 100, l = c(90, 70)), keep_aspect_ratio = FALSE)
 @
 \caption{Three mosaic plots for the \data{HairEyeColor} data using, from top to bottom:
@@ -1863,31 +1864,32 @@ mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)))
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<label1fig,fig=TRUE,echo=FALSE,height=12,width=8>>=
+<<label1fig,fig=TRUE,echo=FALSE,height=10,width=8>>=
 pushViewport(viewport(layout = grid.layout(ncol = 2,nrow=3)))
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1))
-mosaic(Titanic, newpage = FALSE, keep = TRUE, margin = c(right = 3))
+mosaic(Titanic, newpage = FALSE, keep = TRUE, margin = c(right = 3), 
+       gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 1))
 mosaic(Titanic, labeling_args = list(clip = c(Survived = TRUE, Age = TRUE)), 
-       newpage = FALSE, keep = TRUE, margin = c(left = 3))
+       newpage = FALSE, keep = TRUE, margin = c(left = 3), gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2))
 mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = TRUE, Age = 2)), 
-       newpage = FALSE, keep = TRUE, margin = c(right = 3))
+       newpage = FALSE, keep = TRUE, margin = c(right = 3), gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 2))
 mosaic(Titanic, labeling_args = list(rep = c(Survived = FALSE, Age = FALSE)), 
-       newpage = FALSE, keep = TRUE, margin = c(left = 3))
+       newpage = FALSE, keep = TRUE, margin = c(left = 3), gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 1:2, layout.pos.row = 3))
-pushViewport(viewport(width = 0.55))
+pushViewport(viewport(width = 0.5))
 mosaic(Titanic, labeling_args = list(rot_labels = c(bottom = 90, right = 0), 
                   offset_varnames = c(right = 1), offset_labels = c(right = 0.3)), 
-       margins = c(right = 4, bottom = 3), newpage = FALSE, keep = FALSE)
+       margins = c(right = 4, bottom = 3), newpage = FALSE, keep = FALSE, gp_labels = gpar(fontsize = 10))
 popViewport(3)
 @
-\caption{Labeling the Titanic data. Top left: default labeling, top
+\caption{Labeling the Titanic data mosaic. Top left: default labeling, top
   right: clipping, middle left: abbreviating, middle right: inhibiting 
   the repetition of levels, bottom: rotating.}
 \label{fig:labels1}
@@ -1942,7 +1944,7 @@ mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, abbr
 % \end{center}
 % \end{figure}
 
-\noindent The \var{tl\_foo} (``top left'') arguments are \code{TRUE} by default. 
+\noindent The tl\_\var{foo} (``top left'') arguments are \code{TRUE} by default. 
 Now, we will add boxes to the labels and additionally
 enable clipping (see Figure~\ref{fig:labels2}, bottom left):
 
@@ -2010,21 +2012,24 @@ mosaic(Titanic, labeling = labeling_lboxed, margins = c(right = 4, left = 1, 3))
 pushViewport(viewport(layout = grid.layout(ncol = 2, nrow = 2)))
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1))
 mosaic(Titanic, labeling_args = list(pos_varnames = "left", pos_labels = "left", 
-       just_labels = "left", rep = FALSE), newpage = FALSE, keep = TRUE)
+       just_labels = "left", rep = FALSE), newpage = FALSE, keep = TRUE,
+       gp_labels = gpar(fontsize = 12))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 1))
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, 
-                  abbreviate = c(Survived = 1, Age = 3)), newpage = FALSE, keep = TRUE)
+                  abbreviate = c(Survived = 1, Age = 3)), newpage = FALSE, keep = TRUE,
+       margins = c(left = 4, right = 1, 3), gp_labels = gpar(fontsize = 12))
 popViewport()
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2))
 mosaic(Titanic, labeling_args = list(tl_labels = FALSE, tl_varnames = TRUE, 
-       boxes = TRUE, clip = TRUE), newpage = FALSE, keep = TRUE)
+       boxes = TRUE, clip = TRUE), newpage = FALSE, keep = TRUE, 
+       gp_labels = gpar(fontsize = 12))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 2))
 mosaic(Titanic, labeling_args = list(tl_labels = TRUE, boxes = TRUE,
        clip = c(Survived = FALSE, TRUE), 
        labbl_varnames = TRUE), margins = c(left = 4, right = 1, 3), 
-       newpage = FALSE, keep = TRUE)
+       newpage = FALSE, keep = TRUE, gp_labels = gpar(fontsize = 12))
 popViewport(2)
 @
 \caption{Labeling the Titanic data, advanced features. Top left: left aligning, top
@@ -2127,22 +2132,22 @@ labeling_cells(text = tab, clip = FALSE)(Titanic)
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(ncol = 2, nrow = 2)))
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1))
-mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells, newpage = FALSE, keep = TRUE)
+mosaic(~ MaritalStatus + Gender, data = PreSex, labeling = labeling_cells, newpage = FALSE, keep = TRUE, gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 1))
 mosaic(~ PremaritalSex + ExtramaritalSex, data = PreSex, 
        labeling = labeling_cells(abbreviate_labels = TRUE, abbreviate_varnames = TRUE, 
-         clip = FALSE), newpage = FALSE, keep = TRUE)
+         clip = FALSE), newpage = FALSE, keep = TRUE, gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2))
 mosaic(~ PremaritalSex + ExtramaritalSex | MaritalStatus + Gender, data = PreSex, 
        labeling = labeling_conditional(abbreviate_varnames = TRUE, 
          abbreviate_labels = TRUE, clip = FALSE, gp_text = gpar(col = "red")), 
-       newpage = FALSE, keep = TRUE)
+       newpage = FALSE, keep = TRUE, gp_labels = gpar(fontsize = 10))
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 2))
-mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = 1, Age = 4)), 
-       pop = FALSE, newpage = FALSE, keep = TRUE)
+mosaic(Titanic, labeling_args = list(abbreviate = c(Survived = 1, Age = 3)), 
+       pop = FALSE, newpage = FALSE, keep = TRUE, gp_labels = gpar(fontsize = 10))
 tab <- ifelse(Titanic < 6, NA, Titanic)
 labeling_cells(text = tab, clip = FALSE)(Titanic)
 @
@@ -2170,7 +2175,7 @@ mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5))
 \begin{figure}[p]
 \begin{center}
 <<listfig,fig=TRUE,echo=FALSE>>=
-<<list>>
+mosaic(Titanic, labeling = labeling_list, margins = c(bottom = 5), keep = TRUE)
 @
 \caption{Labels indicated below the plot.}
 \label{fig:list}
@@ -2288,10 +2293,10 @@ pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1))
 mosaic(art, spacing = spacing_equal(unit(2, "lines")), keep = TRUE, newpage = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 1))
-mosaic(art, spacing = spacing_dimequal(unit(c(2,0.5), "lines")), keep = TRUE, newpage = FALSE)
+mosaic(art, spacing = spacing_dimequal(unit(c(0.5, 2), "lines")), keep = TRUE, newpage = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2))
-mosaic(art, spacing = spacing_increase(start = unit(0.5, "lines"), rate = 1.5), keep = TRUE, newpage = FALSE)
+mosaic(art, spacing = spacing_increase(start = unit(0.3, "lines"), rate = 2.5), keep = TRUE, newpage = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2, layout.pos.row = 2))
 mosaic(art, spacing = spacing_highlighting, keep = TRUE, newpage = FALSE)
@@ -2490,7 +2495,7 @@ system. In the following, we give a short description of each data set.
 \item[\texttt{Arthritis}] Data  from a 
   double-blind clinical trial
   investigating a new treatment for rheumatoid arthritis. 
-  Source: \cite{vcd:Koch+Edwards:1988}. Taken from: \cite{vcd:Friendly:2000} 
+  Source: \cite{vcd:Koch+Edwards:1988}. Taken from: \cite{vcd:Friendly:2000}.
   Package: \pkg{vcd}.
 \item[\texttt{Bundesliga}] Results from the first German soccer league in the
   years 1995/6 \citep{vcd:Knorr-Held:1999} and 2001/2 (Collected by: Achim
