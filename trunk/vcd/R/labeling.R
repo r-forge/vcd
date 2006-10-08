@@ -20,7 +20,7 @@ pexpand <- function(par, len, default_value, default_names, choices = NULL) {
   ret
 }
 
-labeling_list <- function(gp = gpar(),
+labeling_list <- function(gp_text = gpar(),
                           just = "left",
                           pos = "left",
                           lsep = ": ", sep = " ",
@@ -46,7 +46,7 @@ labeling_list <- function(gp = gpar(),
                       collapse = "\n"
                       ),
                 just = c(just, "top"),
-                gp = gp
+                gp = gp_text
                 )
   }
 }
@@ -66,7 +66,7 @@ class(labeling_conditional) <- "grapcon_generator"
 
 labeling_cells <- function(labels = TRUE, varnames = TRUE,
                          abbreviate_labels = FALSE, abbreviate_varnames = FALSE,
-                         gp = gpar(), lsep = ": ", lcollapse = "\n",
+                         gp_text = gpar(), lsep = ": ", lcollapse = "\n",
                          just = "center", pos = "center", rot = 0,
                          margin = unit(0.5, "lines"), clip_cells = TRUE,
                          text = NULL, ...) {
@@ -124,7 +124,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
           grid.text(if(!is.na(txt)) txt,
                     x = switch(pos[1], left =, top = 0, center = 0.5, 1),
                     y = switch(pos[2], left =, top = 1, center = 0.5, 0),
-                    gp = gp, just = just, rot = rot)
+                    gp = gp_text, just = just, rot = rot)
           popViewport()
         }
       }
