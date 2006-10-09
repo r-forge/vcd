@@ -14,14 +14,15 @@ Point-to-point answers:
 > introduced (their main features described and examples shown) in
 > the introductory section.
 
-We added more explanations and details to the existing overview of the plots.
+We added more explanations and details to the overview of the plots.
 
 > (2) At the end of the paper (new section) a more challenging data set
 > should be analyzed using the functionality of the package and the reader
 > be walked through this analysis.
 
-A new Section 5 is now devoted to the analysis of a four-way example: the ovarian
-cancer data set from Obel (1975).
+A new Section 5 is now devoted to the analysis of a four-way example: 
+a data set from Obel (1975) and taken from Andersen (1991) about survival
+from ovarian cancer.
 
 > (3) Computational/performance issues should be briefly addressed.
 
@@ -31,25 +32,24 @@ These are added as Subsection 2.4.
 > However, I find section 3.3 useful and would like the authors to keep it 
 > in its current form. 
 
-We basically maintained it, but removed details on the comparison of HSV and HCL-space
-and referred the reader to a corresponding technical report. In fact, a paper devoted
-to residual-based shadings also addressing these color issues is currently under review.
+We basically maintained it, but removed some details on the comparison of
+HSV and HCL space. Instead we refer the reader to a technical report
+discussing the details of the HCL shadings.
 
 * Referee:
 
 > 1. The comparison of the different implementations of mosaic plots is nice, 
 > but a bit short. For a journal on statistical software it would be desirable 
-> to have a couple of examples  how the plots/implementations look like, and what 
-> the specific advantages and  disadvantages are.
+> to have a couple of examples how the plots/implementations look like, and what 
+> the specific advantages and disadvantages are.
 
-We feel that this would be out of scope 
-of this article which focuses on the strucplot framework. A thorough comparison 
-with illustrative examples of the existing implementations
-could well form an article on its own. However, we extended Table 1 to include more
-dimensions and implementations.
+We extended Table 1 to include more dimensions and implementations. However,
+a full comparison of the different approaches with illustrative examples is
+beyond the scope of the paper under review (which is already quite long).
+Such a study would deserve an article on its own.
 
-Furthermore, are there no 
-> differences in the implementation of mosaic  plots in MANET and Mondrian?     
+> Furthermore, are there no differences in the implementation of mosaic plots
+> in MANET and Mondrian?     
 
 There are now two separate columns for MANET and Mondrian.
 
@@ -61,8 +61,8 @@ There are now two separate columns for MANET and Mondrian.
 > the splitting of  empty cells should be optionally, and the default should not split
 > the empty cells!
 
-This feature has now been added, and the defaults set accordingly. Also, we briefly
-discussed the visualization of empty cells in the paper.
+This feature has now been added, and the defaults set accordingly. The visualization
+of empty cells is now also briefly discussed within the paper.
 
 > 3. On page 9 it is stated that the doubledecker() function is just a wrapper for the 
 > mosaic() function. It would be nice for the reader to actually see how the wrapper 
@@ -87,7 +87,7 @@ The default plot for two-way tables is now without gaps.
 We now use another data set (survival on the Titanic) which better illustrates
 the issue.
 
-All-in-all section 2.2 could be a  bit clearer in what the options do,
+> All-in-all section 2.2 could be a bit clearer in what the options do,
 > why one would use the one or the other.
 
 The section has now been restructured to have a more logical sequence
