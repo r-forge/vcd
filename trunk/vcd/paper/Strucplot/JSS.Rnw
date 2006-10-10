@@ -640,12 +640,12 @@ options(width=70)
 \end{center}
 \end{figure}
 
-\noindent (Note that \code{HEC}, a \class{structable} object, already includes a
-splitting information which simply gets overloaded in this example.) 
-For compatibility with \codefun{mosaicplot} in base \proglang{R},
-the \codefun{mosaic} function also allows the use of a \code{"direction"} 
-argument taking a vector of \code{"h"} and
-\code{"v"} characters:
+\noindent (Note that \code{HEC}, a \class{structable} object, already
+includes a splitting information which simply gets overloaded in this
+example.)  For compatibility with \codefun{mosaicplot} in base
+\proglang{R}, the \codefun{mosaic} function also allows the use of a
+\code{direction} argument taking a vector of \code{"h"} and \code{"v"}
+characters:
 
 <<split2>>=
 mosaic(HEC, direction = c("v","h","v"))
@@ -903,13 +903,14 @@ residual-based shading (see Section \ref{sec:shading}).
 
 \subsection{Interactive plot modifications}
 
-All strucplot core functions are supposed to produce conditional hierarchical
-plots by the means of nested viewports, corresponding to the provided splitting
-information. Thus, at the end of the plotting, each tile is associated with
-a particular viewport. Each of those viewports has to be
-conventionally named, enabling other strucplot modules, in particular the
-labeling functions, to access specific tiles after they have been
-plotted. The naming convention for the viewports is:
+All strucplot core functions are supposed to produce conditional
+hierarchical plots by the means of nested viewports, corresponding to
+the provided splitting information. Thus, at the end of the plotting,
+each tile is associated with a particular viewport. Each of those
+viewports has to be conventionally named, enabling other strucplot
+modules, in particular the labeling functions, to access specific tiles
+after they have been plotted. The naming convention for the viewports
+is:
 
 \begin{center}
 \code{\emph{[Optional prefix]}cell:\emph{Variable1}=\emph{Level1},\emph{Variable2}=\emph{Level2}} \dots
@@ -994,9 +995,9 @@ $T_d$ can roughly be estimated as
 \end{equation}
 
 \noindent since we first push the $k_1$ viewports for the levels of the
-first dimension, then, for \emph{each} of those, the $k_2$ levels of
+first dimension, then, for \emph{each} of these, the $k_2$ levels of
 the second dimension, etc. If the number of levels is equal ($k$) for
-all dimensions, this simplifies to:
+all dimensions, $T_d$ simplifies to
 
 \begin{equation}
   \label{eq:equalvp}
