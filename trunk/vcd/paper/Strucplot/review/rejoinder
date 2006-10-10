@@ -1,9 +1,13 @@
 Dear Jan,
 
-please find enclosed our revised manuscript: 
-"The Strucplot Framework: Visualizing Multi-Way Contingency Tables with vcd"
-according to the comments of the Associate Editor and the referee's review. 
-Both led to significant improvements both of the paper and the software.
+please find enclosed our manuscript
+
+   "The Strucplot Framework: Visualizing Multi-Way Contingency Tables
+   with vcd"
+
+revised according to the comments of the Associate Editor and the
+referee's review.  Both led to significant improvements both of the
+paper and the software.
 
 Point-to-point answers:
 
@@ -17,123 +21,134 @@ Point-to-point answers:
 We added more explanations and details to the overview of the plots.
 
 > (2) At the end of the paper (new section) a more challenging data set
-> should be analyzed using the functionality of the package and the reader
-> be walked through this analysis.
+> should be analyzed using the functionality of the package and the
+> reader be walked through this analysis.
 
-A new Section 5 is now devoted to the analysis of a four-way example: 
-a data set from Obel (1975) and taken from Andersen (1991) about survival
+A new Section 5 is now devoted to the analysis of a four-way example:  a
+data set from Obel (1975) and taken from Andersen (1991) about survival
 from ovarian cancer.
 
 > (3) Computational/performance issues should be briefly addressed.
 
 These are added as Subsection 2.4.
 
-> (4) All the comments raised in the referee's report should be addressed.
-> However, I find section 3.3 useful and would like the authors to keep it 
-> in its current form. 
+> (4) All the comments raised in the referee's report should be
+> addressed.  However, I find section 3.3 useful and would like the
+> authors to keep it in its current form.
 
-We basically maintained it, but removed some details on the comparison of
-HSV and HCL space. Instead we refer the reader to a technical report
+We basically maintained it, but removed some details on the comparison
+of HSV and HCL space. Instead we refer the reader to a technical report
 discussing the details of the HCL shadings.
 
 * Referee:
 
-> 1. The comparison of the different implementations of mosaic plots is nice, 
-> but a bit short. For a journal on statistical software it would be desirable 
-> to have a couple of examples how the plots/implementations look like, and what 
-> the specific advantages and disadvantages are.
+> 1. The comparison of the different implementations of mosaic plots is
+> nice, but a bit short. For a journal on statistical software it would
+> be desirable to have a couple of examples how the
+> plots/implementations look like, and what the specific advantages and
+> disadvantages are.
 
-We extended Table 1 to include more dimensions and implementations. However,
-a full comparison of the different approaches with illustrative examples is
-beyond the scope of the paper under review (which is already quite long).
-Such a study would deserve an article on its own.
+We extended Table 1 to include more dimensions and
+implementations. However, a full comparison of the different approaches
+with illustrative examples is beyond the scope of the paper under review
+(which is already quite long).  Such a study would deserve an article on
+its own.
 
-> Furthermore, are there no differences in the implementation of mosaic plots
-> in MANET and Mondrian?     
+> Furthermore, are there no differences in the implementation of mosaic
+> plots in MANET and Mondrian?
 
 There are now two separate columns for MANET and Mondrian.
 
-> 2. The coding of empty cells in the structplot framework is done via boxes of zero area 
-> additionally annotated with a "o". This obviously follows the conventions in MANET,  
-> except for the fact that MANET (as most other implementations) do not subdivide empty
-> cells any further - which would not really make any sense since the division is done
-> arbitrarily.  The coding of empty cells should explicitly be explained. Furthermore,
-> the splitting of  empty cells should be optionally, and the default should not split
-> the empty cells!
+> 2. The coding of empty cells in the structplot framework is done via
+> boxes of zero area additionally annotated with a "o". This obviously
+> follows the conventions in MANET, except for the fact that MANET (as
+> most other implementations) do not subdivide empty cells any further -
+> which would not really make any sense since the division is done
+> arbitrarily.  The coding of empty cells should explicitly be
+> explained. Furthermore, the splitting of empty cells should be
+> optionally, and the default should not split the empty cells!
 
-This feature has now been added, and the defaults set accordingly. The visualization
-of empty cells is now also briefly discussed within the paper.
+This feature has now been added, and the defaults set accordingly. The
+visualization of empty cells is now also briefly discussed within the
+paper.
 
-> 3. On page 9 it is stated that the doubledecker() function is just a wrapper for the 
-> mosaic() function. It would be nice for the reader to actually see how the wrapper 
-> (in  its structure) looks like. 
+> 3. On page 9 it is stated that the doubledecker() function is just a
+> wrapper for the mosaic() function. It would be nice for the reader to
+> actually see how the wrapper (in its structure) looks like.
 
-We now give more details on the implementation of doubledecker(). The code
-is easily available in R (e.g., by typing "vcd:::doubledecker.default" 
-at the command line once the package has been loaded).
+We now give more details on the implementation of doubledecker(). The
+code is easily available in R (e.g., by typing
+"vcd:::doubledecker.default" at the command line once the package has
+been loaded).
 
-> 4. The "sieve plot" on page 9 has gaps, which is not faithful to the original definition
-> by Riewyl & Schupach. Of course, the gaps can be set to anything the user wants to see,
-> but  the default should match the original definition - unless there is a good reason for
-> not doing so, which should be mentioned in the paper. 
+> 4. The "sieve plot" on page 9 has gaps, which is not faithful to the
+> original definition by Riewyl & Schupach. Of course, the gaps can be
+> set to anything the user wants to see, but the default should match
+> the original definition - unless there is a good reason for not doing
+> so, which should be mentioned in the paper.
 
 The default plot for two-way tables is now without gaps.
 
-> 5.  Aren't Figure 11 and 14 identical except for a different aspect ratio and a
-> slightly larger gap in the first split? The choice of the example for Figures
-> 13-15 is unfortunate since the  groups for "male" and "female" are almost of
-> same size. 
+> 5.  Aren't Figure 11 and 14 identical except for a different aspect
+> ratio and a slightly larger gap in the first split? The choice of the
+> example for Figures 13-15 is unfortunate since the groups for "male"
+> and "female" are almost of same size.
 
-We now use another data set (survival on the Titanic) which better illustrates
-the issue.
+We now use another data set (survival on the Titanic) which better
+illustrates the issue.
 
 > All-in-all section 2.2 could be a bit clearer in what the options do,
 > why one would use the one or the other.
 
-The section has now been restructured to have a more logical sequence
-in the alternatives. 
+The section has now been restructured to have a more logical sequence in
+the alternatives.
 
-> 6. The pairs() plot on page 18 has some drawbacks. In a traditional paris-scatterplot, 
-> each observation is aligned along two marginal dimensions. In the plot in Figure 16,
-> the  groups for eye-color align in the third column, but the sexes don't in the first
-> row. This is  due to the conditional nature of mosaic plots.  
-> A more consistent pairs plot will use the inverse mosaic plot in the lower_panel
-> (which is  actually the default!) and probably the matching one-dimensional mosaic plot
-> in the  diagonal. (Example) (not really solving the problem, but a bit more consistent)
-> At any rate, the association plots in the lower panel are a bit irritating,
-> as for a comparison  with the raw data in the upper panel one must transpose the entries.
+> 6. The pairs() plot on page 18 has some drawbacks. In a traditional
+> paris-scatterplot, each observation is aligned along two marginal
+> dimensions. In the plot in Figure 16, the groups for eye-color align
+> in the third column, but the sexes don't in the first row. This is due
+> to the conditional nature of mosaic plots.  A more consistent pairs
+> plot will use the inverse mosaic plot in the lower_panel (which is
+> actually the default!) and probably the matching one-dimensional
+> mosaic plot in the diagonal. (Example) (not really solving the
+> problem, but a bit more consistent) At any rate, the association plots
+> in the lower panel are a bit irritating, as for a comparison with the
+> raw data in the upper panel one must transpose the entries.
 
-We now use a plot similar to the referees' report, and additionally added a shading
-which allows to better match the levels of the highlighted variable.
+We now use a plot similar to the referees' report, and additionally
+added a shading which allows to better match the levels of the
+highlighted variable.
 
-> 7. The possibility to modify the panels through their viewports is quite nice. Are the 
-> viewports and names global, and not associated with a specific plot? 
-> If so, this technique  will be pretty error-prone when multiple plots will be used.
+> 7. The possibility to modify the panels through their viewports is
+> quite nice. Are the viewports and names global, and not associated
+> with a specific plot?  If so, this technique will be pretty
+> error-prone when multiple plots will be used.
 
-It is now possible to optionally add a prefix to all strucplot displays to avoid this
-problem. The prefix is set automatically for the panels in the conditional independence
-plot.
+It is now possible to optionally add a prefix to all strucplot displays
+to avoid this problem. The prefix is set automatically for the panels in
+the conditional independence plot.
 
-> 8.  Section 3.3 does not really fit into the description of the package/framework. 
-> I would recommend to leave this section out and put it in a separate, 
-> smaller article, e.g. for the RNewsletter, or the 
-> Statistical Graphics and Statistical Computing Newsletter.
+> 8.  Section 3.3 does not really fit into the description of the
+> package/framework.  I would recommend to leave this section out and
+> put it in a separate, smaller article, e.g. for the RNewsletter, or
+> the Statistical Graphics and Statistical Computing Newsletter.
 
-We removed details on HSV/HCL space and referred the reader to a corresponding
-technical report. However, we kept all information describing the interface of the
-shading functions. 
+We removed details on HSV/HCL space and referred the reader to a
+corresponding technical report. However, we kept all information
+describing the interface of the shading functions.
 
-> 9. The footnote on page 42 gives a hint to the spine() function to plot spine plots and 
-> spinograms. What are spinegrams and how are they defined? Either leave the footnote out, 
-> or give a decent example of what the spine() function is able to do, especially how 
-> a spinegram would look like. 
+> 9. The footnote on page 42 gives a hint to the spine() function to
+> plot spine plots and spinograms. What are spinegrams and how are they
+> defined? Either leave the footnote out, or give a decent example of
+> what the spine() function is able to do, especially how a spinegram
+> would look like.
 
 The footnote has been removed.
 
-> 10. When using the package/framework, it turned out to be quite slow. 
-> This is obviously due to the extensive use of viewports within Grid. 
-> Would it be necessary to spend a section on  performance issues for more complex 
-> plots than the examples in the current paper?! 
+> 10. When using the package/framework, it turned out to be quite slow.
+> This is obviously due to the extensive use of viewports within Grid.
+> Would it be necessary to spend a section on performance issues for
+> more complex plots than the examples in the current paper?!
 
 A new subsection on performance issues has now been added.
 
