@@ -148,7 +148,7 @@
 }
 
 @Book{vcd:Wyszecki+Stiles:2000,
-  author	= {G\"unter Wyszecki and W.S. Stiles},
+  author	= {G\"unter Wyszecki and W. S. Stiles},
   title		= {Color Science},
   edition	= {2nd},
   publisher	= {Wiley},
@@ -172,7 +172,30 @@
   note		= {Accessed 2006-09-14},
 }
 
-@InCollection{vcd:mollon:1995,
+@Article{vcd:Smith:1978,
+  author	= {Alvy Ray Smith},
+  title		= {Color Gamut Transform Pairs},
+  journal	= {Computer Graphics},
+  pages		= {12--19},
+  year		= {1978},
+  volume	= {12},
+  number	= {3},
+  note		= {ACM SIGGRAPH 78 Conference Proceedings},
+%% url		= {http://www.alvyray.com/},
+}
+
+@Article{vcd:Meier+Spalter+Karelitz:2004,
+  author	= {Barbara J. Meier and Anne Morgan Spalter and David B. Karelitz},
+  title		= {Interactive Color Palette Tools},
+  journal	= {{IEEE} Computer Graphics and Applications}
+  volume	= {24},
+  number	= {3},
+  year		= {2004},
+  pages		= {64--72},
+%% url		= {http://graphics.cs.brown.edu/research/color/}
+}
+
+@InCollection{vcd:Mollon:1995,
   author       = {J. Mollon},
   editor       = {T. Lamb and J. Bourriau},
   booktitle    = {Colour: Art and Science},
@@ -287,6 +310,14 @@
   number       = 6
 }
 
+@Manual{vcd:urbanek+wichtrey:2006,
+  title	       = {\pkg{{i}plots}: i{P}lots - {I}nteractive {G}raphics for {\sf R}},
+  author       = {Simon Urbanek and Tobias Wichtrey},
+  year	       = 2006,
+  note	       = {R package version 1.0-3},
+  url	       = {http://www.rosuda.org/iPlots/}
+}
+
 
 
 %% Software
@@ -311,6 +342,14 @@
   pages	       = {14--19},
   month	       = {June},
   url	       = {http://CRAN.R-project.org/doc/Rnews/}
+}
+
+@Book{vcd:Murrell:2006,
+  author       = {Paul Murrell},
+  title	       = {\textsf{R} Graphics},
+  publisher    = {Chapmann \& Hall/CRC},
+  address      = {Boca Raton, Florida},
+  year	       = {2006},
 }
 
 @Book{vcd:Venables+Ripley:2002,
@@ -366,6 +405,25 @@
 
 %% data
 
+@Article{vcd:Azzalini+Bowman:1990,
+  article	= {A. Azzalini and A. W. Bowman},
+  title		= {A Look at Some Data on the {O}ld {F}aithful Geyser},
+  journal	= {Applied Statistics},
+  year		= {1990},
+  volume	= {39},
+  pages		= {357--365},
+}
+
+@Article{vcd:Obel:1975,
+  author       = {E.B. Obel},
+  title	       = {A Comparative Study of Patients with Cancer of the
+                  Ovary Who Have Survived More or Less Than 10 Years},
+  journal      = {Acta Obstetricia et Gynecologica Scandinavica},
+  year	       = 1975,
+  volume       = 55,
+  pages	       = {429--439}
+}
+
 @InCollection{vcd:Koch+Edwards:1988,
   author	= {G. Koch and S. Edwards},
   title		= {Clinical Efficiency Trials with Categorical Data},
@@ -405,7 +463,7 @@
   pages  =	 {398--403}
 }
 
-@Book{vcd:gilbert:1981,
+@Book{vcd:Gilbert:1981,
   author       = {G. N. Gilbert},
   title	       = {Modelling Society: An Introduction to Loglinear
                   Analysis for Social Researchers},
@@ -414,7 +472,7 @@
   address      = {London}
 }
 
-@Book{vcd:thornes+collard:1979,
+@Book{vcd:Thornes+Collard:1979,
   author       = {B. Thornes and J. Collard},
   title	       = {Who Divorces?},
   publisher    = {Routledge \& Kegan},
@@ -422,7 +480,7 @@
   address      = {London}
 }
 
-@Article{vcd:dawson:1995,
+@Article{vcd:Dawson:1995,
   author       = {Robert J. MacG Dawson},
   title	       = {The ``Unusual Episode'' Data Revisited},
   journal      = {Journal of Statistics Education},
@@ -431,8 +489,7 @@
   url	       = {http://www.amstat.org/publications/jse/v3n3/datasets.dawson.html}
 }
 
-
-@Article{vcd:haberman:1974,
+@Article{vcd:Haberman:1974,
   author       = {S. J. Haberman},
   title	       = {Log-linear Models for Frequency Tables with Ordered
                   Classifications},
@@ -442,8 +499,7 @@
   pages	       = {689--700}
 }
 
-
-@Article{vcd:wing:1962,
+@Article{vcd:Wing:1962,
   author       = {J. K. Wing},
   title	       = {Institutionalism in Mental Hospitals},
   journal      = {British Journal of Social Clinical Psychology},
@@ -452,7 +508,7 @@
   pages	       = {38--51}
 }
 
-@Book{vcd:andersen:1991,
+@Book{vcd:Andersen:1991,
   author       = {E. B. Andersen},
   title	       = {The Statistical Analysis of Categorical Data},
   publisher    = {Springer-Verlag},
@@ -559,17 +615,17 @@
   note		= {{ISSN 1609-395X}},
 }
 
-@TECHREPORT{vcd:Zeileis+Meyer+Hornik:2005,
-  AUTHOR = {Achim Zeileis and David Meyer and Kurt Hornik},
-  TITLE = {Residual-based Shadings for Visualizing (Conditional) Independence},
-  INSTITUTION = {Department of Statistics and Mathematics, 
+@TechReport{vcd:Zeileis+Meyer+Hornik:2005,
+  author	= {Achim Zeileis and David Meyer and Kurt Hornik},
+  title		= {Residual-based Shadings for Visualizing (Conditional) Independence},
+  institution	= {Department of Statistics and Mathematics, 
                    Wirtschaftsuniversit\"at Wien,
 		   Research Report Series},
-  YEAR = {2005},
-  TYPE = {Report},
-  NUMBER = {20},
-  MONTH = {August},
-  URL = {http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_871}
+  year		= {2005},
+  type		= {Report},
+  number	= {20},
+  month	        = {August},
+  url		= {http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_871}
 }
 
 @TechReport{vcd:Meyer+Zeileis+Hornik:2005a,
@@ -610,22 +666,3 @@
   pages		= {257--263},
   doi		= {10.1198/000313006X118430}
 }
-
-@Manual{vcd:urbanek+wichtrey:2006,
-  title	       = {\pkg{{i}plots}: i{P}lots - {I}nteractive {G}raphics for {\sf R}},
-  author       = {Simon Urbanek and Tobias Wichtrey},
-  year	       = 2006,
-  note	       = {R package version 1.0-3},
-  url	       = {http://www.rosuda.org/iPlots/}
-}
-
-@Article{vcd:obel:1975,
-  author       = {E.B. Obel},
-  title	       = {A Comparative Study of Patients with Cancer of the
-                  Ovary Who Have Survived More or Less Than 10 Years},
-  journal      = {Acta Obstetricia et Gynecologica Scandinavica},
-  year	       = 1975,
-  volume       = 55,
-  pages	       = {429--439}
-}
-

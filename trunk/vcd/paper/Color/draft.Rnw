@@ -10,10 +10,10 @@
 \Abstract{
   Statistical graphics are often augmented by the use of color
   coding information contained in some variable. When this involves
-  the shading of areas (and not only points or lines)---e.g., as in barplots, pie charts,
+  the shading of areas (and not only points or lines)---e.g., as in bar plots, pie charts,
   mosaic displays or heatmaps---it is important that the colors are perceptually based
   and do not introduce optical illusions or systematic bias. Here, we discuss
-  how the perceptually-based HCL color space can be used for deriving suitable
+  how the perceptually-based Hue-Chroma-Luminance (HCL) color space can be used for deriving suitable
   color palettes for coding categorical data (qualitative palettes) and numerical
   variables (sequential and diverging palettes).
 }
@@ -430,7 +430,8 @@ whereas the others use larger ranges on the chroma axis.
 
 In this section, we show a few examples for the various types of palettes applied
 to statistical graphics. The first illustration is a visualization of a bivariate
-density estimation for the Old Faithful geyser eruptions data. Figure~\ref{fig:bkde}
+density estimation for the Old Faithful geyser eruptions data \citep{vcd:Azzalini+Bowman:1990}.
+Figure~\ref{fig:bkde}
 shows heatmaps of a bivariate kernel density estimate of waiting times between
 and duration of geyser eruptions in Yellowstone National Park. Both use a sequential
 palette as derived in Section~\ref{sec:sequential} balanced towards the same gray levels
@@ -504,7 +505,7 @@ Figure~\ref{fig:votes} shows the distribution of votes in this election stratifi
 province (Bundesland) in a highlighted mosaic display. The order of provinces is from 
 north to south, first for the 10 Western provinces, then for the 6 Eastern provinces. Clearly,
 the SPD performed better in the North and the CDU better in the South; furthermore,
-Die Linke performed particularly well in the Eastern provinces and the Saarland.
+Die Linke performed particularly well in the Eastern provinces and in Saarland.
 
 As pointed out in Section~\ref{sec:diverging}, diverging palettes are particularly useful
 when visualizing residuals or correlations (with natural neutral value 0) or probabilities 
