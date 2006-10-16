@@ -470,7 +470,7 @@ various implementations of Friendly mosaic plots: In his original
 uses colors from a palette based on HLS color space.
 The implementation in the standard packages of the
 \proglang{R} system for statistical computing and graphics
-\citep{vcd:R:2005} employs colors from HSV space. 
+\citep{vcd:R:2006} employs colors from HSV space. 
 Both spaces are rather similar transformations of RGB (Red-Green-Blue) space
 \citep{vcd:Brewer:1999,vcd:Poynton:2000} and are very common implementations of
 colors in many computer packages \citep{vcd:Moretti+Lyons:2002} making the generation
