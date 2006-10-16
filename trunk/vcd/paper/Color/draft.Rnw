@@ -31,7 +31,7 @@ library("KernSmooth")
 source("functions.R")
 load("Bundestagswahl2005.rda")
 
-generate_png <- FALSE
+generate_png <- TRUE
 @
 
 \section{Introduction} \label{sec:intro}
@@ -151,9 +151,9 @@ value and luminance.}
 
 For choosing color palettes it is helpful to have an idea how
 human color vision evolved. It has been hypothesized that it developed in three
-distinct stages: 1.~perception of \textit{light/dark} contrasts (monochrome only),
-2.~\textit{yellow/blue} contrasts (usually associated with our notion of warm/cold colors),
-3.~\textit{green/red} contrasts (helpful for assessing the ripeness of fruit). See 
+distinct stages: 1.~perception of \emph{light/dark} contrasts (monochrome only),
+2.~\emph{yellow/blue} contrasts (usually associated with our notion of warm/cold colors),
+3.~\emph{green/red} contrasts (helpful for assessing the ripeness of fruit). See 
 \cite{vcd:Ihaka:2003} for more details and references.
 
 Due to these three color axes, colors are typically described as
@@ -163,14 +163,14 @@ coordinates in the color plane (yellow/blue vs.~green/red) plus a third
 light/dark axis. Thus, perceptually-based color spaces try to capture the
 perceptual axes
 \begin{enumerate}
-  \item \textbf{hue} (dominant wavelength)
-  \item \textbf{chroma} (colorfulness, intensity of color as compared to gray)
-  \item \textbf{luminance} (brightness, amount of gray)
+  \item \emph{hue} (dominant wavelength)
+  \item \emph{chroma} (colorfulness, intensity of color as compared to gray)
+  \item \emph{luminance} (brightness, amount of gray)
 \end{enumerate}
 
 A popular implementation of such a color space, available in many graphics and
-statistics software packages, are \textit{HSV} (hue, saturation, value) colors.
-They are a simple transformation of \textit{RGB} (red, green, blue) colors
+statistics software packages, are \emph{HSV} (hue, saturation, value) colors.
+They are a simple transformation of \emph{RGB} (red, green, blue) colors
 and are defined by a triplet $(H, S, V)$ with $H \in [0, 360]$ and $S, V \in [0, 100]$.
 HSV space has the shape of a single regular cone (often inflated to a regular
 cylinder). Vertical sections through this space are shown in the upper panel
@@ -189,7 +189,7 @@ the CIELUV and CIELAB spaces developed by the \cite{vcd:CIE:2004}. \cite{vcd:Iha
 argues that CIELUV colors are typically preferred for use with emissive technologies
 such as computer screens which makes them an obvious candidate for implementation
 in statistical software packages. By taking polar coordinates in the UV plane of
-CIELUV, \textit{HCL} (hue, chroma, luminance) colors are obtained, defined by
+CIELUV, \emph{HCL} (hue, chroma, luminance) colors are obtained, defined by
 a triplet $(H, C, L)$ with $H \in [0, 360]$ and $C, L \in [0, 100]$. HCL space
 has the shape of a distorted double cone: the admissable chroma and luminance values
 depend on the hue chosen. The lower panel of Figure~\ref{fig:hsv-hcl} shows
