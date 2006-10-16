@@ -3,7 +3,7 @@
 \SweaveOpts{engine=R, eps=FALSE, echo=FALSE, results=hide}
 
 \title{Choosing Color Palettes for Statistical Graphics}
-\author{Achim Zeileis and Kurt Hornik\\Wirtschaftsuniversit\"at Wien}
+\author{Achim Zeileis \textnormal{and} Kurt Hornik\\Wirtschaftsuniversit\"at Wien}
 \Plainauthor{Achim Zeileis, Kurt Hornik}
 \Keywords{qualitative palette, sequential palette, diverging palette, HCL colors, HSV colors, perceptually-based color space}
 
@@ -20,8 +20,6 @@
 
 \begin{document}
 
-\section{Introduction} \label{sec:intro}
-
 <<preliminaries>>=
 library("vcd")
 library("e1071")
@@ -33,46 +31,76 @@ library("KernSmooth")
 source("functions.R")
 load("Bundestagswahl2005.rda")
 
-generate_png <- TRUE
+generate_png <- FALSE
 @
 
-First, we motivate why HCL colors \citep{vcd:Ihaka:2003} are suitable for choosing color palettes
-by contrasting them with the more commonly implemented HSV colors.
+\section{Introduction} \label{sec:intro}
 
-Then, we describe strategies how color palettes for categorical and numerical
-data can be chosen in this space. Following \cite{vcd:Brewer:1999}, we distinguish
-three types of palettes: qualitative, sequential and diverging.
-All palettes described are 
-available in \proglang{R} \citep{vcd:R:2006} in the package \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006}
-using the HCL color implementation from \pkg{colorspace} \citep{vcd:Ihaka:2004}.
-Technical documentation to the \proglang{R} implementations along with a large
-collection of examples is available via \verb/help("rainbow_hcl")/ that provides 
-more comparisons between existing \proglang{R} palettes (based on HSV colors) and
-the HCL color palettes.
+Color is an integral element of graphical displays in general, and many statistical
+graphics in particular. Statistical software packages typically provide various color
+palettes and allow practitioners to employ these for visualizing data in various types
+of displays. However, more often than not, there is relatively little guidance about
+how to choose an appropriate palette for a certain visualization task. Here, we address
+this problem by suggesting a color selection strategy for visualizing both categorical
+and numerical information by selecting colors along axes in a color space whose axes
+can be matched with perceptual axes of the human visual system.
 
-%%FIXME: what to say about ColorBrewer
+For implementing color palettes in computer programs, typically color spaces are
+employed that provide a mapping to Red-Green-Blue (RGB) colors. RGB is an additive
+color model which is used for generating colors on computer screens
+\citep[by mixing different amounts of the primary colors red, green and blue,
+see][for more details]{vcd:Poynton:2000}. While being eminently useful for generating
+colors on computer screens, it is hard for humans to select the coordinates in RGB
+space corresponding to a certain color. Therefore, color picker tools in computer
+programs are based on different color models---starting from the pioneering introduction
+of Hue-Saturation-Value (HSV) colors \citep{vcd:Smith:1978}---which try to capture the
+dimensions of human visual perception. HSV space is a simple transformation of RGB
+space which is also implemented in many statistical software packages
+\citep[see][for more details on HSV colors and links to further information about the other color
+spaces discussed in the following]{vcd:Wiki+HSV:2006}. Although being easy to use,
+HSV space exhibits a number of disadvantages: It is relatively difficult to select sets of
+HSV coordinates that yield colors that are ``in harmony'' \citep[see][]{vcd:Munsell:1905}.
+The reason for this is that colors with different hues also differ in saturation and brightness.
+For statistical graphics, this is important because it can introduce size distortions in
+the perception of shaded areas and color-caused optical illusions \citep{vcd:Cleveland+McGill:1983}.
+Furthermore, the use of HSV colors encourages the use of flashy and highly saturated
+colors which are good for drawing attention to a plot but hard to look at for a longer time.
+
+Despite these known drawbacks, HSV space is still the predominantly-used color model in
+color picker tools \citep{vcd:Moretti+Lyons:2002,vcd:Meier+Spalter+Karelitz:2004}
+and the basis for many palettes in statistical software packages. A notable
+exception is the \pkg{ColorBrewer.org} tool \citep{vcd:Harrower+Brewer:2003},
+an online tool for selecting color palettes for maps, providing sets of colors
+for coding various types of information. Here, we take a similar approach
+and describe strategies for the choice of color palettes for categorical and numerical
+data. Following \cite{vcd:Brewer:1999} and \cite{vcd:Harrower+Brewer:2003}, we distinguish
+three types of palettes: qualitative, sequential and diverging. The first is tailored
+for coding categorical information and the latter two are aimed at numerical variables.
+Unlike \pkg{ColorBrewer.org}, we do not only provide fixed sets of colors (with a limited
+number of colors in each set) but describe paths through a perceptually-based color space
+so that the user can decide which path exactly should be taken and how many colors should
+be selected. The color space employed by us is the Hue-Chroma-Luminance (HCL) color space
+\citep[see][]{vcd:Ihaka:2003} and we derive explicit formulae describing the paths through
+this space that correspond to different types of palettes. Given a mapping from HCL to RGB
+coordinates, our formulas are extremely easy to implement and we provide such an implementation
+in the \proglang{R} language \citep{vcd:R:2006} using the powerful \proglang{R} graphics
+system \citep[see][]{vcd:Murrell:2006}. A flexible implementation of all palettes described
+is provided in the package \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006} using the HCL
+color implementation from \pkg{colorspace} \citep{vcd:Ihaka:2004}. This gives the user
+both a conceptual and computational tool box for experimenting with color palettes for
+a particular display.
+
+The remainder of the paper is organized as follows: Section~\ref{sec:spaces} provides
+further information on HCL and other color spaces, contrasting in particular the properties
+of HSV and HCL colors. Sections~\ref{sec:qualitative}, \ref{sec:sequential}, and \ref{sec:diverging}
+introduce HCL-based qualitative, sequential, and diverging palettes, respectively.
+Section~\ref{sec:illustrations} shows some brief illustrations for each type of palette
+in statistical graphics before Section~\ref{sec:discussion} concludes the paper with a
+discussion. Some supplementary \proglang{R} code that facilitates experimentation with
+the new palettes is provided in Appendix~\ref{sec:R}.
+
 
 \section{Color spaces} \label{sec:spaces}
-
-For choosing color palettes, it is imperative to have an understanding
-how colors are perceived. For this it is helpful to have an idea how
-human color vision evolved. It has been hypothesized that it developed in three
-distinct stages: 1.~perception of \textit{light/dark} contrasts (monochrome only),
-2.~\textit{yellow/blue} contrasts (usually associated with our notion of warm/cold colors),
-3.~\textit{green/red} contrasts (helpful for assessing the ripeness of fruit). See 
-\cite{vcd:Ihaka:2003} for more details and references.
-
-Due to these three color axes, colors are typically described as
-locations in 3-dimensional spaces. However, human perception of color
-does not correspond to the physiological axes above, but rather to polar
-coordinates in the color plane (yellow/blue vs.~green/red) plus a third
-light/dark axis. Thus, perceptually-based color spaces are defined by three dimensions
-that try to capture
-\begin{enumerate}
-  \item \textbf{hue} (dominant wavelength)
-  \item \textbf{chroma} (colorfulness)
-  \item \textbf{luminance} (brightness, amount of light)
-\end{enumerate}
 
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[p]
@@ -121,13 +149,32 @@ value and luminance.}
 \end{center}
 \end{figure}
 
+For choosing color palettes it is helpful to have an idea how
+human color vision evolved. It has been hypothesized that it developed in three
+distinct stages: 1.~perception of \textit{light/dark} contrasts (monochrome only),
+2.~\textit{yellow/blue} contrasts (usually associated with our notion of warm/cold colors),
+3.~\textit{green/red} contrasts (helpful for assessing the ripeness of fruit). See 
+\cite{vcd:Ihaka:2003} for more details and references.
+
+Due to these three color axes, colors are typically described as
+locations in 3-dimensional spaces. However, human perception of color
+does not correspond to the physiological axes above, but rather to polar
+coordinates in the color plane (yellow/blue vs.~green/red) plus a third
+light/dark axis. Thus, perceptually-based color spaces try to capture the
+perceptual axes
+\begin{enumerate}
+  \item \textbf{hue} (dominant wavelength)
+  \item \textbf{chroma} (colorfulness, intensity of color as compared to gray)
+  \item \textbf{luminance} (brightness, amount of gray)
+\end{enumerate}
+
 A popular implementation of such a color space, available in many graphics and
 statistics software packages, are \textit{HSV} (hue, saturation, value) colors.
 They are a simple transformation of \textit{RGB} (red, green, blue) colors
 and are defined by a triplet $(H, S, V)$ with $H \in [0, 360]$ and $S, V \in [0, 100]$.
 HSV space has the shape of a single regular cone (often inflated to a regular
 cylinder). Vertical sections through this space are shown in the upper panel
-of Figure~\ref{fig:hsv-hcl}, depicting hue and saturation given value.
+of Figure~\ref{fig:hsv-hcl}, depicting hue and saturation given different value levels.
 Although simple to specify and easily available in many computing environments,
 HSV colors have a fundamental drawback: its three dimensions map to the three
 dimensions of human color perception very poorly. The three dimensions are
@@ -151,9 +198,18 @@ luminance) is now properly balanced towards the same gray (going from black to w
 with increasing luminance) which becomes obvious when converting the colors to
 a gray scale is in Figure~\ref{fig:hsv-hcl-gray}. This balancing of HCL colors
 gives us the opportunity to conveniently choose color palettes which code categorical
-and/or numerical information by translating it to the three perceptual dimensions.
+and/or numerical information by translating it to paths along the three perceptual axes.
 However, some care is required for dealing with the irregular shape of the HCL space
 which will be addressed in the following sections.
+
+
+All palettes described are 
+available in \proglang{R} \citep{vcd:R:2006} in the package \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006}
+using the HCL color implementation from \pkg{colorspace} \citep{vcd:Ihaka:2004}.
+Technical documentation to the \proglang{R} implementations along with a large
+collection of examples is available via \verb/help("rainbow_hcl")/ that provides 
+more comparisons between existing \proglang{R} palettes (based on HSV colors) and
+the HCL color palettes.
 
 
 \section{Qualitative palettes} \label{sec:qualitative}
@@ -167,27 +223,22 @@ or highlighted mosaic displays (see Figure~\ref{fig:votes}).
 
 \cite{vcd:Ihaka:2003} describes a simple strategy for choosing such palettes: chroma
 and luminance are kept fixed and only the hue is varied for obtaining different colors
-which are consequently all balanced towards the same gray. If colors from the full
-color wheel (i.e., $H \in [0, 360]$) should be used, not all combinations of chroma
-and luminance are feasible. Figure~\ref{fig:pal-q-construct} depicts how three colors
+which are consequently all balanced towards the same gray. As Figure~\ref{fig:hsv-hcl}
+illustrates, the range of hues available depends on the combination of chroma and
+luminance chosen. Figure~\ref{fig:pal-q-construct} depicts how three colors
 are chosen, given $C = 50$ and $L = 70$. 
 
 Various strategies for choosing the hues in a certain palette are conceivable.
 A simple and intuitive one is to use colors as metaphors for categories
-(e.g., for political parties). Figure~\ref{fig:pal-q-examples} shows a few
-further examples for generating qualitative sets of colors $(H, 50, 70)$.
+(e.g., for political parties), another approach would be to use segments from
+the color wheel corresponding to nearby or distant colors. The latter is shown
+in Figure~\ref{fig:pal-q-examples} which depicts
+examples for generating qualitative sets of colors $(H, 50, 70)$.
 In the upper left panel colors from the full spectrum are used ($H = 30, 120, 210, 300$)
 creating a `dynamic' set of colors. The upper right panel shows a `harmonic'
 set with $H = 60, 120, 180, 240$. Warm colors (from the blue/green part of the spectrum: 
 $H = 270, 230, 190, 150$) and cold colors (from the yellow/red part of the spectrum:
 $H = 90, 50, 10, 330$) are shown in the lower left and right panel, respectively.
-
-In \pkg{vcd}, these palettes are available in the function
-\begin{Soutput}
-rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, ...)
-\end{Soutput}
-
-%%FIXME: briefly explain interface
 
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[p]
@@ -225,6 +276,18 @@ in different intervals for given $C = 50$ and $L = 70$.}
 \end{center}
 \end{figure}
 
+In \pkg{vcd}, these palettes are available in the function
+\begin{Soutput}
+rainbow_hcl(n, c = 50, l = 70, start = 0, end = 360*(n-1)/n, ...)
+\end{Soutput}
+wher \code{n} controls the number of colors in the palette. The arguments
+\code{c} and \code{l} give the fixed chroma and luminance level, respectively,
+and \code{start} and \code{end} specify the range of hue angles. The function
+is named after the base \proglang{R} function \code{rainbow()} which has a similar
+interface but chooses colors in HSV coordinates. It computes the HCL coordinates
+and transforms them to RGB coordinates by calling the \code{hcl()} function 
+provided by the \pkg{colorspace} package. The \proglang{R} code for reproducing
+Figure~\ref{fig:pal-q-examples} is given in the appendix.
 
 
 \section{Sequential palettes} \label{sec:sequential}
@@ -236,7 +299,7 @@ to visualize an intensity or interestingness $i \in [0, 1]$. A typical applicati
 in statistics are heatmaps (see Figure~\ref{fig:bkde}).
 
 The simplest solution to this task is to employ light/dark contrasts, i.e., employ the
-oldest and simplest perceptual axis. The interestingness is thus coded
+most basic perceptual axis. The interestingness is thus coded
 by an increasing amount of gray (i.e., decreasing luminance) 
   \[ (H, 0, 90 - i \cdot 60), \]
 where the hue $H$ used does not matter, chroma is set to 0 (i.e., no color), and 
@@ -257,10 +320,10 @@ The right panel of Figure~\ref{fig:pal-s-construct} shows that the exact same st
 is not possible  for the green hue $H = 120$. While the gray colors without chroma can be chosen in 
 the same way, there is a stronger trade-off between using dark colors (with low luminance)
 and colorful colors (with high chroma). Hence, the second path from light gray to 
-full green ends at a much lighter color with $L_{\min} = 75$.
+full green ends at a much lighter color with $L_{\min} = 75$. 
 
 \setkeys{Gin}{width=\textwidth}
-\begin{figure}[b!]
+\begin{figure}[p]
 \begin{center}
 <<pal-s-construct>>=
 if(generate_png) {
@@ -295,15 +358,10 @@ either only luminance or both luminance and chroma.}
 \end{center}
 \end{figure}
 
-In \pkg{vcd}, this strategy is implemented in the function
-\begin{Soutput}
-sequential_hcl(n, h = 260, c = c(80, 0), l = c(30, 90), power = 1.5, ...) 
-\end{Soutput}
-
 \setkeys{Gin}{width=.8\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<pal-s-examples, fig=TRUE, height=9, width=6>>=
+<<pal-s-examples, fig=TRUE, height=5, width=6>>=
 par(mfrow = c(5, 1), mar = c(0, 0, 0, 0))
 pal(sequential_hcl(12, c = 0, power = 2.2))
 pal(sequential_hcl(12, power = 2.2))
@@ -311,25 +369,39 @@ pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), power = c(1/3, 1.5)))
 pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), power = c(1/5, 1.5)))
 pal(rev(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), power = 1)))
 @
-\caption{\label{fig:pal-s-examples} Examples for sequential palettes.}
+\caption{\label{fig:pal-s-examples} Examples for sequential palettes, varying
+only luminance (first panel), chroma and luminance (second panel), and hue,
+chroma and luminance (remaining panels).}
 \end{center}
 \end{figure}
+
+In \pkg{vcd}, this strategy is implemented in the function
+\begin{Soutput}
+sequential_hcl(n, h = 260, c = c(80, 0), l = c(30, 90), power = 1.5, ...) 
+\end{Soutput}
+where the first element of \code{c} and \code{l} give the starting chroma and luminance
+coordinate (by default colorful and dark) and the second element the ending coordinate
+(by default light gray). The \code{power} argument implements $p$ and defaults to $1.5$.
 
 To increase the contrast between the colors in the palette even further, the ideas from
 the previous sequential palettes can also be combined with qualitative palettes by
 simultaneously varying the hue as well:
-  \[ (H_2 - i \cdot (H_1 - H_2), C_{\max} - i^{p_1} \cdot (C_{\max} - C_{\min}), L_{\max} - i^{p_2} \cdot (L_{\max} - L_{\min})). \]
-A typical application would be heat colors that increase from a light yellow (e.g., $(90, 30, 90)$)
-to a full red (e.g., $(0, 100, 50)$). To make the change in hue visible, the chroma needs to
-increase rather quickly for low values of $i$ and then only slowly for higher values of $i$.
-This can be achieved by choosing a power $p_1 < 1$.
+  \[ (H_2 - i \cdot (H_1 - H_2), C_{\max} - i^{p_1} \cdot (C_{\max} - C_{\min}),
+      L_{\max} - i^{p_2} \cdot (L_{\max} - L_{\min})). \]
+One application would be a HCL-based version of heat colors that increase from a light yellow
+(e.g., $(90, 30, 90)$) to a full red (e.g., $(0, 100, 50)$). To make the change in hue
+visible, the chroma needs to increase rather quickly for low values of $i$ and then only
+slowly for higher values of $i$. This can be achieved by choosing a power $p_1 < 1$.
 
 In \proglang{R}, these are available in the function
 \begin{Soutput}
 heat_hcl(n, h = c(0, 90), c = c(100, 30), l = c(50, 90), power = c(1/5, 1), ...)
 \end{Soutput}
-with which the lower three rows in Figure~\ref{fig:pal-s-examples} are produced.
+with which the lower three rows in Figure~\ref{fig:pal-s-examples} are produced. The
+\proglang{R} code reproducing this figure and stating the exact parameters used is again
+provided in the appendix.
 
+\clearpage
 
 \section{Diverging palettes} \label{sec:diverging}
 
@@ -340,12 +412,12 @@ probabilities (with neutral value 0.5) that could be visualized in mosaic plots 
 or classification maps (see Figure~\ref{fig:class}). Without loss of generality, we assume
 that we want to visualize an intensity or interestingness $i \in [-1, 1]$.
 
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[b!]
+\setkeys{Gin}{width=.8\textwidth}
+\begin{figure}[p]
 \begin{center}
 <<pal-d-construct>>=
 if(generate_png) {
-  png(file = "pal-d-construct.png", height = 480, width = 540)
+  png(file = "pal-d-construct.png", height = 480, width = 534)
   hue260 <- hue.slice(260, grid.n = 301, plot = FALSE)
   hue360 <- hue.slice(360, grid.n = 301, plot = FALSE)
   mychroma <- as.numeric(colnames(hue260))
@@ -394,41 +466,43 @@ varying luminance and chroma.}
 \setkeys{Gin}{width=.8\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<pal-d-examples, fig=TRUE, height=8, width=6>>=
+<<pal-d-examples, fig=TRUE, height=4, width=6>>=
 par(mfrow = c(4, 1), mar = c(0, 0, 0, 0))
 pal(diverge_hcl(7))
 pal(diverge_hcl(7, c = 100, l = c(50, 90), power = 1))
-pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
 pal(diverge_hcl(7, h = c(130, 43), c = 100, l = c(70, 90)))
+pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
 @
-\caption{\label{fig:pal-d-examples} Examples for diverging palettes.}
+\caption{\label{fig:pal-d-examples} Examples for diverging palettes with different
+pairs of hues and decreasing luminance contrasts.}
 \end{center}
 \end{figure}
 
 Given sequential palettes, deriving diverging palettes is easy: two different hues are
 chosen for adding color to the same amount of `gray' at a given intensity $|i|$.
 Figure~\ref{fig:pal-d-construct} shows the chroma/luminance plane back to back for the
-hues $H = 0$ and 260 with two different paths---with slightly different emphasis on
+hues $H = 0$ and 260 with two different paths---giving slightly different emphasis on
 luminance or chroma contrasts---from a full red over a neutral grey to a full blue.
-These particular hues were chosen because they have rather similar
-chroma/luminance planes, allowing for many different combinations of maximal chroma and luminance.
-%%FIXME: symmetric difference
-As Figure~\ref{fig:pal-s-construct} illustrates, a bit of care is needed to choose two colors
-that are sufficiently similar in their chroma/luminance plane to allow for the same
-luminance and/or chroma contrasts.
+As Figure~\ref{fig:pal-s-construct} illustrates, the pair of hues should be chosen carefully
+because the admittable values of in the chrome/luminance plane differ across hues.
+Clearly, for deriving symmetric palettes, only colors from the intersection of the
+admittable chroma/luminance planes can be used. The particular hues $H = 0$ and $260$
+used in Figure~\ref{fig:pal-s-construct} were chosen because they have rather similar
+chroma/luminance planes, allowing for both large chroma and luminance contrasts.
 
 In \pkg{vcd}, the following function is provided:
 \begin{Soutput}
 diverge_hcl(n, h = c(260, 0), c = 80, l = c(30, 90), power = 1.5, ...) 
 \end{Soutput}
+which has the same arguments as \code{sequential_hcl()} but takes a pair of hues \code{h}.
 
 Figure~\ref{fig:pal-d-examples} shows various examples of conceivable combinations of
 hue, chroma and luminance. The first palette uses a broader range on the luminance axis
-whereas the others use larger ranges on the chroma axis.
+whereas the others mostly rely on chroma contrasts.
 
-\section{Illustrations}
+\section{Illustrations} \label{sec:illustrations}
 
-In this section, we show a few examples for the various types of palettes applied
+In this section, we show a collection of examples for the various types of palettes applied
 to statistical graphics. The first illustration is a visualization of a bivariate
 density estimation for the Old Faithful geyser eruptions data \citep{vcd:Azzalini+Bowman:1990}.
 Figure~\ref{fig:bkde}
@@ -450,7 +524,7 @@ if(generate_png) {
   data("geyser", package = "MASS")
   dens <- bkde2D(cbind(geyser$duration, geyser$waiting), bandwidth = c(0.2, 3), gridsize = c(201, 201))
   image(dens$x1, dens$x2, sqrt(dens$fhat), xlab = "duration", ylab = "waiting", 
-    col = rev(sequential_hcl(33, c = 0, power = 2)))
+    col = rev(sequential_hcl(33, c = 0, l = c(30, 90), power = c(1/5, 2))))
   box()
   image(dens$x1, dens$x2, sqrt(dens$fhat), xlab = "duration", ylab = "waiting", 
     col = rev(heat_hcl(33, c = c(80, 30), l = c(30, 90), power = c(1/5, 2))))
@@ -480,6 +554,7 @@ pie(seats, clockwise = TRUE, col = hcl(c(240, 60, 300, 120, 0), 60, 75), radius 
 <<votes, fig=TRUE, height=9, width=11>>=
 Votes <- as.table(as.matrix(votes[c(1, 3, 4, 5, 9, 11, 13, 14, 15, 16, 2, 6, 7, 8, 10, 12),c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]))
 names(dimnames(Votes)) <- c("", "")
+dimnames(Votes)[[2]][c(4, 5)] <- c("Gr", "Li")
 
 mosaic(Votes, labeling_args = list(rot_labels = c(0, 90, 0, 0), pos_labels = "center",
   just_labels = c("center", "center", "center", "right")),
@@ -566,42 +641,131 @@ if(generate_png) {
 \end{figure}
 
 
-\section{Open questions}
+\section{Discussion} \label{sec:discussion}
 
-From our experience, the paths through HCL space described in the previous sections
-in principle work very well and can be used to effectively code qualitative and 
-quantitative information. However, there are some open questions, formulated below.
-In particular, we are not sure how we can properly define trade-offs
-between increasing the range with respect to one dimension and decreasing the
-range with respect to another.
+Many statistical graphics---especially when displayed on a computer screen,
+e.g., as in interactive usage, electronic papers or presentation slides---
+employ colors to code information about a certain variable. Despite this
+omnipresence of color, there is often only little guidance in statistical
+software packages on how to choose a palette appropriate for a particular
+visualization task---auspicious tools such as \pkg{ColorBrewer.org} notwithstanding.
+We try to address this problem by suggesting color schemes for coding
+categorical information (qualitative palettes) and numerical information
+(sequential and diverging palettes) based on the perceptually-based
+HCL color space.
 
-\begin{itemize}
-  \item In sequential/diverging palettes, there is a trade-off between high chroma and high luminance.
-        How should this be chosen in practice? Our impression is that when a small set of colors
-        (such as 3 or 4) are used, large differnces in chroma work well and large differences
-        in luminance are not necessary. However, when a larger set of colors is used (e.g., for 
-        heatmaps where extreme values should be identifiable) it is much more important to have a big
-        difference in luminance.
+We provide paths through HCL space along perceptual axes
+so that colors selected along these paths match perceptual dimensions.
+This gives the users the possibility to easily experiment with the HCL-based
+palettes by varying several degrees of freedom. For qualitative
+palettes, these are the coordinates on the chroma and luminance axis, respectively,
+controlling whether the colors are light or dark and how colorful they are.
+For sequential and diverging palettes, the user can decide whether contrasts
+in the chroma or luminance direction (or both) should be employed. In our
+experience, chroma contrasts work sufficiently well if a small set of colors
+is used. However, when a larger set of colors is used (e.g., for heatmaps
+where extreme values should be identifiable) it is much more important to
+have a big difference in luminance. Another degree of freedom in these 
+palettes is the rate at which the intensity $|i|$ is increased from $0$ to $1$:
+Small powers $p$ can be used if palettes with a lot of color should be 
+constructed (e.g., to clearly separate regions in a classification map). On
+the other hand, large powers $p$ will result in palettes with less color
+(e.g., appropriate to highlight only extreme regions firmly classified in such a map).
 
-  \item How should the intensity $|i|$ be increased from 0 to 1?
-        Our experience is that for a small set of colors linear increase is sufficient ($p = 1$)
-        whereas in heatmaps where only very extreme regions are interesting a $p > 1$
-        should be used.
+Based on these conceputal guidelines and the computational tools readily
+provided in the \proglang{R} system (and easily implemented in other
+statistical software packages), users can generate palettes varying these
+degrees of freedom and thus adapting the colors to their particular graphical display.
 
-  \item For diverging palettes, how should pairs of colors be chosen? The hues $H = 0$
-        and $H = 260$ where chosen because they are on opposite sides of the color wheel
-	but have a very similar chroma/luminance plane.
-	
-  \item To allow more convenient navigation in HCL space, some more \proglang{R} infrastructure
-        could be helpful. We are not sure what would the best or most natural interface for this.
-	A good start might be a function that computes the admissible value on one axis given 
-	a particular value on the other two axes. Maybe you have already experimented with 
-	something like this?
-\end{itemize}	
+%% From our experience, the paths through HCL space described in the previous sections
+%% in principle work very well and can be used to effectively code qualitative and 
+%% quantitative information. However, there are some open questions, formulated below.
+%% In particular, we are not sure how we can properly define trade-offs
+%% between increasing the range with respect to one dimension and decreasing the
+%% range with respect to another.
+%% 
+%% \begin{itemize}
+%%   \item In sequential/diverging palettes, there is a trade-off between high chroma and high luminance.
+%%         How should this be chosen in practice? Our impression is that when a small set of colors
+%%         (such as 3 or 4) are used, large differnces in chroma work well and large differences
+%%         in luminance are not necessary. However, when a larger set of colors is used (e.g., for 
+%%         heatmaps where extreme values should be identifiable) it is much more important to have a big
+%%         difference in luminance.
+%% 
+%%   \item How should the intensity $|i|$ be increased from 0 to 1?
+%%         Our experience is that for a small set of colors linear increase is sufficient ($p = 1$)
+%%         whereas in heatmaps where only very extreme regions are interesting a $p > 1$
+%%         should be used.
+%% 
+%%   \item For diverging palettes, how should pairs of colors be chosen? The hues $H = 0$
+%%         and $H = 260$ where chosen because they are on opposite sides of the color wheel
+%% 	but have a very similar chroma/luminance plane.
+%% 	
+%%   \item To allow more convenient navigation in HCL space, some more \proglang{R} infrastructure
+%%         could be helpful. We are not sure what would the best or most natural interface for this.
+%% 	A good start might be a function that computes the admissible value on one axis given 
+%% 	a particular value on the other two axes. Maybe you have already experimented with 
+%% 	something like this?
+%% \end{itemize}	
 
-%FIXME% Acknowledgements
-%% Paul Murrell, Ross Ihaka, Brian D. Ripley, David Meyer, Thomas Kneib, Michael Hoehle
+
+\section*{Acknowledgements}
+
+We are thankful to David Meyer, Paul Murrell, Brian~D.~Ripley,
+Thomas Kneib, and Michael H\"ohle for feedback, suggestions and discussions.
 
 \bibliography{vcd}
+
+\begin{appendix}
+
+\section[Supplementary R code]{Supplementary \proglang{R} code}
+\label{sec:R}
+
+All palettes discussed above are implemented in the \proglang{R} system for statistical
+computing and graphics \citep{vcd:R:2006} in the package 
+\pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006}. The functions are based on the
+\code{hcl(h, c, l, ...)} function provedid by the \pkg{colorspace} package
+\citep{vcd:Ihaka:2004}. A simple convenience function for displaying a certain palette
+is
+\begin{Soutput}
+pal <- function(col, border = "light gray", ...)
+{
+  n <- length(col)
+  plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1),
+       axes = FALSE, xlab = "", ylab = "", ...)
+  rect(0:(n-1)/n, 0, 1:n/n, 1, col = col, border = border)
+}
+\end{Soutput}
+
+The qualitative palettes in Figure~\ref{fig:pal-q-examples} are generated via
+\begin{Soutput}
+pal(rainbow_hcl(4, start = 30, end = 300))
+pal(rainbow_hcl(4, start = 60, end = 240))
+pal(rainbow_hcl(4, start = 270, end = 150))
+pal(rainbow_hcl(4, start = 90, end = -30))
+\end{Soutput}
+
+The sequential palettes in Figure~\ref{fig:pal-s-examples} are generated via
+\begin{Soutput}
+pal(sequential_hcl(12, c = 0, power = 2.2))
+pal(sequential_hcl(12, power = 2.2))
+pal(terrain_hcl(12, c = c(65, 0), l = c(45, 95), power = c(1/3, 1.5)))
+pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), power = c(1/5, 1.5)))
+pal(heat_hcl(12, h = c(0, -100), l = c(75, 40), c = c(40, 80), power = 1))
+\end{Soutput}
+
+The diverging palettes in Figure~\ref{fig:pal-d-examples} are generated via
+\begin{Soutput}
+pal(diverge_hcl(7))
+pal(diverge_hcl(7, c = 100, l = c(50, 90), power = 1))
+pal(diverge_hcl(7, h = c(130, 43), c = 100, l = c(70, 90)))
+pal(diverge_hcl(7, h = c(180, 330), c = 59, l = c(75, 95)))
+\end{Soutput}
+
+Further information on all palettes is available from the corresponding
+online documentation. Examples that compare the new HCL-based palettes with
+those available in base \proglang{R} can be generated via \code{example("rainbow_hcl")}.
+
+\end{appendix}
 
 \end{document}
