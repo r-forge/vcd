@@ -3,7 +3,7 @@
 \SweaveOpts{engine=R, eps=FALSE, echo=FALSE, results=hide}
 
 \title{Choosing Color Palettes for Statistical Graphics}
-\author{Achim Zeileis \textnormal{and} Kurt Hornik\\Wirtschaftsuniversit\"at Wien}
+\author{Achim Zeileis \textnormal{and} Kurt Hornik\\Wirtschaftsuniversit\"at Wien, Austria}
 \Plainauthor{Achim Zeileis, Kurt Hornik}
 \Keywords{qualitative palette, sequential palette, diverging palette, HCL colors, HSV colors, perceptually-based color space}
 
@@ -29,7 +29,6 @@ library("kernlab")
 library("KernSmooth")
 
 source("functions.R")
-load("Bundestagswahl2005.rda")
 
 generate_png <- TRUE
 @
@@ -69,7 +68,7 @@ colors which are good for drawing attention to a plot but hard to look at for a 
 Despite these known drawbacks, HSV space is still the predominantly-used color model in
 color picker tools \citep{vcd:Moretti+Lyons:2002,vcd:Meier+Spalter+Karelitz:2004}
 and the basis for many palettes in statistical software packages. A notable
-exception is the \pkg{ColorBrewer.org} tool \citep{vcd:Harrower+Brewer:2003},
+exception is \pkg{ColorBrewer.org} \citep{vcd:Harrower+Brewer:2003},
 an online tool for selecting color palettes for maps, providing sets of colors
 for coding various types of information. Here, we take a similar approach
 and describe strategies for the choice of color palettes for categorical and numerical
@@ -542,7 +541,11 @@ if(generate_png) {
 \begin{center}
 <<seats, fig=TRUE, height=5, width=6>>=
 par(mar = rep(0.8, 4))
-pie(seats, clockwise = TRUE, col = hcl(c(240, 60, 300, 120, 0), 60, 75), radius = 1)
+seats <- structure(c(226, 61, 54, 51, 222),
+  .Names = c("CDU/CSU", "FDP",  "Linke", "Gruene", "SPD"))
+parties <- rainbow_hcl(6, c = 60, l = 75)[c(5, 2, 6, 3, 1)]
+names(parties) <- names(seats)
+pie(seats, clockwise = TRUE, col = parties, radius = 1)
 @
 \caption{\label{fig:seats} Seats in the German parliament.}
 \end{center}
@@ -552,15 +555,17 @@ pie(seats, clockwise = TRUE, col = hcl(c(240, 60, 300, 120, 0), 60, 75), radius 
 \begin{figure}[p]
 \begin{center}
 <<votes, fig=TRUE, height=9, width=11>>=
-Votes <- as.table(as.matrix(votes[c(1, 3, 4, 5, 9, 11, 13, 14, 15, 16, 2, 6, 7, 8, 10, 12),c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]))
-names(dimnames(Votes)) <- c("", "")
-dimnames(Votes)[[2]][c(4, 5)] <- c("Gr", "Li")
-
-mosaic(Votes, labeling_args = list(rot_labels = c(0, 90, 0, 0), pos_labels = "center",
-  just_labels = c("center", "center", "center", "right")),
-  gp = gpar(fill = hcl(c(240, 60, 0, 120, 300), 60, 75)),
+data("Bundestag2005")
+votes <- Bundestag2005[c(1, 3:5, 9, 11, 13:16, 2, 6:8, 10, 12),
+                       c("CDU/CSU", "FDP", "SPD", "Gruene", "Linke")]
+parties <- parties[colnames(votes)]
+dimnames(votes)[[2]][c(4, 5)] <- c("Gr", "Li")
+mosaic(votes, gp = gpar(fill = parties),
   spacing = spacing_highlighting, labeling = labeling_left,
-  margins = unit(c(2.5, 1, 1, 12), "lines"), keep = FALSE)
+  labeling_args = list(rot_labels = c(0, 90, 0, 0), pos_labels = "center",
+  just_labels = c("center","center","center","right"), varnames = FALSE),
+  margins = unit(c(2.5, 1, 1, 12), "lines"),
+  keep_aspect_ratio = FALSE)
 @
 \caption{\label{fig:votes} Votes in the German election 2005.}
 \end{center}
@@ -574,12 +579,12 @@ social democrats SPD, a blue hue $H = 240$ for the conservative CDU/CSU, a yello
 for the liberal FDP, a green hue $H = 120$ for the green party `Die Gruenen' and a purple 
 hue $H = 300$ for the leftist party `Die Linke'. All colors use the same chroma $C = 60$ and
 luminance $L = 75$. The pie chart clearly shows that neither the governing coalition of SPD
-and Gruene nor the opposition of CDU and FDP could assemble a majority. Given that no party
-would enter a coalition with the leftists, this lead to a big coalition of CDU and SPD.
+and Gruene nor the opposition of CDU/CSU and FDP could assemble a majority. Given that no party
+would enter a coalition with the leftists, this lead to a big coalition of CDU/CSU and SPD.
 Figure~\ref{fig:votes} shows the distribution of votes in this election stratified by 
 province (Bundesland) in a highlighted mosaic display. The order of provinces is from 
 north to south, first for the 10 Western provinces, then for the 6 Eastern provinces. Clearly,
-the SPD performed better in the North and the CDU better in the South; furthermore,
+the SPD performed better in the North and the CDU/CSU better in the South; furthermore,
 Die Linke performed particularly well in the Eastern provinces and in Saarland.
 
 As pointed out in Section~\ref{sec:diverging}, diverging palettes are particularly useful
