@@ -87,9 +87,8 @@ the general principles suggested can be turned into formulas describing paths of
 coordinates in this space. Given a mapping from HCL to RGB coordinates, our formulas are
 extremely easy to implement in software and we provide such an implementation
 in the \proglang{R} language \citep{vcd:R:2006} using the powerful \proglang{R} graphics
-system \citep[see][]{vcd:Murrell:2006}. A flexible implementation of all palettes described
-is provided in the package \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006} using the HCL
-color implementation from \pkg{colorspace} \citep{vcd:Ihaka:2004}. This gives the user
+system \citep[see][]{vcd:Murrell:2006} and the HCL
+color implementation from package \pkg{colorspace} \citep{vcd:Ihaka:2004}. This gives the user
 both a conceptual and computational tool box for experimenting with color palettes for
 a particular display.
 
@@ -212,9 +211,9 @@ which will be addressed in the following sections.
 
 Qualitative palettes are sets of colors for depicting different categories,
 i.e., for coding a categorical variable. Usually, these should give the same
-perceptual weight to each category so that no group is perceived to be larger/more
+perceptual weight to each category so that no group is perceived to be larger or more
 important than any other one. Typical applications of qualitative palettes in
-statistics would be bar plots, pie charts (see Figure~\ref{fig:seats}) 
+statistics would be bar plots \citep[see][]{vcd:Ihaka:2003}, pie charts (see Figure~\ref{fig:seats}) 
 or highlighted mosaic displays (see Figure~\ref{fig:votes}).
 
 \cite{vcd:Ihaka:2003} describes a simple strategy for choosing such palettes: chroma
@@ -455,10 +454,10 @@ Figure~\ref{fig:pal-d-construct} shows the chroma/luminance plane back to back f
 hues $H = 0$ and 260 with two different paths---giving slightly different emphasis on
 luminance or chroma contrasts---from a full red over a neutral grey to a full blue.
 As Figure~\ref{fig:pal-s-construct} illustrates, the pair of hues should be chosen carefully
-because the admissible values of in the chrome/luminance plane differ across hues.
+because the admissible values in the chrome/luminance plane differ across hues.
 Clearly, for deriving symmetric palettes, only colors from the intersection of the
 admissible chroma/luminance planes can be used. The particular hues $H = 0$ and $260$
-used in Figure~\ref{fig:pal-s-construct} were chosen because they correspond to similar
+used in Figure~\ref{fig:pal-d-construct} were chosen because they correspond to similar
 geometric shapes in the chroma/luminance plane, allowing for both large chroma and
 luminance contrasts. If potential viewers of the resulting graphic might be color-blind,
 the pair of hues should be taken from the yellow/blue axis of the color wheel
@@ -472,9 +471,9 @@ whereas the others mostly rely on chroma contrasts.
 \section{Illustrations} \label{sec:illustrations}
 
 In this section, we show a collection of examples for the various types of palettes applied
-to statistical graphics. The first examples illustrates qualitative palettes
-and visualizes data from the 2005 election for the German parliament ``Bundestag''
-are employed. In this election, five parties were able to obtain enough votes to enter the
+to statistical graphics. The first example illustrates qualitative palettes
+and visualizes data from the 2005 election for the German parliament ``Bundestag''.
+In this election, five parties were able to obtain enough votes to enter the
 Bundestag---the distribution of seats is depicted in a pie chart in Figure~\ref{fig:seats}.
 The colors used are rough metaphors for the political parties, using a red hue $H = 0$ for the
 social democrats SPD, a blue hue $H = 240$ for the conservative CDU/CSU, a yellow hue $H = 60$
@@ -535,10 +534,12 @@ To illustrate sequential palettes, a bivariate density estimation for the Old
 Faithful geyser eruptions data \citep{vcd:Azzalini+Bowman:1990} is visualized.
 The Old Faithful geyser is one of the most popular sites in Yellowstone National Park
 and it is of some interest to understand the relation ship between the duration
-of a geyser eruption and the waiting time until the next eruption.
+of a geyser eruption and the waiting time for this eruption.
 Figure~\ref{fig:bkde} shows (two versions of) a heatmap of a bivariate kernel density estimate of 
-duration and waiting time revealing a multi-modal bivariate distribution with more
-variation in the waiting time after a longer eruption. Both versions of the heatmap use a sequential
+duration and waiting time revealing a multi-modal bivariate distribution: short waiting
+times (around 50 minutes) are typically followed by a long eruption (around 4 minutes)
+whereas long waiting times (around 80 minutes) can be followed by either a long
+or short eruption (around 4 minutes). Both versions of the heatmap use a sequential
 palette as derived in Section~\ref{sec:sequential} balanced towards the same gray levels
 with $L \in [30, 90]$ and $p_2 = 1.5$. The sequential palette in the left panel uses only gray
 colors (i.e., $C_{\max} = 0$) and the palette in the right panel additionally employs
@@ -554,11 +555,13 @@ if(generate_png) {
   png(file = "bkde.png", height = 420, width = 840)
   par(mfrow = c(1, 2))
   data("geyser", package = "MASS")
-  dens <- bkde2D(cbind(geyser$duration, geyser$waiting), bandwidth = c(0.2, 3), gridsize = c(201, 201))
-  image(dens$x1, dens$x2, dens$fhat, xlab = "duration", ylab = "waiting", 
+  ## geyser2 <- cbind(geyser$duration[-299], geyser$waiting[-1])
+  geyser2 <- cbind(geyser$duration, geyser$waiting)
+  dens <- bkde2D(geyser2, bandwidth = c(0.2, 3), gridsize = c(201, 201))
+  image(dens$x1, dens$x2, dens$fhat, xlab = "duration", ylab = "waiting time", 
     col = rev(sequential_hcl(33, c = 0, l = c(30, 90), power = c(1/5, 1.5))))
   box()
-  image(dens$x1, dens$x2, dens$fhat, xlab = "duration", ylab = "waiting", 
+  image(dens$x1, dens$x2, dens$fhat, xlab = "duration", ylab = "waiting time", 
     col = rev(heat_hcl(33, c = c(80, 30), l = c(30, 90), power = c(1/5, 1.5))))
   box()
   dev.off()
@@ -594,12 +597,12 @@ values: values around 0 are on the decision boundary and are shaded in light gra
 regions that are firmly classified to one or the other class are shaded in full blue and
 red respectively. 
 
-Both diverging palettes employ a smaller contrast on the luminance axis ($L \in [30, 90]$)
+Both diverging palettes employ a smaller contrast on the luminance axis ($L \in [50, 90]$)
 and a larger chroma contrast ($C \in [0, 100]$) compared to the sequential palettes from
 the previous example. For Figure~\ref{fig:class}, we set $p_1$ and $p_2$ to the somewhat
 smaller value of $1.3$ to bring out all deviations from the decision boundary and not only the
 extreme decision values. For Figure~\ref{fig:arthritis}, the choice of
-$p_1$ and $p_2$ is not so important because only 5 colors are selected---we use values
+$p_1$ and $p_2$ is less important because only 5 colors are selected---we use values
 $p_1 = p_2 = 1$.
 
 
@@ -645,17 +648,17 @@ if(generate_png) {
 Implementing the different color palettes suggested in the previous section 
 is extremely easy if the software environment chosen already provides an implementation
 of HCL colors: from the formulas provided above the HCL coordinates for a
-palette can easily be computed. A bit more work is required if the sofware
+palette can be conveniently computed. A bit more work is required if the software
 package does not yet provide an HCL implementation. In that case, additional
 functionality is needed for translating HCL coordinates to the software package's 
 color system which may vary between different packages, but standardized RGB (sRGB)
 is often used. The typical way of coordinate conversion is to go first from HCL to
 CIELUV by simply transforming the polar $H$ and $C$ coordinates back to the original
-$U$ and $V$. Subsequently CIELUV is converted to CIEXYZ which in turn is converted
+$U$ and $V$. Subsequently, CIELUV is converted to CIEXYZ which in turn is converted
 to sRGB (with the latter conversion depending on the device used for display).
 The details of these conversions are somewhat technical and tedious (and hence
 omitted here), however the conversion formulas are still straightfoward to
-implement and can for example be found in \cite{vcd:Wiki+HSV:2006} or
+implement and can, for example, be found in \cite{vcd:Wiki+LUV:2006} or
 \cite{vcd:Poynton:2000}.
 
 The \proglang{R} system for statistical computing \citep{vcd:R:2006} already comes
@@ -676,7 +679,7 @@ where \code{n} controls the number of colors in the palette. The arguments
 and \code{start} and \code{end} specify the range of hue angles. The function
 is named after the base \proglang{R} function \code{rainbow()} which has a similar
 interface but chooses colors in HSV coordinates. It computes the HCL coordinates
-and transforms them to RGB coordinates by calling the \code{hcl()} function 
+and transforms them to RGB by calling the \code{hcl()} function 
 provided by the \pkg{colorspace} package. 
 
 Sequential palettes based on a single hue are implemented in the function
@@ -730,7 +733,7 @@ palettes, these are the coordinates on the chroma and luminance axis, respective
 controlling whether the colors are light or dark and how colorful they are.
 For sequential and diverging palettes, the user can decide whether contrasts
 in the chroma or luminance direction (or both) should be employed. In our
-experience (as illustrated in Section~\ref{sec:illustrations}, chroma contrasts
+experience (as illustrated in Section~\ref{sec:illustrations}), chroma contrasts
 work sufficiently well if a small set of colors is used. However, when a larger
 set of colors is used (e.g., for heatmaps where extreme values should be identifiable)
 it is much more important to have a big difference in luminance. Another parameter in these 
