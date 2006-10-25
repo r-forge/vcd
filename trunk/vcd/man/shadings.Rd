@@ -35,7 +35,7 @@ shading_sieve(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   eps = 0.01, line_col = "black", \dots)
 
 shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  col = hcl(c(260, 0), 50, 70))
+  col = NULL)
 }
 \arguments{
   \item{observed}{contingecy table of observed values}
@@ -113,7 +113,7 @@ shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   (1994) for more details. \code{shading_sieve} is similar, but uses HCL colors.
   
   The shading \code{shading_binary} just visualizes the sign of the residuals by using
-  two different colors.  
+  two different colors (default: blue and red, \code{hcl(c(260, 0), 50, 70)})).
 }
 
 \references{
