@@ -221,10 +221,11 @@ shading_max <- function(observed = NULL, residuals = NULL, expected = NULL, df =
 class(shading_max) <- "grapcon_generator"
 
 shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
-  col = colorspace::hcl(c(260, 0), 50, 70))
+  col = NULL)
 {
   ## check col argument
-  if (length(col) != 2) stop("Need exactly two colors!")
+  if(is.null(col)) col <- colorspace::hcl(c(260, 0), 50, 70)
+  col <- rep(col, length.out = 2)
   
   ## store color information for legend
   legend <- list(col = col[2:1], col.bins = 0, lty = NULL, lty.bins = NULL)
