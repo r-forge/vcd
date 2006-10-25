@@ -1,8 +1,6 @@
-citHeader("To cite vcd in publications use:")
+citHeader("To cite package vcd in publications use:")
 
-citHeader("To cite package mlbench in publications use:")
-
-desc <- packageDescription("mlbench")
+desc <- packageDescription("vcd")
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", desc$Date)
 vers <- paste("R package version", desc$Version)
 
