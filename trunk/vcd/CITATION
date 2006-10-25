@@ -1,0 +1,20 @@
+citHeader("To cite vcd in publications use:")
+
+citEntry(entry="Article",
+         title = "The Strucplot Framework: Visualizing Multi-Way Contingency Tables with vcd",
+         author = personList(as.person("David Meyer"),
+			     as.person("Achim Zeileis"),
+	                     as.person("Kurt Hornik")),
+         journal      = "Journal of Statistical Software",
+         year         = "2006",
+	 volume       = "17",
+	 number       = "3",
+	 pages        = "1--48",
+         url          = "http://www.jstatsoft.org/v17/i03/",
+         
+         textVersion = 
+         paste("David Meyer, Achim Zeileis, and Kurt Hornik (2006).", 
+               "The Strucplot Framework: Visualizing Multi-Way Contingency Tables with vcd.",
+               "Journal of Statistical Software, 17(3), 1-48.",
+	       "URL http://www.jstatsoft.org/v17/i03/")
+)
