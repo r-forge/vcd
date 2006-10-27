@@ -662,7 +662,7 @@ pie(rep(1,9), radius = 1, col = rainbow_hcl(9), labels = 360 * 0:8/9)
 <<diverging,fig=TRUE,echo=FALSE,height=6,width=7,results=hide>>=
 par(mfrow = c(1,1), mar = c(1,1,1,1), oma = c(0,0,0,0))
 plot.new()
-rect(0:4/5, 0.2, 1:5/5, 0.5, border = 0, col = diverge_hcl(5))
+rect(0:4/5, 0.2, 1:5/5, 0.5, border = 0, col = diverge_hcl(5, c = 100, l = c(50, 90)))
 rect(0, 0.2, 1, 0.5, border = 1, col = NULL)
 rect(0:4/5, 0.55, 1:5/5, 0.85, border = 0, col = diverge_hsv(5))
 rect(0, 0.55, 1, 0.85, border = 1, col = NULL)
