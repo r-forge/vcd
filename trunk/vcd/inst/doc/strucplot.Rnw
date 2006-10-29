@@ -1693,6 +1693,7 @@ maximum of the absolute Pearson residuals, \emph{each} colored
 residual violates the null hypotheses of independence, and thus, the
 ``culprits'' can immediately be identified.
 
+\clearpage
 \section[Labeling]{Labeling}
 \label{sec:labeling}
 
