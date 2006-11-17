@@ -162,7 +162,7 @@ hue.slice <- function(hue, grid.n = 101, type = c("HCL", "HSV"), plot = TRUE, fi
     luminance = seq(0, 100, length = grid.n)
     nc <- length(chroma)
     nl <- length(luminance)
-    color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
+    color.slice <- outer(chroma, luminance, function(y, x) hcl2hex(hue, x, y, fixup = fixup))
     xlab <- "chroma"
     ylab <- "luminance"
     main <- paste("hue =", round(hue, digits = 0))
@@ -604,22 +604,22 @@ mtext("luminance", side = 4, at = 75, line = 2)
 lines(c(-100, 100), c(50, 50))
 
 ## full colors
-rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
-rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
-rect(-5, 95, 5, 100, col = hcl(260, 0, 100))       ## grey vs. white
-rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))     ## grey vs. white
-rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
-rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
+rect(-100, 47.5, -90, 52.5, col = hcl2hex(0, 100, 50))
+rect(-55, 67.5, -45, 72.5, col = hcl2hex(0, 50, 70))
+rect(-5, 95, 5, 100, col = hcl2hex(260, 0, 100))       ## grey vs. white
+rect(-5, 87.5, 5, 92.5, col = hcl2hex(260, 0, 90))     ## grey vs. white
+rect(45, 67.5, 55, 72.5, col = hcl2hex(260, 50, 70))
+rect(90, 47.5, 100, 52.5, col = hcl2hex(260, 100, 50))
 
 text(-100, 33, "full color", pos = 4, cex = 1.2)
-rect(-100, 20, -80, 30, col = hcl(0, 100, 50))
-rect(-60, 20, -40, 30, col = hcl(0, 50, 70))
-rect(-20, 20, 0, 30, col = hcl(0, 0, 90))       
-rect(0, 20, 20, 30, col = hcl(260, 0, 90))
-#white# rect(-20, 20, 0, 30, col = hcl(0, 0, 100))
-#white# rect(0, 20, 20, 30, col = hcl(260, 0, 100))
-rect(40, 20, 60, 30, col = hcl(260, 50, 70))
-rect(80, 20, 100, 30, col = hcl(260, 100, 50))
+rect(-100, 20, -80, 30, col = hcl2hex(0, 100, 50))
+rect(-60, 20, -40, 30, col = hcl2hex(0, 50, 70))
+rect(-20, 20, 0, 30, col = hcl2hex(0, 0, 90))       
+rect(0, 20, 20, 30, col = hcl2hex(260, 0, 90))
+#white# rect(-20, 20, 0, 30, col = hcl2hex(0, 0, 100))
+#white# rect(0, 20, 20, 30, col = hcl2hex(260, 0, 100))
+rect(40, 20, 60, 30, col = hcl2hex(260, 50, 70))
+rect(80, 20, 100, 30, col = hcl2hex(260, 100, 50))
 
 lines(c(-45, -5), c(72.5, 87.5), lty = 2)
 lines(c(45, 5), c(72.5, 87.5), lty = 2)
@@ -627,19 +627,19 @@ lines(c(-95, -55), c(52.5, 67.5), lty = 2)
 lines(c(95, 55), c(52.5, 67.5), lty = 2)
 
 ## reduced colors
-rect(-25, 47.5, -15, 52.5, col = hcl(0, 20, 50))
-rect(-15, 67.5, -5, 72.5, col = hcl(0, 10, 70))
-rect(5, 67.5, 15, 72.5, col = hcl(260, 10, 70))
-rect(25, 47.5, 15, 52.5, col = hcl(260, 20, 50))
+rect(-25, 47.5, -15, 52.5, col = hcl2hex(0, 20, 50))
+rect(-15, 67.5, -5, 72.5, col = hcl2hex(0, 10, 70))
+rect(5, 67.5, 15, 72.5, col = hcl2hex(260, 10, 70))
+rect(25, 47.5, 15, 52.5, col = hcl2hex(260, 20, 50))
 
 
 text(-100, 13, "reduced color", pos = 4, cex = 1.2)
-rect(-60, 0, -40, 10, col = hcl(0, 20, 50))
-rect(-40, 0, -20, 10, col = hcl(0, 10, 70))
-rect(-20, 0, 0, 10, col = hcl(0, 0, 90))
-rect(0, 0, 20, 10, col = hcl(260, 0, 90))
-rect(20, 0, 40, 10, col = hcl(260, 10, 70))
-rect(40, 0, 60, 10, col = hcl(260, 20, 50))
+rect(-60, 0, -40, 10, col = hcl2hex(0, 20, 50))
+rect(-40, 0, -20, 10, col = hcl2hex(0, 10, 70))
+rect(-20, 0, 0, 10, col = hcl2hex(0, 0, 90))
+rect(0, 0, 20, 10, col = hcl2hex(260, 0, 90))
+rect(20, 0, 40, 10, col = hcl2hex(260, 10, 70))
+rect(40, 0, 60, 10, col = hcl2hex(260, 20, 50))
 
 lines(c(-18.75, -11.25), c(52.5, 67.5), lty = 2)
 lines(c(-8.75, -1.25), c(72.5, 87.5), lty = 2)

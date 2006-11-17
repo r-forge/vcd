@@ -53,7 +53,7 @@ hcl.wheel <-
         for(ang in hues) { # could do all this using outer() instead of for()...
             a. <- ang * pi/180
             z.a <- exp(1i * a.)
-            cols <- hcl(h = ang, c = chroma, l = luminance[i.c], fixup = fixup)
+            cols <- hcl2hex(h = ang, c = chroma, l = luminance[i.c], fixup = fixup)
             points(l.s * z.a, pch = 16, col = cols, cex = p.cex)
             if(do.label[2]) text(z.a*1.05, labels = ang, col = cols[length(cols)/2], srt = ang)
         }
@@ -74,7 +74,7 @@ hue.slice <- function(hue, grid.n = 251, plot = TRUE, fixup = FALSE, main = NULL
   luminance = seq(0, 100, length = grid.n)
   nc <- length(chroma)
   nl <- length(luminance)
-  color.slice <- outer(chroma, luminance, function(y, x) hcl(hue, x, y, fixup = fixup))
+  color.slice <- outer(chroma, luminance, function(y, x) hcl2hex(hue, x, y, fixup = fixup))
   xlab <- "chroma"
   ylab <- "luminance"
   if(is.null(main)) main <- paste("hue =", round(hue, digits = 0))
