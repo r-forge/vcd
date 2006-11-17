@@ -242,9 +242,9 @@ $H = 90, 50, 10, 330$) are shown in the lower left and right panel, respectively
 if(generate_png) {
   png(file = "pal-q-construct.png", height = 480, width = 480)
   hcl.wheel(luminance = 70, do.label = FALSE, inner.circle = TRUE)
-  rect(0.45, -0.05, 0.55, 0.05, col = hcl(0, 50, 70))
-  rect(-cos(pi/3)/2-0.05, sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, sin(pi/3)/2+0.05, col = hcl(120, 50, 70))
-  rect(-cos(pi/3)/2-0.05, -sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, -sin(pi/3)/2+0.05, col = hcl(240, 50, 70))
+  rect(0.45, -0.05, 0.55, 0.05, col = hcl2hex(0, 50, 70))
+  rect(-cos(pi/3)/2-0.05, sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, sin(pi/3)/2+0.05, col = hcl2hex(120, 50, 70))
+  rect(-cos(pi/3)/2-0.05, -sin(pi/3)/2-0.05, -cos(pi/3)/2+0.05, -sin(pi/3)/2+0.05, col = hcl2hex(240, 50, 70))
   dev.off()
 }
 @
@@ -315,21 +315,21 @@ if(generate_png) {
   lines(c(0, 100), c(90, 50), lty = 2)
   lines(c(0, 80), c(90, 30), lty = 2)
   lines(c(2.5, 2.5), c(90, 30), lty = 2)
-  rect(0, 87.5, 5, 92.5, col = hcl(260, 0, 90))
-  rect(47.5, 67.5, 52.5, 72.5, col = hcl(260, 50, 70))
-  rect(95, 47.5, 100, 52.5, col = hcl(260, 100, 50))
-  rect(37.5, 57.5, 42.5, 62.5, col = hcl(260, 40, 60))
-  rect(77.5, 27.5, 82.5, 32.5, col = hcl(260, 80, 30))
-  rect(0, 57.5, 5, 62.5, col = hcl(260, 0, 60))
-  rect(0, 27.5, 5, 32.5, col = hcl(260, 0, 30))
+  rect(0, 87.5, 5, 92.5, col = hcl2hex(260, 0, 90))
+  rect(47.5, 67.5, 52.5, 72.5, col = hcl2hex(260, 50, 70))
+  rect(95, 47.5, 100, 52.5, col = hcl2hex(260, 100, 50))
+  rect(37.5, 57.5, 42.5, 62.5, col = hcl2hex(260, 40, 60))
+  rect(77.5, 27.5, 82.5, 32.5, col = hcl2hex(260, 80, 30))
+  rect(0, 57.5, 5, 62.5, col = hcl2hex(260, 0, 60))
+  rect(0, 27.5, 5, 32.5, col = hcl2hex(260, 0, 30))
   hue.slice(120, grid.n = 301)
   lines(c(0, 100), c(90, 75), lty = 2)
   lines(c(2.5, 2.5), c(90, 30), lty = 2)
-  rect(0, 87.5, 5, 92.5, col = hcl(260, 0, 90))
-  rect(47.5, 80, 52.5, 85, col = hcl(120, 50, 82.5))
-  rect(95, 72.5, 100, 77.5, col = hcl(120, 100, 75))
-  rect(0, 57.5, 5, 62.5, col = hcl(260, 0, 60))
-  rect(0, 27.5, 5, 32.5, col = hcl(260, 0, 30))
+  rect(0, 87.5, 5, 92.5, col = hcl2hex(260, 0, 90))
+  rect(47.5, 80, 52.5, 85, col = hcl2hex(120, 50, 82.5))
+  rect(95, 72.5, 100, 77.5, col = hcl2hex(120, 100, 75))
+  rect(0, 57.5, 5, 62.5, col = hcl2hex(260, 0, 60))
+  rect(0, 27.5, 5, 32.5, col = hcl2hex(260, 0, 30))
   dev.off()
 }
 @
@@ -411,17 +411,17 @@ if(generate_png) {
   mtext("luminance", side = 2, at = 50, line = 2)
   mtext("luminance", side = 4, at = 50, line = 2)
   lines(c(-100, 0, 100), c(50, 90, 50), lty = 2)
-  rect(-100, 47.5, -90, 52.5, col = hcl(0, 100, 50))
-  rect(-55, 67.5, -45, 72.5, col = hcl(0, 50, 70))
-  rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))
-  rect(45, 67.5, 55, 72.5, col = hcl(260, 50, 70))
-  rect(90, 47.5, 100, 52.5, col = hcl(260, 100, 50))
+  rect(-100, 47.5, -90, 52.5, col = hcl2hex(0, 100, 50))
+  rect(-55, 67.5, -45, 72.5, col = hcl2hex(0, 50, 70))
+  rect(-5, 87.5, 5, 92.5, col = hcl2hex(260, 0, 90))
+  rect(45, 67.5, 55, 72.5, col = hcl2hex(260, 50, 70))
+  rect(90, 47.5, 100, 52.5, col = hcl2hex(260, 100, 50))
   lines(c(-80, 0, 80), c(30, 90, 30), lty = 2)
-  rect(-85, 27.5, -75, 32.5, col = hcl(0, 80, 30))
-  rect(-45, 57.5, -35, 62.5, col = hcl(0, 40, 60))
-  rect(-5, 87.5, 5, 92.5, col = hcl(260, 0, 90))
-  rect(35, 57.5, 45, 62.5, col = hcl(260, 40, 60))
-  rect(75, 27.5, 85, 32.5, col = hcl(260, 80, 30))
+  rect(-85, 27.5, -75, 32.5, col = hcl2hex(0, 80, 30))
+  rect(-45, 57.5, -35, 62.5, col = hcl2hex(0, 40, 60))
+  rect(-5, 87.5, 5, 92.5, col = hcl2hex(260, 0, 90))
+  rect(35, 57.5, 45, 62.5, col = hcl2hex(260, 40, 60))
+  rect(75, 27.5, 85, 32.5, col = hcl2hex(260, 80, 30))
   dev.off()
 }
 @
@@ -679,8 +679,9 @@ where \code{n} controls the number of colors in the palette. The arguments
 and \code{start} and \code{end} specify the range of hue angles. The function
 is named after the base \proglang{R} function \code{rainbow()} which has a similar
 interface but chooses colors in HSV coordinates. It computes the HCL coordinates
-and transforms them to RGB by calling the \code{hcl()} function 
-provided by the \pkg{colorspace} package. 
+and transforms them to RGB by using the \code{hcl2hex()} function which
+is a convenience wrapper to the function \code{polarLUV()} from
+the \pkg{colorspace} package. 
 
 Sequential palettes based on a single hue are implemented in the function
 \begin{Soutput}
@@ -796,9 +797,9 @@ Thomas Kneib, and Michael H\"ohle for feedback, suggestions and discussions.
 All palettes discussed above are implemented in the \proglang{R} system for statistical
 computing and graphics \citep{vcd:R:2006} in the package 
 \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006}. The functions are based on the
-\code{hcl(h, c, l, ...)} function proveded by the \pkg{colorspace} package
-\citep{vcd:Ihaka:2004}. A simple convenience function for displaying a certain palette
-is
+\code{polarLUV(l, c, h)} function proveded by the \pkg{colorspace} package
+\citep{vcd:Ihaka:2004}.
+A simple convenience function for displaying a certain palette is
 \begin{Soutput}
 pal <- function(col, border = "light gray", ...)
 {
