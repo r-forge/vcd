@@ -35,7 +35,7 @@ hcl2hex(h = 0, c = 35, l = 85, gamma = 2.2, fixup = TRUE)
   \item{v}{value value in the HSV color description.}
   \item{power}{control parameter determining how chroma
     and luminance should be increased (1 = linear, 2 = quadratic, etc.).}
-  \item{gamma}{gamma value of the display _gamma_ value.}
+  \item{gamma}{gamma value of the display.}
   \item{fixup}{logical. Should the color be corrected to a valid RGB
     value before correction?}
   \item{\dots}{Other arguments passed to \code{hcl2hex} or \code{\link{hsv}}, respectively.}
@@ -57,7 +57,7 @@ hcl2hex(h = 0, c = 35, l = 85, gamma = 2.2, fixup = TRUE)
   HSV space.
 
   \code{sequential_hcl} gives a sequential palette starting at the full
-  color HCL(\code{h}, \code{c[1]}, \code{l[1]})} through to a light color
+  color HCL(\code{h}, \code{c[1]}, \code{l[1]}) through to a light color
   HCL(\code{h}, \code{c[2]}, \code{l[2]}) by interpolation.
   
   \code{diverge_hcl} and \code{diverge_hsv}, compute 
