@@ -1,7 +1,7 @@
 \documentclass[10pt,a4paper]{article}
 
 %% Packages:
-\usepackage{graphicx,color,a4wide,thumbpdf,hyperref}
+\usepackage{graphicx,color,a4wide,thumbpdf,rotating,hyperref}
 %% need no \usepackage{Sweave}
 
 %% BibTeX
@@ -100,7 +100,7 @@ dimnames(pun) <- list(Memory = c("yes", "no"), Attitude = c("no", "moderate"),
 myseed <- 1071
 nrep <- 5000
 nrep_char <- "5,000"
-recompute <- TRUE
+recompute <- FALSE
 @
 
 <<inference,echo=FALSE,results=hide>>=
@@ -134,11 +134,14 @@ if(recompute) {
   set.seed(myseed)
   pun_cotab <- cotab_coindep(pun, condvars = 3:4, type = "assoc", n = nrep,
     varnames = FALSE, margins = c(2, 1, 1, 2), test = "maxchisq", interpolate = 1:2)
+  set.seed(myseed)
+  pun_cotab2 <- cotab_coindep(pun, condvars = 3:4, type = "mosaic", n = nrep,
+    varnames = FALSE, margins = c(2, 1, 1, 2), test = "maxchisq", interpolate = 1:2)
 
   save(art_max, art_chisq,
        pring_max, pring_chisq,
        alz_dmax, alz_maxchisq, alz_sumchisq, alz_cotab,
-       pun_dmax, pun_maxchisq, pun_sumchisq, pun_cotab,
+       pun_dmax, pun_maxchisq, pun_sumchisq, pun_cotab, pun_cotab2,
        file = "JCGS-inference.rda")
 } else {
   load("JCGS-inference.rda")
@@ -327,11 +330,14 @@ textbooks when addressing the independence problem in 2-way tables
 \citep[see, e.g.,][]{vcd:Agresti:2002}.
 
 However, the sum of squares is not the only plausible way of capturing deviations
-from zero in the residuals.
-There are many other conceivable functionals $\lambda(\cdot)$ which
-lead to reasonable test statistics $\lambda([r_{ij}])$: one which is particularly
-suitable for identifying the cells responsible for the `dependence' (i.e., significant
-departure from independence), if any, is the maximum of the absolute values
+from zero in the residuals. There are many other conceivable functionals $\lambda(\cdot)$ which
+lead to reasonable test statistics $\lambda([r_{ij}])$---and without further 
+specification of a certain pattern of dependence no functional $\lambda(\cdot)$
+uniformly dominates all others in terms of power of the resulting test procedure.
+Therefore, the choice of the functional is usually also guided by the data analysis problem at
+hand: one functional which is particularly suitable for identifying the cells responsible for
+the `dependence' (i.e., significant departure from independence), if any, is the maximum of
+the absolute values
 \begin{equation} \label{eq:MaxAbs}
 M \quad = \quad \max_{i, j} |r_{ij}|.
 \end{equation}
@@ -777,9 +783,10 @@ a discrete shading with few colors is much easier to interpret.
 
 
 \setkeys{Gin}{width=2\textwidth}
-\begin{figure}[p]
+\begin{sidewaysfigure}[p]
 \begin{center}
-<<shadings,fig=TRUE,echo=FALSE,height=12,width=16,results=hide,include=FALSE>>=
+<<shadings,fig=TRUE,echo=FALSE,height=12,width=18,results=hide,include=FALSE>>=
+##                                       width=16
 mymar <- c(1.5, 0.5, 0.5, 2.5)
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(2, 3)))
@@ -809,7 +816,8 @@ mosaic(pring, newpage = FALSE, gp = shading_hcl, margins = mymar,
   gp_args = list(interpolate = c(1, 1.5), p.value = pring_chisq$p.value))
 popViewport(2)
 @
-\includegraphics[height=\textwidth,angle=90,keepaspectratio]{JCGS-shadings}
+%%\includegraphics[height=\textwidth,angle=90,keepaspectratio]{JCGS-shadings}
+\includegraphics[width=.9\textwidth,keepaspectratio]{JCGS-shadings}
 \caption{Upper row: Mosaic plot for the arthritis data with Friendly shading (left),
 HSV maximum shading (middle), HCL maximum shading (right). Lower row: Mosaic
 plot for the piston rings data with fixed user-defined cut offs 1 and 1.5 and 
@@ -817,7 +825,7 @@ Friendly shading (left), HSV sum-of-squares shading (middle), HCL sum-of-squares
 (right).}
 \label{fig:shadings}
 \end{center}
-\end{figure}
+\end{sidewaysfigure}
 \setkeys{Gin}{width=\textwidth}
 
 This maximum shading is already very flexible and combines visualization and inference.
@@ -1028,6 +1036,18 @@ independence of memory and attitude given age and education.}
 \end{center}
 \end{figure}
 
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<conditional_mosaic2,fig=TRUE,echo=FALSE,height=11,width=11>>=
+cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab2)
+@
+\caption{Conditional mosaic plot with maximum sum-of-squares shading for conditional
+independence of memory and attitude given age and education.}
+\label{fig:pun2}
+\end{center}
+\end{figure}
+
 As a 4-way example, we use the punishment data \citep{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
 the attitude of a random sample of 783 persons towards corporal
@@ -1040,7 +1060,13 @@ as a child and attitude towards punishment of children as an adult, controlling
 for age and education. Figure~\ref{fig:pun} shows a conditional association
 plot of memory and attitude given age and education. This can be
 interpreted as a diagnostic residual plot for the associated log-linear conditional
-independence model. It shows an association between memories and attitude
+independence model. 
+%FIXME: with mosaic%
+Alternatively, a conditional mosaic plot as in Figure~\ref{fig:pun2} can be used for
+visualizing the contingency table and its associated residuals from the conditional independence
+model using the same shading. Both reveal
+%FIXME: without mosaic% It shows 
+an association between memories and attitude
 for the lowest education group (first column) and highest age group (last row):
 experienced violence seems to engender violence again as there are less adults
 that disapprove punishment in the group with memories of punishments than expected
@@ -1093,8 +1119,6 @@ for the conditional independence problem.
 All significance tests are carried out using a conditional inference approach
 instead of relying on unconditional asymptotic results.
 
-\clearpage
-
 \section*{Computational Details}
 
 The results in this paper were obtained using
@@ -1104,6 +1128,8 @@ The results in this paper were obtained using
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep[see][]{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
+
+\newpage
 
 \bibliography{vcd}
 
@@ -1180,6 +1206,11 @@ cotabplot(~ smoking + disease | gender, data = alz, panel = cotab_coindep, n = 5
 set.seed(rseed)
 cotabplot(~ memory + attitude | age + education, data = pun, panel = cotab_coindep,
   n = 5000, type = "assoc", test = "maxchisq", interpolate = 1:2)
+
+## Figure 6
+set.seed(rseed)
+cotabplot(~ memory + attitude | age + education, data = pun, panel = cotab_coindep,
+  n = 5000, type = "mosaic", test = "maxchisq", interpolate = 1:2)
 \end{verbatim}
 
 \end{appendix}
