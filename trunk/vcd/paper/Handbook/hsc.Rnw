@@ -1315,7 +1315,7 @@ cotabplot(aperm(UCBAdmissions, c(2,1,3)), panel = cotab_coindep, shade = TRUE,
 
 As a four-way example, we use the punishment data \cite{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
-the attitude of a random sample of 783 persons towards corporal
+the attitude of a random sample of 1,456 persons towards corporal
 punishment of children (see Table~\ref{tab:punish}).      
 \index{data!Danish corporal punishment}
 The data consist of four variables: Attitude is a binary variable
