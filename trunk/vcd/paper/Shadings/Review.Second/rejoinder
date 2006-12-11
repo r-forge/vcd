@@ -1,0 +1,91 @@
+Dear Luke,
+
+we prepared a revision of our manuscript
+  "Residual-based Shadings for Visualizing (Conditional) Independence"
+according to the comments of the referee. All three specific comments
+have been fully included into the paper. Some of the general comments
+are included as well in the paper and we provide some detailed replies
+to all of them below.
+
+I've put up a ZIP archive containing an unblinded and blinded version
+of the paper at
+  http://statmath.wu-wien.ac.at/~zeileis/shadings.zip
+
+Best wishes,
+Z
+
+
+Specific Comments
+*****************
+
+> It would be nice to include the shaded mosaic (as well 
+> as the association) plot for the 4-way table example.   
+> This would highlight the color scheme better.
+
+The corresponding mosaic plot has been added to Section 4. The
+reason that we preferred to use the association plot in our previous
+submission was the following: The largest Pearson residuals occur
+in cells with small observed frequencies and this is brought out a
+bit better by the association plot. However, the mosaic plot also 
+visualizes different aspects of the data set and surely adds to the
+intelligibility of the example. Our feeling is that the graphic is 
+not absolutely necessary for the paper, but if the editors think it
+important enough to justify another color page in the paper, we are,
+of course, happy to include it.
+
+> Orientation of Figure 3 does not correspond with description.
+
+Fixed by rotating the caption to conform with the orientation of the
+figure.
+
+> I believe that Haberman (1937) p 11, should read (1973).
+
+Yes, of course, thanks for spotting this!
+
+General Comments
+****************
+
+> Sums of Squares Shading:
+> Arbitrary choice of cut-offs reduces the approach to ad hoc 
+> observation-shading approaches. Relatedly, it is not clear 
+> that in isolation, the sums of squares shading won't 
+> lead the reader to see statistical significance where 
+> there is none.
+
+As argued at the end of Section 3.3, the cut-offs in the sum-of-squares
+shading cannot convey significance, hence different palettes are
+used to do this. It is true that readers, when exposed to these
+shadings the first time, might find it difficult to judge significance.
+It takes a certain time and effort to learn about them, but then
+the palettes are typically easily recognized and it is easy to
+distinguish between the bright fully-colored palette and the
+reduced-color palette.
+
+> Page 11. "This has also the advantage that only the conditional 
+> independence problem but  not the conditioning distribution over 
+> k = 1, . . . ,K is visualized which could obscure departures 
+> from conditional independence if the number of observations 
+> in each stratum n++k are very different."  --This makes me wonder 
+> why the focus is not generally on distribution homogeneity 
+> in the 2-way table case as well--why display the joint 
+> distribution when describing association? 
+
+In a 2-way table, inclusion of the distribution of the first margin
+does not impede interpretation of the conditional distribution of the
+second margin. The conditional proportions are aligned along the same
+axis and hence easily read off.
+The same is not necessarily true in multi-way tables, depending on
+the splitting order and direction which in turn depends on the
+independence model that should be visualized.
+
+> Use of maximum stat. The power of the Max stat may be significantly
+> lower than the power of the  X^2 (score) stat. How might this play
+> a role in your graphical approach to diagnosing model fit?
+
+This is a good point: Especially in higher-dimensional tables, the 
+sum-of-squares statistic performs considerably better than the maximum
+statistic for certain patterns of dependence while the converse is
+true for other patterns. Therefore, we added some brief remarks at the end
+of Section 2.1 that neither of the tests uniformly dominates the other
+and that the reason for discussing the maximum test in some detail is
+its appeal for visualization.

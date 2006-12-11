@@ -1119,6 +1119,13 @@ for the conditional independence problem.
 All significance tests are carried out using a conditional inference approach
 instead of relying on unconditional asymptotic results.
 
+\section*{Acknowledgements}
+
+We are thankful to Paul Murrell and Ross Ihaka---for providing tools, insights
+and feedback that helped to derive the results presented in this paper---and to
+two anonymous referees and editor Luke Tierney---for valuable comments and suggestions
+that lead to a substantial improvement of the paper.
+
 \section*{Computational Details}
 
 The results in this paper were obtained using
@@ -1128,10 +1135,27 @@ The results in this paper were obtained using
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep[see][]{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
+A vignette that demonstrates how all empirical examples can exactly be reproduced by the reader
+in \proglang{R} is provided in the package \pkg{vcd}, see
+\code{vignette("residual-shadings", package = "vcd")}
 
 \newpage
 
 \bibliography{vcd}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+%% deprecated stuff
 
 \newpage
 
@@ -1215,19 +1239,9 @@ cotabplot(~ memory + attitude | age + education, data = pun, panel = cotab_coind
 
 \end{appendix}
 
-\end{document}
 
 
 
-
-
-
-
-
-
-
-
-%% deprecated stuff
 
 %% UCB admissions
 data("UCBAdmissions", package = "datasets")

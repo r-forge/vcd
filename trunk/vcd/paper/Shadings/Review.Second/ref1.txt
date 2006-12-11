@@ -1,0 +1,39 @@
+COMMENTS FOR THE AUTHORS
+
+The revision better highlights the utility of the approach.  
+I have just a few specific comments/suggestions and 
+a few general comments.
+
+  It would be nice to include the shaded mosaic (as well 
+as the association) plot for the 4-way table example.   
+This would highlight the color scheme better.
+
+  Orientation of Figure 3 does not correspond with description.
+
+  I believe that Haberman (1937) p 11,  should read (1973).
+
+
+General comments that authors may choose to comment on 
+in the paper, or think about...
+
+Sums of Squares Shading:
+Arbitrary choice of cut-offs reduces the approach to ad hoc 
+observation-shading approaches.  Relatedly, it is not clear 
+that in isolation, the sums of squares shading won't 
+lead the reader to see statistical significance where 
+there is none.
+
+Page 11. "This has also the advantage that only the conditional 
+independence problem but  not the conditioning distribution over 
+k = 1, . . . ,K is visualized which could obscure departures 
+from conditional independence if the number of observations 
+in each stratum n++k are very different."  --This makes me wonder 
+why the focus is not generally on distribution homogeneity 
+in the 2-way table case as well--why display the joint 
+distribution when describing association? 
+
+Use of maximum stat.  The power of the Max stat 
+may be significantly lower 
+than the power of the  X^2 (score) stat.  
+How might this play a role in your 
+graphical approach to diagnosing model fit?
