@@ -100,7 +100,7 @@ dimnames(pun) <- list(Memory = c("yes", "no"), Attitude = c("no", "moderate"),
 myseed <- 1071
 nrep <- 5000
 nrep_char <- "5,000"
-recompute <- FALSE
+recompute <- TRUE
 @
 
 <<inference,echo=FALSE,results=hide>>=
@@ -918,6 +918,18 @@ in higher dimensions. However, as argued for the mosaic plots by \cite{vcd:Frien
 and \cite{vcd:Theus+Lauer:1999}, it becomes increasingly
 important to choose a good layout as the number of variables grows.
 
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[b!]
+\begin{center}
+<<conditional_mosaic,fig=TRUE,echo=FALSE,height=5,width=9>>=
+cotabplot(~ Smoking + Disease | Gender, data = alz, panel = alz_cotab)
+@
+\caption{Conditional mosaic plot with double maximum shading for conditional
+independence of smoking and disease given gender.}
+\label{fig:alz}
+\end{center}
+\end{figure}
+
 How the structure of the independence problem can be exploited for 
 selecting a suitable layout and shading for mosaic and association plots,
 is exemplified with the conditional independence problem in 3-way tables.
@@ -990,14 +1002,26 @@ could obscure departures from conditional independence if the number of observat
 in each stratum $n_{++k}$ are very different.
 
 \setkeys{Gin}{width=\textwidth}
-\begin{figure}[b!]
+\begin{figure}[t!]
 \begin{center}
-<<conditional_mosaic,fig=TRUE,echo=FALSE,height=5,width=9>>=
-cotabplot(~ Smoking + Disease | Gender, data = alz, panel = alz_cotab)
+<<conditional_assoc,fig=TRUE,echo=FALSE,height=11,width=11>>=
+cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab)
 @
-\caption{Conditional mosaic plot with double maximum shading for conditional
-independence of smoking and disease given gender.}
-\label{fig:alz}
+\caption{Conditional association plot with maximum sum-of-squares shading for conditional
+independence of memory and attitude given age and education.}
+\label{fig:pun}
+\end{center}
+\end{figure}
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<conditional_mosaic2,fig=TRUE,echo=FALSE,height=11,width=11>>=
+cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab2)
+@
+\caption{Conditional mosaic plot with maximum sum-of-squares shading for conditional
+independence of memory and attitude given age and education.}
+\label{fig:pun2}
 \end{center}
 \end{figure}
 
@@ -1024,33 +1048,9 @@ under independence. Interestingly, there seems to be another large residual for
 the light smoker group ($<$10 cigarettes) and Alzheimer's disease---however, this
 is only significant at 10\% and not at the 1\% level as the other two cells.
 
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[t!]
-\begin{center}
-<<conditional_assoc,fig=TRUE,echo=FALSE,height=11,width=11>>=
-cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab)
-@
-\caption{Conditional association plot with maximum sum-of-squares shading for conditional
-independence of memory and attitude given age and education.}
-\label{fig:pun}
-\end{center}
-\end{figure}
-
-\setkeys{Gin}{width=\textwidth}
-\begin{figure}[t!]
-\begin{center}
-<<conditional_mosaic2,fig=TRUE,echo=FALSE,height=11,width=11>>=
-cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab2)
-@
-\caption{Conditional mosaic plot with maximum sum-of-squares shading for conditional
-independence of memory and attitude given age and education.}
-\label{fig:pun2}
-\end{center}
-\end{figure}
-
 As a 4-way example, we use the punishment data \citep{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
-the attitude of a random sample of 1,456 persons towards corporal
+the attitude of a random sample of $1,456$ persons towards corporal
 punishment of children. The contingency table comprises four margins:
 memory of punishments as a child (yes/no), attitude as a binary variable
 (approval of ``moderate'' punishment or ``no'' approval), highest level
@@ -1126,20 +1126,20 @@ and feedback that helped to derive the results presented in this paper---and to
 two anonymous referees and editor Luke Tierney---for valuable comments and suggestions
 that lead to a substantial improvement of the paper.
 
+\clearpage
+
 \section*{Computational Details}
 
 The results in this paper were obtained using
 \proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")}
 \citep[\mbox{\url{http://www.R-project.org/}}]{vcd:R:2006} and the packages
-\pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2006},
+\pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2006b},
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep[see][]{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
 {\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
-A vignette that demonstrates how all empirical examples can exactly be reproduced by the reader
+A vignette that demonstrates how all empirical examples can exactly be reproduced
 in \proglang{R} is provided in the package \pkg{vcd}, see
-\code{vignette("residual-shadings", package = "vcd")}
-
-\newpage
+\code{vignette("residual-shadings", package = "vcd")}.
 
 \bibliography{vcd}
 
