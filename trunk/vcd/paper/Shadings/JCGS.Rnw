@@ -1050,7 +1050,7 @@ independence of memory and attitude given age and education.}
 
 As a 4-way example, we use the punishment data \citep{vcd:andersen:1991} 
 from a study of the Gallup Institute in Denmark in 1979 about
-the attitude of a random sample of 783 persons towards corporal
+the attitude of a random sample of 1,456 persons towards corporal
 punishment of children. The contingency table comprises four margins:
 memory of punishments as a child (yes/no), attitude as a binary variable
 (approval of ``moderate'' punishment or ``no'' approval), highest level

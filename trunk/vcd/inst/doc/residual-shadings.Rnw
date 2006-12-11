@@ -281,7 +281,7 @@ is only significant at 10\% and not at the 1\% level as the other two cells.
 \section{Corporal punishment of children}
 
 As a 4-way example, data from a study of the Gallup Institute in Denmark in 1979 about
-the attitude of a random sample of 783 persons towards corporal
+the attitude of a random sample of 1,456 persons towards corporal
 punishment of children is used. The contingency table comprises four margins:
 memory of punishments as a child (yes/no), attitude as a binary variable
 (approval of ``moderate'' punishment or ``no'' approval), highest level
