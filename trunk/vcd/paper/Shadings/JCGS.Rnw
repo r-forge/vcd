@@ -89,7 +89,7 @@ Copyright {\copyright} 2007 American Statistical Association, Institute of Mathe
 \SweaveOpts{engine=R,eps=FALSE,echo=FALSE,results=hide}
 \setkeys{Gin}{width=0.8\textwidth}
 
-<<load_data,echo=FALSE,results=hide>>=
+<<load_data>>=
 library("vcd")
 
 data("Arthritis", package = "vcd")
@@ -117,7 +117,7 @@ nrep_char <- "5,000"
 recompute <- TRUE
 @
 
-<<inference,echo=FALSE,results=hide>>=
+<<inference>>=
 if(recompute) {
   set.seed(myseed)
   art_max <- coindep_test(art, n = nrep)
@@ -162,7 +162,7 @@ if(recompute) {
 }
 @
 
-<<auxiliary_functions,echo=FALSE,results=hide>>=
+<<auxiliary_functions>>=
 stat <- function(x, digits = 3) as.vector(round(x$statistic, digits = digits))
 pval <- function(x, digits = 6) {
   oop <- options()
@@ -435,7 +435,7 @@ versa for the treated patients.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[t!]
 \begin{center}
-<<classic_plots,fig=TRUE,echo=FALSE,height=6,width=11,results=hide>>=
+<<classic_plots,fig=TRUE,height=6,width=11>>=
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
@@ -526,7 +526,7 @@ The reduced-color palette will be explained in Section~\ref{sec:significance}.
 \setkeys{Gin}{width=.8\textwidth}
 \begin{figure}[p]
 \begin{center}
-<<shading_HSV,echo=FALSE,results=hide>>=
+<<shading_HSV>>=
 png(file = "shading_HSV.png", height = 525, width = 600)
 ## generate colors
 hue23 <- hue.slice(2/3, grid.n = 101, plot = FALSE, type = "HSV")
@@ -604,7 +604,7 @@ dev.off()
 
 %% height=7,width=8 for PDF
 
-<<shading_HCL,echo=FALSE,results=hide>>=
+<<shading_HCL>>=
 png(file = "shading_HCL.png", height = 525, width = 600)
 ## generate colors
 hue260 <- hue.slice(260, grid.n = 101, plot = FALSE)
@@ -815,7 +815,7 @@ a discrete shading with few colors is much easier to interpret.
 \setkeys{Gin}{width=2\textwidth}
 \begin{sidewaysfigure}[p]
 \begin{center}
-<<shadings,fig=TRUE,echo=FALSE,height=12,width=18,results=hide,include=FALSE>>=
+<<shadings,fig=TRUE,height=12,width=18,include=FALSE>>=
 ##                                       width=16
 mymar <- c(1.5, 0.5, 0.5, 2.5)
 grid.newpage()
@@ -951,7 +951,7 @@ important to choose a good layout as the number of variables grows.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[b!]
 \begin{center}
-<<conditional_mosaic,fig=TRUE,echo=FALSE,height=5,width=9>>=
+<<conditional_mosaic,fig=TRUE,height=5,width=9>>=
 cotabplot(~ Smoking + Disease | Gender, data = alz, panel = alz_cotab)
 @
 \caption{Conditional mosaic plot with double maximum shading for conditional
@@ -1034,7 +1034,7 @@ in each stratum $n_{++k}$ are very different.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[t!]
 \begin{center}
-<<conditional_assoc,fig=TRUE,echo=FALSE,height=11,width=11>>=
+<<conditional_assoc,fig=TRUE,height=11,width=11>>=
 cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab)
 @
 \caption{Conditional association plot with maximum sum-of-squares shading for conditional
@@ -1046,7 +1046,7 @@ independence of memory and attitude given age and education.}
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[t!]
 \begin{center}
-<<conditional_mosaic2,fig=TRUE,echo=FALSE,height=11,width=11>>=
+<<conditional_mosaic2,fig=TRUE,height=11,width=11>>=
 cotabplot(~ Memory + Attitude | Age + Education, data = pun, panel = pun_cotab2)
 @
 \caption{Conditional mosaic plot with maximum sum-of-squares shading for conditional
