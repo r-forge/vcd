@@ -11,7 +11,7 @@
 
 \Abstract{
   This vignette is a companion paper to \cite{vcd:Zeileis+Meyer+Hornik:2005}
-  which introduces sever extensions to residual-based shadings for enhancing
+  which introduces several extensions to residual-based shadings for enhancing
   mosaic and association plots. The paper introduces (a)~perceptually uniform
   Hue-Chroma-Luminance (HCL) palettes and (b)~incorporates the result of an
   associated significance test into the shading. Here, we show how the

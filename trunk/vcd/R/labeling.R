@@ -130,7 +130,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
       }
     }
     split()
-    seekViewport("base")
+    seekViewport(paste(prefix, "base", sep = ""))
     upViewport(1)
   }
 }
@@ -556,7 +556,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       ## label again
       split()
     }
-    seekViewport("base")
+    seekViewport(paste(prefix, "base", sep = ""))
     upViewport(1)
   }
 }
