@@ -434,7 +434,7 @@ pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
 mosaic(he, gp = shading_hcl, split_vertical = TRUE, newpage = FALSE, legend = FALSE)
 popViewport(2)
 @
-\caption{\label{fig:haireye} Extended mosaic display for haireye data.}
+\caption{\label{fig:haireye} Extended mosaic display for hair and eye color data.}
 \end{center}
 \end{figure}
 
@@ -870,3 +870,24 @@ Thomas Kneib, and Michael H\"ohle for feedback, suggestions and discussions.
 \bibliography{vcd}
 
 \end{document}
+
+<<barplot, eval=FALSE>>=
+x <- rbind(
+c(255, 255, 111),
+c(255, 255,  47),
+c(120,  50,   1),
+c(102, 204, 102),
+c( 50, 204, 204),
+c(203, 153, 204),
+c(102, 204, 102),
+c(255,  47,  47),
+c(102, 204, 102))/255
+
+y <- c(10, 20, 25, 18, 16, 13, 21, 15, 18) - 3
+
+par(mfrow = c(1, 2))
+barplot(y, col = hex(RGB(x[,1], x[,2], x[,3])), space = 0)
+## barplot(y, col = hcl(attr(as(RGB(x[,1], x[,2], x[,3]), "polarLUV"), "coords")[,"H"],
+##  c = 40, l = 80), space = 0)
+barplot(y, col = rainbow_hcl(7, c = 40, l = 80)[c(3, 5, 2, 4, 6, 1, 4, 7, 4)], space = 0)
+@

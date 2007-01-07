@@ -152,3 +152,33 @@ plot.bnd <- function(x, z = NULL,
     invisible(x)
 }
 
+## EXAMPLES
+##
+## ## packages and source code
+## library("vcd")
+## source("bnd.R")
+## 
+## ## read map
+## m <- read.bnd("nigeria37.bnd")
+## 
+## ## read model fit align along district
+## fit <- read.table("reml_purespatial_f_district_spatial.res", header = TRUE)
+## fit <- fit[order(fit$district),]
+## 
+## ## simple maps
+## plot(m)
+## plot(m, fill = "white")
+## 
+## ## shaded maps
+## plot(m, z = fit$pmode)
+## plot(m, z = fit$pmode, fill = rainbow(100, start = 0, end = 1/3))
+## plot(m, z = fit$pmode, fill = diverge_hcl(100))
+## ## but for diverging palettes: use symmetrical zlim
+## 
+## ## compare HSV-based qualitative palette
+## ## with HCL-based diverging palette
+## par(mfrow = c(1, 2))
+## plot(m, z = fit$pmode, fill = rainbow(100, start = 0, end = 1/3),
+##   zlim = c(-0.65, 0.65))
+## plot(m, z = fit$pmode, zlim = c(-0.65, 0.65),
+##   fill = diverge_hcl(100, h = c(0, 120), c = 60, l = c(45, 90), power = 1.2))
