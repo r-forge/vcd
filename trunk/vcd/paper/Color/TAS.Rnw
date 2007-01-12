@@ -39,7 +39,7 @@ graphics in particular. Statistical software packages typically provide various 
 palettes and allow practitioners to employ these for visualizing data in various types
 of displays. However, more often than not, there is relatively little guidance about
 how to choose a suitable palette for a certain visualization task. Consequently,
-sub-optimal color palettes are used for too many color graphics displayed in journal articles
+sub-optimal color palettes are used quite frequently for color graphics displayed in journal articles
 or on presentation slides which could easily be enhanced if the underlying information
 were captured appropriately in the color schemes. Here, we address
 this problem by suggesting a color selection strategy for visualizing both categorical
@@ -86,13 +86,14 @@ a suitable color space. Consequently, the user can decide which path exactly sho
 taken and how many colors should be selected. The color space employed by us is the
 Hue-Chroma-Luminance (HCL) color space \citep[see][]{vcd:Ihaka:2003} and we show how
 the general principles suggested can be turned into formulas describing paths of
-coordinates in this space. Given a mapping from HCL to RGB coordinates, our formulas are
-extremely easy to implement in software and we provide such an implementation
-in the \proglang{R} language \citep{vcd:R:2006} using the powerful \proglang{R} graphics
-system \citep[see][]{vcd:Murrell:2006} and the HCL
-color implementation from package \pkg{colorspace} \citep{vcd:Ihaka:2006}. This gives the user
-both a conceptual and computational tool box for experimenting with color palettes for
-a particular display.
+coordinates in this space.
+%% Given a mapping from HCL to RGB coordinates, our formulas are
+%% extremely easy to implement in software and we provide such an implementation
+%% in the \proglang{R} language \citep{vcd:R:2006} using the powerful \proglang{R} graphics
+%% system \citep[see][]{vcd:Murrell:2006} and the HCL
+%% color implementation from package \pkg{colorspace} \citep{vcd:Ihaka:2006}. This gives the user
+%% both a conceptual and computational tool box for experimenting with color palettes for
+%% a particular display.
 
 The remainder of the paper is organized as follows: Section~\ref{sec:motivation} provides
 several motivating examples, showing how typical HSV-based graphics can be enhanced
@@ -100,7 +101,7 @@ by using HCL-based palettes. Section~\ref{sec:spaces} gives a brief introduction
 to the underlying HSV and HCL color spaces before Section~\ref{sec:palettes} 
 suggests strategies for deriving HCL-based qualitative, sequential, and diverging palettes.
 Section~\ref{sec:software} offers some general remarks on the implementation in statistical
-software packages as well as some details on our implementation in \proglang{R}.
+software packages as well as some details on the implementation in \proglang{R}.
 Section~\ref{sec:discussion} concludes the paper with a discussion.
 
 
@@ -605,7 +606,7 @@ where the hue $H$ used does not matter, chroma is set to 0 (i.e., no color), and
 luminance ranges in $[30, 90]$ avoiding the extreme colors white ($L = 100$) and 
 black ($L = 0$). Instead of going linearly from light to dark gray, luminance
 could also be increased nonlinearly, e.g., by some function $i' = f(i)$ that
-controls whether luminance is increased quickly with intensity or not. We found $i' = f(i) = i^p$ 
+controls whether luminance is increased quickly with intensity or not. We found $f(i) = i^p$ 
 to be a convenient transformation where the power $p$ can be varied to achieve
 different degrees of non-linearity.
 
@@ -810,7 +811,8 @@ The \proglang{R} system for statistical computing \citep{vcd:R:2006} already com
 with an open-source implementation of HCL (and other color spaces) in the package
 \pkg{colorspace} \citep{vcd:Ihaka:2006}. The coordinate transformations mentioned
 above are contained in \proglang{C} code within \pkg{colorspace} that are easy to
-port to other statistical software systems. Based on \pkg{colorspace}, 
+port to other statistical software systems. Based on \pkg{colorspace} and
+the \proglang{R} graphics system \citep[see][]{vcd:Murrell:2006},
 the package \pkg{vcd} \citep{vcd:Meyer+Zeileis+Hornik:2006} provides implementations
 of all palettes discussed above. Qualitative palettes are provided by
 \code{rainbow_hcl()} (named after the HSV-based function \code{rainbow()} in base
@@ -818,7 +820,7 @@ of all palettes discussed above. Qualitative palettes are provided by
 \code{sequential_hcl()} while \code{heat_hcl()} offers sequential palettes based on
 a range of hues. Diverging palettes can be obtained by \code{diverge_hcl()}.
 Technical documentation along with a large collection of examples is available via
-\verb/help("rainbow_hcl")/. \proglang{R} code for reproducing
+\verb/help("rainbow_hcl", package = "vcd")/. \proglang{R} code for reproducing
 Figures~\ref{fig:pal-q-examples}, \ref{fig:pal-s-examples} and \ref{fig:pal-d-examples}
 (and some illustrations) can be accessed via \code{vignette("hcl-colors", package = "vcd")}.
 
@@ -836,8 +838,8 @@ categorical information (qualitative palettes) and numerical information
 (sequential and diverging palettes) based on the perceptually-based
 HCL color space.
 
-We provide paths through HCL space along perceptual axes
-so that colors selected along these paths match perceptual dimensions.
+We provide paths through HCL space along perceptual axes of the human visual system
+so that colors selected along these paths match human perceptual dimensions.
 This gives the users the possibility to conveniently experiment with the HCL-based
 palettes by varying several graphical parameters. For qualitative
 palettes, these are the coordinates on the chroma and luminance axis, respectively,
