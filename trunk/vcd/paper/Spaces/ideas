@@ -1,0 +1,18 @@
+  o motivation for computing with color spaces: color is an important tool
+    for statistical graphics; omnipresent in electronic papers,
+    presentation slides, software packages; however, little is published
+    in the statistical literature on how you can compute with colors.
+  o some background on color perception
+  o description of important color spaces: RGB, HSV, CIEXYZ, CIELAB,
+    CIELUV/HCL (possibly some remarks on HLS, CMYK)
+      - properties/shape
+      - advantages/disadvantages
+      - conversions (incl. formulas), difficulties, etc.
+  o applications: computing distances, mixing colors, selecting palettes
+    along axes of color spaces, ...
+
+For the color spaces part, I think that simply documenting what is already
+in colorspace (plus some background info) should be very interestin. For
+the applications, I could throw in the things we did for vcd and recycle
+some stuff we've written in this report (which is not submitted in this
+form)
