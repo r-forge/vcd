@@ -3,4 +3,4 @@ inst/doc/*.tex
 inst/doc/*.eps
 inst/doc/*.ps
 inst/doc/*.sxi
-R/Bundesliga.R
+data/Bundesliga.R
