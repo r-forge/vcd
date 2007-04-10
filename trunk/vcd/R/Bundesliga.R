@@ -1,3 +1,4 @@
+if (FALSE) {
 ## collection of R functions to query http://www.dfb.de/
 ## for Bundesliga results
 
@@ -330,3 +331,4 @@ Bundesliga$Year <- as.integer(as.character(Bundesliga$Year))
 Bundesliga$Round <- as.integer(as.character(Bundesliga$Round))
 Bundesliga$AwayGoals <- as.integer(as.character(Bundesliga$AwayGoals))
 Bundesliga$HomeGoals <- as.integer(as.character(Bundesliga$HomeGoals))
+}
