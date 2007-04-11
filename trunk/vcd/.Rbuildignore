@@ -1,6 +1,6 @@
 paper
+work
 inst/doc/*.tex
 inst/doc/*.eps
 inst/doc/*.ps
 inst/doc/*.sxi
-data/Bundesliga.R

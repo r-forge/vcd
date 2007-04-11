@@ -1,4 +1,5 @@
 \documentclass{Z}
+%% need no \usepackage{Sweave}
 
 \usepackage{thumbpdf}
 
