@@ -1,4 +1,3 @@
-if (FALSE) {
 ## collection of R functions to query http://www.dfb.de/
 ## for Bundesliga results
 
@@ -262,7 +261,7 @@ for(j in 42:43){
 
       ## read raw HTML
       x <- readLines(url(paste("http://www.dfb.de/bliga/spiel.php?liga=bl1m&spieltag=", Round[i],  
-                                "&art=e&saison=", ses ,"&saisonl=",year, "&lang=D", sep = "")))    
+                                "&art=e&saison=", ses ,"&saisonl=",year, "&lang=D", sep = "")))
   
       ## select relevant lines    
       x1 <- x[substr(x, 1, 14) == "<table BORDER="]
@@ -302,12 +301,11 @@ for(j in 42:43){
    v
    }
   
-  ## Schoenheitsfehler bereinigen
+## Schoenheitsfehler bereinigen
 
 v[v == "Borussia Moenchengladbach </TD><TD><font size=\"2\" "] <- "Borussia Moenchengladbach" 
 v[v == "Hannover 1896"] <- "Hannover 96" 
 v[v == "TSV Muenchen 1860"] <- "TSV 1860 Muenchen" 
-v[v == "1860 Muenchen"] <- "TSV 1860 Muenchen"   
 v[v == "1860 Muenchen"] <- "TSV 1860 Muenchen"
 v[v == "1. FC Köln"] <- "1. FC Koeln"  
 v[v == "Bayern München"] <- "Bayern Muenchen"
@@ -320,7 +318,8 @@ v[v == "0*</TD><td><fontsize=\"2\""] <- "0"
  ## Finishing
 
 BL<- as.data.frame(v)
-colnames(BL)<-c("HomeTeam","AwayTeam","HomeGoals","AwayGoals","PlayTime","Round","Year")
+colnames(BL)<-c("HomeTeam","AwayTeam",
+                "HomeGoals","AwayGoals","PlayTime","Round","Year")
 
   ## Finishing additions
 
@@ -331,4 +330,3 @@ Bundesliga$Year <- as.integer(as.character(Bundesliga$Year))
 Bundesliga$Round <- as.integer(as.character(Bundesliga$Round))
 Bundesliga$AwayGoals <- as.integer(as.character(Bundesliga$AwayGoals))
 Bundesliga$HomeGoals <- as.integer(as.character(Bundesliga$HomeGoals))
-}
