@@ -68,9 +68,9 @@
 \lhead[]{}
 \chead[]{}
 \rhead[]{}
-\lfoot[This is a preprint of an article accepted for publication in \textit{Journal of Computational and Graphical Statistics}.
+\lfoot[This is a preprint of an article published in \textit{Journal of Computational and Graphical Statistics}, Volume 16, Number 3, Pages 507--525.
 Copyright {\copyright} 2007 American Statistical Association, Institute of Mathematical Statistics, and Interface Foundation of North America]%
-{This is a preprint of an article accepted for publication in \textit{Journal of Computational and Graphical Statistics}.
+{This is a preprint of an article published in \textit{Journal of Computational and Graphical Statistics}, Volume 16, Number 3, Pages 507--525.
 Copyright {\copyright} 2007 American Statistical Association, Institute of Mathematical Statistics, and Interface Foundation of North America}
 \cfoot[]{}
 \rfoot[]{}
@@ -1166,7 +1166,7 @@ The results in this paper were obtained using
 \pkg{vcd}~\Sexpr{packageDescription("vcd")$Version} \citep{vcd:Meyer+Zeileis+Hornik:2006b},
 {\pkg{MASS}~\Sexpr{packageDescription("MASS")$Version}} \citep[see][]{vcd:Venables+Ripley:2002},
 {\pkg{grid}~{\Sexpr{packageDescription("grid")$Version}}} \citep[see][]{vcd:Murrell:2002} and
-{\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2004}.
+{\pkg{colorspace}~{\Sexpr{packageDescription("colorspace")$Version}}} \citep{vcd:Ihaka:2006}.
 A vignette that demonstrates how all empirical examples can exactly be reproduced
 in \proglang{R} is provided in the package \pkg{vcd}, see
 \code{vignette("residual-shadings", package = "vcd")}.
