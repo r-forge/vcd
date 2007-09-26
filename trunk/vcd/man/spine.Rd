@@ -37,6 +37,7 @@ spine(x, \dots)
   \item{off}{vertical offset between the bars (in per cent). It is fixed to
     \code{0} for spinograms and defaults to \code{2} for spine plots.}
   \item{main, xlab, ylab}{character strings for annotation}
+  \item{ylim}{limits for the y axis}
   \item{margins}{margins when calling \code{\link{plotViewport}}}
   \item{gp}{a \code{"gpar"} object controlling the grid graphical
     parameters of the rectangles. It should specify in particular a vector of
