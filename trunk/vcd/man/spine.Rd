@@ -12,12 +12,12 @@
 spine(x, \dots)
 \method{spine}{default}(x, y = NULL,
   breaks = NULL, ylab_tol = 0.05, off = NULL,
-  main = "", xlab = NULL, ylab = NULL, margins = c(5.1, 4.1, 4.1, 3.1),
+  main = "", xlab = NULL, ylab = NULL, ylim = c(0, 1), margins = c(5.1, 4.1, 4.1, 3.1),
   gp = gpar(), name = "spineplot", newpage = TRUE, pop = TRUE,
   \dots)
 \method{spine}{formula}(formula, data = list(),
   breaks = NULL, ylab_tol = 0.05, off = NULL,
-  main = "", xlab = NULL, ylab = NULL, margins = c(5.1, 4.1, 4.1, 3.1),
+  main = "", xlab = NULL, ylab = NULL, ylim = c(0, 1), margins = c(5.1, 4.1, 4.1, 3.1),
   gp = gpar(), name = "spineplot", newpage = TRUE, pop = TRUE,
   \dots)
 }
