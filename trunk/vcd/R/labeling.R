@@ -39,7 +39,7 @@ labeling_list <- function(gp_text = gpar(),
     pos <- unit(switch(pos, left = 0, center = 0.5, 1) / cols, "npc")
     ind <- split(seq(ld), rep.int(seq(cols), ceiling(ld / cols))[seq(ld)])
 
-    for (i in seq(along = ind))
+    for (i in seq_along(ind))
       grid.text(x = offset[1] + pos + unit((i - 1) / cols, "npc"),
                 y = unit(1, "npc") - offset[2],
                 paste(names(d[ind[[i]]]),
@@ -90,7 +90,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
       margin <- unit(margin, "lines")
 
     prvars <- ifelse(abbreviate_varnames,
-                     sapply(seq(along = dn),
+                     sapply(seq_along(dn),
                             function(i) abbreviate(dn[i], abbreviate_varnames[i])),
                      dn)
     prvars <- ifelse(varnames, paste(prvars, lsep, sep = ""), "")
@@ -98,7 +98,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
     ## draw labels
     split <- function(vind = 1, labs = c()) {
       n <- d[[vind]]
-      for (labind in seq(along = n)) {
+      for (labind in seq_along(n)) {
         lab <- c(labs, n[labind])
         names(lab) <- names(d)[1:vind]
         mlab <- paste(prefix, "cell:", paste(dn[1:vind], lab, sep = "=", collapse = ","),
@@ -116,7 +116,7 @@ labeling_cells <- function(labels = TRUE, varnames = TRUE,
             do.call("[", c(list(text), as.list(lab)))
           } else {
             prlab <- ifelse(abbreviate_labels,
-                            sapply(seq(along = lab),
+                            sapply(seq_along(lab),
                                    function(i) abbreviate(lab[i], abbreviate_labels[i])),
                             lab)
             prlab <- prlab[labels[1:ld]]
@@ -224,7 +224,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     ## abbreviate
     abbreviate <- pexpand(abbreviate, ld, FALSE, dn)
     labs <- d
-    for (i in seq(along = d))
+    for (i in seq_along(d))
       if (abbreviate[i])
         labs[[i]] <- abbreviate(labs[[i]], abbreviate[i])
 
@@ -276,7 +276,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     ## precompute spaces
     lsp <- tsp <- bsp <- rsp <- 0
     labsp <- rep.int(0, ld)
-    for (i in seq(along = dn)[tl_labels & labels])
+    for (i in seq_along(dn)[tl_labels & labels])
       labsp[i] <- if (split_vertical[i]) {
         if (alternate_labels[i]) bsp <- bsp - 1
         tsp <- tsp + 1
@@ -284,7 +284,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
         if (alternate_labels[i]) rsp <- rsp + 1
         lsp <- lsp - 1
       }
-    for (i in rev(seq(along = dn)[!tl_labels & labels]))
+    for (i in rev(seq_along(dn)[!tl_labels & labels]))
       labsp[i] <- if (split_vertical[i]) {
         if (alternate_labels[i]) tsp <- tsp + 1
         bsp <- bsp - 1
@@ -297,7 +297,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     ## varnames in the outer margin
       ## compute axis names
       tt <- bt <- lt <- rt <- ""
-      for (i in seq(along = dn)) {
+      for (i in seq_along(dn)) {
         var <- if (!is.null(set_varnames) && !is.na(set_varnames[dn[i]]))
           set_varnames[dn[i]]
         else
@@ -335,7 +335,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
                   rot = rot_varnames[2], just = just_varnames[2], gp = gp_varnames[[2]])
     } else {
     ## varnames beneath labels
-      for (i in seq(along = dn)) {
+      for (i in seq_along(dn)) {
         var <- if (!is.null(set_varnames) && !is.na(set_varnames[dn[i]]))
           set_varnames[dn[i]]
         else
@@ -397,7 +397,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
       n <- d[[vind]]
       vl <- length(n)
       sp <- split_vertical[vind]
-      labseq <- seq(along = n)
+      labseq <- seq_along(n)
       if (!sp) labseq <- rev(labseq)
 
       for (labind in labseq) {

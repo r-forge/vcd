@@ -152,7 +152,7 @@ strucplot <- function(## main parameters
   if (newpage)
     grid.newpage()
   if (keep_aspect_ratio)
-    pushViewport(viewport(width = 1, height = 1, default.unit = "snpc"))
+    pushViewport(viewport(width = 1, height = 1, default.units = "snpc"))
   
   pushViewport(vcdViewport(mar = margins,
                            oma = title_margins,

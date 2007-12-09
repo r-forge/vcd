@@ -97,7 +97,7 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
   ylim <- ylim + c(-1, 1) * diff(ylim) * 0.04
   
   if(newpage) grid.newpage()
-  pushViewport(plotViewport(xscale = xlim, yscale = ylim, default.unit = "native", name = name))
+  pushViewport(plotViewport(xscale = xlim, yscale = ylim, default.units = "native", name = name))
   grid.points(x = RVAL[,1], y = RVAL[,3], default.units = "native", gp = gp, ...)
   grid.lines(x = xlim, y = predict(fm, newdata = data.frame(mycount = xlim)),
     default.units = "native", gp = gpar(col = 2))
