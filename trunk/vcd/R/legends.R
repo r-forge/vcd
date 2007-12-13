@@ -67,8 +67,14 @@ legend_resbased <- function(fontsize = 12,
 
       if(is.null(at))
         at <- seq(from = head(col.bins, 1), to = tail(col.bins, 1), length = ticks)
+      tw <- paste(rep("4", digits), collapse = "")
+      if (any(trunc(at) != at))
+        tw <- paste(tw, ".", sep = "")
+      if (any(at < 0))
+        tw <- paste(tw, "-", sep = "")
+
       grid.text(format(signif(at, digits = digits)),
-                x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", "-4.44"),
+                x = unit(1, "npc") + unit(0.8, "lines") + unit(1, "strwidth", tw),
                 y = at,
                 default.units = "native",
                 just = c("right", "center"),
