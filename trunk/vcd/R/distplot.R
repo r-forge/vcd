@@ -26,7 +26,7 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
   switch(match.arg(type),
 
   "poisson" = {
-    par.ml <- goodfit(x, type = type)$par$lambda
+    par.ml <- suppressWarnings(goodfit(x, type = type)$par$lambda)
 
     phi <- function(nk, k, N, size = NULL)
       ifelse(nk > 0, lgamma(k + 1) + log(nk/N), NA)
@@ -45,7 +45,7 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
       size <- max(count)
       warning("size was not given, taken as maximum count")
     }
-    par.ml <- goodfit(x, type = type, par = list(size = size))$par$prob
+    par.ml <- suppressWarnings(goodfit(x, type = type, par = list(size = size))$par$prob)
 
     phi <- function(nk, k, N, size)
       log(nk) - log(N * choose(size, k))
@@ -60,7 +60,7 @@ function(x, type = c("poisson", "binomial", "nbinomial"),
 
   "nbinomial" = {
     if(is.null(size)) {
-      par.ml <- goodfit(x, type = type)$par
+      par.ml <- suppressWarnings(goodfit(x, type = type)$par)
       size <- par.ml$size
       par.ml <- par.ml$prob
     }else{
