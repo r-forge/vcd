@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <title>Visualizing Contingency Tables</title>
+    <link rel="stylesheet" type="text/css" href="vcd.css" media="all"/>
+  </head>
+
+  <body>
+    <h1>Visualizing Contingency Tables</h1>
+
+    <h2>1. Introduction</h2>
+
+    <p>This document reproduces all figures of the article:</p>
+
+    <p> David Meyer, Achim Zeileis, and Kurt Hornik. Visualizing contingency
+    tables. In Chun-Houh Chen, Wolfang H&auml;rdle, and Antony Unwin,
+    editors,  <i>Handbook of Data Visualization</i>, Springer Handbooks of
+    Computational Statistics, pages 589-616. Springer-Verlag, New
+    York, 2008. ISBN 978-3-540-33036-3.</p>
+    
+    <p>Click on each figure to see the corresponding R code. The
+    complete R script is provided <a href="hsc.R">here</a>.</p>
+
+    <h2>2. Two-way Tables</h2>
+
+    <p>Figure 12.1, p. 593: A grouped bar plot for the hospital data.<br/>
+      <a href="hsc-barsgrouped.R" target="_blank">
+	<img src="hsc-barsgrouped.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.2, p. 593: A 3d-bar plot for the hospital data.<br/>
+      <a href="hsc-bars3d.R" target="_blank">
+	<img src="hsc-bars3d.jpg" border="0">
+      </a>
+    </p>
+
+    <h3>2.1. Mosaic Displays</h3>
+
+    <p>Figure 12.3, p. 594: Construction of a mosaic plot for the
+    hospital data, step 1.<br/>
+      <a href="hsc-mosaic1.R" target="_blank">
+	<img src="hsc-mosaic1.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.4, p. 594: Construction of a mosaic plot for the
+    hospital data, step 2.<br/>
+      <a href="hsc-mosaic2.R" target="_blank">
+	<img src="hsc-mosaic2.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.5, p. 595: Mosaic plot for the
+    hospital data, alternative splitting.<br/>
+      <a href="hsc-mosaic3.R" target="_blank">
+	<img src="hsc-mosaic3.jpg" border="0">
+      </a>
+    </p>
+
+    <h3>2.2. Sieve Plots</h3>
+
+    <p>Figure 12.6, p. 597: Sieve plot for the hospital data.<br/>
+      <a href="hsc-sieve.R" target="_blank">
+	<img src="hsc-sieve.jpg" border="0">
+      </a>
+    </p>
+
+
+    <h3>2.3. Association Plots</h3>
+
+    <p>Figure 12.7, p. 597: Association plot for the
+       hospital data.<br/>
+      <a href="hsc-assoc.R" target="_blank">
+	<img src="hsc-assoc.jpg" border="0">
+      </a>
+    </p>
+
+    <h2>3. Using Colors for Residual-based Shadings</h2>
+
+    <h3>3.1. A Note on Colors and Color Palettes</h3> 
+    
+    <p>Figure 12.8, p. 600: Qualitative color palette for the HSV
+      (left) and HCL (right) spaces.<br/>
+      <a href="hsc-color.R" target="_blank">
+	<img src="hsc-color.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.9, p. 600: Diverging color palettes for the HSV space
+      (upper part) and the HCL space (lower part).<br/>
+      <a href="hsc-diverging.R" target="_blank">
+	<img src="hsc-diverging.jpg" border="0">
+      </a>
+    </p>
+
+    <h3>3.2. Highlighting and Color-based Shadings</h3> 
+
+    <p>Figure 12.10, p. 601: Spine plot with highlighting for the
+    hospital data.<br/>
+      <a href="hsc-highlight.R" target="_blank">
+	<img src="hsc-highlight.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.11, p. 602: Mosaic display of the hospital data with Friendly-like color coding of the residuals.<br/>
+      <a href="hsc-friendly.R" target="_blank">
+	<img src="hsc-friendly.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.12, p. 603: Association plot of the hospital data with Friendly-like color coding of the residuals.<br/>
+      <a href="hsc-assoccolor.R" target="_blank">
+	<img src="hsc-assoccolor.jpg" border="0">
+      </a>
+    </p>
+
+    <h3>3.3. Visualizing Test Statistics</h3> 
+
+    <p>Figure 12.13, p. 605: Mosaic plot for the arthritis data, using
+    the &chi;&sup2; test and fixed cut-off points for the shading.<br/>
+      <a href="hsc-arthritis.R" target="_blank">
+	<img src="hsc-arthritis.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.14, p. 606: Mosaic plot for the arthritis data, using
+    the maximum test and data-driven cut-off points for the residuals.<br/>
+      <a href="hsc-arthritis2.R" target="_blank">
+	<img src="hsc-arthritis2.jpg" border="0">
+      </a>
+    </p>
+
+    <h2>4. Selected Methods for Multi-Way Tables</h2>
+
+    <h3>4.1. Exploratory Visualization Techniques</h3>
+
+    <p>Figure 12.15, p. 608: Pairs-plot for the UCB admissions data.<br/>
+      <a href="hsc-pairs.R" target="_blank">
+	<img src="hsc-pairs.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.16, p. 609: Doubledecker plot for the UCB admissions data.<br/>
+      <a href="hsc-ucbhigh.R" target="_blank">
+	<img src="hsc-ucbhigh.jpg" border="0">
+      </a>
+    </p>
+
+    <h3>4.2. Model-based Displays for Conditional Independence Models</h3>
+
+    <p>Figure 12.17, p. 610: Mosic plot for the UCB admissions data.<br/>
+      <a href="hsc-ucbmosaic.R" target="_blank">
+	<img src="hsc-ucbmosaic.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.18, p. 610: Association plot for the UCB admissions data.<br/>
+      <a href="hsc-ucbassoc.R" target="_blank">
+	<img src="hsc-ucbassoc.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.19, p. 611: Conditional association plot for the UCB admissions data.<br/>
+      <a href="hsc-ucbcotab.R" target="_blank">
+	<img src="hsc-ucbcotab.jpg" border="0">
+      </a>
+    </p>
+    
+    <h3>4.3. A four-way example</h3>
+
+    <p>Figure 12.20, p. 612: Mosic plot with highlighting for the
+    punishment data.<br/>
+      <a href="hsc-punishhigh.R" target="_blank">
+	<img src="hsc-punishhigh.jpg" border="0">
+      </a>
+    </p>
+
+    <p>Figure 12.21, p. 613: Conditional mosaic plot for the punishment data.<br/>
+      <a href="hsc-punishcotab.R" target="_blank">
+	<img src="hsc-punishcotab.jpg" border="0">
+      </a>
+    </p>
+
+  </body>
+
+</html>
