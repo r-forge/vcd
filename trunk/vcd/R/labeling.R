@@ -17,7 +17,6 @@ pexpand <- function(par, len, default_value, default_names, choices = NULL) {
   if (!is.null(nam)) {
     names(ret) <- default_names
     ret[nam] <- par[nam]
-    ret
   }
   ret
 }
@@ -180,7 +179,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
 
     if (inherits(gp_varnames, "gpar"))
       gp_varnames <- list(gp_varnames)
-    gp_varnames <- pexpand(gp_varnames, 4, gpar(fontsize = 12, fontface = 2),
+    gp_varnames <- pexpand(gp_varnames, 4, list(gpar(fontsize = 12, fontface = 2)),
                            c("top", "right", "bottom", "left"))
 
     rot_varnames <- pexpand(rot_varnames, 4, c(0, 90, 0, 90),
@@ -231,7 +230,7 @@ labeling_border <- function(labels = TRUE, varnames = labels,
     ## gp_labels
     if (inherits(gp_labels, "gpar"))
       gp_labels <- list(gp_labels)
-    gp_labels <- pexpand(gp_labels, ld, gpar(fontsize = 12), dn)
+    gp_labels <- pexpand(gp_labels, ld, list(gpar(fontsize = 12)), dn)
 
     ## varnames
     varnames <- pexpand(varnames, ld, labels, dn)
@@ -347,21 +346,21 @@ labeling_border <- function(labels = TRUE, varnames = labels,
                 grid.text(var,
                           y = unit(1, "npc") + unit(1 + tsp - labsp[i], "lines") + offset_varnames[1],
                           x = unit(-0.5, "lines"),
-                          just = "right", gp = gpar(fontface = 2))
+                          just = "right", gp = gp_varnames[[4]])
               } else {
                 grid.text(var, y = unit(1, "npc") + unit(1 + tsp - labsp[i], "lines") + offset_varnames[1],
                           x = unit(1, "npc") + unit(0.5, "lines"),
-                          just = "left", gp = gpar(fontface = 2))
+                          just = "left", gp = gp_varnames[[2]])
               }
             } else {
               if (labbl_varnames[i]) {
                 grid.text(var, y = unit(labsp[i], "lines") + -1 * offset_varnames[3],
                           x = unit(-0.5, "lines"), just = "right",
-                          gp = gpar(fontface = 2))
+                          gp = gp_varnames[[4]])
               } else {
                 grid.text(var, y = unit(labsp[i], "lines") + -1 * offset_varnames[3],
                           x = unit(1, "npc") + unit(0.5, "lines"),
-                          just = "left", gp = gpar(fontface = 2))
+                          just = "left", gp = gp_varnames[[2]])
               }
             }
           } else {
@@ -369,21 +368,21 @@ labeling_border <- function(labels = TRUE, varnames = labels,
               if (labbl_varnames[i]) {
                 grid.text(var, x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset_varnames[4],
                           y = unit(-0.5, "lines"), just = "right", rot = 90,
-                          gp = gpar(fontface = 2))
+                          gp = gp_varnames[[4]])
               } else {
                 grid.text(var, x = unit(lsp - 1 - labsp[i], "lines") + -1 * offset_varnames[4],
                           y = unit(1, "npc") + unit(0.5, "lines"),
-                          just = "left", rot = 90, gp = gpar(fontface = 2))
+                          just = "left", rot = 90, gp = gp_varnames[[2]])
               }
             } else {
               if (labbl_varnames[i]) {
                 grid.text(var, x = unit(1, "npc") + unit(labsp[i], "lines") + offset_varnames[2],
                           y = unit(-0.5, "lines"),
-                          just = "right", rot = 90, gp = gpar(fontface = 2))
+                          just = "right", rot = 90, gp = gp_varnames[[4]])
               } else {
                 grid.text(var, x = unit(1, "npc") + unit(labsp[i], "lines") + offset_varnames[2],
                           y = unit(1, "npc") + unit(0.5, "lines"),
-                          just = "left", rot = 90, gp = gpar(fontface = 2))
+                          just = "left", rot = 90, gp = gp_varnames[[2]])
               }
             }
           }
@@ -573,10 +572,16 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"),
                                   pos_labels = c("left", "center", "left", "center"),
                                   just_labels = c("left", "left", "left", "center"),
                                   varnames = NULL,
+                                  gp_varnames = gpar(fontsize = 12, fontface = 2),
                                   offset_varnames = c(0, -0.6, 0, 0),
                                   tl_labels = NULL,
                                   ...) {
   lab_pos <- match.arg(lab_pos)
+  
+  if (inherits(gp_varnames, "gpar"))
+      gp_varnames <- list(gp_varnames)
+  gp_varnames <- pexpand(gp_varnames, 4, list(gpar(fontsize = 12, fontface = 2)), c("top", "right", "bottom", "left"))
+  
   function(d, split_vertical, condvars, prefix = "") {
     if (is.table(d))
       d <- dimnames(d)
@@ -616,6 +621,7 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"),
                     pos_labels = pos_labels,
                     just_labels = just_labels,
                     varnames = varnames,
+                    gp_varnames = gp_varnames,
                     offset_varnames = offset_varnames,
                     tl_labels = tl_labels,
                     ...
@@ -626,7 +632,7 @@ labeling_doubledecker <- function(lab_pos = c("bottom", "top"),
         seekViewport(paste(prefix, "margin_right", sep = ""))
         grid.text(dep_varname,
                   x = unit(0.5, "lines"), y = unit(1, "npc"), just = c("left","top"),
-                  gp = gpar(fontface = 2))
+                  gp = gp_varnames[[2]])
     }
   }
 }
