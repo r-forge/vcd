@@ -334,10 +334,13 @@ struc_mosaic <- function(zero_size = 0.5, zero_split = FALSE,
             ## rectangles
             gpobj <- structure(lapply(gp, function(x) x[cbind(index, m)]),
                                class = "gpar")
+            nam <- paste(prefix, "rect:",
+                         remove_trailing_comma(nametmp), sep = "")
             if (!is.null(panel))
-                panel(residuals, observed, expected, c(cbind(index, m)))
-            grid.rect(gp = gpobj, name = paste(prefix, "rect:",
-                                  remove_trailing_comma(nametmp), sep = ""))
+                panel(residuals, observed, expected, c(cbind(index, m)),
+                      gpobj, nam)
+            else
+                grid.rect(gp = gpobj, name = nam)
           }
         }
         upViewport(1)

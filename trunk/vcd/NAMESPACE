@@ -37,6 +37,8 @@ export(
        "labeling_conditional",
        "labeling_list",
        "labeling_doubledecker",
+       "labeling_values",
+       "labeling_residuals",
 
 ## legends
        "legend_resbased",
