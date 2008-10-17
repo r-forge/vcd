@@ -52,7 +52,7 @@ strucplot <- function(## main parameters
                      c("pearson", "deviance", "ft"))
   } else {
       if (is.null(residuals_type))
-          residuals_type = ""
+          residuals_type <- ""
   }
 
   ## convert structable object
