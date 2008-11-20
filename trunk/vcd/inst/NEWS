@@ -1,3 +1,7 @@
+Changes in Version 1.2-1
+
+  o Fixed a bug in labeling (incorrect handling of some parameters)
+
 Changes in Version 1.2-0
 
   o Moved color palettes from vcd to colorspace,
