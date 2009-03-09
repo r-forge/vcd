@@ -1,6 +1,6 @@
 Package: vcd
-Version: 1.2-2
-Date: 2009-02-05
+Version: 1.2-3
+Date: 2009-03-09
 Title: Visualizing Categorical Data
 Author: David Meyer, Achim Zeileis, Kurt Hornik
 Maintainer: David Meyer <David.Meyer@R-project.org>
