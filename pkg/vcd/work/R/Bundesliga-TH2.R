@@ -61,7 +61,7 @@ levels(Bundesliga$AwayTeam) <- c(levels(Bundesliga$AwayTeam), "1899 Hoffenheim")
 dfb <- data.frame(HomeTeam = factor(home, levels = levels(Bundesliga$HomeTeam)),
                   AwayTeam = factor(away, levels = levels(Bundesliga$AwayTeam)),
                   HomeGoals = homes, AwayGoals = aways, Round = round, Year = year,
-                  Date = as.POSIXct(strptime(reg[,1], "%d.%m.%Y, %H.%M")))
+                  Date = as.POSIXct(strptime(allreg[,1], "%d.%m.%Y, %H.%M")))
 
 save(dfb, file = "Bundesliga_2005-2008.Rda")
 
