@@ -15,9 +15,12 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
         count <- as.vector(x[,2])
     }
 
-    ## eliminate zero frequencies
-    count <- count[!(freq < 1)]
-    freq <- freq[!(freq < 1)]
+    ## fill-in possibly missing cells
+    nfreq <- rep(0, max(count) + 1)
+    nfreq[count + 1] <- freq
+    freq <- nfreq
+    count <- 0:max(count)
+
     n <- length(count)
     df <- n - 1
 
@@ -39,6 +42,7 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
 	par <- weighted.mean(count,freq)
       }
       else if(method == "MinChisq") {
+        warning("`MinChisq' method may yield poor results for count distributions")
         df <- df - 1
 
 	chi2 <- function(x)
@@ -59,6 +63,15 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
       if(is.null(size)) {
         size <- max(count)
         warning("size was not given, taken as maximum count")
+      }
+
+      if(size > max(count)) {
+        nfreq <- rep(0, max(count) + 1)
+        nfreq[count + 1] <- freq
+        freq <- nfreq
+        count <- 0:max(count)
+        n <- length(count)
+        df <- n - 1      
       }
 
       if(!is.null(par$prob)) {
@@ -114,6 +127,7 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
       },
 
       "MinChisq" = {
+        warning("`MinChisq' method may yield poor results for count distributions")
         if(is.null(par$size)) {
           df <- df - 2
 
@@ -186,7 +200,7 @@ summary.goodfit <- function(object, ...)
     count <- object$count
     expctd <- fitted(object)
 
-    G2 <- sum(obsrvd * log(obsrvd/expctd)) * 2
+    G2 <- sum(ifelse(obsrvd == 0, 0, obsrvd * log(obsrvd/expctd))) * 2
 
     n <- length(obsrvd)
     switch(object$type,
