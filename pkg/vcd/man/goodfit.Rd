@@ -38,7 +38,7 @@ goodfit(x, type = c("poisson", "binomial", "nbinomial"),
 }
 \details{
   \code{goodfit} essentially computes the fitted values of a discrete
-  distribution (either poisson, binomial or negative binomial) to the
+  distribution (either Poisson, binomial or negative binomial) to the
   count data given in \code{x}.  If the parameters are not specified
   they are estimated either by ML or Minimum Chi-squared. 
 
@@ -48,10 +48,16 @@ goodfit(x, type = c("poisson", "binomial", "nbinomial"),
   If for \code{"binomial"} \code{size} is not specified it is not
   estimated but taken as the maximum count.
 
-  The corresponding Pearson Chi-squared or likelihood ratio statistic
-  respectively is computed and given with their \eqn{p} values by the
+  The corresponding Pearson Chi-squared or likelihood ratio statistic,
+  respectively, is computed and given with their \eqn{p} values by the
   \code{summary} method.  The \code{plot} method produces a
   \code{\link{rootogram}} of the observed and fitted values.
+  
+  For the minimum Chi-squared method, only those cells up to the maximal
+  count provided are considered, i.e., a poor fit on larger counts would
+  not be picked up by the inference. This is a problem for the count
+  distributions (Poisson and negative binomial) where there is no finite
+  maximal expected count. Hence, a warning is issued in this case.
 }
 \value{
   A list of class \code{"goodfit"} with elements:
