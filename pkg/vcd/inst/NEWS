@@ -1,4 +1,4 @@
-Changes in Version 1.2-4
+Changes in Version 1.2-5
 
   o Bundesliga data set has been augmented with the results of the
     seasons 2006/7, 2007/8, 2008/9 (thanks to Torsten Hothorn).
@@ -10,6 +10,17 @@ Changes in Version 1.2-4
     observed count) are still not considered. As it is unclear how
     the minimum Chi-squared estimate and associated test should be
     computed, a warning is now issued.
+
+  o sieve() now accepts a gp_tile argument to control the appearance of
+    the cells (apart from the sieve color)
+
+Changes in Version 1.2-4
+
+  o Bug fix: labeling arguments were incorrectly handled when the options
+    were not provided as named vector
+
+  o ternaryplot() now makes use of the `cex` argument also for 
+    the rendering of optional labels, if any
 
 
 Changes in Version 1.2-3
