@@ -42,7 +42,6 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
 	par <- weighted.mean(count,freq)
       }
       else if(method == "MinChisq") {
-        warning("`MinChisq' method may yield poor results for count distributions")
         df <- df - 1
 
 	chi2 <- function(x)
@@ -127,7 +126,6 @@ goodfit <- function(x, type = c("poisson", "binomial", "nbinomial"),
       },
 
       "MinChisq" = {
-        warning("`MinChisq' method may yield poor results for count distributions")
         if(is.null(par$size)) {
           df <- df - 2
 
