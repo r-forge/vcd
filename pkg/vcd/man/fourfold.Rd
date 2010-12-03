@@ -53,7 +53,9 @@ fourfold(x,
   \item{ticks}{the length of the ticks. If set to 0, no ticks are
     plotted.}
   \item{p_adjust_method}{method to be used for p-value adjustments for
-    multi-stratum plots.  The p-values are used for the \sQuote{visual}
+    multi-stratum plots, as provided by \code{link[stats]{p.adjust}}.
+    Use \code{p_adjust_method="none"} to disable this adjustment.
+    The p-values are used for the \sQuote{visual}
     significance tests of the odds ratios.}
   \item{newpage}{logical; if \code{TRUE}, \code{grid.newpage()} is
     called before plotting.}
@@ -94,6 +96,8 @@ fourfold(x,
 \seealso{
   \code{\link{mosaic}},
   \code{\link{assoc}}
+  
+  \code{link[stats]{p.adjust}} for methods of p value adjustment
 }
 \examples{
 data("UCBAdmissions")
