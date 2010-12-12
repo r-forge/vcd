@@ -1,4 +1,4 @@
-Changes beyond Version 1.2-9
+Changes in Version 1.2-10
 
   o For use with shading_Friendly(), shading_hsv() now sets the line type of
     borders corresponding to abs(residual)<eps to lty[1] in addition to setting
