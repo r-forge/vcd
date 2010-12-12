@@ -1,5 +1,26 @@
+## Modifications - MF - 1 Dec 2010
+#  -- change default colors to more distinguishable values
+#  -- allow to work with >3 dimensional arrays
+
+# Take a >3D array and return a 3D array, with dimensions 3+ as a single dimension
+# Include as a separate function, since it is useful in other contexts
+array3d <- function(x, sep=':') {
+  if(length(dim(x))<=3) return(x)
+
+  x3d <- array(x, c(dim(x)[1:2], prod(dim(x)[-(1:2)])))
+  if (!is.null(dimnames(x))) {
+	  n3d <- paste(names(dimnames(x))[-(1:2)], collapse=sep)
+	  d3d <- apply(expand.grid(dimnames(x)[-(1:2)]), 1, paste, collapse=sep)
+	  dimnames(x3d) <- c(dimnames(x)[1:2], list(d3d))
+	  names(dimnames(x3d))[3] <- n3d
+  }
+  x3d
+}
+
 "fourfold" <-
-function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
+function(x, 
+#        color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#000080"),
+         color = c("#99CCFF","#6699CC","#FFA0A0","#A0A0FF", "#FF0000", "#000080"),
          conf_level = 0.95,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
          space = 0.2, main = NULL, sub = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
@@ -11,7 +32,7 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
     ##   Friendly, M. (1994).
     ##   A fourfold display for 2 by 2 by \eqn{k} tables.
     ##   Technical Report 217, York University, Psychology Department.
-    ##   http://www.math.yorku.ca/SCS/Papers/4fold/4fold.ps.gz
+    ##   http://datavis.ca/papers/4fold/4fold.pdf
     ##
     ## Implementation notes:
     ##
@@ -37,14 +58,17 @@ function(x, color = c("#99CCFF","#6699CC","#FF5050","#6060A0", "#FF0000", "#0000
 
     if(!is.array(x))
         stop("x must be an array")
-    if(length(dim(x)) == 2) {
+	dimx <- dim(x)   # save original dimensions for setting default mfrow/mfcol when length(dim(x))>3
+    # <FIXME>
+    # The code below could be incorporated into array3d()
+    # </FIXME>
+	if(length(dim(x)) == 2) {
         x <- if(is.null(dimnames(x)))
             array(x, c(dim(x), 1))
         else
             array(x, c(dim(x), 1), c(dimnames(x), list(NULL)))
     }
-    if(length(dim(x)) != 3)
-        stop("x must be 2- or 3-dimensional")
+	x <- array3d(x)
     if(any(dim(x)[1:2] != 2))
         stop("table for each stratum must be 2 by 2")
     dnx <- dimnames(x)
