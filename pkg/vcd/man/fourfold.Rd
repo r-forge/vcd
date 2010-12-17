@@ -48,7 +48,8 @@ fourfold(x,
   \item{mfrow, mfcol}{a numeric vector with two components:
     \var{nr} and \var{nc}, indicating that the displays for the \eqn{2 \times 2}{2 x 2}
     tables should be arranged in an \var{nr} by \var{nc} layout, filled
-    by rows/columns.}
+    by rows/columns. The defaults are calculated to give a collection of plots in
+    landscape orientation when \var{k} is not a perfect square.}
   \item{extended}{logical; if \code{TRUE}, extended plots are plotted,
     i.e., colors are brighter for significant log-odds ratios, and ticks
     are plotted showing the direction of association for positive log-odds.}
