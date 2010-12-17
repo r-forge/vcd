@@ -1,20 +1,29 @@
 ## Modifications - MF - 1 Dec 2010
 #  -- change default colors to more distinguishable values
 #  -- allow to work with >3 dimensional arrays
+#  -- modified defaults for mfrow/mfcol to give landscape display, nr <= nc, rather than nr >= nc
 
-# Take a >3D array and return a 3D array, with dimensions 3+ as a single dimension
+# Take a 2+D array and return a 3D array, with dimensions 3+ as a single dimension
 # Include as a separate function, since it is useful in other contexts
 array3d <- function(x, sep=':') {
-  if(length(dim(x))<=3) return(x)
-
-  x3d <- array(x, c(dim(x)[1:2], prod(dim(x)[-(1:2)])))
-  if (!is.null(dimnames(x))) {
-	  n3d <- paste(names(dimnames(x))[-(1:2)], collapse=sep)
-	  d3d <- apply(expand.grid(dimnames(x)[-(1:2)]), 1, paste, collapse=sep)
-	  dimnames(x3d) <- c(dimnames(x)[1:2], list(d3d))
-	  names(dimnames(x3d))[3] <- n3d
+	if(length(dim(x)) == 2) {
+        x <- if(is.null(dimnames(x)))
+            array(x, c(dim(x), 1))
+        else
+            array(x, c(dim(x), 1), c(dimnames(x), list(NULL)))
+        return(x)
+    }
+  else if(length(dim(x))==3) return(x)
+  else {
+	  x3d <- array(x, c(dim(x)[1:2], prod(dim(x)[-(1:2)])))
+	  if (!is.null(dimnames(x))) {
+		  n3d <- paste(names(dimnames(x))[-(1:2)], collapse=sep)
+		  d3d <- apply(expand.grid(dimnames(x)[-(1:2)]), 1, paste, collapse=sep)
+		  dimnames(x3d) <- c(dimnames(x)[1:2], list(d3d))
+		  names(dimnames(x3d))[3] <- n3d
+  	}
+  	return(x3d)
   }
-  x3d
 }
 
 "fourfold" <-
@@ -58,17 +67,8 @@ function(x,
 
     if(!is.array(x))
         stop("x must be an array")
-	dimx <- dim(x)   # save original dimensions for setting default mfrow/mfcol when length(dim(x))>3
-    # <FIXME>
-    # The code below could be incorporated into array3d()
-    # </FIXME>
-	if(length(dim(x)) == 2) {
-        x <- if(is.null(dimnames(x)))
-            array(x, c(dim(x), 1))
-        else
-            array(x, c(dim(x), 1), c(dimnames(x), list(NULL)))
-    }
-	x <- array3d(x)
+    dimx <- dim(x)   # save original dimensions for setting default mfrow/mfcol when length(dim(x))>3
+    x <- array3d(x)
     if(any(dim(x)[1:2] != 2))
         stop("table for each stratum must be 2 by 2")
     dnx <- dimnames(x)
@@ -178,8 +178,13 @@ function(x,
         nc <- mfcol[2]
         byrow <- TRUE
     }
+    else if(length(dimx)>3) {
+        nr <- dimx[3]
+        nc <- prod(dimx[-(1:3)])
+    }
     else {
-        nr <- ceiling(sqrt(k))
+#       nr <- ceiling(sqrt(k))
+        nr <- round(sqrt(k))
         nc <- ceiling(k / nr)
     }
     if(nr * nc < k)

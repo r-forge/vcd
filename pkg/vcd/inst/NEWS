@@ -9,6 +9,9 @@ Changes in Version 1.2-10
 
   o In fourfold(), allow the function to work with >3-dimensional tables, by restructuring
     all strata dimensions into a single combined 3rd dimension.
+
+  o In fourfold(), modified defaults for mfrow/mfcol to give landscape display, nr <= nc, 
+    rather than nr >= nc. If length(dim(x))>3, set nr=dim(x)[3].
  
 Changes in Version 1.2-9
 
