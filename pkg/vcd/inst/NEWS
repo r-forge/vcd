@@ -1,4 +1,10 @@
+Changes in Version 1.2-11
+
+  o Bug fix: `gamma'-argument removed from hcl2hex()
+
 Changes in Version 1.2-10
+
+  o Add aperm method for structable objects
 
   o For use with shading_Friendly(), shading_hsv() now sets the line type of
     borders corresponding to abs(residual)<eps to lty[1] in addition to setting
