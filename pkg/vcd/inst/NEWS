@@ -1,3 +1,12 @@
+Changes in Version 1.2-12
+
+  o Bug fix: assoc() would not plot tables with 0 residuals
+
+  o Bug fix: structable() adds dimnames and dimname names if none are specified
+
+  o Bug fix: print error message when subsetting/selecting of structable objects
+             using more than 2 indices
+
 Changes in Version 1.2-11
 
   o Bug fix: `gamma'-argument removed from hcl2hex()
