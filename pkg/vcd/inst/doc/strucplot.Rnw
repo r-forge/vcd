@@ -726,7 +726,7 @@ vectorized arguments in the strucplot framework (with
 The \codefun{cotabplot} function does a much better job on this task:
 it arranges stratified strucplot displays
 in a lattice-like layout, conditioning on variable \emph{levels}.
-The plot in Figure~\ref{fig:cotabplot} shows hair and eye color, given sex:
+The plot in Figure~\ref{fig:cotabplot} shows class and age group, given sex:
 
 <<cotabplot>>=
 cotabplot(~ Class + Age | Sex, data = STD, split_vertical = TRUE)
