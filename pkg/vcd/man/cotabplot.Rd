@@ -11,7 +11,7 @@
 cotabplot(x, \dots)
 \method{cotabplot}{default}(x, cond = NULL,
   panel = cotab_mosaic, panel_args = list(),
-  margins = rep(1, 4),
+  margins = rep(1, 4), layout = NULL,
   text_gp = gpar(fontsize = 12), rect_gp = gpar(fill = grey(0.9)),
   pop = TRUE, newpage = TRUE,
   \dots)
@@ -29,6 +29,8 @@ cotabplot(x, \dots)
   \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as needed.
     giving the margins around the whole plot.}
+  \item{layout}{integer vector (of length two), giving the number of
+    rows and columns for the panel.}
   \item{text_gp}{object of class \code{"gpar"} used for the text in the panel titles.}
   \item{rect_gp}{object of class \code{"gpar"} used for the rectangles with the panel titles.}
   \item{pop}{logical indicating whether the generated viewport tree
