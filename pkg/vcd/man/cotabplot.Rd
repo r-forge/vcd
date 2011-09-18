@@ -25,7 +25,7 @@ cotabplot(x, \dots)
   \item{panel}{panel function applied for each conditioned plot,
     see details.}
   \item{panel_args}{list of arguments passed to \code{panel} if this is
-    a panel-generating function inheriting from class \code{"panel_generator"}.}
+    a panel-generating function inheriting from class \code{"grapcon_generator"}.}
   \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as needed.
     giving the margins around the whole plot.}
@@ -68,7 +68,7 @@ cotabplot(x, \dots)
   \code{c(z = "z1")} in the example above). 
   
   Alternatively, \code{panel} can also be a panel-generating function
-  of class \code{"panel_generator"} which creates a function with the
+  of class \code{"grapcon_generator"} which creates a function with the
   interface described above. The panel-generating function is called
   with the interface
   
