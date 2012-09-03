@@ -6,8 +6,6 @@ Authors@R: c(person(given = "David", family = "Meyer", role = c("aut", "cre"), e
              person(given = "Achim", family = "Zeileis", role = c("aut")),
              person(given = "Kurt", family = "Hornik", role = c("aut")),
              person(given = "Michael", family = "Friendly", role = "ctb"))
-Author: David Meyer [aut, cre], Achim Zeileis [aut], Kurt Hornik [aut], Michael Friendly [ctb]
-Maintainer: David Meyer <David.Meyer@R-project.org>
 Description: Visualization techniques, data sets, summary and inference
         procedures aimed particularly at categorical data. Special
         emphasis is given to highly extensible grid graphics. The
