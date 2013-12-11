@@ -2,6 +2,13 @@
 \title{News for Package \pkg{vcd}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 1.3-2}{
+  \itemize{
+    \item \code{Ord_plot()} gets \code{lwd}, \code{lty} and \code{col} arguments
+    to control plotting of the OLS and WLS lines.
+  }
+}
+
 \section{Changes in version 1.3-1}{
   \itemize{
     \item several namespace issues fixed
