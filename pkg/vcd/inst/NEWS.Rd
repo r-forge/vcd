@@ -6,6 +6,7 @@
   \itemize{
     \item \code{Ord_plot()} gets \code{lwd}, \code{lty} and \code{col} arguments
     to control plotting of the OLS and WLS lines.
+    \item \code{distplot()} gets an \code{lwd} argument.
   }
 }
 
