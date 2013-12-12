@@ -10,7 +10,7 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
   size = NULL, lambda = NULL, legend = TRUE, xlim = NULL, ylim = NULL,
   conf_int = TRUE, conf_level = 0.95, main = NULL,
   xlab = "Number of occurrences", ylab = "Distribution metameter",
-  gp = gpar(cex = 0.5), name = "distplot", newpage = TRUE, pop = TRUE, \dots)
+  gp = gpar(cex = 0.8), lwd=2, name = "distplot", newpage = TRUE, pop = TRUE, \dots)
 }
 \arguments{
   \item{x}{either a vector of counts, a 1-way table of frequencies of
@@ -36,6 +36,7 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
   \item{ylab}{a label for the y axis.}
   \item{gp}{a \code{"gpar"} object controlling the grid graphical
     parameters of the points.}  
+  \item{lwd}{line width for the fitted line}
   \item{name}{name of the plotting viewport.}
   \item{newpage}{logical. Should \code{\link{grid.newpage}} be called 
     before plotting?}
