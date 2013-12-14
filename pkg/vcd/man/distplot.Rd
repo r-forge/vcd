@@ -57,7 +57,7 @@ distplot(x, type = c("poisson", "binomial", "nbinomial"),
 
 \value{
 Returns invisibly a data frame containing the counts (\code{Counts}), 
-frequencies (\code{Freq)) and other details of the computations used
+frequencies (\code{Freq}) and other details of the computations used
 to construct the plot.
 }
 
