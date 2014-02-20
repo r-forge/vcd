@@ -97,7 +97,8 @@ pairs_strucplot <- function(panel = mosaic,
     rest2 <- index[!index %in% 1:2]
 	expected <- switch(type,
 			joint = list(1:2, rest2),   # shouldn't this be list(c(j,i), rest) ??
-			conditional = list(c(j,rest), c(i,rest)),
+			conditional = list(c(1,rest2), c(2,rest2)),
+#			conditional = list(c(j,rest), c(i,rest)),
 			total = sapply(c(j, i, rest), list),
 			NULL)
 	panel(x = margin.table(x, if (type == "pairwise") c(j, i) else c(j, i, rest)),
