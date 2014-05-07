@@ -1,6 +1,6 @@
 \name{CoalMiners}
 \alias{CoalMiners}
-\docType{data}
+
 \title{Breathlessness and Wheeze in Coal Miners}
 \description{
   Data from Ashford & Sowden (1970) given by Agresti (1990) on the
@@ -29,7 +29,8 @@ data("CoalMiners")
 
 \details{
 In an earlier version of this data set, the first group, aged 20-24, was
-inadvertently omitted from this data table.
+inadvertently omitted from this data table and the breathlessness variable
+was called wheeze and vice versa.
 }
 
 \references{
@@ -71,8 +72,6 @@ plot(l,
      main = "Breathlessness and Wheeze in Coal Miners")
 m <- lm(l ~ age + I(age^2))
 lines(fitted(m), col = "red", lwd=2)
-
-
 }
 
 \keyword{datasets}
