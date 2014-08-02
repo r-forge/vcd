@@ -1,7 +1,8 @@
 \documentclass[nojss]{jss}
 %% need no \usepackage{Sweave}
 
-\usepackage{thumbpdf}
+%% omit thumbpdf at the moment due to problems on some systems
+%% \usepackage{thumbpdf}
 
 %% almost as usual
 \author{David Meyer, Achim Zeileis, \textnormal{and} Kurt
