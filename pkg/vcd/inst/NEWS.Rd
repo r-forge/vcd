@@ -11,7 +11,9 @@
     shown with solid lines, as per Friendly specifications.
     \item fixed problems with \code{pairs_strucplot()} type argument, particularly for
     \code{type="conditional"}
-    \item Fixed error in \code{CoalMiners} data (missing group, labels switched)
+    \item Fixed error in \code{CoalMiners} data (missing group, labels
+    switched)
+    \item Change default area type for sieve plots to "area"
   }
 }
 
