@@ -161,8 +161,10 @@ strucplot <- function(## main parameters
   }
   gp <- structure(lapply(gp, FUN), class = "gpar")
 
+  FUN = function(new = newpage) {
   ## set up page
-  if (newpage)
+##  if (newpage)
+  if (new)
     grid.newpage()
   if (keep_aspect_ratio)
     pushViewport(viewport(width = 1, height = 1, default.units = "snpc"))
@@ -232,10 +234,33 @@ strucplot <- function(## main parameters
   seekViewport(paste(prefix, "base", sep = ""))
   ## one more up if sandwich-mode
   if (pop) popViewport(1 + keep_aspect_ratio) else upViewport(1 + keep_aspect_ratio)
-
+}
+  FUN()
   ## return visualized table
-  invisible(structable(if (type == "observed") x else expected,
-                      split_vertical = split_vertical))
+##  invisible(structable(if (type == "observed") x else expected,
+##                      split_vertical = split_vertical))
+  invisible(structure(structable(if (type == "observed") x else expected,
+                      split_vertical = split_vertical), .FUN = FUN))
+}
+
+splot <- function(..., layout = NULL, main = NULL, gp_main = gpar(),
+                  sub = NULL, gp_sub = gpar()) {
+    l <- list(...)
+    if (is.null(layout))
+        layout <- c(1, length(l))
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow = layout[1],
+                          ncol = layout[2])))
+    count <- 1
+    for (i in seq_len(layout[1]))
+        for (j in seq_len(layout[2])) {
+            pushViewport(viewport(layout.pos.row = i,
+                                  layout.pos.col = j))
+            attr(l[[count]], ".FUN")(FALSE)
+            popViewport()
+            count <- count + 1
+        }
+    popViewport(1)
 }
 
 vcdViewport <- function(mar = rep.int(2.5, 4),
