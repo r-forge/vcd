@@ -1,23 +1,24 @@
-##library(colorspace)
-##library(vcdExtra)
-##m = glm(survived ~ age + sex, data = Donner, family = binomial())
-
 logregplot <-
 function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
-         legendpos = "topright", predvar = NULL, condvar = NULL,
-         subset)
+         pch = 19, cex = 1, xlab = NULL, ylab = NULL,
+         legendpos = "topright", conf.level = 0.95,
+         predvar = NULL, condvar = NULL, ylevel = NULL,
+         type = c("response", "link"), ..., subset)
 {
     if (!inherits(model, "glm"))
         stop("Method requires a model of class 'glm'.")
-    if(family(model)$family != "binomial")
-        stop("Method requires a glm model with binomial link.")
+    type <- match.arg(type)
     term <- terms(model)
     data.classes <- attr(term, "dataClasses")
     nam <- names(data.classes)
     resp <- nam[attr(term, "response")]
+    if (is.null(ylab))
+        ylab <- resp
     data.classes[resp] <- ""
     if (is.null(predvar))
         predvar <- nam[match("numeric", data.classes)]
+    if (is.null(xlab))
+        xlab <- predvar
     if (is.null(condvar))
         condvar <- nam[match("factor", data.classes)]
     dat <- model$model[order(model$model[,predvar]),]
@@ -28,17 +29,30 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
         dat <- dat[i,]
     }
 
-    plot(dat[,predvar], dat[,resp], type = "n",
-         xlab = predvar, ylab = resp, main = main)
+    ylim <- if (type == "response")
+        c(0,1)
+    else
+        range(predict(model, dat, type = "link"))
 
+    if (is.null(ylevel))
+        ylevel <- if(is.factor(dat[,resp]))
+                      levels(dat[,resp])[2]
+                  else
+                      1
+    plot(dat[,predvar], dat[,resp],
+         type = "n",
+         xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
+
+    quantile <- qnorm((1 + conf.level) / 2)
     draw <- function(ind, colband, colline) {
         points(dat[ind, predvar],
-               jitter(dat[ind, resp], jitter_factor),
-               col = colline)
-        pr <- predict(model, dat[ind,], type = "response", se.fit = TRUE)
+               jitter(ylim[1 + (dat[ind,resp] == ylevel)],
+                      jitter_factor),
+               pch = pch, cex = cex, col = colline)
+        pr <- predict(model, dat[ind,], type = type, se.fit = TRUE)
         polygon(c(dat[ind,predvar], rev(dat[ind,predvar])),
-                c(pr$fit -1.96 * pr$se.fit,
-                  rev(pr$fit +1.96 * pr$se.fit)),
+                c(pr$fit - quantile * pr$se.fit,
+                  rev(pr$fit + quantile * pr$se.fit)),
                 col = colband, border = NA)
         lines(dat[ind, predvar],
               pr$fit,
