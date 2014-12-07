@@ -1,12 +1,12 @@
 binreg_plot <-
 function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
          pch = NULL, cex = 1, xlab = NULL, ylab = NULL,
-         legend = TRUE, legendpos = "topright",
-         labels = FALSE, labels.place = "right", labels.pos = 1,
-         labels.offset = 0.5,
-         conf.level = 0.95,
-         predvar = NULL, condvar = NULL, ylevel = NULL,
-         col.band = NULL, col.line = NULL,
+         legend = TRUE, legend_pos = "topright",
+         labels = FALSE, labels_place = "right", labels_pos = 1,
+         labels_offset = 0.5,
+         conf_level = 0.95,
+         pred_var = NULL, cond_vars = NULL, ylevel = NULL,
+         col_band = NULL, col_line = NULL,
          type = c("response", "link"), ..., subset)
 {
     if (!inherits(model, "glm"))
@@ -19,13 +19,13 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
     if (is.null(pch))
         pch <- c(19,15,17, 1:14, 16, 18, 20:25)
     data.classes[resp] <- ""
-    if (is.null(predvar))
-        predvar <- nam[match("numeric", data.classes)]
+    if (is.null(pred_var))
+        pred_var <- nam[match("numeric", data.classes)]
     if (is.null(xlab))
-        xlab <- predvar
-    if (is.null(condvar))
-        condvar <- nam[match("factor", data.classes)]
-    dat <- model$model[order(model$model[,predvar]),]
+        xlab <- pred_var
+    if (is.null(cond_vars))
+        cond_vars <- nam[data.classes %in% "factor"]
+    dat <- model$model[order(model$model[,pred_var]),]
     if (!missing(subset)) {
         e <- substitute(subset)
         i <- eval(e, dat, parent.frame())
@@ -44,72 +44,83 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
                   else
                       1
 
-    lev <- levels(dat[,condvar])
+    if (is.na(cond_vars) || is.logical(cond_vars) && !cond_vars[1])
+        cond_vars <- NULL
+    if (is.null(cond_vars)) {
+        labels <- legend <- FALSE
+    } else {
+        if (length(cond_vars) > 1) {
+            cross <- paste(cond_vars, collapse = "*")
+            dat[,cross] <- factor(apply(dat[,cond_vars], 1, paste, collapse = ":"))
+            cond_vars <- cross
+        }
+        lev <- levels(dat[,cond_vars])
+    }
 
     if (is.null(ylab))
         ylab <- if (type == "response")
                     paste0("P(", resp, ")")
                 else
                     paste0("logit(", resp, ")")
-    plot(dat[,predvar], dat[,resp],
+    plot(dat[,pred_var], dat[,resp],
          type = "n",
          xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
 
-    quantile <- qnorm((1 + conf.level) / 2)
+    quantile <- qnorm((1 + conf_level) / 2)
     draw <- function(ind, colband, colline, pch, label) {
-        points(dat[ind, predvar],
+        points(dat[ind, pred_var],
                jitter(ylim[1 + (dat[ind, resp] == ylevel)],
                       jitter_factor),
                pch = pch, cex = cex, col = colline)
         pr <- predict(model, dat[ind,], type = type, se.fit = TRUE)
-        polygon(c(dat[ind, predvar], rev(dat[ind, predvar])),
+        polygon(c(dat[ind, pred_var], rev(dat[ind, pred_var])),
                 c(pr$fit - quantile * pr$se.fit,
                   rev(pr$fit + quantile * pr$se.fit)),
                 col = colband, border = NA)
-        lines(dat[ind, predvar],
+        lines(dat[ind, pred_var],
               pr$fit,
               lwd = lwd,
               col = colline)
         if (labels) {
-            x = switch(labels.place,
-                       left = dat[ind, predvar][1],
-                       right = dat[ind, predvar][length(dat[ind, predvar])])
-            y = switch(labels.place,
+            x = switch(labels_place,
+                       left = dat[ind, pred_var][1],
+                       right = dat[ind, pred_var][length(dat[ind, pred_var])])
+            y = switch(labels_place,
                        left = pr$fit[1],
                        right = pr$fit[length(pr$fit)])
-            text(x, y, labels = label, pos = labels.pos,
-                 offset = labels.offset, col = colline)
+            text(x, y, labels = label, pos = labels_pos,
+                 offset = labels_offset, col = colline)
         }
     }
 
-    if (is.null(condvar) || is.na(condvar) ||
-        is.logical(condvar) && !condvar[1]) {
-        if (is.null(col.band))
-            col.band <- rainbow_hcl(1, alpha = 0.2)
-        if (is.null(col.line))
-            col.line <- rainbow_hcl(1, l = 50)
+    if (is.null(cond_vars) || is.na(cond_vars) ||
+        is.logical(cond_vars) && !cond_vars[1]) {
+        if (is.null(col_band))
+            col_band <- rainbow_hcl(1, alpha = 0.2)
+        if (is.null(col_line))
+            col_line <- rainbow_hcl(1, l = 50)
         draw(1:nrow(dat),
-             col.band,
-             col.line,
+             col_band,
+             col_line,
              pch[1])
     } else {
         llev <- length(lev)
         pch <- rep(pch, length.out = llev)
-        if (is.null(col.band))
-            col.band <- rainbow_hcl(llev, alpha = 0.2)
-        if (is.null(col.line))
-            col.line <- rainbow_hcl(llev, l = 50)
+        if (is.null(col_band))
+            col_band <- rainbow_hcl(llev, alpha = 0.2)
+        if (is.null(col_line))
+            col_line <- rainbow_hcl(llev, l = 50)
         for (i in seq_along(lev)) {
-            ind <- dat[,condvar] == lev[i]
-            draw(ind, col.band[i], col.line[i], pch[i], lev[i])
+            ind <- dat[,cond_vars] == lev[i]
+            draw(ind, col_band[i], col_line[i], pch[i], lev[i])
         }
         if (legend)
-            legend(legendpos,
+            legend(legend_pos,
                    legend = lev,
-                   col = col.line,
+                   col = col_line,
                    lwd = lwd,
                    title.adj = 0.15,
-                   title = condvar)
+                   title = cond_vars)
     }
 
 
