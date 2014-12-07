@@ -23,14 +23,21 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
         pred_var <- nam[match("numeric", data.classes)]
     if (is.null(xlab))
         xlab <- pred_var
-    if (is.null(cond_vars))
-        cond_vars <- nam[data.classes %in% "factor"]
     dat <- model$model[order(model$model[,pred_var]),]
     if (!missing(subset)) {
         e <- substitute(subset)
         i <- eval(e, dat, parent.frame())
         i <- i & !is.na(i)
         dat <- dat[i,]
+    }
+    if (is.null(cond_vars)) {
+        cond_vars <- nam[data.classes %in% "factor"]
+        sing <- sapply(dat, function(i) all(i == i[1]))
+        if (any(sing)) {
+            cond_vars <- setdiff(cond_vars, names(sing)[sing])
+            if(length(cond_vars) < 1)
+                cond_vars <- FALSE
+        }
     }
 
     ylim <- if (type == "response")
