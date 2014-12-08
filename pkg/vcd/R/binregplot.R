@@ -1,8 +1,8 @@
 binreg_plot <-
 function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
          pch = NULL, cex = 1, xlab = NULL, ylab = NULL,
-         legend = TRUE, legend_pos = "topright",
-         labels = FALSE, labels_place = "right", labels_pos = 1,
+         legend = TRUE, legend_pos = NULL, inset = c(0, 0.1),
+         labels = FALSE, labels_place = "right", labels_pos = 4,
          labels_offset = 0.5,
          conf_level = 0.95,
          pred_var = NULL, cond_vars = NULL, ylevel = NULL,
@@ -21,6 +21,12 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
     data.classes[resp] <- ""
     if (is.null(pred_var))
         pred_var <- nam[match("numeric", data.classes)]
+    if (is.null(legend_pos))
+        legend_pos <-
+            if (coef(model)[pred_var] > 0)
+                "topleft"
+            else
+                "topright"
     if (is.null(xlab))
         xlab <- pred_var
     dat <- model$model[order(model$model[,pred_var]),]
@@ -33,11 +39,10 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
     if (is.null(cond_vars)) {
         cond_vars <- nam[data.classes %in% "factor"]
         sing <- sapply(dat, function(i) all(i == i[1]))
-        if (any(sing)) {
+        if (any(sing))
             cond_vars <- setdiff(cond_vars, names(sing)[sing])
-            if(length(cond_vars) < 1)
-                cond_vars <- FALSE
-        }
+        if(length(cond_vars) < 1)
+            cond_vars <- FALSE
     }
 
     ylim <- if (type == "response")
@@ -57,8 +62,8 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
         labels <- legend <- FALSE
     } else {
         if (length(cond_vars) > 1) {
-            cross <- paste(cond_vars, collapse = "*")
-            dat[,cross] <- factor(apply(dat[,cond_vars], 1, paste, collapse = ":"))
+            cross <- paste(cond_vars, collapse = " x ")
+            dat[,cross] <- factor(apply(dat[,cond_vars], 1, paste, collapse = " : "))
             cond_vars <- cross
         }
         lev <- levels(dat[,cond_vars])
@@ -127,6 +132,7 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
                    col = col_line,
                    lwd = lwd,
                    title.adj = 0.15,
+                   inset = inset,
                    title = cond_vars)
     }
 
