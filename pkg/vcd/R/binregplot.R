@@ -5,7 +5,7 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
          labels = FALSE, labels_place = "right", labels_pos = 4,
          labels_offset = 0.5,
          conf_level = 0.95,
-         pred_var = NULL, cond_vars = NULL, ylevel = NULL,
+         pred_var = NULL, cond_vars = NULL, base_level = NULL,
          col_band = NULL, col_line = NULL,
          type = c("response", "link"), ..., subset)
 {
@@ -50,11 +50,11 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
     else
         range(predict(model, dat, type = "link"))
 
-    if (is.null(ylevel))
-        ylevel <- if(is.factor(dat[,resp]))
-                      levels(dat[,resp])[2]
-                  else
-                      1
+    if (is.null(base_level))
+        base_level <- if(is.factor(dat[,resp]))
+                          levels(dat[,resp])[1]
+                      else
+                          0
 
     if (is.na(cond_vars) || is.logical(cond_vars) && !cond_vars[1])
         cond_vars <- NULL
@@ -81,7 +81,7 @@ function(model, main = NULL, jitter_factor = 0.1, lwd = 5,
     quantile <- qnorm((1 + conf_level) / 2)
     draw <- function(ind, colband, colline, pch, label) {
         points(dat[ind, pred_var],
-               jitter(ylim[1 + (dat[ind, resp] == ylevel)],
+               jitter(ylim[1 + (dat[ind, resp] != base_level)],
                       jitter_factor),
                pch = pch, cex = cex, col = colline)
         pr <- predict(model, dat[ind,], type = type, se.fit = TRUE)
