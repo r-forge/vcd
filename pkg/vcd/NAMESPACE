@@ -1,4 +1,5 @@
 import(MASS)
+import(grid)
 import(grDevices)
 import(colorspace)
 importFrom("utils","head","tail")
@@ -88,6 +89,7 @@ export(
        "Ord_plot",
        "strucplot",
        "ternaryplot",
+       "binreg_plot",
        "grid_legend",
        "woolf_test")
 

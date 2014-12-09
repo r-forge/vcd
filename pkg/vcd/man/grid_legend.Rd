@@ -10,11 +10,12 @@ grid_legend(x, y, pch = NA, col = par('col'), labels, frame = TRUE,
             default_units = "lines", gp = gpar(), draw = TRUE,
             title = NULL, just = 'center', lwd = NA, lty = NA,
             gp_title = NULL, gp_labels = NULL,
-            gp_frame = gpar(fill = "transparent"))
+            gp_frame = gpar(fill = "transparent"),
+            inset = c(0, 0))
 }
 \arguments{
   \item{x}{character string 'topright', 'topleft', 'bottomright',
-    'bottomleft' or x coordinate of the legend}
+    'bottomleft', 'top', 'bottom', 'left', 'right', 'center' or x coordinate of the legend}
   \item{y}{y coordinates of the legend}
   \item{pch}{integer vector of plotting symbols if any}
   \item{col}{character vector of colors for the symbols}
@@ -36,6 +37,8 @@ grid_legend(x, y, pch = NA, col = par('col'), labels, frame = TRUE,
   \item{gp_title}{object of class \code{"gpar"} used for the title }
   \item{gp_labels}{object of class \code{"gpar"} used for the labels }
   \item{gp_frame}{object of class \code{"gpar"} used for the frame }
+  \item{inset}{numeric vector of length 2 specifying the inset of the
+    legend in npc units, relative to the specified x and y coordinates.}
 }
 \value{
   Invisibly, the legend as a \code{"grob"} object.
