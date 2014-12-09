@@ -180,12 +180,13 @@
 	## Statistics - Returned invisibly
 	ads <- crossprod(diag(x))
 	ar  <- n * n * crossprod(colFreqs, rowFreqs)
-	invisible(list(
-					Bangdiwala = ads / ar,
-					Bangdiwala_Weighted = (sum(weights * A)) /  ar,
-					weights = weights
-			)
-	)
+	invisible(structure(list(
+            Bangdiwala = ads / ar,
+            Bangdiwala_Weighted = (sum(weights * A)) /  ar,
+            weights = weights),
+                            .GTREE = grid.grab()
+                            )
+                  )
 }
 
 

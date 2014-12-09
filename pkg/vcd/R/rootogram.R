@@ -71,19 +71,20 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
      grid.points(x = dummy, y = fit, default.units = "native", gp = points_gp, pch = pch)
      if(pop) popViewport() else upViewport()
    })
+   invisible(grid.grab())
 }
 
 grid_barplot <- function(height, width = 0.8, offset = 0,
   names = NULL, xlim = NULL, ylim = NULL, xlab = "", ylab = "", main = "",
   gp = gpar(fill = "lightgray"), name = "grid_barplot", newpage = TRUE, pop = FALSE)
 {
-  if(is.null(names)) names <- names(height)  
+  if(is.null(names)) names <- names(height)
   height <- as.vector(height)
   n <- length(height)
   width <- rep(width, length.out = n)
   offset <- rep(offset, length.out = n)
 
-  if(is.null(names)) names <- rep("", n)  
+  if(is.null(names)) names <- rep("", n)
   if(is.null(xlim)) xlim <- c(1 - mean(width[c(1, n)]), n + mean(width[c(1, n)]))
   if(is.null(ylim)) ylim <- c(min(offset), max(height + offset))
 
@@ -97,5 +98,5 @@ grid_barplot <- function(height, width = 0.8, offset = 0,
   grid.text(ylab, x = unit(-3, "lines"), rot = 90)
   grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
   if(pop) popViewport() else upViewport()
-  invisible(1:n)
+  invisible(structure(1:n, .GTREE = grid.grab()))
 }
