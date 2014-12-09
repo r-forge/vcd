@@ -161,7 +161,7 @@ strucplot <- function(## main parameters
   }
   gp <- structure(lapply(gp, FUN), class = "gpar")
 
-  FUN = function(new = newpage) {
+  REDRAW <- function(new = newpage) {
   ## set up page
 ##  if (newpage)
   if (new)
@@ -235,15 +235,15 @@ strucplot <- function(## main parameters
   ## one more up if sandwich-mode
   if (pop) popViewport(1 + keep_aspect_ratio) else upViewport(1 + keep_aspect_ratio)
 }
-  FUN()
+  REDRAW()
   ## return visualized table
 ##  invisible(structable(if (type == "observed") x else expected,
 ##                      split_vertical = split_vertical))
   invisible(structure(structable(if (type == "observed") x else expected,
-                      split_vertical = split_vertical), .FUN = FUN))
+                      split_vertical = split_vertical), .REDRAW = REDRAW))
 }
 
-splot <- function(...,
+mplot <- function(...,
                   layout = NULL,
                   main = NULL, gp_main = gpar(fontsize = 20),
                   sub = NULL, gp_sub = gpar(fontsize = 15),
@@ -294,7 +294,7 @@ splot <- function(...,
             pushViewport(viewport(width = 1,
                                   height = 1,
                                   default.units = if (keep_aspect_ratio) "snpc" else "npc"))
-            attr(l[[count]], ".FUN")(FALSE)
+            attr(l[[count]], ".REDRAW")(FALSE)
             popViewport(2)
             count <- count + 1
         }
