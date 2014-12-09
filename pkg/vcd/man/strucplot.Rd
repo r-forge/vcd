@@ -17,7 +17,8 @@ strucplot(x, residuals = NULL, expected = NULL,
   main = NULL, sub = NULL, margins = unit(3, "lines"),
   title_margins = NULL, legend_width = NULL,
   main_gp = gpar(fontsize = 20), sub_gp = gpar(fontsize = 15),
-  newpage = TRUE, pop = TRUE, keep_aspect_ratio = NULL, prefix = "", \dots)
+  newpage = TRUE, pop = TRUE, plot = TRUE,
+  keep_aspect_ratio = NULL, prefix = "", \dots)
 }
 \arguments{
   \item{x}{a contingency table in array form, with optional category
@@ -123,6 +124,8 @@ strucplot(x, residuals = NULL, expected = NULL,
     parameters used for the main (sub) title, if specified.}
   \item{newpage}{logical indicating whether a new page should be created
     for the plot or not.}
+  \item{plot}{logical indicating whether the function should actually
+    draw the plot (default) or just return the drawing function.}
   \item{keep_aspect_ratio}{logical indicating whether the aspect ratio should be
     fixed or not. If unspecified, the default is \code{TRUE} for
     two-dimensional tables and \code{FALSE} otherwise.}

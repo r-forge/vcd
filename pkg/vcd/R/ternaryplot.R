@@ -130,7 +130,7 @@ function (x,
 
   ## cleanup
   if(pop) popViewport(2) else upViewport(2)
-
+  invisible(grid.grab())
 }
 
 

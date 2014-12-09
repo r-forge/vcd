@@ -413,5 +413,5 @@ function(x,
 
     popViewport(1)
 
-    return(invisible())
+    return(invisible(grid.grab()))
 }

@@ -37,6 +37,7 @@ strucplot <- function(## main parameters
                       sub_gp = gpar(fontsize = 15),
                       newpage = TRUE,
                       pop = TRUE,
+                      plot = TRUE,
                       keep_aspect_ratio = NULL,
                       prefix = "",
                       ...
@@ -235,7 +236,7 @@ strucplot <- function(## main parameters
   ## one more up if sandwich-mode
   if (pop) popViewport(1 + keep_aspect_ratio) else upViewport(1 + keep_aspect_ratio)
 }
-  REDRAW()
+  if (plot) REDRAW()
   ## return visualized table
 ##  invisible(structable(if (type == "observed") x else expected,
 ##                      split_vertical = split_vertical))
@@ -288,16 +289,25 @@ mplot <- function(...,
                  )
     count <- 1
     for (i in seq_len(layout[1]))
-        for (j in seq_len(layout[2])) {
-            pushViewport(viewport(layout.pos.row = i,
-                                  layout.pos.col = j))
-            pushViewport(viewport(width = 1,
-                                  height = 1,
-                                  default.units = if (keep_aspect_ratio) "snpc" else "npc"))
-            attr(l[[count]], ".REDRAW")(FALSE)
-            popViewport(2)
-            count <- count + 1
-        }
+        for (j in seq_len(layout[2]))
+            if(count <= ll) {
+                pushViewport(viewport(layout.pos.row = i,
+                                      layout.pos.col = j))
+                pushViewport(viewport(width = 1,
+                                      height = 1,
+                                      default.units = if (keep_aspect_ratio) "snpc" else "npc"))
+                if (inherits(l[[count]], "gTree"))
+                    grid.draw(l[[count]])
+                else
+                    if (inherits(l[[count]], "structable") &&
+                        !is.null(attr(l[[count]], ".REDRAW")))
+                        attr(l[[count]], ".REDRAW")(FALSE)
+                    else
+                        if (!is.null(attr(l[[count]], ".GTREE")))
+                            grid.draw(attr(l[[count]], ".GTREE"))
+                popViewport(2)
+                count <- count + 1
+            }
     popViewport(2)
 
     ## push sub, if any

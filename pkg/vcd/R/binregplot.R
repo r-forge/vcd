@@ -159,13 +159,14 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
 
     ## set up plot region, similar to plot.xy()
     if (newpage) grid.newpage()
-    pushViewport(plotViewport(xscale = xlimaxis, yscale = ylimaxis, default.units = "native"))
+    pushViewport(plotViewport(xscale = xlimaxis, yscale = ylimaxis, default.units = "native", name = "binreg_plot"))
     grid.rect(gp = gpar(fill = "transparent"))
     grid.xaxis()
     grid.yaxis()
     grid.text(xlab, y = unit(-3.5, "lines"))
     grid.text(ylab, x = unit(-3, "lines"), rot = 90)
     grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gp_main)
+    pushViewport(viewport(xscale = xlimaxis, yscale = ylimaxis, default.units = "native", clip = "on"))
 
     ## draw fitted curve(s)
     if (is.null(cond_vars)) {
@@ -194,7 +195,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                         gp_title = gp_legend_title)
     }
 
-    if (pop) popViewport() else upViewport()
+    if (pop) popViewport(2) else upViewport(2)
 
-    invisible()
+    invisible(grid.grab())
 }
