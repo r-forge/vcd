@@ -89,6 +89,7 @@ data("Federalist")
 data("Butterfly")
 data("WomenQueue")
 
+\dontrun{
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(2, 2)))
 
@@ -107,5 +108,12 @@ popViewport()
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=2))
 Ord_plot(WomenQueue, main = "Women in queues of length 10", newpage = FALSE)
 popViewport(2)
+}
+mplot(
+  Ord_plot(HorseKicks, main = "Death by horse kicks"),
+  Ord_plot(Federalist, main = "Instances of 'may' in Federalist papers"),
+  Ord_plot(Butterfly, main = "Butterfly species collected in Malaya"),
+  Ord_plot(WomenQueue, main = "Women in queues of length 10")
+)
 }
 \keyword{category}

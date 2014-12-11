@@ -64,7 +64,7 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
   }
 
   if(pop) popViewport() else upViewport()
-  invisible(RVAL)
+  invisible(structure(RVAL, .GTREE = grid.grab()))
 }
 
 Ord_estimate <- function(x, type = NULL, tol = 0.1)
@@ -107,7 +107,7 @@ Ord_estimate <- function(x, type = NULL, tol = 0.1)
   "none" = {
     par <- NA
   })
-  structure(list(estimate = par, type = type), .GTREE = grid.grab())
+  list(estimate = par, type = type)
 }
 
 

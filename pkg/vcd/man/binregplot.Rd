@@ -11,10 +11,10 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
          pred_var = NULL, cond_vars = NULL, base_level = NULL, subset,
          type = c("response", "link"), conf_level = 0.95,
          pch = NULL, cex = 0.6, jitter_factor = 0.1, 
-         lwd = 5, col_lines = NULL, col_bands = NULL, 
+         lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
          legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
          legend_vgap = unit(0.5, "lines"),
-         labels = FALSE, labels_side = c("right", "left"), labels_pos = c("left","center"),
+         labels = FALSE, labels_pos = c("right", "left"), labels_just = c("left","center"),
          labels_offset = c(0.01, 0),
          gp_main = gpar(fontface = "bold", fontsize = 14),
          gp_legend_frame = gpar(lwd = 1, col = "black"),
@@ -57,6 +57,9 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   \item{jitter_factor}{argument passed to \code{\link[base]{jitter}}
     used for the points representing the observed values.}
   \item{lwd}{Line width for the fitted values.}
+  \item{lty}{Line type for the fitted values.}
+  \item{point_size}{size of points for the fitted values in char units (default: 0, so
+    no points are plotted).}
   \item{col_lines, col_bands}{character vector specifying the colors of the fitted
     lines and confidence bands,
     by default chosen with \code{\link[colorspace]{rainbow_hcl}}. The
@@ -71,11 +74,13 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   \item{legend_vgap}{vertical space between the legends' line entries.}
   \item{labels}{logical; if \code{TRUE}, labels corresponding to the
     factor levels are plotted next to the fitted lines.}
-  \item{labels_side}{either "right" or "left", determining on which side
-    of the fitted lines the labels should be placed.}
-  \item{labels_pos}{character vector of length 2, specifying the
-    relative positioning of the labels to their coordinates.}
-  \item{labels_offset}{numeric vector of length 2, specifying the offset
+  \item{labels_pos}{either "right" or "left", determining on which side
+    of the fitted lines (start or end) the labels should be placed.}
+  \item{labels_just}{character vector of length 2, specifying the
+    relative justification of the labels to their coordinates. See the
+    documentation of the \code{just} parameter of
+    \code{\link[grid]{grid.text}} for more details.}
+  \item{labels_offset}{numeric vector of length 2, specifying the offset    
     of the labels' coordinates in npc units.}
   \item{gp_main}{object of class \code{"gpar"} used for the main title.}
   \item{gp_legend_frame}{object of class \code{"gpar"} used for the main title.}
@@ -130,7 +135,7 @@ binreg_plot(art.mod2, subset = Sex == "Male") ## subsetting
 ## some tweaking
 binreg_plot(art.mod2, gp_legend_frame = gpar(col = NA, fill = "white"), col_bands = NA)
 binreg_plot(art.mod2, legend = FALSE, labels = TRUE,
-            labels_side = "left", labels_pos = c("left", "top"))
+            labels_pos = "left", labels_just = c("left", "top"))
 }
 \keyword{category}
 \keyword{hplot}
