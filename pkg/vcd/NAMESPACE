@@ -90,6 +90,7 @@ export(
        "strucplot",
        "ternaryplot",
        "binreg_plot",
+       "mplot",
        "grid_legend",
        "woolf_test")
 

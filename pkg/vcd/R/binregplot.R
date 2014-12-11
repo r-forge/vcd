@@ -4,10 +4,11 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
          pred_var = NULL, cond_vars = NULL, base_level = NULL, subset,
          type = c("response", "link"), conf_level = 0.95,
          pch = NULL, cex = 0.6, jitter_factor = 0.1,
-         lwd = 5, col_lines = NULL, col_bands = NULL,
+         lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL,
          legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
          legend_vgap = unit(0.5, "lines"),
-         labels = FALSE, labels_side = c("right", "left"), labels_pos = c("left","center"),
+         labels = FALSE, labels_pos = c("right", "left"),
+         labels_just = c("left","center"),
          labels_offset = c(0.01, 0),
          gp_main = gpar(fontface = "bold", fontsize = 14),
          gp_legend_frame = gpar(lwd = 1, col = "black"),
@@ -17,23 +18,36 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     if (!inherits(model, "glm"))
         stop("Method requires a model of class 'glm'.")
     type <- match.arg(type)
-    labels_side <- match.arg(labels_side)
+    labels_pos <- match.arg(labels_pos)
 
     ## extract data from model
-    term <- terms(model)
+    mod <- model.frame(model)
+    term <- terms(mod)
     data.classes <- attr(term, "dataClasses")
     nam <- names(data.classes)
 
     ## determine response
-    resp <- nam[attr(term, "response")]
-    data.classes[resp] <- ""
+    r <- attr(term, "response")
+    resp <- nam[r]
+    data.classes <- data.classes[-r]
+    nam <- nam[-r]
 
     ## determine numeric predictor (take first)
-    if (is.null(pred_var))
-        pred_var <- nam[match("numeric", data.classes)]
+    if (is.null(pred_var)) {
+        fac <- data.classes %in% c("factor","logical")
+        pred_var_model <- names(data.classes[!fac][1])
+        pred_var <-
+            names(unlist(sapply(all.vars(term),
+                                grep, pred_var_model)))[1]
 
+    } else pred_var_model <- pred_var
+
+    ## filter observed data using model (to account for models fitted with subset=...)
+    dat <- model$data[row.names(mod),]
     ## sort observations using order of numeric predictor
-    dat <- model$model[order(model$model[,pred_var]),]
+    o <- order(dat[,pred_var])
+    mod <- mod[o,]
+    dat <- dat[o,]
 
     ## apply subset argument, if any
     if (!missing(subset)) {
@@ -41,12 +55,13 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
         i <- eval(e, dat, parent.frame())
         i <- i & !is.na(i)
         dat <- dat[i,]
+        mod <- mod[i,]
     }
 
     ## determine conditioning variables. Remove all those with only one level observed.
     if (is.null(cond_vars)) {
         cond_vars <- nam[data.classes %in% "factor"]
-        sing <- sapply(dat, function(i) all(i == i[1]))
+        sing <- na.omit(sapply(dat, function(i) all(i == i[1])))
         if (any(sing))
             cond_vars <- setdiff(cond_vars, names(sing)[sing])
         if(length(cond_vars) < 1)
@@ -70,8 +85,8 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
 
     ## set default base level ("no effect") of response to first level/0
     if (is.null(base_level))
-        base_level <- if(is.factor(dat[,resp]))
-                          levels(dat[,resp])[1]
+        base_level <- if(is.factor(mod[,resp]))
+                          levels(mod[,resp])[1]
                       else
                           0
 
@@ -108,7 +123,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     ## (positive -> topleft, negative -> topright)
     if (is.null(legend_pos))
         legend_pos <-
-            if (coef(model)[pred_var] > 0)
+            if (coef(model)[grep(pred_var, names(coef(model)))[1]] > 0)
                 "topleft"
             else
                 "topright"
@@ -117,13 +132,13 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     draw <- function(ind, colband, colline, pch, label) {
         ## plot observed data as points on top or bottom
         grid.points(unit(dat[ind, pred_var], "native"),
-                    unit(jitter(ylim[1 + (dat[ind, resp] != base_level)],
+                    unit(jitter(ylim[1 + (mod[ind, resp] != base_level)],
                                  jitter_factor), "native"),
                     pch = pch, size = unit(cex, "char"), gp = gpar(col = colline),
                     default.units = "native"
                     )
 
-        ## confidence band
+        ## confidence band and fitted values
         pr <- predict(model, dat[ind,], type = type, se.fit = TRUE)
         grid.polygon(unit(c(dat[ind, pred_var], rev(dat[ind, pred_var])), "native"),
                      unit(c(pr$fit - quantile * pr$se.fit,
@@ -131,20 +146,23 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                      gp = gpar(fill = colband, col = NA))
         grid.lines(unit(dat[ind, pred_var], "native"),
                    unit(pr$fit, "native"),
-                   gp = gpar(col = colline, lwd = lwd))
+                   gp = gpar(col = colline, lwd = lwd, lty = lty))
+        grid.points(unit(dat[ind, pred_var], "native"),
+                    unit(pr$fit, "native"), pch = pch, size = unit(point_size, "char"),
+                    gp = gpar(col = colline))
 
         ## add labels, if any
         if (labels) {
-            x = switch(labels_side,
+            x = switch(labels_pos,
                        left = dat[ind, pred_var][1],
                        right = dat[ind, pred_var][length(dat[ind, pred_var])])
-            y = switch(labels_side,
+            y = switch(labels_pos,
                        left = pr$fit[1],
                        right = pr$fit[length(pr$fit)])
             grid.text(x = unit(x, "native") + unit(labels_offset[1], "npc"),
                       y = unit(y, "native") + unit(labels_offset[2], "npc"),
                       label = label,
-                      just = labels_pos,
+                      just = labels_just,
                       gp = gpar(col = colline))
         }
     }
@@ -196,6 +214,5 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     }
 
     if (pop) popViewport(2) else upViewport(2)
-
     invisible(grid.grab())
 }

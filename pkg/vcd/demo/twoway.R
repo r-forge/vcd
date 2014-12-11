@@ -1,7 +1,7 @@
   #####################
   ## Fourfold tables ##
   #####################
-  
+
   ### Berkeley Admission Data ###
   ###############################
   data(UCBAdmissions)
@@ -14,7 +14,7 @@
   fourfold(x, margin = 1, extended = FALSE)
   ### std. for both
   fourfold(x, extended = FALSE)
-  
+
   ## stratified
   fourfold(UCBAdmissions, extended = FALSE)
   fourfold(UCBAdmissions) ## extended plots
@@ -22,13 +22,13 @@
   ## using cotabplot
   cotabplot(UCBAdmissions, panel = function(x, condlevels, ...)
               fourfold(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                       newpage = F, ...)
+                       newpage = F, grob = FALSE, ...)
             )
 
   ### Coal Miners Lung Data ###
   #############################
   data(CoalMiners)
-  
+
   ## Fourfold display, both margins equated
   fourfold(CoalMiners, mfcol = c(3,3))
 
@@ -40,10 +40,10 @@
        main = "Breathelessness and Wheeze in Coal Miners")
   m <- lm(l ~ g + I(g^2))
   lines(fitted(m), col = "red")
-  
+
   ## Fourfold display, strata equated
   fourfold(CoalMiners, std = "ind.max", mfcol = c(3,3))
-  
+
   ####################
   ## Sieve Diagrams ##
   ####################
@@ -73,7 +73,7 @@
         shade = TRUE
         )
   detach(VisualAcuity)
-  
+
   ### Berkeley Admission ###
   ##########################
 
@@ -95,7 +95,7 @@
   ######################
   ## Association Plot ##
   ######################
-  
+
   ### Hair Eye Color ###
   ######################
   data(HairEyeColor)
@@ -122,7 +122,7 @@
                       ylab = "Wife's Rating",
                       main = "Husband's and Wife's Sexual Fun")
    )
-  
+
   ### MS Diagnosis data ###
   #########################
   data(MSPatients)
@@ -150,14 +150,14 @@
   ### Arthritis Treatment Data ###
   ################################
   data(Arthritis)
-  
+
   ## Build table by crossing Treatment and Sex
   (tab <- as.table(xtabs(~ I(Sex:Treatment) + Improved, data = Arthritis)))
-  
+
   ## Mark groups
   col <- c("red", "red", "blue", "blue")
   pch <- c(1, 19, 1, 19)
-  
+
   ## plot
   ternaryplot(
               tab,
@@ -226,10 +226,10 @@
        )
   abline(lm(total ~ as.POSIXct(launch),
             subset = side == "Port"),
-         col = "red")     
+         col = "red")
   abline(lm(total ~ as.POSIXct(launch),
             subset = side == "Starboard"),
-         col = "darkblue")     
+         col = "darkblue")
 
   detach(Lifeboats)
 

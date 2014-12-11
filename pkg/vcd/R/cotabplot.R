@@ -197,10 +197,10 @@ class(cotab_assoc) <- "grapcon_generator"
 cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
   function(x, condlevels) {
     if (is.null(condlevels))
-      fourfold(x, newpage = FALSE, ...)
+      fourfold(x, newpage = FALSE, grob = FALSE, ...)
     else
       fourfold(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-               newpage = FALSE, ...)
+               newpage = FALSE, grob = FALSE, ...)
   }
 }
 class(cotab_fourfold) <- "grapcon_generator"

@@ -88,6 +88,7 @@ data("SexualFun")
 agreementplot(t(SexualFun))
 
 data("MSPatients")
+\dontrun{
 ## best visualized using a resized device, e.g. using:
 ## get(getOption("device"))(width = 12)
 pushViewport(viewport(layout = grid.layout(ncol = 2)))
@@ -100,6 +101,11 @@ agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients",
               newpage = FALSE)
 popViewport(2)
 dev.off()
+}
+mplot(
+  agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients"),
+  agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
+)
 }
 \keyword{category}
 \keyword{hplot}
