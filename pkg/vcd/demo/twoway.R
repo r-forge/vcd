@@ -22,7 +22,7 @@
   ## using cotabplot
   cotabplot(UCBAdmissions, panel = function(x, condlevels, ...)
               fourfold(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]],
-                       newpage = F, grob = FALSE, ...)
+                       newpage = F, return_grob = FALSE, ...)
             )
 
   ### Coal Miners Lung Data ###

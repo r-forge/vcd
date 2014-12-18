@@ -13,7 +13,8 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
   rect_gp = gpar(fill = "lightgray"), lines_gp = gpar(col = "red"),
   points_gp = gpar(col = "red"), pch = 19,
   xlab = NULL, ylab = NULL, ylim = NULL,
-  name = "rootogram", newpage = TRUE, pop = TRUE, ...)
+  name = "rootogram", newpage = TRUE, pop = TRUE,
+  return_grob = FALSE, ...)
 {
    if(is.null(names)) names <- names(x)
 
@@ -41,7 +42,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
                         c(fit-obs,fit)) + c(0, 0.1)}
      dummy <- grid_barplot(obs, names = names, offset = fit - obs, gp = rect_gp,
              xlab = xlab, ylab = ylab, ylim = ylim,
-	     name = name, newpage = newpage, pop = FALSE, grob = FALSE, ...)
+	     name = name, newpage = newpage, pop = FALSE, return_grob = FALSE, ...)
      downViewport(name)
      grid.lines(x = dummy, y = fit, default.units = "native", gp = lines_gp)
      grid.points(x = dummy, y = fit, default.units = "native", gp = points_gp, pch = pch)
@@ -53,7 +54,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
      if(is.null(ylim)) {ylim <- range(-0.01 * c(obs,fit), c(obs,fit)) }
      dummy <- grid_barplot(obs, names = names, gp = rect_gp,
              xlab = xlab, ylab = ylab, ylim = ylim,
-	     name = name, newpage = newpage, pop = FALSE, grob = FALSE, ...)
+	     name = name, newpage = newpage, pop = FALSE, return_grob = FALSE, ...)
      downViewport(name)
      grid.lines(x = dummy, y = fit, default.units = "native", gp = lines_gp)
      grid.points(x = dummy, y = fit, default.units = "native", gp = points_gp, pch = pch)
@@ -65,19 +66,21 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
                         c(fit-obs,fit)) + c(0, 0.1)}
      dummy <- grid_barplot(fit - obs, names = names, gp = rect_gp,
              xlab = xlab, ylab = ylab, ylim = ylim,
-	     name = name, newpage = newpage, pop = FALSE, grob = FALSE, ...)
+	     name = name, newpage = newpage, pop = FALSE, return_grob = FALSE, ...)
      downViewport(name)
      grid.lines(x = dummy, y = fit, default.units = "native", gp = lines_gp)
      grid.points(x = dummy, y = fit, default.units = "native", gp = points_gp, pch = pch)
      if(pop) popViewport() else upViewport()
    })
-   invisible(grid.grab())
+   if (return_grob)
+       invisible(grid.grab())
+   else
+       invisible(NULL)
 }
 
 grid_barplot <- function(height, width = 0.8, offset = 0,
   names = NULL, xlim = NULL, ylim = NULL, xlab = "", ylab = "", main = "",
-  gp = gpar(fill = "lightgray"), name = "grid_barplot", newpage = TRUE, pop = FALSE,
-                         grob = TRUE)
+  gp = gpar(fill = "lightgray"), name = "grid_barplot", newpage = TRUE, pop = FALSE, return_grob = FALSE)
 {
   if(is.null(names)) names <- names(height)
   height <- as.vector(height)
@@ -99,7 +102,7 @@ grid_barplot <- function(height, width = 0.8, offset = 0,
   grid.text(ylab, x = unit(-3, "lines"), rot = 90)
   grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
   if(pop) popViewport() else upViewport()
-  if (grob)
+  if (return_grob)
       invisible(structure(1:n, .GTREE = grid.grab()))
   else
       invisible(1:n)

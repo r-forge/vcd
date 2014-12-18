@@ -35,7 +35,7 @@ function(x,
          space = 0.2, main = NULL, sub = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
          ticks = 0.15, p_adjust_method = p.adjust.methods, newpage = TRUE,
          fontsize = 12, default_prefix = c("Row", "Col", "Strata"), sep = ": ",
-         grob = TRUE)
+         return_grob = FALSE)
 
 {
     ## Code for producing fourfold displays.
@@ -414,6 +414,6 @@ function(x,
 
     popViewport(1)
 
-    if (grob)
+    if (return_grob)
         return(invisible(grid.grab()))
 }
