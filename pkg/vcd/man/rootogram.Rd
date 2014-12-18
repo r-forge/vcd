@@ -12,7 +12,8 @@
   rect_gp = gpar(fill = "lightgray"), lines_gp = gpar(col = "red"),
   points_gp = gpar(col = "red"), pch = 19,
   xlab = NULL, ylab = NULL, ylim = NULL,
-  name = "rootogram", newpage = TRUE, pop = TRUE, \dots)
+  name = "rootogram", newpage = TRUE, pop = TRUE,
+  return_grob = FALSE, \dots)
 }
 \arguments{
   \item{x}{either a vector or a 1-way table of frequencies.}
@@ -38,6 +39,8 @@
   \item{newpage}{logical. Should \code{\link{grid.newpage}} be called 
     before plotting?}
   \item{pop}{logical. Should the viewport created be popped?}
+  \item{return_grob}{logical. Should a snapshot of the display be
+    returned as a grid grob?}
   \item{\dots}{further arguments passed to \code{\link{grid_barplot}}.}
 }
 \details{

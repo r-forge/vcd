@@ -6,7 +6,8 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
                      type = NULL, xlim = NULL, ylim = NULL, xlab = "Number of occurrences",
 		     ylab = "Frequency ratio", main = "Ord plot", gp = gpar(cex = 0.5),
 		     lwd = c(2,2), lty=c(2,1), col=c("black", "red"),
-		     name = "Ord_plot", newpage = TRUE, pop = TRUE, ...)
+		     name = "Ord_plot", newpage = TRUE, pop = TRUE,
+                     return_grob = FALSE, ...)
 {
   if(is.vector(obj)) {
     obj <- table(obj)
@@ -64,7 +65,10 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
   }
 
   if(pop) popViewport() else upViewport()
-  invisible(structure(RVAL, .GTREE = grid.grab()))
+  if(return_grob)
+      invisible(structure(RVAL, .GTREE = grid.grab()))
+  else
+      invisible(RVAL)
 }
 
 Ord_estimate <- function(x, type = NULL, tol = 0.1)

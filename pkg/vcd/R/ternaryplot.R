@@ -21,6 +21,7 @@ function (x,
           main = "ternary plot",
           newpage = TRUE,
 	  pop = TRUE,
+          return_grob = FALSE,
           ...)
 {
   ## parameter handling
@@ -130,7 +131,8 @@ function (x,
 
   ## cleanup
   if(pop) popViewport(2) else upViewport(2)
-  invisible(grid.grab())
+  if (return_grob)
+      invisible(grid.grab())
 }
 
 
