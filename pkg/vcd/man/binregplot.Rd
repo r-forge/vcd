@@ -14,12 +14,12 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
          lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
          legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
          legend_vgap = unit(0.5, "lines"),
-         labels = FALSE, labels_pos = c("right", "left"), labels_just = c("left","center"),
-         labels_offset = c(0.01, 0),
+         labels = FALSE, labels_pos = c("right", "left"),
+         labels_just = c("left","center"), labels_offset = c(0.01, 0),
          gp_main = gpar(fontface = "bold", fontsize = 14),
          gp_legend_frame = gpar(lwd = 1, col = "black"),
          gp_legend_title = gpar(fontface = "bold"),
-         newpage = TRUE, pop = TRUE)
+         newpage = TRUE, pop = TRUE, return_grob = FALSE)
 }
 \arguments{
   \item{model}{a binary regression model fitted with \code{\link[stats]{glm}}}
@@ -86,7 +86,10 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   \item{gp_legend_frame}{object of class \code{"gpar"} used for the main title.}
   \item{gp_legend_title}{object of class \code{"gpar"} used for the main title.}
   \item{newpage}{logical; if \code{TRUE}, the plot is drawn on a new page.}
-  \item{pop}{logical; if \code{TRUE}, all newly generated viewports are popped after plotting.}
+  \item{pop}{logical; if \code{TRUE}, all newly generated viewports are
+    popped after plotting.}
+  \item{return_grob}{logical. Should a snapshot of the display be
+    returned as a grid grob?}
 }
 \details{
   The primary purpose of this function is to visualize observed and

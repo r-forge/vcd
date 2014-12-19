@@ -51,9 +51,13 @@ pushViewport(viewport(layout.pos.col = 2))
 popViewport(2)
 dev.off()
 }
+
+## alternative, more convenient way
 mplot(
-  agreementplot(t(MSPatients[,,1]), main = "Winnipeg Patients"),
-  agreementplot(t(MSPatients[,,2]), main = "New Orleans Patients")
+  agreementplot(t(MSPatients[,,1]), return_grob = TRUE,
+    main = "Winnipeg Patients"),
+  agreementplot(t(MSPatients[,,2]), return_grob = TRUE,
+    main = "New Orleans Patients")
 )
 }
 \keyword{datasets}

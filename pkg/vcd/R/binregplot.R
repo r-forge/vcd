@@ -13,7 +13,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
          gp_main = gpar(fontface = "bold", fontsize = 14),
          gp_legend_frame = gpar(lwd = 1, col = "black"),
          gp_legend_title = gpar(fontface = "bold"),
-         newpage = TRUE, pop = TRUE)
+         newpage = TRUE, pop = TRUE, return_grob = FALSE)
 {
     if (!inherits(model, "glm"))
         stop("Method requires a model of class 'glm'.")
@@ -214,5 +214,8 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     }
 
     if (pop) popViewport(2) else upViewport(2)
-    invisible(grid.grab())
+    if (return_grob)
+        invisible(grid.grab())
+    else
+        invisible(NULL)
 }

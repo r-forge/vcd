@@ -66,7 +66,7 @@ Ord_plot <- function(obj, legend = TRUE, estimate = TRUE, tol = 0.1,
 
   if(pop) popViewport() else upViewport()
   if(return_grob)
-      invisible(structure(RVAL, .GTREE = grid.grab()))
+      invisible(structure(RVAL, grob = grid.grab()))
   else
       invisible(RVAL)
 }

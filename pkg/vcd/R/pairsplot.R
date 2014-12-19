@@ -20,6 +20,7 @@ pairs.table <- function(x,
                         space = 0.3,
                         newpage = TRUE,
                         pop = TRUE,
+                        return_grob = FALSE,
                         margins = unit(1, "lines"),
                         ...)
 {
@@ -70,7 +71,10 @@ pairs.table <- function(x,
       if (pop) popViewport(2) else upViewport(2)
     }
   if (pop) popViewport(3) else upViewport(3)
-  invisible(x)
+  if (return_grob)
+      invisible(structure(x, grob = grid.grab()))
+  else
+      invisible(x)
 }
 
 pairs.structable <- function(x, ...) pairs(as.table(x), ...)

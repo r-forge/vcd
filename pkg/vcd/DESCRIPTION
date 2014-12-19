@@ -14,7 +14,7 @@ Description: Visualization techniques, data sets, summary and inference
         by Michael Friendly.
 LazyLoad: yes
 LazyData: yes
-Depends: R (>= 2.4.0), grid, stats
+Depends: R (>= 2.4.0), grid
 Suggests: KernSmooth, mvtnorm, kernlab, HSAUR, coin
-Imports: utils, MASS, grDevices, colorspace
+Imports: stats, utils, MASS, grDevices, colorspace
 License: GPL-2
