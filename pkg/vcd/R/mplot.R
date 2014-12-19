@@ -1,9 +1,10 @@
 mplot <- function(...,
+                  .list = list(),
                   layout = NULL, cex = NULL,
                   main = NULL, gp_main = gpar(fontsize = 20),
                   sub = NULL, gp_sub = gpar(fontsize = 15),
                   keep_aspect_ratio = TRUE) {
-    l <- list(...)
+    l <- c(list(...), .list)
     ll <- length(l)
     m <- !is.null(main)
     s <- !is.null(sub)
@@ -53,15 +54,11 @@ mplot <- function(...,
                 pushViewport(viewport(width = 1,
                                       height = 1,
                                       default.units = if (keep_aspect_ratio) "snpc" else "npc"))
-                if (inherits(l[[count]], "gTree"))
+                if (inherits(l[[count]], "grob"))
                     grid.draw(l[[count]])
                 else
-                    if (inherits(l[[count]], "structable") &&
-                        !is.null(attr(l[[count]], ".REDRAW")))
-                        attr(l[[count]], ".REDRAW")(FALSE)
-                    else
-                        if (!is.null(attr(l[[count]], ".GTREE")))
-                            grid.draw(attr(l[[count]], ".GTREE"))
+                    if (!is.null(attr(l[[count]], "grob")))
+                        grid.draw(attr(l[[count]], "grob"))
                 popViewport(2)
                 count <- count + 1
             }

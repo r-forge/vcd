@@ -11,7 +11,8 @@
   diag_panel = pairs_diagonal_mosaic, diag_panel_args = list(),
   main = NULL, sub = NULL, main_gp = gpar(fontsize = 20),
   sub_gp = gpar(fontsize = 15), space = 0.3,
-  newpage = TRUE, pop = TRUE, margins = unit(1, "lines"), \dots)
+  newpage = TRUE, pop = TRUE, return_grob = FALSE,
+  margins = unit(1, "lines"), \dots)
 }
 \arguments{
 
@@ -42,6 +43,8 @@
     created.}
   \item{pop}{logical indicating whether all viewports should be popped
     after the plot has been drawn.}
+  \item{return_grob}{logical. Should a snapshot of the display be
+    returned as a grid grob?}
   \item{margins}{either an object of class \code{"unit"} of length 4, or
     a numeric vector of length 4. The elements are recycled as needed.
     The four components specify the top, right,

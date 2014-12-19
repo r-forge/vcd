@@ -25,7 +25,7 @@ function (x,
           ...)
 {
   ## parameter handling
-  labels <- match.arg(labels)
+    labels <- match.arg(labels)
   if (grid == TRUE) grid <- "dotted"
 
   if (coordinates)
@@ -133,6 +133,8 @@ function (x,
   if(pop) popViewport(2) else upViewport(2)
   if (return_grob)
       invisible(grid.grab())
+  else
+      invisible(NULL)
 }
 
 

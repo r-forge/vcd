@@ -103,7 +103,7 @@ grid_barplot <- function(height, width = 0.8, offset = 0,
   grid.text(main, y = unit(1, "npc") + unit(2, "lines"), gp = gpar(fontface = "bold"))
   if(pop) popViewport() else upViewport()
   if (return_grob)
-      invisible(structure(1:n, .GTREE = grid.grab()))
+      invisible(structure(1:n, grob = grid.grab()))
   else
       invisible(1:n)
 }

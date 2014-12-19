@@ -416,4 +416,6 @@ function(x,
 
     if (return_grob)
         return(invisible(grid.grab()))
+    else
+        return(invisible(NULL))
 }
