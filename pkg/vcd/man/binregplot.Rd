@@ -8,8 +8,8 @@
 \usage{
 binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
          xlim = NULL, ylim = NULL,
-         pred_var = NULL, cond_vars = NULL, base_level = NULL, subset,
-         type = c("response", "link"), conf_level = 0.95,
+         pred_var = NULL, group_vars = NULL, base_level = NULL, subset,
+         type = c("response", "link"), conf_level = 0.95, delta = FALSE,
          pch = NULL, cex = 0.6, jitter_factor = 0.1, 
          lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
          legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
@@ -35,7 +35,7 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
     depending on \code{type}}
   \item{pred_var}{character string of length 1 giving the name of
     the numeric predictor. Defaults to the first one found in the data set.}
-  \item{cond_vars}{optional character string of conditioning
+  \item{group_vars}{optional character string of conditioning
     variables. Defaults to all factors found in the data set, response
     excluded. If \code{FALSE}, no variables are used for conditioning.}
   \item{base_level}{vector of length one,
@@ -51,6 +51,9 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
     fitted values. The y-axis will be adapted accordingly.}
   \item{conf_level}{confidence level used for calculating 
     confidence bands.}
+  \item{delta}{logical; indicates whether the delta method should be
+    employed for calculating the limits of the confidence band or not
+    (see details).}
   \item{pch}{character or numeric vector of symbols used for plotting
     the (possibly conditioned) observed values, recycled as needed.}
   \item{cex}{size of the plot symbols (in lines).}
@@ -105,6 +108,15 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
 
   The function tries to determine suitable values for the legend and/or
   labels, but depending on the data, this might require some tweaking.
+
+  By default, the limits of the confidence band are determined for the
+  linear predictor (i.e., on the link scale) and transformed to response
+  scale (if this is the chosen plot type) using the inverse link
+  function. If \code{delta} is \code{TRUE}, the limits
+  are determined on the response scale. Note that the resulting band using the
+  delta method is symmetric around the fitted mean,
+  but may exceed the unit interval (on the response scale) and 
+  will be cut off.
 }
 \value{
 \code{NULL} (invisibly).

@@ -1,8 +1,8 @@
 binreg_plot <-
 function(model, main = NULL, xlab = NULL, ylab = NULL,
          xlim = NULL, ylim = NULL,
-         pred_var = NULL, cond_vars = NULL, base_level = NULL, subset,
-         type = c("response", "link"), conf_level = 0.95,
+         pred_var = NULL, group_vars = NULL, base_level = NULL, subset,
+         type = c("response", "link"), conf_level = 0.95, delta = FALSE,
          pch = NULL, cex = 0.6, jitter_factor = 0.1,
          lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL,
          legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
@@ -59,16 +59,16 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     }
 
     ## determine conditioning variables. Remove all those with only one level observed.
-    if (is.null(cond_vars)) {
-        cond_vars <- nam[data.classes %in% "factor"]
+    if (is.null(group_vars)) {
+        group_vars <- nam[data.classes %in% "factor"]
         sing <- na.omit(sapply(dat, function(i) all(i == i[1])))
         if (any(sing))
-            cond_vars <- setdiff(cond_vars, names(sing)[sing])
-        if(length(cond_vars) < 1)
-            cond_vars <- NULL
+            group_vars <- setdiff(group_vars, names(sing)[sing])
+        if(length(group_vars) < 1)
+            group_vars <- NULL
     } else
-        if (is.na(cond_vars) || is.logical(cond_vars) && !cond_vars[1])
-            cond_vars <- NULL
+        if (is.na(group_vars) || is.logical(group_vars) && !group_vars[1])
+            group_vars <- NULL
 
     ## set y axis limits - either probability or logit scale
     if(is.null(ylim))
@@ -91,16 +91,16 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                           0
 
     ## determine labels of conditioning variables, if any
-    if (is.null(cond_vars)) {
+    if (is.null(group_vars)) {
         labels <- legend <- FALSE
     } else {
         ## compute cross-factors for more than two conditioning variables
-        if (length(cond_vars) > 1) {
-            cross <- paste(cond_vars, collapse = " x ")
-            dat[,cross] <- factor(apply(dat[,cond_vars], 1, paste, collapse = " : "))
-            cond_vars <- cross
+        if (length(group_vars) > 1) {
+            cross <- paste(group_vars, collapse = " x ")
+            dat[,cross] <- factor(apply(dat[,group_vars], 1, paste, collapse = " : "))
+            group_vars <- cross
         }
-        lev <- levels(dat[,cond_vars])
+        lev <- levels(dat[,group_vars])
     }
 
     ## set x- and y-lab
@@ -139,10 +139,21 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                     )
 
         ## confidence band and fitted values
-        pr <- predict(model, dat[ind,], type = type, se.fit = TRUE)
+        typ <- if (type == "response" && !delta) "link" else type
+        pr <- predict(model, dat[ind,], type = typ, se.fit = TRUE)
+        lower <- pr$fit - quantile * pr$se.fit
+        upper <- pr$fit + quantile * pr$se.fit
+        if (type == "response" && !delta) {
+            lower <- family(model)$linkinv(lower)
+            upper <- family(model)$linkinv(upper)
+            pr$fit <- family(model)$linkinv(pr$fit)
+        }
+        if (type == "response") { ## cut probs at unit interval
+            lower[lower < 0] <- 0
+            upper[upper > 1] <- 1
+        }
         grid.polygon(unit(c(dat[ind, pred_var], rev(dat[ind, pred_var])), "native"),
-                     unit(c(pr$fit - quantile * pr$se.fit,
-                            rev(pr$fit + quantile * pr$se.fit)), "native"),
+                     unit(c(lower, rev(upper)), "native"),
                      gp = gpar(fill = colband, col = NA))
         grid.lines(unit(dat[ind, pred_var], "native"),
                    unit(pr$fit, "native"),
@@ -168,7 +179,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     }
 
     ## determine colors and plot symbols
-    llev <- if (is.null(cond_vars)) 1 else length(lev)
+    llev <- if (is.null(group_vars)) 1 else length(lev)
     pch <- rep(pch, length.out = llev)
     if (is.null(col_bands))
         col_bands <- rainbow_hcl(llev, alpha = 0.2)
@@ -187,7 +198,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     pushViewport(viewport(xscale = xlimaxis, yscale = ylimaxis, default.units = "native", clip = "on"))
 
     ## draw fitted curve(s)
-    if (is.null(cond_vars)) {
+    if (is.null(group_vars)) {
         ## single curve
         draw(1:nrow(dat),
              col_bands,
@@ -196,7 +207,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     } else {
         ## multiple curves
         for (i in seq_along(lev)) {
-            ind <- dat[,cond_vars] == lev[i]
+            ind <- dat[,group_vars] == lev[i]
             draw(ind, col_bands[i], col_lines[i], pch[i], lev[i])
         }
 
@@ -209,7 +220,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                         vgap = legend_vgap,
                         gp_frame = gp_legend_frame,
                         inset = legend_inset,
-                        title = cond_vars,
+                        title = group_vars,
                         gp_title = gp_legend_title)
     }
 
