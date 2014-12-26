@@ -85,7 +85,9 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
 
     ## set default base level ("no effect") of response to first level/0
     if (is.null(base_level))
-        base_level <- if(is.factor(mod[,resp]))
+        base_level <- if(is.matrix(mod[,resp]))
+                          1
+                      else if(is.factor(mod[,resp]))
                           levels(mod[,resp])[1]
                       else
                           0
@@ -107,10 +109,21 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     if (is.null(xlab))
         xlab <- pred_var
     if (is.null(ylab))
-        ylab <- if (type == "response")
-                    paste0("P(", resp, ")")
-                else
-                    paste0("logit(", resp, ")")
+        ylab <- if (type == "response") {
+                    if (is.matrix(mod[,resp]))
+                        paste0("P(",
+                               c("Failure","Success")[base_level],
+                               ")")
+                    else
+                        paste0("P(", resp, ")")
+                } else {
+                    if (is.matrix(mod[,resp]))
+                        paste0("logit(",
+                               c("Failure","Success")[base_level],
+                               ")")
+                    else
+                        paste0("logit(", resp, ")")
+                }
 
     ## rearrange default plot symbol palette
     if (is.null(pch))
@@ -131,9 +144,16 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     ## work horse for drawing points, fitted curve and confidence band
     draw <- function(ind, colband, colline, pch, label) {
         ## plot observed data as points on top or bottom
+        ycoords <- if (is.matrix(mod[,resp])) {
+            tmp <- prop.table(mod[ind,resp], 1)[,base_level]
+            if (type == "link")
+                family(model)$linkfun(tmp)
+            else
+                tmp
+        } else
+            jitter(ylim[1 + (mod[ind, resp] != base_level)], jitter_factor)
         grid.points(unit(dat[ind, pred_var], "native"),
-                    unit(jitter(ylim[1 + (mod[ind, resp] != base_level)],
-                                 jitter_factor), "native"),
+                    unit(ycoords, "native"),
                     pch = pch, size = unit(cex, "char"), gp = gpar(col = colline),
                     default.units = "native"
                     )
