@@ -86,11 +86,13 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     ## set default base level ("no effect") of response to first level/0
     if (is.null(base_level))
         base_level <- if(is.matrix(mod[,resp]))
-                          1
+                          2
                       else if(is.factor(mod[,resp]))
                           levels(mod[,resp])[1]
                       else
                           0
+    if (is.matrix(mod[,resp]) && is.character(base_level))
+        base_level <- switch(base_level, success =, Success = 1, failure =, Failure = 2)
 
     ## determine labels of conditioning variables, if any
     if (is.null(group_vars)) {
@@ -145,7 +147,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     draw <- function(ind, colband, colline, pch, label) {
         ## plot observed data as points on top or bottom
         ycoords <- if (is.matrix(mod[,resp])) {
-            tmp <- prop.table(mod[ind,resp], 1)[,base_level]
+            tmp <- prop.table(mod[ind,resp], 1)[,switch(base_level, 2, 1)]
             if (type == "link")
                 family(model)$linkfun(tmp)
             else
@@ -178,9 +180,11 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
         grid.lines(unit(dat[ind, pred_var], "native"),
                    unit(pr$fit, "native"),
                    gp = gpar(col = colline, lwd = lwd, lty = lty))
-        grid.points(unit(dat[ind, pred_var], "native"),
-                    unit(pr$fit, "native"), pch = pch, size = unit(point_size, "char"),
-                    gp = gpar(col = colline))
+        if (point_size > 0)
+            grid.points(unit(dat[ind, pred_var], "native"),
+                        unit(pr$fit, "native"), pch = pch,
+                        size = unit(point_size, "char"),
+                        gp = gpar(col = colline))
 
         ## add labels, if any
         if (labels) {

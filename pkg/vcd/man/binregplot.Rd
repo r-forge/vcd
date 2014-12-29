@@ -38,12 +38,18 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   \item{group_vars}{optional character string of conditioning
     variables. Defaults to all factors found in the data set, response
     excluded. If \code{FALSE}, no variables are used for conditioning.}
-  \item{base_level}{vector of length one,
-    specifying the base ('no effect') value of the response variable
-    (e.g., "Placebo", 0, FALSE, etc.). Defaults to the first level for
+  \item{base_level}{vector of length one. If the response is a vector,
+    this specifies the base ('no effect') value of the
+    response variable
+    (e.g., "Placebo", 0, FALSE, etc.) and defaults
+    to the first level for
     factor responses, or 0 for numeric/binary variables. This controls
     which observations will be plotted on the top or the bottom of the
-    display.}
+    display. If the response is a matrix with success and failure
+    column, this specifies the one to be interpreted as failure
+    (default: 2), either as an integer, or as a
+    string (\code{"success"}  or \code{"failure"}). The proportions of
+    \emph{successes} will be plotted as observed values.}
   \item{subset}{an optional vector specifying a subset of the data
     rows. The value is evaluated in the data environment, so expressions
     can be used to select the data (see examples).}
