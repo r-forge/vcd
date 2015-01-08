@@ -2,6 +2,21 @@
 \title{News for Package \pkg{vcd}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 1.3-3}{
+  \itemize{
+    \item \code{binreg_plot()} added for (conditioned) binary regression plots
+    \item Bug fix in mosaic: using \code{highlighting=} and/or
+    \code{condvars=} now not only reorders the table, but also the split
+    information, so that both remain consistent.
+    \item All plot functions now have an option to return the produced
+    plot as an grid object for further use (e.g., in \code{mplot()})
+    \item \code{mplot()} added for combining multiple grid plots in a
+    multi-panel-layout
+    \item \code{legend_grid} now allows more options for positioning,
+    and an \code{inset} argument has been added for relative adjustments.
+  }  
+}
+
 \section{Changes in version 1.3-2}{
   \itemize{
     \item \code{Ord_plot()} gets \code{lwd}, \code{lty} and \code{col} arguments
