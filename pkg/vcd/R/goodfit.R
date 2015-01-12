@@ -193,7 +193,7 @@ print.goodfit <- function(x, ...)
     RVAL <- cbind(x$count, x$observed, x$fitted)
     colnames(RVAL) <- c("count", "observed", "fitted")
     rownames(RVAL) <- rep("", nrow(RVAL))
-    print(RVAL)
+    print(RVAL, ...)
     invisible(x)
 }
 
@@ -230,7 +230,7 @@ summary.goodfit <- function(object, ...)
     colnames(RVAL) <- c("X^2", "df", "P(> X^2)")
 
     cat(paste("\n\t Goodness-of-fit test for", object$type, "distribution\n\n"))
-    print(RVAL)
+    print(RVAL, ...)
     invisible(RVAL)
 }
 
