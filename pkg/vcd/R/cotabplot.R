@@ -156,9 +156,9 @@ cotabplot.default <- function(x, cond = NULL,
 }
 
   if (return_grob)
-      invisible(x)
+      invisible(structure(x, grob = grid.grab()))
   else
-      structure(invisible(x), grob = grid.grab())
+      invisible(x)
 
 }
 
