@@ -206,9 +206,9 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     llev <- if (is.null(group_vars)) 1 else length(lev)
     pch <- rep(pch, length.out = llev)
     if (is.null(col_bands))
-        col_bands <- rainbow_hcl(llev, alpha = 0.2)
+        col_bands <- colorspace::rainbow_hcl(llev, alpha = 0.2)
     if (is.null(col_lines))
-        col_lines <- rainbow_hcl(llev, l = 50)
+        col_lines <- colorspace::rainbow_hcl(llev, l = 50)
 
     ## set up plot region, similar to plot.xy()
     if (newpage) grid.newpage()

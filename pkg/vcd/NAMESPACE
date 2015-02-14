@@ -4,6 +4,7 @@ import(stats)
 import(grDevices)
 import(colorspace)
 importFrom("utils","head","tail")
+importFrom("lmtest","coeftest","coeftest.default")
 
 export(
 ## generic functions
@@ -22,6 +23,7 @@ export(
        "spine",
        "tile",
        "structable",
+       "loddsratio",
 
 ## spacings
        "spacing_conditional",
@@ -183,3 +185,21 @@ S3method("summary", "Kappa")
 S3method("summary", "assocstats")
 S3method("summary", "goodfit")
 S3method("summary", "oddsratio")
+
+# logoddsratio related methods
+S3method("loddsratio", "default")
+S3method("loddsratio", "formula")
+S3method("coef", "loddsratio")
+S3method("confint", "loddsratio")
+S3method("dim", "loddsratio")
+S3method("dimnames", "loddsratio")
+S3method("print", "loddsratio")
+S3method("plot", "loddsratio")
+S3method("summary", "loddsratio")
+S3method("vcov", "loddsratio")
+S3method("as.matrix", "loddsratio")
+S3method("as.array", "loddsratio")
+S3method("as.data.frame", "loddsratio")
+
+S3method("image", "loddsratio")
+S3method("tile", "loddsratio")

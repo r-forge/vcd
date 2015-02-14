@@ -4,6 +4,8 @@
 
 \section{Changes in version 1.3-3}{
   \itemize{
+    \item code for handling (log) odds ratios greatly enhanced to
+    support extended odds ratios and conditioned odds ratio plots.
     \item \code{binreg_plot()} added for (conditioned) binary regression plots
     \item Bug fix in mosaic: using \code{highlighting=} and/or
     \code{condvars=} now not only reorders the table, but also the split

@@ -16,5 +16,5 @@ LazyLoad: yes
 LazyData: yes
 Depends: R (>= 2.4.0), grid
 Suggests: KernSmooth, mvtnorm, kernlab, HSAUR, coin
-Imports: stats, utils, MASS, grDevices, colorspace
+Imports: stats, utils, MASS, grDevices, colorspace, lmtest
 License: GPL-2
