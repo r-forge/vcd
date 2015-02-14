@@ -7,19 +7,19 @@
 }
 \usage{
 binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
-         xlim = NULL, ylim = NULL,
-         pred_var = NULL, group_vars = NULL, base_level = NULL, subset,
-         type = c("response", "link"), conf_level = 0.95, delta = FALSE,
-         pch = NULL, cex = 0.6, jitter_factor = 0.1, 
-         lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
-         legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
-         legend_vgap = unit(0.5, "lines"),
-         labels = FALSE, labels_pos = c("right", "left"),
-         labels_just = c("left","center"), labels_offset = c(0.01, 0),
-         gp_main = gpar(fontface = "bold", fontsize = 14),
-         gp_legend_frame = gpar(lwd = 1, col = "black"),
-         gp_legend_title = gpar(fontface = "bold"),
-         newpage = TRUE, pop = TRUE, return_grob = FALSE)
+            xlim = NULL, ylim = NULL,
+            pred_var = NULL, group_vars = NULL, base_level = NULL, subset,
+            type = c("response", "link"), conf_level = 0.95, delta = FALSE,
+            pch = NULL, cex = 0.6, jitter_factor = 0.1, 
+            lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
+            legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
+            legend_vgap = unit(0.5, "lines"),
+            labels = FALSE, labels_pos = c("right", "left"),
+            labels_just = c("left","center"), labels_offset = c(0.01, 0),
+            gp_main = gpar(fontface = "bold", fontsize = 14),
+            gp_legend_frame = gpar(lwd = 1, col = "black"),
+            gp_legend_title = gpar(fontface = "bold"),
+            newpage = TRUE, pop = TRUE, return_grob = FALSE)
 }
 \arguments{
   \item{model}{a binary regression model fitted with \code{\link[stats]{glm}}}
@@ -92,8 +92,10 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   \item{labels_offset}{numeric vector of length 2, specifying the offset    
     of the labels' coordinates in npc units.}
   \item{gp_main}{object of class \code{"gpar"} used for the main title.}
-  \item{gp_legend_frame}{object of class \code{"gpar"} used for the main title.}
-  \item{gp_legend_title}{object of class \code{"gpar"} used for the main title.}
+  \item{gp_legend_frame}{object of class \code{"gpar"} used for the
+    legend frame.}
+  \item{gp_legend_title}{object of class \code{"gpar"} used for the
+    legend title.}
   \item{newpage}{logical; if \code{TRUE}, the plot is drawn on a new page.}
   \item{pop}{logical; if \code{TRUE}, all newly generated viewports are
     popped after plotting.}
@@ -125,7 +127,8 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   will be cut off.
 }
 \value{
-\code{NULL} (invisibly).
+  if \code{return_grob} is \code{TRUE}, a grob object corresponding to
+  the plot. \code{NULL} (invisibly) else.
 }
 \references{
 Michael Friendly (2000),
