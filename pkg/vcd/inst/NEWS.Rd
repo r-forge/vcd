@@ -4,6 +4,9 @@
 
 \section{Changes in version 1.3-3}{
   \itemize{
+    \item \code{assocstats} now handles strata (all but the first two
+    dimensions)
+    \item \code{sieve} now accepts a \code{scale=} argument
     \item code for handling (log) odds ratios greatly enhanced to
     support extended odds ratios and conditioned odds ratio plots.
     \item \code{binreg_plot()} added for (conditioned) binary regression plots

@@ -5,11 +5,13 @@
   Produces a (conditional) line plot of extended (log) odds ratios.
 }
 \usage{
-\method{plot}{loddsratio}(x, baseline = TRUE, lines = TRUE,
-confidence = TRUE, conf_level = 0.95,
+\method{plot}{loddsratio}(x, baseline = TRUE, gp_baseline = gpar(lty = 2),
+lines = TRUE, lwd_lines = 3,
+confidence = TRUE, conf_level = 0.95, lwd_confidence = 2,
 whiskers = 0, transpose = FALSE,
-col = NULL, cex = 0.6, pch = NULL,
+col = NULL, cex = 0.8, pch = NULL,
 bars = NULL, gp_bars = gpar(fill = "lightgray", alpha = 0.5),
+bar_width = unit(0.05, "npc"),
              
 legend = TRUE, legend_pos = "topright", legend_inset = c(0, 0),
 legend_vgap = unit(0.5, "lines"),
@@ -24,10 +26,13 @@ newpage = TRUE, pop = TRUE, return_grob = FALSE, \dots)
   \item{x}{an object of class \code{loddsratio}}
   \item{baseline}{if \code{TRUE}, a dashed line is plotted at a
     value of 1 (in case of odds) or 0 (in case of log-odds).}
+  \item{gp_baseline}{object of class \code{"gpar"} used for the baseline.}
   \item{lines}{if \code{TRUE}, the points are connected by lines (only
     sensible if the variable represented by the x-axis is ordinal).}
+  \item{lwd_lines}{Width of the connecting lines (in \code{char} units).}
   \item{confidence}{logical; shall confindence intervals be plotted?}
   \item{conf_level}{confidence level used for confidence intervals.}
+  \item{lwd_confidence}{Line width of the confidence interval bars (in \code{char} units).}
   \item{whiskers}{width of the confidence interval whiskers.}
   \item{transpose}{if \code{TRUE}, the plot is transposed.}
 
@@ -39,6 +44,7 @@ newpage = TRUE, pop = TRUE, return_grob = FALSE, \dots)
   \item{bars}{logical; shall bars be plotted additionally to the points?
     Defaults to \code{TRUE} in case of only one conditioning variable.}
   \item{gp_bars}{object of class \code{"gpar"} used for the bars.}
+  \item{bar_width}{Width of the bars, if drawn.}
   
   \item{legend}{logical; if \code{TRUE} (default), a legend is drawn.}
   \item{legend_pos}{numeric vector of length 2, specifying x and y
