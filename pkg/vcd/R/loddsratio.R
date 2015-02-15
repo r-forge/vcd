@@ -315,16 +315,20 @@ tile.loddsratio <-
 "plot.loddsratio" <-
     function(x,
              baseline = TRUE,
+             gp_baseline = gpar(lty = 2),
              lines = TRUE,
+             lwd_lines = 3,
              confidence = TRUE,
              conf_level = 0.95,
+             lwd_confidence = 2,
              whiskers = 0,
              transpose = FALSE,
              col = NULL,
-             cex = 0.6,
+             cex = 0.8,
              pch = NULL,
              bars = NULL,
              gp_bars = gpar(fill = "lightgray", alpha = 0.5),
+             bar_width = unit(0.05, "npc"),
 
              legend = TRUE, legend_pos = "topright", legend_inset = c(0, 0),
              legend_vgap = unit(0.5, "lines"),
@@ -408,7 +412,7 @@ tile.loddsratio <-
         if (baseline)
             grid.lines(unit(c(1,1) - LOG, "native"),
                        unit(c(0,1), "npc"),
-                       gp = gpar(lty = 2))
+                       gp = gp_baseline)
 
         # workhorse for one stratum
         draw_one_stratum <- function(vals, pch = "o", col = "black", offset = 0,
@@ -417,7 +421,7 @@ tile.loddsratio <-
                 if (any(vals > !LOG))
                     grid.rect(unit(vals[vals > !LOG], "native"),
                               unit(seq_along(vals)[vals > !LOG], "native"),
-                              height = unit(0.5, "native"),
+                              height = bar_width,
                               width = unit(vals[vals > !LOG] - !LOG, "native"),
                               just = "right",
                               gp = gp_bars
@@ -425,7 +429,7 @@ tile.loddsratio <-
                 if (any(vals < !LOG))
                     grid.rect(unit(vals[vals < !LOG], "native"),
                               unit(seq_along(vals)[vals < !LOG], "native"),
-                              height = unit(0.5, "native"),
+                              height = bar_width,
                               width = unit(abs(vals[vals < !LOG] - !LOG), "native"),
                               just = "left",
                               gp = gp_bars
@@ -434,14 +438,14 @@ tile.loddsratio <-
             if (lines)
                 grid.lines(unit(vals, "native"),
                            unit(seq_along(vals), "native"),
-                           gp = gpar(col = col),
+                           gp = gpar(col = col, lwd = lwd_lines),
                            default.units = "native"
                            )
             grid.points(unit(vals, "native"),
                         unit(seq_along(vals), "native"),
                         pch = pch,
                         size = unit(cex, "char"),
-                        gp = gpar(col = col),
+                        gp = gpar(col = col, lwd = lwd_lines),
                         default.units = "native"
                         )
             if (confidence)
@@ -449,13 +453,13 @@ tile.loddsratio <-
                     ii <- i + jitter
                     grid.lines(unit(c(lwr[offset + i], upr[offset + i]), "native"),
                                unit(c(ii, ii), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                     grid.lines(unit(c(lwr[offset + i], lwr[offset + i]), "native"),
                                unit(c(ii - whiskers/2, ii + whiskers/2), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                     grid.lines(unit(c(upr[offset + i], upr[offset + i]), "native"),
                                unit(c(ii - whiskers/2, ii + whiskers/2), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                 }
         }
     } else {
@@ -474,7 +478,8 @@ tile.loddsratio <-
         ## baseline
         if (baseline)
             grid.lines(unit(c(0,1), "npc"),
-                       unit(c(1,1) - LOG, "native"), gp = gpar(lty = 2))
+                       unit(c(1,1) - LOG, "native"),
+                       gp = gp_baseline)
 
         ## workhorse for one stratum
         draw_one_stratum <- function(vals, pch = "o", col = "black", offset = 0,
@@ -483,7 +488,7 @@ tile.loddsratio <-
                 if (any(vals > !LOG))
                     grid.rect(unit(seq_along(vals)[vals > !LOG], "native"),
                               unit(vals[vals > !LOG], "native"),
-                              width = unit(0.5, "native"),
+                              width = bar_width,
                               height = unit(vals[vals > !LOG] - !LOG, "native"),
                               just = "top",
                               gp = gp_bars
@@ -491,7 +496,7 @@ tile.loddsratio <-
                 if (any(vals < !LOG))
                     grid.rect(unit(seq_along(vals)[vals < !LOG], "native"),
                               unit(vals[vals < !LOG], "native"),
-                              width = unit(0.5, "native"),
+                              width = bar_width,
                               height = unit(abs(vals[vals < !LOG] - !LOG), "native"),
                               just = "bottom",
                               gp = gp_bars
@@ -500,14 +505,14 @@ tile.loddsratio <-
             if (lines)
                 grid.lines(unit(seq_along(vals), "native"),
                            unit(vals, "native"),
-                           gp = gpar(col = col),
+                           gp = gpar(col = col, lwd = lwd_lines),
                            default.units = "native"
                            )
             grid.points(unit(seq_along(vals), "native"),
                         unit(vals, "native"),
                         pch = pch,
                         size = unit(cex, "char"),
-                        gp = gpar(col = col),
+                        gp = gpar(col = col, lwd = lwd_lines),
                         default.units = "native"
                         )
             if (confidence)
@@ -515,13 +520,13 @@ tile.loddsratio <-
                     ii <- i + jitter
                     grid.lines(unit(c(ii, ii), "native"),
                                unit(c(lwr[offset + i], upr[offset + i]), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                     grid.lines(unit(c(ii - whiskers/2, ii + whiskers/2), "native"),
                                unit(c(lwr[offset + i], lwr[offset + i]), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                     grid.lines(unit(c(ii - whiskers/2, ii + whiskers/2), "native"),
                                unit(c(upr[offset + i], upr[offset + i]), "native"),
-                               gp = gpar(col = col))
+                               gp = gpar(col = col, lwd = lwd_confidence))
                 }
         }
 
