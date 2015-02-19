@@ -155,7 +155,8 @@ treating the \code{coefficients} vector as an (R-1) x (C-1) x strata array.
 
 The \code{confint} method computes confidence intervals for the log odds ratios
 (or for odds ratios, with \code{log=FALSE}).
-The \code{\link[lmtest]{coeftest}} method prints the asymptotic standard errors,
+The \code{\link[lmtest]{coeftest}} method (\code{summary} is an alias)
+prints the asymptotic standard errors,
  z tests (standardized log odds ratios), and the corresponding p values.   
 }
 
