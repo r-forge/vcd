@@ -167,9 +167,10 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
     add <- if(correct) 0.5 else 0
     ##coef <- drop(contr %*% log(as.vector(x) + add))
     ##FIXME: 0 cells mess up the matrix product, try workaround:
-    vec <- log(as.vector(x) + add)
-    coef <- apply(t(contr) * vec, 2, sum, na.rm = TRUE)
-
+    mat <- t(contr) * log(as.vector(x) + add)
+    nas <- apply(contr != 0 & is.na(t(mat)), 1, any)
+    coef <- apply(mat, 2, sum, na.rm = TRUE)
+    coef[nas] <- NA
     ## covariances
     vcov <- crossprod(diag(sqrt(1/(as.vector(x) + add))) %*% t(contr))
 
