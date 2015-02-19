@@ -123,7 +123,7 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
             rval[d > 0, 1:2],
             rval[d < 0, 2:1]
         )
-        return(rval[order(rval[,1L]),])
+        return(rval[order(rval[,1L]),,drop = FALSE])
     }
     Rix <- compute_index(R, ref[[1L]])
     Cix <- compute_index(C, ref[[2L]])
@@ -165,7 +165,10 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
 
     ## point estimates
     add <- if(correct) 0.5 else 0
-    coef <- drop(contr %*% log(as.vector(x) + add))
+    ##coef <- drop(contr %*% log(as.vector(x) + add))
+    ##FIXME: 0 cells mess up the matrix product, try workaround:
+    vec <- log(as.vector(x) + add)
+    coef <- apply(t(contr) * vec, 2, sum, na.rm = TRUE)
 
     ## covariances
     vcov <- crossprod(diag(sqrt(1/(as.vector(x) + add))) %*% t(contr))
