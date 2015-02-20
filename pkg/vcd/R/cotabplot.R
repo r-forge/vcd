@@ -208,6 +208,16 @@ cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
 }
 class(cotab_fourfold) <- "grapcon_generator"
 
+cotab_loddsratio <- function(x = NULL, condvars = NULL, ...) {
+  function(x, condlevels) {
+    if(is.null(condlevels)) plot(loddsratio(x, ...), newpage = FALSE, pop = FALSE, return_grob = FALSE, ...)
+      else plot(loddsratio(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]], ...),
+                 newpage = FALSE, pop = FALSE, return_grob = FALSE,
+                 prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
+  }
+}
+class(cotab_loddsratio) <- "grapcon_generator"
+
 cotab_coindep <- function(x, condvars,
   test = c("doublemax", "maxchisq", "sumchisq"),
   level = NULL, n = 1000, interpolate = c(2, 4),
