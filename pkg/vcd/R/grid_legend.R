@@ -1,4 +1,4 @@
-grid_legend <- function (x, y, pch = NA, col = par('col'), labels, frame = TRUE, hgap = unit(0.8, "lines"), vgap = unit(0.8, "lines"), default_units = "lines", gp = gpar(), draw = TRUE, title = NULL, just = 'center', lwd = NA, lty = NA, gp_title = NULL, gp_labels = NULL, gp_frame = gpar(fill = "transparent"), inset = c(0, 0))
+grid_legend <- function (x, y, pch = NA, col = par('col'), labels, frame = TRUE, hgap = unit(0.8, "lines"), vgap = unit(0.8, "lines"), default_units = "lines", gp = gpar(), draw = TRUE, title = NULL, just = 'center', lwd = NA, lty = NA, size = 1, gp_title = NULL, gp_labels = NULL, gp_frame = gpar(fill = "transparent"), inset = c(0, 0))
 
 {
     inset <- rep(inset, length.out = 2)
@@ -76,7 +76,9 @@ grid_legend <- function (x, y, pch = NA, col = par('col'), labels, frame = TRUE,
 
     for (i in 1:nlabs) {
         if(!is.na(pch[i]))
-            fg <- placeGrob(fg, pointsGrob(0.5, 0.5, pch = pch[i], gp = gpar(col = col[i])), col = 1, row = i + tit)
+            fg <- placeGrob(fg, pointsGrob(0.5, 0.5, pch = pch[i],
+                                           size = unit(size, "char"),
+                                           gp = gpar(col = col[i])), col = 1, row = i + tit)
         else if(!is.na(lwd[i]) || !is.na(lty[i]))
             fg <- placeGrob(fg, linesGrob( unit(c(0.2, .8), "npc"),  unit(c(.5), "npc"),
                                           gp = gpar(col = col[i], lwd = lwd[i], lty=lty[i])), col = 1, row = i + tit)

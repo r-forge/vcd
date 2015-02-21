@@ -169,7 +169,7 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
     ##FIXME: 0 cells mess up the matrix product, try workaround:
     mat <- t(contr) * log(as.vector(x) + add)
     nas <- apply(contr != 0 & is.na(t(mat)), 1, any)
-    coef <- apply(mat, 2, sum, na.rm = TRUE)
+    coef <- apply(mat, 1, sum, na.rm = TRUE)
     coef[nas] <- NA
     ## covariances
     vcov <- crossprod(diag(sqrt(1/(as.vector(x) + add))) %*% t(contr))
@@ -338,6 +338,8 @@ tile.loddsratio <-
              legend_vgap = unit(0.5, "lines"),
              gp_legend_frame = gpar(lwd = 1, col = "black"),
              gp_legend_title = gpar(fontface = "bold"),
+             gp_legend = gpar(), legend_lwd = 1,
+             legend_size = 1,
 
              xlab = NULL,
              ylab = NULL,
@@ -347,6 +349,7 @@ tile.loddsratio <-
              main = NULL,
              gp_main = gpar(fontsize = 12, fontface = "bold"),
              newpage = TRUE, pop = TRUE, return_grob = FALSE,
+             prefix = "",
              ...)
 {
     ## handle default values, limits etc.
@@ -355,7 +358,7 @@ tile.loddsratio <-
     d <- dim(values)
     if (is.null(bars))
         bars <- is.null(d)
-    oddsrange <- range(values)
+    oddsrange <- range(values, na.rm = TRUE)
 
     if(confidence) {
         CI  <- confint(x, log = LOG, level = conf_level)
@@ -402,7 +405,7 @@ tile.loddsratio <-
         ## set up plot region, similar to plot.xy()
         pushViewport(plotViewport(xscale = ylimaxis, yscale = xlimaxis,
                                   default.units = "native",
-                                  name = "oddsratio_plot"))
+                                  name = paste(prefix,"oddsratio_plot")))
         grid.yaxis(name = "yaxis", seq_along(labs), labs,
                    edits = gEdit("labels", rot = 90, hjust = .5, vjust = 0))
         grid.xaxis()
@@ -553,12 +556,15 @@ tile.loddsratio <-
                                        1, paste, collapse = "|"),
                         pch = pch[1 : nrow(tab)],
                         col = col,
+                        lwd = legend_lwd,
                         lty = "solid",
+                        size = legend_size,
                         vgap = legend_vgap,
+                        gp = gp_legend,
                         gp_frame = gp_legend_frame,
                         inset = legend_inset,
                         title = paste(names(attr(tab, "row.vars")), collapse = " x "),
-                        gp_title = gp_legend_title)
+                        gp_title = gp_legend_title, ...)
     }
 
     grid.rect(gp = gpar(fill = "transparent"))
