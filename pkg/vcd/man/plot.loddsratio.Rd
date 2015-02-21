@@ -1,5 +1,6 @@
 \name{plot.loddsratio}
 \alias{plot.loddsratio}
+\alias{cotab_loddsratio}
 \title{Plotting (Log) Odds Ratios}
 \description{
   Produces a (conditional) line plot of extended (log) odds ratios.
@@ -17,10 +18,11 @@ legend = TRUE, legend_pos = "topright", legend_inset = c(0, 0),
 legend_vgap = unit(0.5, "lines"),
 gp_legend_frame = gpar(lwd = 1, col = "black"),
 gp_legend_title = gpar(fontface = "bold"),
+gp_legend = gpar(), legend_lwd = 1, legend_size = 1,
              
 xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL,
 main = NULL, gp_main = gpar(fontsize = 12, fontface = "bold"),
-newpage = TRUE, pop = TRUE, return_grob = FALSE, \dots)
+newpage = TRUE, pop = TRUE, return_grob = FALSE, prefix = "", \dots)
 }
 \arguments{
   \item{x}{an object of class \code{loddsratio}}
@@ -58,6 +60,11 @@ newpage = TRUE, pop = TRUE, return_grob = FALSE, \dots)
     legend frame.}
   \item{gp_legend_title}{object of class \code{"gpar"} used for the
     legend title.}
+  \item{gp_legend}{object of class \code{"gpar"} used for the
+    legend defaults.}
+  \item{legend_lwd}{line width used in the legend for the different
+    groups}
+  \item{legend_size}{size used for the group symbols (in char units).}
 
   \item{xlab}{label for the x-axis. Defaults to \code{"Strata"} if
     \code{transpose} is \code{FALSE}.}
@@ -72,6 +79,7 @@ newpage = TRUE, pop = TRUE, return_grob = FALSE, \dots)
     popped after plotting.}
   \item{return_grob}{logical. Should a snapshot of the display be
     returned as a grid grob?}
+  \item{prefix}{character string used as prefix for the viewport name}
   \item{\dots}{other graphics parameters (see \code{\link{par}}).}
 }
 \value{
@@ -132,5 +140,11 @@ plot(loddsratio(~ attitude + memory | age + education, data = Punishment), trans
 # alternative visualization methods
 image(loddsratio(Freq ~ ., data = Punishment))
 tile(loddsratio(Freq ~ ., data = Punishment))
+
+## cotabplots for more complex tables
+cotabplot(Titanic, cond = c("Age","Sex"), panel = cotab_loddsratio)
+
+cotabplot(Freq ~ opinion + grade + year | gender, data = JointSports, panel = cotab_loddsratio)
+cotabplot(Freq ~ opinion + grade | year + gender, data = JointSports, panel = cotab_loddsratio)
 }
 \keyword{category}

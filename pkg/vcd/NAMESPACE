@@ -74,6 +74,7 @@ export(
        "cotab_mosaic",
        "cotab_assoc",
        "cotab_sieve",
+       "cotab_loddsratio",
        "cotab_fourfold",
        "cotab_coindep",
 

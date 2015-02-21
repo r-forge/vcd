@@ -9,6 +9,7 @@ grid_legend(x, y, pch = NA, col = par('col'), labels, frame = TRUE,
             hgap = unit(0.8, "lines"), vgap = unit(0.8, "lines"),
             default_units = "lines", gp = gpar(), draw = TRUE,
             title = NULL, just = 'center', lwd = NA, lty = NA,
+            size = 1,
             gp_title = NULL, gp_labels = NULL,
             gp_frame = gpar(fill = "transparent"),
             inset = c(0, 0))
@@ -34,6 +35,7 @@ grid_legend(x, y, pch = NA, col = par('col'), labels, frame = TRUE,
     location. see ?viewport for more details}
   \item{lwd}{positive number to set the line width. if specified lines are drawn}
   \item{lty}{line type. if specified lines are drawn}
+  \item{size}{size of the group symbols (in char units)}
   \item{gp_title}{object of class \code{"gpar"} used for the title }
   \item{gp_labels}{object of class \code{"gpar"} used for the labels }
   \item{gp_frame}{object of class \code{"gpar"} used for the frame }
