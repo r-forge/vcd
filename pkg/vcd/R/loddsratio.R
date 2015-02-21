@@ -172,7 +172,12 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
     coef <- apply(mat, 2, sum, na.rm = TRUE)
     coef[nas] <- NA
     ## covariances
-    vcov <- crossprod(diag(sqrt(1/(as.vector(x) + add))) %*% t(contr))
+    ##vcov <- crossprod(diag(sqrt(1/(as.vector(x) + add))) %*% t(contr))
+    tmp <- sqrt(1/(as.vector(x) + add)) * t(contr)
+    tmp[is.na(tmp)] <- 0
+    vcov <- crossprod(tmp)
+    vcov[nas,] <- NA
+    vcov[,nas] <- NA
 
     rval <- structure(list(
         coefficients = coef,
@@ -365,9 +370,9 @@ tile.loddsratio <-
         lwr <- CI[,1]
         upr <- CI[,2]
         oddsrange <- if (baseline)
-                         c(min(0, lwr), max(0, upr))
+                         c(min(0, lwr, na.rm = TRUE), max(0, upr, na.rm = TRUE))
                      else
-                         c(min(lwr), max(upr))
+                         c(min(lwr, na.rm = TRUE), max(upr, na.rm = TRUE))
     }
 
     if (is.null(main))
@@ -542,19 +547,18 @@ tile.loddsratio <-
     if (is.null(d))
         draw_one_stratum(values, pch[1], col[1])
     else {
-        tab <- ftable(values, col.vars = 1)
-        jitt <- scale(seq_len(nrow(tab)), scale = 25 * nrow(tab))
-        for (i in 1 : nrow(tab))
-            draw_one_stratum(tab[i,],
+        jitt <- scale(seq_len(prod(d[-1])), scale = 25 * prod(d[-1]))
+        for (i in 1 : prod(d[-1]))
+            draw_one_stratum(values[(i - 1) * d[1] + seq(d[1])],
                              pch[(i - 1 ) %% length(pch) + 1],
                              col[i],
-                             offset = (i - 1) * ncol(tab),
+                             offset = (i - 1) * d[1],
                              jitt[i])
         if (legend)
             grid_legend(legend_pos,
-                        labels = apply(expand.grid(attr(tab, "row.vars")),
+                        labels = apply(expand.grid(dimnames(values)[-1]),
                                        1, paste, collapse = "|"),
-                        pch = pch[1 : nrow(tab)],
+                        pch = pch[1 : prod(d[-1])],
                         col = col,
                         lwd = legend_lwd,
                         lty = "solid",
@@ -563,7 +567,7 @@ tile.loddsratio <-
                         gp = gp_legend,
                         gp_frame = gp_legend_frame,
                         inset = legend_inset,
-                        title = paste(names(attr(tab, "row.vars")), collapse = " x "),
+                        title = paste(names(dimnames(values)[-1]), collapse = " x "),
                         gp_title = gp_legend_title, ...)
     }
 
