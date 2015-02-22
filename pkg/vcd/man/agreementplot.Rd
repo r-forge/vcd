@@ -20,7 +20,8 @@
               ylab_rot = 90, ylab_just = "center",
               fill_col = function(j) gray((1 - (weights[j]) ^ 2) ^ 0.5),
               line_col = "red", xscale = TRUE, yscale = TRUE,
-              return_grob = FALSE, \dots)
+              return_grob = FALSE,
+              prefix = "", \dots)
 \method{agreementplot}{formula}(formula, data = NULL, ..., subset)
 }
 \arguments{
@@ -49,6 +50,7 @@
     the data frame to be used for plotting.}
   \item{xscale, yscale}{logicals indicating whether the marginals should
   be added on the x-axis/y-axis, respectively.}
+  \item{prefix}{character string used as prefix for the viewport name}
   \item{\dots}{further graphics parameters (see \code{\link{par}}).}
 }
 \details{
@@ -60,6 +62,8 @@
   A weight vector of
   length 1 means strict agreement only, each additional element
   increases the maximum number of disagreement steps.
+
+  \code{\link{cotabplot}} can be used for stratified analyses (see examples).
 }
 \value{
   Invisibly returned, a list with components
@@ -106,13 +110,8 @@ popViewport(2)
 dev.off()
 }
 
-## alternative, more convenient way
-mplot(
-  agreementplot(t(MSPatients[,,1]), return_grob = TRUE,
-    main = "Winnipeg Patients"),
-  agreementplot(t(MSPatients[,,2]), return_grob = TRUE,
-    main = "New Orleans Patients")
-)
+## alternatively, use cotabplot:
+cotabplot(MSPatients, panel = cotab_agreementplot)
 }
 \keyword{category}
 \keyword{hplot}

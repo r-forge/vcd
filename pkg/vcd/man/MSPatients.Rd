@@ -59,5 +59,8 @@ mplot(
   agreementplot(t(MSPatients[,,2]), return_grob = TRUE,
     main = "New Orleans Patients")
 )
+
+## alternatively, use cotabplot:
+cotabplot(MSPatients, panel = cotab_agreementplot)
 }
 \keyword{datasets}

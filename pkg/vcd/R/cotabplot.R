@@ -218,6 +218,15 @@ cotab_loddsratio <- function(x = NULL, condvars = NULL, ...) {
 }
 class(cotab_loddsratio) <- "grapcon_generator"
 
+cotab_agreementplot <- function(x = NULL, condvars = NULL, ...) {
+  function(x, condlevels) {
+    if(is.null(condlevels)) agreementplot(x, newpage = FALSE, pop = FALSE, return_grob = FALSE, ...)
+      else agreementplot(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]], newpage = FALSE, pop = FALSE, return_grob = FALSE,
+                         prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
+  }
+}
+class(cotab_agreementplot) <- "grapcon_generator"
+
 cotab_coindep <- function(x, condvars,
   test = c("doublemax", "maxchisq", "sumchisq"),
   level = NULL, n = 1000, interpolate = c(2, 4),
