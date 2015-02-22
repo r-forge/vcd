@@ -26,7 +26,7 @@ all stratifying dimensions.
 
 loddsratio(x, \dots)
 \method{loddsratio}{default}(x, strata = NULL, log = TRUE, 
-  ref = NULL, correct = any(x == 0), \dots)
+  ref = NULL, correct = any(x == 0L), \dots)
 
 \method{loddsratio}{formula}(formula, data = NULL, \dots,
 subset = NULL, na.action = NULL)
@@ -65,11 +65,13 @@ subset = NULL, na.action = NULL)
   \item{log}{Logical. Should the results be displayed on a log scale
     or not? All internal computations are always on the log-scale but the
     results are transformed by default if \code{log = TRUE}.}
-  \item{correct}{Logical. Should a continuity correction be applied (by adding
-    0.5 to all table entries) before computing odds ratios? By default, this
-    not employed unless there are any zero cells in the table,
-    but this correction is often recommended to reduce bias when some frequencies 
-    are small (Fleiss, 1981).}
+  \item{correct}{Logical or numeric. Should a continuity correction
+    be applied before computing odds ratios?
+    If \code{TRUE}, 0.5 is  added to  all cells; if numeric (or an
+    array conforming to the data) that value is added to all cells.  By default,
+    this not  employed unless there are any zero cells in  the table, but this
+    correction is often recommended to reduce bias when some frequencies are small
+    (Fleiss, 1981).}
   \item{object}{An object of class \code{loddsratio} as computed by
     \code{loddsratio}.}
   \item{\dots}{Arguments passed to methods.}
@@ -154,10 +156,15 @@ treating the \code{coefficients} vector as an (R-1) x (C-1) x strata array.
 \code{as.matrix} and \code{as.array} methods are also provided for this purpose.
 
 The \code{confint} method computes confidence intervals for the log odds ratios
-(or for odds ratios, with \code{log=FALSE}).
+(or for odds ratios, with \code{log = FALSE}).
 The \code{\link[lmtest]{coeftest}} method (\code{summary} is an alias)
-prints the asymptotic standard errors,
- z tests (standardized log odds ratios), and the corresponding p values.   
+prints the asymptotic standard errors, z tests (standardized log odds
+ratios), and the corresponding p values.
+
+\emph{Structural zeros}: In addition to the options for zero cells provided by \code{correct},
+the function allows for structural zeros to be represented as \code{NA} in the data argument.
+\code{NA} in the data yields \code{NA} as the \code{LOR} estimate, but does not affect other
+cells.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

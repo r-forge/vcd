@@ -164,7 +164,17 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
     if (!is.null(names(dimnames(x)))) names(dn) <- names(dimnames(x))
 
     ## point estimates
-    add <- if(correct) 0.5 else 0
+
+    if (is.logical(correct)) {
+        add <- if(correct) 0.5 else 0
+    }
+    else if(is.numeric(correct)) {
+        add <- as.vector(correct)
+        if (length(add) != length(x))
+            stop("array size of 'correct' does not conform to the data")
+    }
+    else stop("correct is not valid")
+
     ##coef <- drop(contr %*% log(as.vector(x) + add))
     ##FIXME: 0 cells mess up the matrix product, try workaround:
     mat <- log(as.vector(x) + add) * t(contr)
