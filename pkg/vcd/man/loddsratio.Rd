@@ -14,13 +14,14 @@
 \alias{as.data.frame.loddsratio}
 
 \title{
-Calculate Log Odds Ratios for Frequency Tables
+Calculate Generalized Log Odds Ratios for Frequency Tables
 }
 \description{
 Computes (log) odds ratios and their asymptotic variance covariance
 matrix for R x C (x strata) tables.
 Odds ratios are calculated for two array dimensions, separately for each level of
-all stratifying dimensions.
+all stratifying dimensions. See Friendly et al. (2011) for a sketch of a
+general theory.
 }
 \usage{
 
@@ -103,9 +104,15 @@ vectors, e.g., \code{ref = c("foo", "bar")} also works ("foo" pertaining again t
     row reference and "bar" to column reference).
 
 Note that all such parameterizations are equivalent, in that one can derive all
-other possible odds ratios from any non-redundant set.
+other possible odds ratios from any non-redundant set, but the interpretation
+of these values depends on the parameterization.
 
-See the help page of \code{\link{plot.loddsratio}} for visualization.
+Note also that these reference level parameterizations only have meaning when the
+primary (non-strata) table dimensions are larger than 2x2.  In the 2x2 case,
+the odds ratios are defined by the order of levels of those variables in the table,
+so you can achieve a desired interpretation by manipulating the table.
+
+See the help page of \code{\link{plot.loddsratio}} for visualization methods.
 }
 \value{
 An object of class \code{loddsratio}, with the following components: 
@@ -128,7 +135,7 @@ An object of class \code{loddsratio}, with the following components:
 }
 
 \references{
-A. Agresti (1990), \emph{Categorical Data Analysis}. New York: Wiley.
+A. Agresti (2013), \emph{Categorical Data Analysis}, 3rd Ed. New York: Wiley.
 
 Fleiss, J. L. (1981). \emph{Statistical Methods for Rates and Proportions}.
 2nd Edition. New York: Wiley.
@@ -142,11 +149,11 @@ Correspondence Analysis and Related Methods (CARME 2011).
 
 }
 \author{
-Achim Zeileis and Michael Friendly
+Achim Zeileis and Michael Friendly and David Meyer
 }
 \note{
 The method of calculation is an example of the use of the delta method
-described by Agresti (1990), Section 12.1.7, giving estimates of
+described by Agresti (2013), Section 16.1.6, giving estimates of
 log odds ratios and their asymptotic covariance matrix.
 
 The \code{coef} method returns the \code{coefficients} component as a vector
@@ -172,7 +179,7 @@ cells.
 \seealso{
 %%\code{\link[vcd]{oddsratio}},
 \code{\link{plot.loddsratio}} for some plotting methods;
-\code{\link[stats]{confint}},
+\code{\link[stats]{confint}} for confidence intervals;
 \code{\link[lmtest]{coeftest}} for z-tests of significance
 
 }
@@ -213,6 +220,14 @@ lor_pun_df <- as.data.frame(lor_pun)
 pun_mod1 <- lm(LOR ~ as.numeric(age) * as.numeric(education),
                data = lor_pun_df, weights = 1 / ASE^2)
 anova(pun_mod1)
+
+## illustrate ref levels
+VA.fem <- xtabs(Freq ~ left + right, subset=gender=="female", data=VisualAcuity)
+VA.fem
+loddsratio(VA.fem)                  # profile contrasts
+loddsratio(VA.fem, ref=1)           # contrasts against level 1
+loddsratio(VA.fem, ref=dim(VA.fem)) # contrasts against level 4
+
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
