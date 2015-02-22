@@ -1,6 +1,5 @@
 \name{plot.loddsratio}
 \alias{plot.loddsratio}
-\alias{cotab_loddsratio}
 \title{Plotting (Log) Odds Ratios}
 \description{
   Produces a (conditional) line plot of extended (log) odds ratios.
@@ -89,7 +88,10 @@ newpage = TRUE, pop = TRUE, return_grob = FALSE, prefix = "", \dots)
 \details{
   The function basically produces conditioned line plots of the (log)
     odds ratios structure provided in \code{x}. 
-}
+
+  \code{\link{cotabplot}} can be used for stratified analyses (see examples).
+
+  }
 \references{
   M. Friendly (2000),
   \emph{Visualizing Categorical Data}.

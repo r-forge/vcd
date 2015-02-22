@@ -66,6 +66,7 @@
 				line_col = "red",
 				xscale=TRUE, yscale = TRUE,
                                 return_grob = FALSE,
+                                prefix = "",
 				...)
 {
 	if (length(dim(x)) > 2)
@@ -82,7 +83,8 @@
 
 	## open viewport
 	if (newpage) grid.newpage()
-	pushViewport(plotViewport(margins))
+	pushViewport(plotViewport(margins,
+                                  name = paste(prefix,"agreementplot")))
 	pushViewport(viewport(width = unit(1, "snpc"),
                               height = unit(1, "snpc")))
 

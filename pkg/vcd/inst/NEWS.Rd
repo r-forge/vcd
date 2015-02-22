@@ -5,8 +5,10 @@
 \section{Changes in version 1.3-3}{
   \itemize{
     \item \code{loddsratio} now accepts structural zeros (missing values)
+    \item \code{cotab_agreementplot} panel function for plotting
+    conditional (stratified) agreement charts added
     \item \code{cotab_loddsratio} panel function for plotting
-  conditional log-odds ratios plots added
+    conditional log-odds ratios plots added
     \item \code{assocstats} now handles strata (all but the first two
     dimensions)
     \item \code{sieve} now accepts a \code{scale=} argument
