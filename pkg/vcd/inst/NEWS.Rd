@@ -4,9 +4,17 @@
 
 \section{Changes in version 1.3-3}{
   \itemize{
-    \item \code{loddsratio} now accepts structural zeros (missing values)
     \item \code{cotab_agreementplot} panel function for plotting
     conditional (stratified) agreement charts added
+    \item \code{loddsratio} added as an extension of \code{oddsratio} fr
+    conditioned generalized odds ratios. The plot method is greatly
+    enhanced, and structural zeros (missing values) are also
+    accepted. \code{oddsratio} is now just an alias for
+    \code{loddsratio}.
+    \item Bug fix in \code{pairs.table()}: for
+    \code{"conditional"} type, tables are now reordered so that the
+    conditioning variables come \emph{first}.
+    
     \item \code{cotab_loddsratio} panel function for plotting
     conditional log-odds ratios plots added
     \item \code{assocstats} now handles strata (all but the first two
@@ -15,7 +23,7 @@
     \item code for handling (log) odds ratios greatly enhanced to
     support extended odds ratios and conditioned odds ratio plots.
     \item \code{binreg_plot()} added for (conditioned) binary regression plots
-    \item Bug fix in mosaic: using \code{highlighting=} and/or
+    \item Bug fix in \code{mosaic()}: using \code{highlighting=} and/or
     \code{condvars=} now not only reorders the table, but also the split
     information, so that both remain consistent.
     \item All plot functions now have an option to return the produced
