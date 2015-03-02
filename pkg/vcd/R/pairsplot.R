@@ -96,30 +96,35 @@ pairs_strucplot <- function(panel = mosaic,
                             labeling = NULL, ...) {
   type = match.arg(type)
   function(x, i, j) {
-    index <- 1:length(dim(x))
-    rest <- index[!index %in% c(i, j)]
-    rest2 <- index[!index %in% 1:2]
-	expected <- switch(type,
-			joint = list(1:2, rest2),   # shouldn't this be list(c(j,i), rest) ??
-			conditional = list(c(1,rest2), c(2,rest2)),
-#			conditional = list(c(j,rest), c(i,rest)),
-			total = sapply(c(j, i, rest), list),
-			NULL)
-	panel(x = margin.table(x, if (type == "pairwise") c(j, i) else c(j, i, rest)),
-			expected = expected,
-#           expected = if (type == "joint") list(1:2, rest2) else NULL,
-#           condvars = if (type == "conditional") rest2 else NULL,
-			labeling = labeling,
-           margins = margins,
-           legend = legend,
+      index <- 1:length(dim(x))
+      rest <- index[!index %in% c(i, j)]
+      rest2 <- index[!index %in% 1:2]
+      tl <- tail(index, 2)
+      rest3 <- index[!index %in% tl]
+      expected <- switch(type,
+                         joint = list(1:2, rest2),
+                         conditional = list(c(tl[1], rest3),
+                                            c(tl[2], rest3)),
+                         total = sapply(c(j, i, rest), list),
+                         NULL)
+      margin <- switch(type,
+                       pairwise = c(j, i),
+                       conditional = c(rest, j, i),
+                       c(j, i, rest))
+      panel(x = margin.table(x, margin),
 
-           split_vertical = TRUE,
+            expected = expected,
+            labeling = labeling,
+            margins = margins,
+            legend = legend,
 
-           newpage = FALSE,
-           pop = FALSE,
-           prefix = paste("panel:Y=",names(dimnames(x))[i],",X=",
-             names(dimnames(x))[j],"|",sep = ""),
-           ...)
+            split_vertical = TRUE,
+
+            newpage = FALSE,
+            pop = FALSE,
+            prefix = paste("panel:Y=",names(dimnames(x))[i],",X=",
+            names(dimnames(x))[j],"|",sep = ""),
+            ...)
   }
 }
 class(pairs_strucplot) <- "grapcon_generator"

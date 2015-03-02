@@ -1,5 +1,6 @@
 \name{loddsratio}
 \alias{loddsratio}
+\alias{oddsratio}
 \alias{loddsratio.default}
 \alias{loddsratio.formula}
 
@@ -32,6 +33,8 @@ loddsratio(x, \dots)
 \method{loddsratio}{formula}(formula, data = NULL, \dots,
 subset = NULL, na.action = NULL)
 
+oddsratio(x, stratum = NULL, log = TRUE)
+
 \method{coef}{loddsratio}(object, log = object$log, \dots)
 \method{vcov}{loddsratio}(object, log = object$log, \dots)
 \method{print}{loddsratio}(x, log = x$log, \dots)
@@ -46,7 +49,7 @@ subset = NULL, na.action = NULL)
 
   \item{x}{An object. For the default method a k-way matrix/table/array
     of frequencies. The number of margins has to be at least 2.}
-  \item{strata}{Numeric or character indicating the margins of a
+  \item{strata, stratum}{Numeric or character indicating the margins of a
     k-way table \code{x} (with k greater than 2) that should be employed
     as strata. By default dimensions \code{3 : length(dim(x))} are used.}
   \item{ref}{Numeric or character. Reference categories for the (non-stratum)
@@ -172,6 +175,10 @@ ratios), and the corresponding p values.
 the function allows for structural zeros to be represented as \code{NA} in the data argument.
 \code{NA} in the data yields \code{NA} as the \code{LOR} estimate, but does not affect other
 cells.
+
+\code{oddsratio} is just an alias to \code{loddsratio} for backward
+compatibility.
+
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

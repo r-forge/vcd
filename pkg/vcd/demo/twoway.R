@@ -33,13 +33,17 @@
   fourfold(CoalMiners, mfcol = c(3,3))
 
   ## Log Odds Ratio Plot
-  summary(l <- oddsratio(CoalMiners))
-  g <- seq(20, 60, by = 5)
-  plot(l,
-       xlab = "Age Group",
-       main = "Breathelessness and Wheeze in Coal Miners")
-  m <- lm(l ~ g + I(g^2))
-  lines(fitted(m), col = "red")
+  data(CoalMiners, package = "vcd")
+  lor_CM <- loddsratio(CoalMiners)
+  plot(lor_CM)
+  lor_CM_df <- as.data.frame(lor_CM)
+
+  # fit linear models using WLS
+  age <- seq(20, 60, by = 5)
+  lmod <- lm(LOR ~ age, weights = 1 / ASE^2, data = lor_CM_df)
+  grid.lines(age, fitted(lmod), gp = gpar(col = "blue"))
+  qmod <- lm(LOR ~ poly(age, 2), weights = 1 / ASE^2, data = lor_CM_df)
+  grid.lines(age, fitted(qmod), gp = gpar(col = "red"))
 
   ## Fourfold display, strata equated
   fourfold(CoalMiners, std = "ind.max", mfcol = c(3,3))
