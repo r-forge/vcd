@@ -38,8 +38,12 @@ distplot <-
                fm <- lm(y ~ mycount)
                par.estim <- exp(coef(fm)[2])
                names(par.estim) <- "lambda"
-               if(!is.null(lambda)) par.estim <- par.estim * lambda
-               legend.text <- paste("exp(slope) =", round(par.estim, digits = 3))
+               txt <- "exp(slope)"
+               if(!is.null(lambda)) {
+                   par.estim <- par.estim * lambda
+                   txt <- paste(txt, "x lambda")
+               }
+               legend.text <- paste(txt, "=", round(par.estim, digits = 3))
                if(is.null(main)) main <- "Poissoness plot"
   },
 

@@ -4,6 +4,7 @@
 
 \section{Changes in version 1.3-3}{
   \itemize{
+    \item Fix legend of \code{distplot()} in case of leveled plots
     \item \code{cotab_agreementplot} panel function for plotting
     conditional (stratified) agreement charts added
     \item \code{loddsratio} added as an extension of \code{oddsratio} fr
