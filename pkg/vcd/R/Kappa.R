@@ -54,7 +54,7 @@ print.Kappa <-
 {
 	tab <- rbind(x$Unweighted, x$Weighted)
 	z <- tab[,1] / tab[,2]
-	tab <- cbind(tab, z)
+	tab <- cbind(tab, z, `Pr(>|z|)` = 2 * pnorm(-abs(z)))
 	if (CI) {
 		q <-  qnorm((1 + level)/2)
 		lower <- tab[,1] - q * tab[,2]
