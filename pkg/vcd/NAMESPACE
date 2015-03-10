@@ -202,6 +202,8 @@ S3method("vcov", "loddsratio")
 S3method("as.matrix", "loddsratio")
 S3method("as.array", "loddsratio")
 S3method("as.data.frame", "loddsratio")
+S3method("aperm", "loddsratio")
+S3method("t", "loddsratio")
 
 S3method("image", "loddsratio")
 S3method("tile", "loddsratio")

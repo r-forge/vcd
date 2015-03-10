@@ -204,6 +204,25 @@ loddsratio.default <- function(x, strata = NULL, log = TRUE,
 dimnames.loddsratio <- function(x, ...) x$dimnames
 dim.loddsratio <- function(x, ...) x$dim
 
+## t/aperm-methods
+t.loddsratio <- function(x)
+    aperm(x)
+
+aperm.loddsratio <- function(a, perm = NULL, ...)
+{
+    if ((d <- length(a$dim)) < 4) return(a)
+    if(is.null(perm))
+        perm <- rev(seq_len(d - 2))
+    nams <- names(a$coefficients)
+    a$coefficients <- as.vector(aperm(as.array(a), perm, ...))
+    nams <- as.vector(aperm(array(nams, dim = a$dim[-c(1:2)]), perm, ...))
+    names(a$coefficients) <- nams
+    a$dimnames[-c(1:2)] <- a$dimnames[-c(1:2)][perm]
+    a$dim[-c(1:2)] <- a$dim[-c(1:2)][perm]
+    a$vcov <- a$vcov[nams, nams]
+    a$contrasts <- a$contrasts[nams,]
+    a
+}
 
 ## straightforward methods
 coef.loddsratio <- function(object, log = object$log, ...)
