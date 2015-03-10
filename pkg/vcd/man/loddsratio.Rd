@@ -12,6 +12,8 @@
 \alias{vcov.loddsratio}
 \alias{as.matrix.loddsratio}
 \alias{as.array.loddsratio}
+\alias{aperm.loddsratio}
+\alias{t.loddsratio}
 \alias{as.data.frame.loddsratio}
 
 \title{
@@ -42,6 +44,8 @@ oddsratio(x, stratum = NULL, log = TRUE)
 
 %as.array(x, \dots)
 \method{as.array}{loddsratio}(x, log=x$log, \dots)
+\method{t}{loddsratio}(x)
+\method{aperm}{loddsratio}(a, perm, \dots)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -76,8 +80,9 @@ oddsratio(x, stratum = NULL, log = TRUE)
     this not  employed unless there are any zero cells in  the table, but this
     correction is often recommended to reduce bias when some frequencies are small
     (Fleiss, 1981).}
-  \item{object}{An object of class \code{loddsratio} as computed by
+  \item{a, object}{An object of class \code{loddsratio} as computed by
     \code{loddsratio}.}
+  \item{perm}{numeric or character vector specifying a permutation of strata.}
   \item{\dots}{Arguments passed to methods.}
   
   \item{parm}{A specification of which parameters are to be given confidence intervals, 
