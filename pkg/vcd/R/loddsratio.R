@@ -25,6 +25,7 @@
 
 ## -- DM: added plot.oddsratio method
 ## -- DM: added formula interface
+## -- DM: add t() and aperm() methdos
 
 loddsratio <- function(x, ...)
     UseMethod("loddsratio")
@@ -51,7 +52,7 @@ loddsratio.formula <-
             varnames <- varnames[-which(varnames %in% dep)]
         }
 
-        varnames <- c(varnames, dep)
+        varnames <- c(dep, varnames)
     }
 
 
