@@ -210,15 +210,20 @@ t.loddsratio <- function(x)
 
 aperm.loddsratio <- function(a, perm = NULL, ...)
 {
-    if ((d <- length(a$dim)) < 4) return(a)
-    if(is.null(perm))
-        perm <- rev(seq_len(d - 2))
+    d <- length(a$dim)
+    if(is.null(perm)) {
+        perm <- if (d < 3) 2L : 1L else c(2L : 1L, d : 3L)
+    } else {
+        if (any(perm[1:2] > 2L) || (d > 2L) && any(perm[-c(1:2)] < 2L))
+            stop("Mixing of strata and non-strata variables not allowed!")
+    }
     nams <- names(a$coefficients)
-    a$coefficients <- as.vector(aperm(as.array(a), perm, ...))
-    nams <- as.vector(aperm(array(nams, dim = a$dim[-c(1:2)]), perm, ...))
+    a$coefficients <- as.vector(aperm(array(a$coef, dim = a$dim),
+                                      perm, ...))
+    nams <- as.vector(aperm(array(nams, dim = a$dim), perm, ...))
     names(a$coefficients) <- nams
-    a$dimnames[-c(1:2)] <- a$dimnames[-c(1:2)][perm]
-    a$dim[-c(1:2)] <- a$dim[-c(1:2)][perm]
+    a$dimnames <- a$dimnames[perm]
+    a$dim <- a$dim[perm]
     a$vcov <- a$vcov[nams, nams]
     a$contrasts <- a$contrasts[nams,]
     a
