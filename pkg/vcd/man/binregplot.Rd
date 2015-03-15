@@ -1,9 +1,10 @@
 \name{binreg_plot}
 \alias{binreg_plot}
+\alias{grid_abline}
 \title{Binary Regression Plot}
 \description{
-  Creates a display of observed and fitted values for binary regression
-  models with one numeric predictor, conditioned by zero or many co-factors.
+  Creates a display of observed and fitted values for a binary regression
+  model with one numeric predictor, conditioned by zero or many co-factors.
 }
 \usage{
 binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
@@ -19,7 +20,8 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
             gp_main = gpar(fontface = "bold", fontsize = 14),
             gp_legend_frame = gpar(lwd = 1, col = "black"),
             gp_legend_title = gpar(fontface = "bold"),
-            newpage = TRUE, pop = TRUE, return_grob = FALSE)
+            newpage = TRUE, pop = FALSE, return_grob = FALSE)
+grid_abline(a, b, \dots)
 }
 \arguments{
   \item{model}{a binary regression model fitted with \code{\link[stats]{glm}}}
@@ -101,14 +103,19 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
     popped after plotting.}
   \item{return_grob}{logical. Should a snapshot of the display be
     returned as a grid grob?}
+  \item{a}{intercept; alternatively, a regression model from which
+    coefficients can be extracted via \code{\link[stats]{coef}}.}
+  \item{b}{slope.}
+  \item{\dots}{Further arguments passed to \code{\link[grid]{grid.abline}}}
 }
 \details{
-  The primary purpose of this function is to visualize observed and
+  The primary purpose of \code{binreg_plot()} is to visualize observed and
   fitted values for binary regression models (like the logistic or probit
   regression model) with one numeric predictor. If one or more
-  categorical predictors are used in the model, the fitted values are
+  categorical predictors are used in the model, the \emph{fitted} values are
   conditioned on them, i.e. separate curves are drawn corresponding to
-  the factor level combinations.
+  the factor level combinations. Thus, it shows a \emph{full-model plot}, not a
+  conditional plot where several models would be fit to data subsets.
   
   The implementation relies on objects returned by
   \code{\link[stats]{glm}}, as it uses its \code{"terms"} and
@@ -125,6 +132,11 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
   delta method is symmetric around the fitted mean,
   but may exceed the unit interval (on the response scale) and 
   will be cut off.
+
+  \code{grid_abline()} is a simple convenience wrapper for
+  \code{\link[grid]{grid.abline}} with similar behavior than
+  \code{\link[graphics]{abline}} in that it extracts coefficients from
+  a regression model, if given instead of the intercept \code{a}.
 }
 \value{
   if \code{return_grob} is \code{TRUE}, a grob object corresponding to

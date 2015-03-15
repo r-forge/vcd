@@ -97,6 +97,7 @@ export(
        "binreg_plot",
        "mplot",
        "grid_legend",
+       "grid_abline",
        "woolf_test")
 
 S3method("[", "structable")
