@@ -13,7 +13,7 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
          gp_main = gpar(fontface = "bold", fontsize = 14),
          gp_legend_frame = gpar(lwd = 1, col = "black"),
          gp_legend_title = gpar(fontface = "bold"),
-         newpage = TRUE, pop = TRUE, return_grob = FALSE)
+         newpage = TRUE, pop = FALSE, return_grob = FALSE)
 {
     if (!inherits(model, "glm"))
         stop("Method requires a model of class 'glm'.")
@@ -154,11 +154,12 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                 tmp
         } else
             jitter(ylim[1 + (mod[ind, resp] != base_level)], jitter_factor)
-        grid.points(unit(dat[ind, pred_var], "native"),
-                    unit(ycoords, "native"),
-                    pch = pch, size = unit(cex, "char"), gp = gpar(col = colline),
-                    default.units = "native"
-                    )
+        if (cex > 0)
+            grid.points(unit(dat[ind, pred_var], "native"),
+                        unit(ycoords, "native"),
+                        pch = pch, size = unit(cex, "char"), gp = gpar(col = colline),
+                        default.units = "native"
+                        )
 
         ## confidence band and fitted values
         typ <- if (type == "response" && !delta) "link" else type
@@ -248,9 +249,36 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
                         gp_title = gp_legend_title)
     }
 
-    if (pop) popViewport(2) else upViewport(2)
+    if (pop) popViewport(2)
     if (return_grob)
         invisible(grid.grab())
     else
         invisible(NULL)
+}
+
+###########
+grid_abline <- function(a, b, ...)
+{
+    ## taken from graphics::abline()
+    if (is.object(a) || is.list(a)) {
+        p <- length(coefa <- as.vector(coef(a)))
+        if (p > 2)
+            warning(gettextf("only using the first two of %d regression coefficients",
+                p), domain = NA)
+        islm <- inherits(a, "lm")
+        noInt <- if (islm)
+            !as.logical(attr(stats::terms(a), "intercept"))
+        else p == 1
+        if (noInt) {
+            a <- 0
+            b <- coefa[1L]
+        }
+        else {
+            a <- coefa[1L]
+            b <- if (p >= 2)
+                coefa[2L]
+            else 0
+        }
+    }
+    grid.abline(a, b, ...)
 }

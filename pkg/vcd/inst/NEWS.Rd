@@ -4,6 +4,7 @@
 
 \section{Changes in version 1.3-3}{
   \itemize{
+    \item add \code{grid_abline()} for convenience.
     \item Add P-values to the output print.Kappa() produces.
     \item Fix legend of \code{distplot()} in case of leveled plots
     \item \code{cotab_agreementplot} panel function for plotting
