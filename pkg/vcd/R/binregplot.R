@@ -1,7 +1,7 @@
 binreg_plot <-
 function(model, main = NULL, xlab = NULL, ylab = NULL,
-         xlim = NULL, ylim = NULL,
-         pred_var = NULL, group_vars = NULL, base_level = NULL, subset,
+         xlim = NULL, ylim = NULL, pred_var = NULL, pred_range = c("data", "xlim"),
+         group_vars = NULL, base_level = NULL, subset,
          type = c("response", "link"), conf_level = 0.95, delta = FALSE,
          pch = NULL, cex = 0.6, jitter_factor = 0.1,
          lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL,
@@ -19,6 +19,8 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
         stop("Method requires a model of class 'glm'.")
     type <- match.arg(type)
     labels_pos <- match.arg(labels_pos)
+    if (is.character(pred_range))
+        pred_range <- match.arg(pred_range)
 
     ## extract data from model
     mod <- model.frame(model)
@@ -79,8 +81,11 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
     ## allow for some cosmetic extra space
     ylimaxis <- ylim + c(-1, 1) * diff(ylim) * 0.04
 
-   if(is.null(xlim))
-        xlim <- range(dat[,pred_var])
+    if(is.null(xlim))
+        xlim <- if (is.numeric(pred_range))
+                    range(pred_range)
+                else
+                    range(dat[,pred_var])
     xlimaxis <- xlim + c(-1, 1) * diff(xlim) * 0.04
 
     ## set default base level ("no effect") of response to first level/0
@@ -163,7 +168,21 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
 
         ## confidence band and fitted values
         typ <- if (type == "response" && !delta) "link" else type
-        pr <- predict(model, dat[ind,], type = typ, se.fit = TRUE)
+        if (is.character(pred_range)) {
+            if (pred_range == "data") {
+                D <- dat[ind,]
+                P <- D[,pred_var]
+            } else {
+                P <- seq(from = xlim[1L], to = xlim[2L], length.out = 100L)
+                D <- dat[ind,][rep(1L, length(P)),]
+                D[,pred_var] <- P
+            }
+        } else {
+            P <- pred_range
+            D <- dat[ind,][rep(1L, length(P)),]
+            D[,pred_var] <- P
+        }
+        pr <- predict(model, D, type = typ, se.fit = TRUE)
         lower <- pr$fit - quantile * pr$se.fit
         upper <- pr$fit + quantile * pr$se.fit
         if (type == "response" && !delta) {
@@ -175,14 +194,14 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
             lower[lower < 0] <- 0
             upper[upper > 1] <- 1
         }
-        grid.polygon(unit(c(dat[ind, pred_var], rev(dat[ind, pred_var])), "native"),
+        grid.polygon(unit(c(P, rev(P)), "native"),
                      unit(c(lower, rev(upper)), "native"),
                      gp = gpar(fill = colband, col = NA))
-        grid.lines(unit(dat[ind, pred_var], "native"),
+        grid.lines(unit(P, "native"),
                    unit(pr$fit, "native"),
                    gp = gpar(col = colline, lwd = lwd, lty = lty))
         if (point_size > 0)
-            grid.points(unit(dat[ind, pred_var], "native"),
+            grid.points(unit(P, "native"),
                         unit(pr$fit, "native"), pch = pch,
                         size = unit(point_size, "char"),
                         gp = gpar(col = colline))
@@ -190,8 +209,8 @@ function(model, main = NULL, xlab = NULL, ylab = NULL,
         ## add labels, if any
         if (labels) {
             x = switch(labels_pos,
-                       left = dat[ind, pred_var][1],
-                       right = dat[ind, pred_var][length(dat[ind, pred_var])])
+                       left = P[1],
+                       right = P[length(P)])
             y = switch(labels_pos,
                        left = pr$fit[1],
                        right = pr$fit[length(pr$fit)])
