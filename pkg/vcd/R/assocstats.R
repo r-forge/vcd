@@ -21,7 +21,7 @@ assocstats <- function(x) {
   structure(
             list(table = x,
                  chisq_tests = tab,
-                 phi = phi,
+                 phi = ifelse(all(dim(x) == 2L), phi, NA),
                  contingency = cont,
                  cramer = cramer),
             class = "assocstats"

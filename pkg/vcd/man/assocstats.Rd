@@ -20,7 +20,8 @@ assocstats(x)
   In case of a 2-dimensional table, a list with components:
   \item{chisq_tests}{a \eqn{2 \times 3}{2 x 3} table with the
     chi-squared statistics.}
-  \item{phi}{The \emph{absolute value} of the phi coefficient.}
+  \item{phi}{The \emph{absolute value} of the phi coefficient (only
+    defined for \eqn{2 \times 2}{2 x 2} tables).}
   \item{cont}{The contingency coefficient.}
   \item{cramer}{Cramer's V.}
   In case of higher-dimensional tables, a list of the above mentioned
