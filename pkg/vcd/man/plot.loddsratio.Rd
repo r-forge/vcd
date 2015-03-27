@@ -21,7 +21,7 @@ gp_legend = gpar(), legend_lwd = 1, legend_size = 1,
              
 xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL,
 main = NULL, gp_main = gpar(fontsize = 12, fontface = "bold"),
-newpage = TRUE, pop = TRUE, return_grob = FALSE, prefix = "", \dots)
+newpage = TRUE, pop = FALSE, return_grob = FALSE, prefix = "", \dots)
 }
 \arguments{
   \item{x}{an object of class \code{loddsratio}}

@@ -209,12 +209,16 @@ cotab_fourfold <- function (x = NULL, condvars = NULL, ...) {
 class(cotab_fourfold) <- "grapcon_generator"
 
 cotab_loddsratio <- function(x = NULL, condvars = NULL, ...) {
-  function(x, condlevels) {
-    if(is.null(condlevels)) plot(loddsratio(x, ...), newpage = FALSE, pop = FALSE, return_grob = FALSE, ...)
-      else plot(loddsratio(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]], ...),
+    function(x, condlevels) {
+        if(is.null(condlevels)) {
+            plot(loddsratio(x, ...), newpage = FALSE, pop = FALSE, return_grob = FALSE, ...)
+        } else {
+            plot(loddsratio(co_table(x, names(condlevels))[[paste(condlevels, collapse = ".")]], ...),
                  newpage = FALSE, pop = FALSE, return_grob = FALSE,
                  prefix = paste("panel:", paste(names(condlevels), condlevels, sep = "=", collapse = ","), "|", sep = ""), ...)
-  }
+        }
+        upViewport(2)
+    }
 }
 class(cotab_loddsratio) <- "grapcon_generator"
 

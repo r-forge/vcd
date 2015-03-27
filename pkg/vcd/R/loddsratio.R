@@ -388,7 +388,7 @@ tile.loddsratio <-
 
              main = NULL,
              gp_main = gpar(fontsize = 12, fontface = "bold"),
-             newpage = TRUE, pop = TRUE, return_grob = FALSE,
+             newpage = TRUE, pop = FALSE, return_grob = FALSE,
              prefix = "",
              ...)
 {
@@ -607,7 +607,7 @@ tile.loddsratio <-
     }
 
     grid.rect(gp = gpar(fill = "transparent"))
-    if (pop) popViewport(2) else upViewport(2)
+    if (pop) popViewport(2)
     if (return_grob)
         invisible(grid.grab())
     else
