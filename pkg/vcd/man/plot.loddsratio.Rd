@@ -114,9 +114,9 @@ lor_CM_df <- as.data.frame(lor_CM)
 # fit linear models using WLS
 age <- seq(20, 60, by = 5)
 lmod <- lm(LOR ~ age, weights = 1 / ASE^2, data = lor_CM_df)
-grid.lines(age, fitted(lmod), gp = gpar(col = "blue"))
+grid.lines(seq_along(age), fitted(lmod), gp = gpar(col = "blue", lwd = 2), default.units = "native")
 qmod <- lm(LOR ~ poly(age, 2), weights = 1 / ASE^2, data = lor_CM_df)
-grid.lines(age, fitted(qmod), gp = gpar(col = "red"))
+grid.lines(seq_along(age), fitted(qmod), gp = gpar(col = "red", lwd = 2), default.units = "native")
 
 ## 2 x k x 2
 lor_Emp <-loddsratio(Employment)
