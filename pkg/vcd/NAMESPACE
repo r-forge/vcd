@@ -164,6 +164,8 @@ S3method("pairs", "structable")
 S3method("fitted", "goodfit")
 S3method("fitted", "coindep_test")
 
+S3method("residuals", "goodfit")
+
 S3method("predict", "goodfit")
 
 S3method("confint", "Kappa")
