@@ -2,9 +2,11 @@
 \title{News for Package \pkg{vcd}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in version 1.3-3}{
+\section{Changes in version 1.4-0}{
   \itemize{
-    \item add \code{grid_abline()} for convenience.
+    \item Add residual-based shading to \code{rootogram()}.
+    \item Add \code{residuals()} method for \code{"goodfit"} objects.
+    \item Add \code{grid_abline()} for convenience.
     \item Add P-values to the output print.Kappa() produces.
     \item Fix legend of \code{distplot()} in case of leveled plots
     \item \code{cotab_agreementplot} panel function for plotting

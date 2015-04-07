@@ -12,7 +12,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
                               type = c("hanging", "standing", "deviation"),
                               shade = FALSE, legend = TRUE,
                               legend_args = list(x = 0, y = 0.2, height = 0.6), df = NULL,
-                              rect_gp = NULL, rect_gp_args = list(), lines_gp = gpar(col = "red"),
+                              rect_gp = NULL, rect_gp_args = list(), lines_gp = gpar(col = "red", lwd = 2),
                               points_gp = gpar(col = "red"), pch = 19,
                               xlab = NULL, ylab = NULL, ylim = NULL,
                               main = NULL, sub = NULL,
@@ -68,7 +68,7 @@ rootogram.default <- function(x, fitted, names = NULL, scale = c("sqrt", "raw"),
     if (keep_aspect_ratio)
         pushViewport(viewport(width = 1, height = 1, default.units = "snpc"))
 
-    pushViewport(vcd:::vcdViewport(mar = margins,
+    pushViewport(vcdViewport(mar = margins,
                              oma = title_margins,
                              legend = shade && !(is.null(legend) || is.logical(legend) && !legend),
                              main = !is.null(main), sub = !is.null(sub),
