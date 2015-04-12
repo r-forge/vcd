@@ -10,8 +10,11 @@ Authors@R: c(person(given = "David", family = "Meyer", role = c("aut", "cre"), e
 Description: Visualization techniques, data sets, summary and inference
         procedures aimed particularly at categorical data. Special
         emphasis is given to highly extensible grid graphics. The
-        package was inspired by the book "Visualizing Categorical Data"
-        by Michael Friendly.
+        package was package was originally inspired by the book 
+	"Visualizing Categorical Data" by Michael Friendly and is 
+	now the main support package for a new book, 
+	"Discrete Data Analysis with R" by Michael Friendly and 
+	David Meyer (2015).
 LazyLoad: yes
 LazyData: yes
 Depends: R (>= 2.4.0), grid
