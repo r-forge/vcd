@@ -34,7 +34,7 @@ function(x,
          std = c("margins", "ind.max", "all.max"), margin = c(1, 2),
          space = 0.2, main = NULL, sub = NULL, mfrow = NULL, mfcol = NULL, extended = TRUE,
          ticks = 0.15, p_adjust_method = p.adjust.methods, newpage = TRUE,
-         fontsize = 12, default_prefix = c("Row", "Col", "Strata"), sep = ": ",
+         fontsize = 12, default_prefix = c("Row", "Col", "Strata"), sep = ": ", varnames = TRUE,
          return_grob = FALSE)
 
 {
@@ -282,10 +282,12 @@ function(x,
                   gp = gpar(fontsize = fontsize),
                   rot = 90)
         if (k > 1) {
-            grid.text(
-                      paste(names(dimnames(x))[3],
-                            dimnames(x)[[3]][i],
-                            sep = sep),
+            grid.text(if (!varnames)
+                          dimnames(x)[[3]][i]
+                      else
+                          paste(names(dimnames(x))[3],
+                                dimnames(x)[[3]][i],
+                                sep = sep),
                       0, 1 + (1 + gamma / 2) * space,
                       gp = gpar(fontsize = fontsize * gamma),
                       default.units = "native"
