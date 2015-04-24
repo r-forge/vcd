@@ -180,7 +180,7 @@ mosaic(art)
 mosaic(art, shade = TRUE)
 ## which uses the HCL shading
 mosaic(art, gp = shading_hcl)
-## the residuals are two small to have color,
+## the residuals are too small to have color,
 ## hence the cut-offs can be modified
 mosaic(art, gp = shading_hcl, gp_args = list(interpolate = c(1, 1.8)))
 ## the same with the Friendly palette 
