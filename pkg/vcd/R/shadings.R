@@ -90,7 +90,7 @@ shading_hsv <- function(observed, residuals = NULL, expected = NULL, df = NULL,
 	if(!is.null(eps))
 		ltytmp[abs(x) < abs(eps)] <- lty[1]
 	dim(ltytmp) <- dim(x)
-	
+
 	return(structure(list(col = col, fill = fill, lty = ltytmp), class = "gpar"))
 }
   attr(rval, "legend") <- legend
@@ -201,6 +201,14 @@ shading_Friendly <- function(observed = NULL, residuals = NULL, expected = NULL,
 	      eps = eps, line_col = line_col, p.value = NA, ...)
 }
 class(shading_Friendly) <- "grapcon_generator"
+
+shading_Friendly2 <- function(observed = NULL, residuals = NULL, expected = NULL, df = NULL, lty = 1:2, interpolate = c(2, 4), eps = 0.01, line_col = "black", ...)
+{
+  shading_hcl(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
+              lty = lty, interpolate = interpolate,
+	      eps = eps, line_col = line_col, p.value = NA, ...)
+}
+class(shading_Friendly2) <- "grapcon_generator"
 
 shading_sieve <-
     function(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
