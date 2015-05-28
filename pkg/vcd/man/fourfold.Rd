@@ -14,7 +14,7 @@ fourfold(x,
   mfrow = NULL, mfcol = NULL, extended = TRUE, ticks = 0.15,
   p_adjust_method = p.adjust.methods, newpage = TRUE,
   fontsize = 12, default_prefix = c("Row", "Col", "Strata"),
-  sep = ": ", dimnames = TRUE, return_grob = FALSE)
+  sep = ": ", varnames = TRUE, return_grob = FALSE)
 }
 \arguments{
   \item{x}{a \eqn{2 \times 2 \times k}{2 x 2 x k} contingency table in array form, or a
