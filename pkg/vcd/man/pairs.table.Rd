@@ -120,7 +120,7 @@ Hence, the second approach is equivalent to the first if
   Graphical methods for categorical data.
   \emph{SAS User Group International Conference Proceedings}, \bold{17},
   190--200.
-  \url{http://datavis.ca/sugi/sugi17.pdf}
+  \url{http://datavis.ca/papers/sugi/sugi17.pdf}
 
   Meyer, D., Zeileis, A., and Hornik, K. (2006),
   The strucplot framework: Visualizing multi-way contingency tables with
