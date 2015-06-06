@@ -54,6 +54,9 @@ export(
        "shading_hsv",
        "shading_max",
        "shading_Friendly",
+       "shading_Friendly2",
+       "shading_diagonal",
+       "shading_Marimekko",
        "shading_sieve",
        "hcl2hex",
 

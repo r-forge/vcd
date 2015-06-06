@@ -4,6 +4,7 @@
 
 \section{Changes in version 1.4-0}{
   \itemize{
+    \item Add \code{shading_Marimekko} and \code{shading_diagonal}.
     \item Add residual-based shading to \code{rootogram()}.
     \item Add \code{residuals()} method for \code{"goodfit"} objects.
     \item Add \code{grid_abline()} for convenience.

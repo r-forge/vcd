@@ -263,3 +263,29 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
 }
 class(shading_binary) <- "grapcon_generator"
 
+shading_Marimekko <-
+function(x, fill = NULL)
+{
+    if (is.null(fill)) fill <- colorspace::rainbow_hcl
+    d <- dim(x)
+    l1 <- if (length(d) > 1L) d[2] else d
+    l2 <- if (length(d) > 1L) d[1] else 1
+    if (is.function(fill)) fill <- fill(l1)
+    gpar(col = NA, lty = "solid",
+         fill = array(rep(fill, each = l2), dim = d))
+}
+
+shading_diagonal <-
+function(x, fill = NULL)
+{
+    if (is.null(fill)) fill <- colorspace::rainbow_hcl
+    d <- dim(x)
+    if (length(d) < 1L)
+        stop("Need matrix or array!")
+    if (d[1] != d[2])
+        stop("First two dimensions need to be of same length!")
+    if (is.function(fill)) fill <- fill(d[1])
+    tp = toeplitz(seq_len(d[1]))
+    gpar(col = NA, lty = "solid",
+         fill = array(rep(fill[tp],  d[1]), dim = d))
+}
