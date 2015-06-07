@@ -45,7 +45,7 @@ shading_sieve(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
 shading_binary(observed = NULL, residuals = NULL, expected = NULL, df = NULL,
   col = NULL)
 
-shading_Marimekko(x, fill = NULL)
+shading_Marimekko(x, fill = NULL, byrow = FALSE)
 
 shading_diagonal(x, fill = NULL)
 
@@ -101,6 +101,7 @@ hcl2hex(h = 0, c = 35, l = 85, fixup = TRUE)
   \item{fill}{Either a character vector of color codes, or a palette
     function that generates such a vector. Defaults to
     \code{\link[colorspace]{rainbow_hcl}}}
+  \item{byrow}{logical; shall tiles be filled by row or by column?}
   \item{\dots}{Other arguments passed to \code{\link{hcl2hex}}
     or \code{\link{hsv}}, respectively.}
 }
