@@ -264,15 +264,16 @@ shading_binary <- function(observed = NULL, residuals = NULL, expected = NULL, d
 class(shading_binary) <- "grapcon_generator"
 
 shading_Marimekko <-
-function(x, fill = NULL)
+function(x, fill = NULL, byrow = FALSE)
 {
     if (is.null(fill)) fill <- colorspace::rainbow_hcl
     d <- dim(x)
     l1 <- if (length(d) > 1L) d[2] else d
     l2 <- if (length(d) > 1L) d[1] else 1
     if (is.function(fill)) fill <- fill(l1)
+    fill <- if (byrow) rep(fill, l2) else rep(fill, each = l2)
     gpar(col = NA, lty = "solid",
-         fill = array(rep(fill, each = l2), dim = d))
+         fill = array(fill, dim = d))
 }
 
 shading_diagonal <-
