@@ -9,10 +9,10 @@
     \item Add \code{residuals()} method for \code{"goodfit"} objects.
     \item Add \code{grid_abline()} for convenience.
     \item Add P-values to the output print.Kappa() produces.
-    \item Fix legend of \code{distplot()} in case of leveled plots
+    \item Fix legend of \code{distplot()} in case of leveled plots.
     \item \code{cotab_agreementplot} panel function for plotting
-    conditional (stratified) agreement charts added
-    \item \code{loddsratio} added as an extension of \code{oddsratio} fr
+    conditional (stratified) agreement charts added.
+    \item \code{loddsratio} added as an extension of \code{oddsratio} for
     conditioned generalized odds ratios. The plot method is greatly
     enhanced, and structural zeros (missing values) are also
     accepted. \code{oddsratio} is now just an alias for
@@ -22,20 +22,18 @@
     conditioning variables come \emph{first}.
     
     \item \code{cotab_loddsratio} panel function for plotting
-    conditional log-odds ratios plots added
+    conditional log-odds ratios plots added.
     \item \code{assocstats} now handles strata (all but the first two
-    dimensions)
-    \item \code{sieve} now accepts a \code{scale=} argument
-    \item code for handling (log) odds ratios greatly enhanced to
-    support extended odds ratios and conditioned odds ratio plots.
+    dimensions).
+    \item \code{sieve} now accepts a \code{scale=} argument.
     \item \code{binreg_plot()} added for (conditioned) binary regression plots
     \item Bug fix in \code{mosaic()}: using \code{highlighting=} and/or
     \code{condvars=} now not only reorders the table, but also the split
     information, so that both remain consistent.
     \item All plot functions now have an option to return the produced
-    plot as an grid object for further use (e.g., in \code{mplot()})
+    plot as a grid object for further use (e.g., in \code{mplot()}).
     \item \code{mplot()} added for combining multiple grid plots in a
-    multi-panel-layout
+    multi-panel-layout.
     \item \code{legend_grid} now allows more options for positioning,
     and an \code{inset} argument has been added for relative adjustments.
   }  

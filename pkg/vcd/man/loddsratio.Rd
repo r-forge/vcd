@@ -51,12 +51,12 @@ oddsratio(x, stratum = NULL, log = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
 
-  \item{x}{An object. For the default method a k-way matrix/table/array
+  \item{x}{an object. For the default method a k-way matrix/table/array
     of frequencies. The number of margins has to be at least 2.}
   \item{strata, stratum}{Numeric or character indicating the margins of a
-    k-way table \code{x} (with k greater than 2) that should be employed
-    as strata. By default dimensions \code{3 : length(dim(x))} are used.}
-  \item{ref}{Numeric or character. Reference categories for the (non-stratum)
+    $k$-way table \code{x} (with $k$ greater than 2) that should be employed
+    as strata. By default all dimensions except the first two are used.}
+  \item{ref}{numeric or character. Reference categories for the (non-stratum)
     row and column dimensions that should be employed for computing the
     odds ratios. By default, odds ratios for profile contrasts (or sequential
     contrasts, i.e., successive differences of adjacent categories) are
@@ -70,22 +70,22 @@ oddsratio(x, stratum = NULL, log = TRUE)
   \item{subset}{an optional vector specifying a subset of observations to be used.}
   \item{na.action}{a function which indicates what should happen when
     the data contain \code{NA}s. Ignored if \code{data} is a contingency table.}
-  \item{log}{Logical. Should the results be displayed on a log scale
+  \item{log}{logical. Should the results be displayed on a log scale
     or not? All internal computations are always on the log-scale but the
     results are transformed by default if \code{log = TRUE}.}
-  \item{correct}{Logical or numeric. Should a continuity correction
+  \item{correct}{logical or numeric. Should a continuity correction
     be applied before computing odds ratios?
     If \code{TRUE}, 0.5 is  added to  all cells; if numeric (or an
     array conforming to the data) that value is added to all cells.  By default,
     this not  employed unless there are any zero cells in  the table, but this
     correction is often recommended to reduce bias when some frequencies are small
     (Fleiss, 1981).}
-  \item{a, object}{An object of class \code{loddsratio} as computed by
+  \item{a, object}{an object of class \code{loddsratio} as computed by
     \code{loddsratio}.}
   \item{perm}{numeric or character vector specifying a permutation of strata.}
-  \item{\dots}{Arguments passed to methods.}
+  \item{\dots}{arguments passed to methods.}
   
-  \item{parm}{A specification of which parameters are to be given confidence intervals, 
+  \item{parm}{a specification of which parameters are to be given confidence intervals, 
     either a vector of numbers or a vector of names. If missing, all parameters are considered.}
   
   \item{level}{the confidence level required for the \code{confint} method.}
@@ -133,7 +133,7 @@ An object of class \code{loddsratio}, with the following components:
 	}
 \item{vcov}{Variance covariance matrix of the log odds ratios.}
 \item{dimnames}{Dimension names for the log odds ratios, considered as a table of
-  size \code{c(R-1, C-1, dim(x)[strata]}. Use the \code{dim} and \code{dimnames} methods
+  size (R-1, C-1, \code{dim(x)[strata]}). Use the \code{dim} and \code{dimnames} methods
   to extract these and manipulate the log odds ratios in relation to the original table.}
 \item{dim}{Corresponding dimension vector.}
 \item{contrasts}{A matrix C, such that \code{C \%*\% as.vector(log(x))} gives the log odds
@@ -157,7 +157,7 @@ Correspondence Analysis and Related Methods (CARME 2011).
 
 }
 \author{
-Achim Zeileis and Michael Friendly and David Meyer
+Achim Zeileis, Michael Friendly and David Meyer.
 }
 \note{
 The method of calculation is an example of the use of the delta method
