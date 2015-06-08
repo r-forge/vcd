@@ -12,7 +12,7 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
             pred_var = NULL, pred_range = c("data", "xlim"),
             group_vars = NULL, base_level = NULL, subset,
             type = c("response", "link"), conf_level = 0.95, delta = FALSE,
-            pch = NULL, cex = 0.6, jitter_factor = 0.1, 
+            pch = NULL, cex = 0.6, jitter_factor = 0.1,
             lwd = 5, lty = 1, point_size = 0, col_lines = NULL, col_bands = NULL, 
             legend = TRUE, legend_pos = NULL, legend_inset = c(0, 0.1),
             legend_vgap = unit(0.5, "lines"),
@@ -25,7 +25,7 @@ binreg_plot(model, main = NULL, xlab = NULL, ylab = NULL,
 grid_abline(a, b, \dots)
 }
 \arguments{
-  \item{model}{a binary regression model fitted with \code{\link[stats]{glm}}}
+  \item{model}{a binary regression model fitted with \code{\link[stats]{glm}}.}
   \item{main}{user-specified main title.}
   \item{xlab}{x-axis label. Defaults to the name of the (first) numeric predictor.}
   \item{ylab}{y-axis label. Defaults to the name of the response -
@@ -35,7 +35,7 @@ grid_abline(a, b, \dots)
     predictor.}
   \item{ylim}{Range of the y-axis. Defaults to the unit interval on
     probability scale or the fitted values range on the link scale,
-    depending on \code{type}}
+    depending on \code{type}.}
   \item{pred_var}{character string of length 1 giving the name of
     the numeric predictor. Defaults to the first one found in the data
     set.}
@@ -80,18 +80,18 @@ grid_abline(a, b, \dots)
   \item{col_lines, col_bands}{character vector specifying the colors of the fitted
     lines and confidence bands,
     by default chosen with \code{\link[colorspace]{rainbow_hcl}}. The
-    conidence bands are using alpha blending with alpha = 0.2.}
+    confidence bands are using alpha blending with alpha = 0.2.}
   \item{legend}{logical; if \code{TRUE} (default), a legend is drawn.}
   \item{legend_pos}{numeric vector of length 2, specifying x and y
-    coordinates of the legend, or a character string (e.g., 'topleft',
-    'center' etc.). Defaults to 'topleft' if the fitted curve's slope is
-    positive, and 'topright' else.}
+    coordinates of the legend, or a character string (e.g., \code{"topleft"},
+    \code{"center"} etc.). Defaults to \code{"topleft"} if the fitted curve's slope is
+    positive, and \code{"topright"} else.}
   \item{legend_inset}{numeric vector or length 2 specifying the inset
     from the legend's x and y coordinates in npc units.}
-  \item{legend_vgap}{vertical space between the legends' line entries.}
+  \item{legend_vgap}{vertical space between the legend's line entries.}
   \item{labels}{logical; if \code{TRUE}, labels corresponding to the
     factor levels are plotted next to the fitted lines.}
-  \item{labels_pos}{either "right" or "left", determining on which side
+  \item{labels_pos}{either \code{"right"} or \code{"left"}, determining on which side
     of the fitted lines (start or end) the labels should be placed.}
   \item{labels_just}{character vector of length 2, specifying the
     relative justification of the labels to their coordinates. See the
@@ -112,7 +112,7 @@ grid_abline(a, b, \dots)
   \item{a}{intercept; alternatively, a regression model from which
     coefficients can be extracted via \code{\link[stats]{coef}}.}
   \item{b}{slope.}
-  \item{\dots}{Further arguments passed to \code{\link[grid]{grid.abline}}}
+  \item{\dots}{Further arguments passed to \code{\link[grid]{grid.abline}}.}
 }
 \details{
   The primary purpose of \code{binreg_plot()} is to visualize observed and
@@ -178,6 +178,12 @@ binreg_plot(art.mod2, subset = Sex == "Male") ## subsetting
 binreg_plot(art.mod2, gp_legend_frame = gpar(col = NA, fill = "white"), col_bands = NA)
 binreg_plot(art.mod2, legend = FALSE, labels = TRUE,
             labels_pos = "left", labels_just = c("left", "top"))
+
+## model with grouped response data
+shuttle.mod <- glm(cbind(nFailures, 6 - nFailures) ~ Temperature,
+                   data = SpaceShuttle, na.action = na.exclude, family = binomial)
+binreg_plot(shuttle.mod, xlim = c(30, 81), pred_range = "xlim",
+            ylab = "O-Ring Failure Probability", xlab = "Temperature (F)")
 }
 \keyword{category}
 \keyword{hplot}

@@ -35,7 +35,7 @@ mplot(..., .list = list(),
   grid-based displays, especially those produced by the vcd methods. The
   layout (number of rows and columns) is guessed from the amount of
   supplied objects, if not supplied. Currently, the vcd plotting
-  functions do not return grob objects by default - this might change in
+  functions do not return grob objects by default---this might change in
   the future. Also, some of them will return the grob object as a
   \code{"grob"} attribute, attached to the currently returned object.
 }
