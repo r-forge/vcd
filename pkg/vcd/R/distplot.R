@@ -54,7 +54,7 @@ distplot <-
                }
                par.ml <- suppressWarnings(goodfit(x, type = type, par = list(size = size))$par$prob)
 
-               phi <- function(nk, k, N, size)
+               phi <- function(nk, k, N, size = NULL)
                    log(nk) - log(N * choose(size, k))
                y <- phi(myfreq, mycount, sum(freq), size = size)
                fm <- lm(y ~ mycount)
@@ -74,7 +74,7 @@ distplot <-
                    xbar <- weighted.mean(mycount, myfreq)
                    par.ml <- size / (size+xbar)
                }
-               phi <- function(nk, k, N, size)
+               phi <- function(nk, k, N, size = NULL)
                    log(nk) - log(N * choose(size + k - 1, k))
                y <- phi(myfreq, mycount, sum(freq), size = size)
                fm <- lm(y ~ mycount)
