@@ -2,6 +2,13 @@
 \title{News for Package \pkg{vcd}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 1.4-1}{
+  \itemize{
+    \item \code{shading_hcl} now also uses solid line type for
+    \code{abs(residuals) < eps} like \code{shading_hsv()}.
+  }
+}
+
 \section{Changes in version 1.4-0}{
   \itemize{
     \item Add \code{shading_Marimekko} and \code{shading_diagonal}.

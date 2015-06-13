@@ -183,6 +183,8 @@ shading_hcl <- function(observed, residuals = NULL, expected = NULL, df = NULL,
     dim(col) <- dim(x)
 
     lty <- ifelse(x > 0, lty[1], lty[2])
+    if(!is.null(eps))
+        lty[abs(x) < abs(eps)] <- lty[1]
     dim(lty) <- dim(x)
 
     return(structure(list(col = col, fill = fill, lty = lty), class = "gpar"))
