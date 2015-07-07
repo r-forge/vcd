@@ -4,6 +4,7 @@
 
 \section{Changes in version 1.4-1}{
   \itemize{
+    \item add imports for functions in recommended packages to NAMESPACE
     \item \code{shading_hcl} now also uses solid line type for
     \code{abs(residuals) < eps} like \code{shading_hsv()}.
   }
