@@ -620,7 +620,7 @@ tile.loddsratio <-
 }
 
 lines.loddsratio <-
-function(x, legend = FALSE, ...)
+function(x, legend = FALSE, confidence = FALSE, cex = 0, ...)
 {
-    plot(x, add = TRUE, newpage = FALSE, legend = legend, ...)
+    plot(x, add = TRUE, newpage = FALSE, legend = legend, confidence = confidence, cex = cex, ...)
 }

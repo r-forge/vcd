@@ -2,6 +2,12 @@
 \title{News for Package \pkg{vcd}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 1.4-2}{
+  \itemize{
+    \item add \code{lines()} method for \code{loddsratio} objects.
+  }
+}
+
 \section{Changes in version 1.4-1}{
   \itemize{
     \item add imports for functions in recommended packages to NAMESPACE
