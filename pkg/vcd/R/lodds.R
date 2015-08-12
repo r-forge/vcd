@@ -247,14 +247,14 @@ confint.lodds <-
 
 ### DONE:
 ##  The header should say:
-#    (log) odds ratios for vn[response] by ... all the rest (strata)
+#    (log) odds for vn[response] by ... all the rest (strata)
 make_header <- function(x)
 {
     vn <- names(dimnames(x))
     resp <- vn[x$response]
     strat <- paste(vn[x$strata], collapse=", ")
     header <- c(if(x$log) "log" else "",
-                "odds ratios for", resp, "by", strat,
+                "odds for", resp, "by", strat,
 #                if (length(vn)>2) c("by", paste(vn[-(1:2)], collapse=', ')),
                 "\n\n")
     paste(header, sep = " ")
