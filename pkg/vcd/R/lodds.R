@@ -277,7 +277,7 @@ print.lodds <- function(x, log = x$log, ...) {
 as.data.frame.lodds <- function(x, row.names = NULL, optional = FALSE, log=x$log, ...) {
     df <-data.frame(expand.grid(dimnames(x)),
                     logodds = coef(x, log = log),
-                    ASE = sqrt(diag(vcov(x, log = log))), row.names = row.names, optional = optional,  ...
+                    ASE = sqrt(diag(vcov(x, log = log))), row.names = row.names, ...
                     )
     if (!log) colnames(df)[ncol(df) - 1] <- "odds"
     df
