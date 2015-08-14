@@ -248,7 +248,8 @@ confint.lodds <-
 ### DONE:
 ##  The header should say:
 #    (log) odds for vn[response] by ... all the rest (strata)
-make_header <- function(x)
+#   Fixed:  clash with make_header in loddsratio
+make_header_odds <- function(x)
 {
     vn <- names(dimnames(x))
     resp <- vn[x$response]
@@ -262,7 +263,7 @@ make_header <- function(x)
 
 ## print method
 print.lodds <- function(x, log = x$log, ...) {
-    cat(make_header(x))
+    cat(make_header_odds(x))
     print(drop(array(coef(x, log = log), dim = dim(x), dimnames = dimnames(x)), ...))
     invisible(x)
 }
