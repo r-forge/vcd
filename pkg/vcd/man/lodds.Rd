@@ -212,11 +212,11 @@ set.seed(1)
 x <- matrix(rpois(5 * 3, 7), ncol = 5, nrow = 3)
 dimnames(x) <- list(Row = head(letters, 3), Col = tail(letters, 5))
 
-x_lor <- lodds(x)
-coef(x_lor)
-x_lor
-confint(x_lor)
-summary(x_lor)
+x_lodds <- lodds(x)
+coef(x_lodds)
+x_lodds
+confint(x_lodds)
+summary(x_lodds)
 
 ### 2 x 2 x k cases
 ##data(CoalMiners, package = "vcd")
