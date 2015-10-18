@@ -5,6 +5,7 @@
 \section{Changes in version 1.4-2}{
   \itemize{
     \item add \code{lines()} method for \code{loddsratio} objects.
+    \item add \code{gpar()} argment to control confidence intervals in \code{distplot()}.
   }
 }
 
