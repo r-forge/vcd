@@ -4,8 +4,11 @@
 
 \section{Changes in version 1.4-4}{
   \itemize{
-    \item Bugfix: labeling_cells() could not handle structable objects 
-          when called separately from mosaic().
+    \item Bugfix: \code{labeling_cells()} could not handle structable objects 
+    when called separately from \code{mosaic()}.
+    \item \code{ternaryplot()} now has additional \code{dimnames_rot=} and
+    \code{labels_rot=} arguments for changing the angle of the labels.
+    \item The loddratio plot now suppresses labels in the 2x2x(strata) case.
   }
 }
 
