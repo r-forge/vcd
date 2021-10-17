@@ -30,13 +30,7 @@ citEntry(entry="Article",
 	 volume       = "17",
 	 number       = "3",
 	 pages        = "1--48",
-         url          = "https://www.jstatsoft.org/v17/i03/",
-         
-         textVersion = 
-         paste("David Meyer, Achim Zeileis, and Kurt Hornik (2006).", 
-               "The Strucplot Framework: Visualizing Multi-Way Contingency Tables with vcd.",
-               "Journal of Statistical Software, 17(3), 1-48.",
-	       "URL https://www.jstatsoft.org/v17/i03/")
+         doi          = "10.18637/jss.v017.i03"
 )
 
 citEntry(entry="Article",
@@ -50,9 +44,5 @@ citEntry(entry="Article",
 	 volume       = "16",
 	 number       = "3",
 	 pages        = "507--525",
-         
-         textVersion = 
-         paste("Achim Zeileis, David Meyer, and Kurt Hornik (2007).", 
-               "Residual-based Shadings for Visualizing (Conditional) Independence.",
-               "Journal of Computational and Graphical Statistics, 16(3), 507-525.")
+         doi          = "10.1198/106186007X237856"
 )
