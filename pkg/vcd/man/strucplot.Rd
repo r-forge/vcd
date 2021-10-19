@@ -199,7 +199,7 @@ strucplot(x, residuals = NULL, expected = NULL,
 }
 
 \references{
-  Meyer D., Zeileis A., and Hornik K. (2006),
+  Meyer, D., Zeileis, A., and Hornik, K. (2006),
   The strucplot framework: Visualizing multi-way contingency tables with
   \pkg{vcd}.
   \emph{Journal of Statistical Software}, \bold{17(3)}, 1-48.

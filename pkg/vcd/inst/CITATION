@@ -30,7 +30,7 @@ citEntry(entry="Article",
 	 volume       = "17",
 	 number       = "3",
 	 pages        = "1--48",
-         doi          = "10.18637/jss.v017.i03"
+   doi          = "10.18637/jss.v017.i03"
 )
 
 citEntry(entry="Article",
@@ -44,5 +44,5 @@ citEntry(entry="Article",
 	 volume       = "16",
 	 number       = "3",
 	 pages        = "507--525",
-         doi          = "10.1198/106186007X237856"
+   doi          = "10.1198/106186007X237856"
 )
